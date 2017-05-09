@@ -1,4 +1,4 @@
-package com.private_void;
+package com.private_void.app;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
