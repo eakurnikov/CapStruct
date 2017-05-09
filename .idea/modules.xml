@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CapStruct.iml" filepath="$PROJECT_DIR$/.idea/modules/CapStruct.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CapStruct_main.iml" filepath="$PROJECT_DIR$/.idea/modules/CapStruct_main.iml" group="CapStruct" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CapStruct_test.iml" filepath="$PROJECT_DIR$/.idea/modules/CapStruct_test.iml" group="CapStruct" />
+    </modules>
+  </component>
+</project>
