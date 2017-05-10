@@ -40,7 +40,7 @@ public class Flux {
         this.fluxSpeed = fluxAxis;
         this.particlesAmount = particlesAmountTotal;
         this.divergentAngleDegrees = divergentAngleDegrees;
-        this.divergentAngleRadians = Utils.convertDegreesToRads(this.divergentAngleDegrees);
+        this.divergentAngleRadians = Utils.convertDegreesToRads(divergentAngleDegrees);
 
         createDivergentFlux(this.particlesAmount);
     }
@@ -68,7 +68,7 @@ public class Flux {
     }
 
     public ArrayList<Particle> getParticles() {
-        return this.particles;
+        return particles;
     }
 
 }

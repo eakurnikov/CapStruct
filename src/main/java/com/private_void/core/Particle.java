@@ -32,12 +32,24 @@ public class Particle {
         this.coordinate = coordinate;
     }
 
+    public void setCoordinate(float x, float y, float z) {
+        this.coordinate.setX(x);
+        this.coordinate.setY(y);
+        this.coordinate.setZ(z);
+    }
+
     public Vector3D getSpeed() {
         return speed;
     }
 
     public void setSpeed(Vector3D speed) {
         this.speed = speed;
+    }
+
+    public void setSpeed(float x, float y, float z) {
+        this.speed.setX(x);
+        this.speed.setY(y);
+        this.speed.setZ(z);
     }
 
     public float getIntensity() {

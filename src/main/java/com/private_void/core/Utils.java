@@ -62,7 +62,7 @@ public final class Utils {
 
     }
 
-    public static float findMax(float[] A) {
+    public static float getMax(float[] A) {
         float max = Math.abs(A[0]);
         for (int i = 1; i < 3; i++) {
             if (Math.abs(A[i]) > max)
