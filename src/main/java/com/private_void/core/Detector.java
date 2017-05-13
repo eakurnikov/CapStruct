@@ -46,6 +46,7 @@ public class Detector {
         this.beginCoordinate.setZ(centerCoordinate.getZ() - width);
         this.cellsAmount = (int) (2.0f * width / cellSize);
         this.cells = new float[cellsAmount][cellsAmount];
+
         Arrays.fill(cells, 0.0f);
 
     }
@@ -66,6 +67,7 @@ public class Detector {
         this.beginCoordinate.setZ(centerCoordinate.getZ() - width);
         this.cellsAmount = (int) (2.0f * width / cellSize);
         this.cells = new float[cellsAmount][cellsAmount];
+
         Arrays.fill(cells, 0.0f);
 
     }
@@ -80,28 +82,31 @@ public class Detector {
 
             for (Particle particle : flux.getParticles()) {
 
-                x = particle.getCoordinate().getX();
-                y = particle.getCoordinate().getY();
-                z = particle.getCoordinate().getZ();
+                if (!particle.isAbsorbed() && particle.getIntensity() > flux.getMinIntensity()) {
 
-                Vx = particle.getSpeed().getX();
-                Vy = particle.getSpeed().getY();
-                Vz = particle.getSpeed().getZ();
+                    x = particle.getCoordinate().getX();
+                    y = particle.getCoordinate().getY();
+                    z = particle.getCoordinate().getZ();
 
-                particle.setCoordinate((float) (tanR * (x * Vz - z * Vx - rR * sinR * Vz) / (tanR * Vz - Vx) + rR * sinR),
-                                       (float) ((Vy / Vz) * ((x * Vz - z * Vx - rR * sinR * Vz) / (tanR * Vz - Vx) - z) + y),
-                                       (float) ((x * Vz - z * Vx - rR * sinR * Vz) / (tanR * Vz - Vx)));
+                    Vx = particle.getSpeed().getX();
+                    Vy = particle.getSpeed().getY();
+                    Vz = particle.getSpeed().getZ();
 
-                cells[(int)(Math.ceil((particle.getCoordinate().getZ() - beginCoordinate.getZ()) / cellSize))][(int)(Math.ceil((particle.getCoordinate().getY() - beginCoordinate.getY()) / cellSize))] += particle.getIntensity();
-                detectedParticlesAmount++;
+                    particle.setCoordinate(tanR * (x * Vz - z * Vx - rR * sinR * Vz) / (tanR * Vz - Vx) + rR * sinR,
+                                           (Vy / Vz) * ((x * Vz - z * Vx - rR * sinR * Vz) / (tanR * Vz - Vx) - z) + y,
+                                           (x * Vz - z * Vx - rR * sinR * Vz) / (tanR * Vz - Vx));
+
+                    cells[(int) (Math.ceil((particle.getCoordinate().getZ() - beginCoordinate.getZ()) / cellSize))][(int) (Math.ceil((particle.getCoordinate().getY() - beginCoordinate.getY()) / cellSize))] += particle.getIntensity();
+                    detectedParticlesAmount++;
+
+                }
 
             }
 
         }
         catch (Exception ex){
-
+            notDetectedParticlesAmount++;
             System.out.println(ex.getMessage());
-
         }
 
     }
@@ -128,6 +133,10 @@ public class Detector {
 
     public void setOutOfCapillarParticlesAmount(int outOfCapillarParticlesAmount) {
         this.outOfCapillarParticlesAmount = outOfCapillarParticlesAmount;
+    }
+
+    public void increaseOutOfCapillarParticlesAmount() {
+        outOfCapillarParticlesAmount++;
     }
 
 }

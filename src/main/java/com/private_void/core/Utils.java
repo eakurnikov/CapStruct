@@ -14,22 +14,37 @@ public final class Utils {
     }
 
     public static void matrixMultiplication(float[][] A, float[] B, float[] C) {
+
         for (int i = 0; i < 3; i++) {
+
             C[i] = 0;
+
             for (int k = 0; k < 3; k++) {
                 C[i] += A[i][k] * B[k];
             }
+
         }
+
     }
 
-    public static void inverseMatrix(float[][] A, float[][] B) {
+    public static float[][] inverseMatrix(float[][] A) {
+
+        float[][] B = new float[3][3];
+
         try {
-            float detA = A[0][0] * det(A, 0, 0) + A[0][1] * det(A, 0, 1) + A[0][2] * det(A, 0, 2);
+
+            float detA = A[0][0] * det(A, 0, 0)
+                       + A[0][1] * det(A, 0, 1)
+                       + A[0][2] * det(A, 0, 2);
+
             for (int i = 0; i < 3; i++) {
+
                 for (int j = 0; j < 3; j++) {
                     B[j][i] = det(A, i, j) / detA;
                 }
+
             }
+
         }
         catch (ArithmeticException e) {
             System.out.println("Division by zero.");
@@ -38,6 +53,9 @@ public final class Utils {
         catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
+        return B;
+
     }
 
     public static float det(float[][] A, int i, int j) {
@@ -63,15 +81,23 @@ public final class Utils {
     }
 
     public static float getMax(float[] A) {
+
         float max = Math.abs(A[0]);
+
         for (int i = 1; i < 3; i++) {
-            if (Math.abs(A[i]) > max)
+
+            if (Math.abs(A[i]) > max) {
                 max = Math.abs(A[i]);
+            }
+
         }
+
         return max;
+
     }
 
     public static float convertDegreesToRads(final float angleDegrees) {
         return (float) Math.PI * angleDegrees / 180;
     }
+
 }
