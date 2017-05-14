@@ -4,33 +4,20 @@ import java.util.Random;
 
 public class Cylinder extends Surface{
 
-    Random rand;
+    private float length;
 
-    public Cylinder(final Point3D frontCoordinate, float radius, float length, float roughnessSize, int roughnessAngleD, float reflectivity, int slideAngleD) {
+    public Cylinder(final Point3D frontCoordinate, float radius, float length, float roughnessSize, int roughnessAngleD,
+                    float reflectivity, int slideAngleD) {
 
-        super(frontCoordinate, radius, length, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
+        super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
 
-        rand = new Random();
-        normal = new Vector3D(0.0f, 1.0f, 0.0f);
-        axis = new Vector3D(1.0f, 0.0f, 0.0f);//
-        detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),
-                               2 * radius,
-                               1.0f,
-                               0.0f,
-                                radius);
+        this.length = length;
+        this.detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),
+                                    2 * radius,
+                                    1.0f,
+                                    0,
+                                     radius);
 
-    }
-
-    public void setNormal(float x, float y, float z) {
-        normal.setX(x);
-        normal.setY(y);
-        normal.setZ(z);
-    }
-
-    public void setAxis(float x, float y, float z) {
-        axis.setX(x);
-        axis.setY(y);
-        axis.setZ(z);
     }
 
     @Override
@@ -40,17 +27,15 @@ public class Cylinder extends Surface{
                             particle.getCoordinate().getY() + (particle.getSpeed().getY() / Math.abs(particle.getSpeed().getY())) * radius,
                             particle.getCoordinate().getZ() + (particle.getSpeed().getZ() / Math.abs(particle.getSpeed().getZ())) * radius};
         float[] delta = {1.0f, 1.0f, 1.0f};
-        float[][] W = new float[3][3];
         float[] F  = new float[3];
+        float[][] W = new float[3][3];
 
         float E = 0.05f;
-        float dr = 0.0f;
+        float dr = rand.nextFloat() * roughnessSize;
 
         while (Utils.getMax(delta) > E) {
 
             try {
-
-                dr = rand.nextFloat() * roughnessSize;
 
                 W[0][0] = 0.0f;
                 W[0][1] = 2.0f * solution[1];
@@ -71,7 +56,7 @@ public class Cylinder extends Surface{
                 Utils.matrixMultiplication(Utils.inverseMatrix(W), F, delta);
 
                 for (int i = 0; i < 3; i++) {
-                    solution[i] -= delta[i]; //возможно, нужно разыменовывать дельту
+                    solution[i] -= delta[i];
                 }
 
             }

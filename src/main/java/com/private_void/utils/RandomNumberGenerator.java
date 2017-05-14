@@ -30,8 +30,7 @@ public class RandomNumberGenerator {
             u = rand.nextFloat() * 2 - 1;
             v = rand.nextFloat() * 2 - 1;
             s = u * u + v * v;
-        }
-        while (s >= 1 || s == 0);
+        } while (s >= 1 || s == 0);
 
         y = v * (float) Math.sqrt(-2.0f * Math.log(s) / s);
         z = u * (float) Math.sqrt(-2.0f * Math.log(s) / s);

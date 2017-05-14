@@ -19,7 +19,8 @@ public class Flux {
     private ArrayList<Particle> particles;
     private Random rand;
 
-    public Flux(final Point3D fluxCoordinate, final Vector3D fluxSpeed, int fluxLength, int particlesAmountPerLayer, float layerDistance, float minIntensity) {
+    public Flux(final Point3D fluxCoordinate, final Vector3D fluxSpeed, int fluxLength, int particlesAmountPerLayer,
+                float layerDistance, float minIntensity) {
 
         rand = new Random();
 
@@ -34,7 +35,8 @@ public class Flux {
 
     }
 
-    public void Flux(final Point3D fluxCoordinate, final Vector3D fluxAxis, int particlesAmountTotal, float divergentAngleDegrees, float minIntensity) {
+    public void Flux(final Point3D fluxCoordinate, final Vector3D fluxAxis, int particlesAmountTotal,
+                     float divergentAngleDegrees, float minIntensity) {
 
         rand = new Random();
 

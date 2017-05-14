@@ -11,8 +11,8 @@ public class Detector {
     private Point3D beginCoordinate;
     private float width;
     private float cellSize;
-    private float angleDegrees;
-    private float angleRadians;
+    private float angleD;
+    private float angleR;
     private int cellsAmount;
     private int detectedParticlesAmount;
     private int notDetectedParticlesAmount;
@@ -30,13 +30,13 @@ public class Detector {
 
     private float[][] cells;
 
-    public Detector(final Point3D centerCoordinate, float width, float cellSize, float angleDegrees, float capillarRadiusBig, float capillarRadiusSmall) {
+    public Detector(final Point3D centerCoordinate, float width, float cellSize, float angleD, float capillarRadiusBig, float capillarRadiusSmall) {
 
         this.centerCoordinate = centerCoordinate;
         this.width = width;
         this.cellSize = cellSize;
-        this.angleDegrees = angleDegrees;
-        this.angleRadians = Utils.convertDegreesToRads(angleDegrees);
+        this.angleD = angleD;
+        this.angleR = Utils.convertDegreesToRads(angleD);
         this.capillarRadiusBig = capillarRadiusBig;
         this.capillarRadiusSmall = capillarRadiusSmall;
         this.detectedParticlesAmount = 0;
@@ -51,13 +51,13 @@ public class Detector {
 
     }
 
-    public Detector(final Point3D centerCoordinate, float width, float cellSize, float angleDegrees, float capillarRadiusSmall) {
+    public Detector(final Point3D centerCoordinate, float width, float cellSize, float angleD, float capillarRadiusSmall) {
 
         this.centerCoordinate = centerCoordinate;
         this.width = width;
         this.cellSize = cellSize;
-        this.angleDegrees = angleDegrees;
-        this.angleRadians = Utils.convertDegreesToRads(angleDegrees);
+        this.angleD = angleD;
+        this.angleR = Utils.convertDegreesToRads(angleD);
         this.capillarRadiusBig = 0.0f;
         this.capillarRadiusSmall = capillarRadiusSmall;
         this.detectedParticlesAmount = 0;
@@ -74,8 +74,8 @@ public class Detector {
 
     public void detect(Flux flux) {
 
-        float sinR = (float) Math.sin(angleRadians);
-        float tanR = (float) Math.tan(angleRadians);
+        float sinR = (float) Math.sin(angleR);
+        float tanR = (float) Math.tan(angleR);
         float rR = capillarRadiusBig + capillarRadiusSmall;
 
         try {
