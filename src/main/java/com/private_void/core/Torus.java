@@ -1,6 +1,7 @@
 package com.private_void.core;
 
 import com.private_void.utils.RandomNumberGenerator;
+import com.private_void.utils.Utils;
 
 public class Torus extends Surface {
 

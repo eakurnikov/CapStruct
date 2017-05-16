@@ -1,4 +1,4 @@
-package com.private_void.core;
+package com.private_void.utils;
 
 //TODO: возможно, заменить использование массивов на какие-то контейнеры.
 public final class Utils {
