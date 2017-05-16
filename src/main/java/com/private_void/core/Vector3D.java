@@ -1,6 +1,5 @@
 package com.private_void.core;
 
-//TODO: разобраться со спецификатором final. Уместно ли его юзать как const для параметров, и как передавать значения по ссылке и по значению, константным и нет
 public class Vector3D extends Point3D{
 
     private float[][] rotationMatrixXYZ;
@@ -39,21 +38,6 @@ public class Vector3D extends Point3D{
             x = x / norm;
             y = y / norm;
             z = z / norm;
-        }
-        catch(ArithmeticException e) {
-            System.out.println("Деление на ноль.");
-        }
-
-    }
-
-    public static void normalizeVector(Vector3D vector3D) {
-
-        float norm = (float) Math.sqrt(vector3D.getX() * vector3D.getX() + vector3D.getY() * vector3D.getY() + vector3D.getZ() * vector3D.getZ());
-
-        try {
-            vector3D.setX(vector3D.getX() / norm);
-            vector3D.setY(vector3D.getY() / norm);
-            vector3D.setZ(vector3D.getZ() / norm);
         }
         catch(ArithmeticException e) {
             System.out.println("Деление на ноль.");
@@ -192,7 +176,7 @@ public class Vector3D extends Point3D{
         }
 
         Vector3D result = new Vector3D(temp[0], temp[1], temp[2]);
-        normalizeVector(result);
+        result.normalize();
 
         return result;
 
@@ -208,7 +192,7 @@ public class Vector3D extends Point3D{
         }
 
         Vector3D result = new Vector3D(temp[0], temp[1], temp[2]);
-        normalizeVector(result);
+        result.normalize();
 
         return result;
 

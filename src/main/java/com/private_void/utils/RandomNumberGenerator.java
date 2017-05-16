@@ -4,21 +4,34 @@ import com.private_void.core.Point3D;
 
 import java.util.Random;
 
-// TODO: сделать синглтоном Билла Пью или вообще убрать и пользоваться nextGaussian()
+// TODO: сделать синглтоном Билла Пью
 public class RandomNumberGenerator {
 
+    //TODO впилить тестирование последовательностей на случайность и подобрать таким образом значение SEED
+    public static final int SEED = 1;
     private static RandomNumberGenerator instance;
     private Random rand;
 
-    private RandomNumberGenerator() {
-        rand = new Random();
+    private RandomNumberGenerator(int seed) {
+        rand = new Random(seed);
     }
 
     public static RandomNumberGenerator getInstance() {
+
         if (instance == null) {
-            instance = new RandomNumberGenerator();
+            instance = new RandomNumberGenerator(SEED);
         }
+
         return instance;
+
+    }
+
+    public int uniformInt(int bound) {
+        return rand.nextInt(bound);
+    }
+
+    public float uniformFloat() {
+        return rand.nextFloat();
     }
 
     public Point3D gauss(float mean, float dev) {

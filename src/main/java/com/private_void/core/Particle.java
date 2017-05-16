@@ -28,7 +28,7 @@ public class Particle {
         return coordinate;
     }
 
-    public void setCoordinate(Point3D coordinate) {
+    public void setCoordinate(final Point3D coordinate) {
         this.coordinate = coordinate;
     }
 
@@ -42,7 +42,7 @@ public class Particle {
         return speed;
     }
 
-    public void setSpeed(Vector3D speed) {
+    public void setSpeed(final Vector3D speed) {
         this.speed = speed;
     }
 
@@ -81,8 +81,8 @@ public class Particle {
     }
 
     public void increaseTrace(final Point3D point3D) {
-        this.trace = (float) Math.sqrt((point3D.getX() - coordinate.getX()) * (point3D.getX() - coordinate.getX())
-                                     + (point3D.getY() - coordinate.getY()) * (point3D.getY() - coordinate.getY())
-                                     + (point3D.getZ() - coordinate.getZ()) * (point3D.getZ() - coordinate.getZ()));
+        trace = (float) Math.sqrt((point3D.getX() - coordinate.getX()) * (point3D.getX() - coordinate.getX())
+                                + (point3D.getY() - coordinate.getY()) * (point3D.getY() - coordinate.getY())
+                                + (point3D.getZ() - coordinate.getZ()) * (point3D.getZ() - coordinate.getZ()));
     }
 }

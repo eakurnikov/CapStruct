@@ -1,5 +1,7 @@
 package com.private_void.core;
 
+import com.private_void.utils.RandomNumberGenerator;
+
 public class Torus extends Surface {
 
     private float torusRadius;
@@ -20,12 +22,13 @@ public class Torus extends Surface {
                                     2 * radius,
                                     1.0f,
                                      curvAngleD,
+                                     torusRadius,
                                      radius);
 
     }
 
     @Override
-    public Point3D getHitPoint(Particle particle) {
+    public Point3D getHitPoint(final Particle particle) {
 
         float[] solution = {particle.getCoordinate().getX() + particle.getSpeed().getX() * radius,
                             particle.getCoordinate().getY() + particle.getSpeed().getY() * radius,
@@ -35,7 +38,7 @@ public class Torus extends Surface {
         float[][] W = new float[3][3];
 
         float E = 0.05f;
-        float dr = rand.nextFloat() * roughnessSize;
+        float dr = RandomNumberGenerator.getInstance().uniformFloat() * roughnessSize;
 
         int iterationsAmount = 0;
         int iterationsAmountMax = 200;
@@ -67,7 +70,7 @@ public class Torus extends Surface {
                 F[1] = (solution[0] - particle.getCoordinate().getX()) / particle.getSpeed().getX() - (solution[1] - particle.getCoordinate().getY()) / particle.getSpeed().getY();
                 F[2] = (solution[1] - particle.getCoordinate().getY()) / particle.getSpeed().getY() - (solution[2] - particle.getCoordinate().getZ()) / particle.getSpeed().getZ();
 
-                Utils.matrixMultiplication(Utils.inverseMatrix(W), F, delta);
+                delta = Utils.matrixMultiplication(Utils.inverseMatrix(W), F);
 
                 for (int i = 0; i < 3; i++) {
                     solution[i] -= delta[i]; //возможно, нужно разыменовывать дельту
@@ -108,28 +111,30 @@ public class Torus extends Surface {
             if (((Vy / Vx) * (x0 - x) + y) * ((Vy / Vx) * (x0 - x) + y) +
                     ((Vz / Vx) * (x0 - x) + z) * ((Vz / Vx) * (x0 - x) + z) < radius * radius) {
 
-                // Костыль для уничтожения частиц, у которых произошло слишком много отражений внутри каплляра
+                // Костыль для уничтожения частиц, у которых произошло слишком много отражений внутри каплляра. В принципе он не нужен
+                // так как, если будет много отражений, интенсивность просто убьется. Но нужно протестировать
                 int reboundsCount = 0;
+
+                newCoordinate = getHitPoint(particle);
+
+                x = newCoordinate.getX();
+                y = newCoordinate.getY();
+                z = newCoordinate.getZ();
 
                 while (Math.asin(x / Math.sqrt(x * x + y * y + (z + torusRadius) * (z + torusRadius))) <= Utils.convertDegreesToRads(curvAngleD)) {
 
-                    newCoordinate = getHitPoint(particle);
                     particle.increaseTrace(newCoordinate);
                     particle.setCoordinate(newCoordinate);
                     reboundsCount++;
-
-                    x = newCoordinate.getX();
-                    y = newCoordinate.getY();
-                    z = newCoordinate.getZ();
 
                     setNormal((-2 * (x * x + y * y + (z + torusRadius) * (z + torusRadius) + torusRadius * torusRadius - radius * radius) * 2 * x + 8 * torusRadius * torusRadius * x),
                               (-2 * (x * x + y * y + (z + torusRadius) * (z + torusRadius) + torusRadius * torusRadius - radius * radius) * 2 * y),
                               (-2 * (x * x + y * y + (z + torusRadius) * (z + torusRadius) + torusRadius * torusRadius - radius * radius) * 2 * (z + torusRadius) + 8 * torusRadius * torusRadius * (z + torusRadius)));
                     setAxis(1.0f, 0.0f, 0.0f);
 
-                    axis.turnAroundOY(Utils.convertDegreesToRads(rand.nextInt(360)));
-                    normal.turnAroundVector(Utils.convertDegreesToRads(rand.nextInt(roughnessAngleD)), axis);
-                    axis = normal.getNewVectorByTurningAroundOX(Utils.convertDegreesToRads(rand.nextInt(90)));
+                    axis.turnAroundOY(Utils.convertDegreesToRads(RandomNumberGenerator.getInstance().uniformInt(360)));
+                    normal.turnAroundVector(Utils.convertDegreesToRads(RandomNumberGenerator.getInstance().uniformInt(roughnessAngleD)), axis);
+                    axis = normal.getNewVectorByTurningAroundOX(Utils.convertDegreesToRads(RandomNumberGenerator.getInstance().uniformInt(90)));
 
                     angleVN = particle.getSpeed().getAngle(normal);
                     if (angleVN < Utils.convertDegreesToRads(slideAngleD) && reboundsCount  < reboundsCountMax) {

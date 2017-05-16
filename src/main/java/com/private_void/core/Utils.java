@@ -3,17 +3,17 @@ package com.private_void.core;
 //TODO: возможно, заменить использование массивов на какие-то контейнеры.
 public final class Utils {
 
-    public static float zero = 1e-5f;
+    public static final float ZERO = 1e-5f;
 
-    private Utils() {
-        zero = 1e-5f;
-    }
+    private Utils() {}
 
     public static boolean compareToZero(float value) {
-        return Math.abs(value) < zero;
+        return Math.abs(value) < ZERO;
     }
 
-    public static void matrixMultiplication(float[][] A, float[] B, float[] C) {
+    public static float[] matrixMultiplication(final float[][] A, final float[] B) {
+
+        float[] C = new float[3];
 
         for (int i = 0; i < 3; i++) {
 
@@ -25,9 +25,11 @@ public final class Utils {
 
         }
 
+        return C;
+
     }
 
-    public static float[][] inverseMatrix(float[][] A) {
+    public static float[][] inverseMatrix(final float[][] A) {
 
         float[][] B = new float[3][3];
 
@@ -58,7 +60,7 @@ public final class Utils {
 
     }
 
-    public static float det(float[][] A, int i, int j) {
+    public static float det(final float[][] A, int i, int j) {
 
         i += 1;
         if (i == 3)
@@ -80,7 +82,7 @@ public final class Utils {
 
     }
 
-    public static float getMax(float[] A) {
+    public static float getMax(final float[] A) {
 
         float max = Math.abs(A[0]);
 

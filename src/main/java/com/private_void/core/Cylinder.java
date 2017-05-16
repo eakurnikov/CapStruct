@@ -1,6 +1,6 @@
 package com.private_void.core;
 
-import java.util.Random;
+import com.private_void.utils.RandomNumberGenerator;
 
 public class Cylinder extends Surface{
 
@@ -31,7 +31,7 @@ public class Cylinder extends Surface{
         float[][] W = new float[3][3];
 
         float E = 0.05f;
-        float dr = rand.nextFloat() * roughnessSize;
+        float dr = RandomNumberGenerator.getInstance().uniformFloat() * roughnessSize;
 
         while (Utils.getMax(delta) > E) {
 
@@ -53,7 +53,7 @@ public class Cylinder extends Surface{
                 F[1] = (solution[0] - particle.getCoordinate().getX()) / particle.getSpeed().getX() - (solution[1] - particle.getCoordinate().getY()) / particle.getSpeed().getY();
                 F[2] = -(solution[2] - particle.getCoordinate().getZ()) / particle.getSpeed().getZ() + (solution[0] - particle.getCoordinate().getX()) / particle.getSpeed().getX();
 
-                Utils.matrixMultiplication(Utils.inverseMatrix(W), F, delta);
+                delta = Utils.matrixMultiplication(Utils.inverseMatrix(W), F);
 
                 for (int i = 0; i < 3; i++) {
                     solution[i] -= delta[i];
@@ -93,18 +93,19 @@ public class Cylinder extends Surface{
             if (((Vy / Vx) * (x0 - x) + y) * ((Vy / Vx) * (x0 - x) + y) +
                 ((Vz / Vx) * (x0 - x) + z) * ((Vz / Vx) * (x0 - x) + z) < radius * radius) {
 
-                while (particle.getCoordinate().getX() <= length) {
+                newCoordinate = getHitPoint(particle);
 
-                    newCoordinate = getHitPoint(particle);
+                while (newCoordinate.getX() <= length) {
+
                     particle.increaseTrace(newCoordinate);
                     particle.setCoordinate(newCoordinate);
 
                     setNormal(0.0f, -2 * newCoordinate.getY(), -2 * newCoordinate.getZ());
                     setAxis(1.0f, 0.0f, 0.0f);
 
-                    axis.turnAroundOY(Utils.convertDegreesToRads(rand.nextInt(360)));
-                    normal.turnAroundVector(Utils.convertDegreesToRads(rand.nextInt(roughnessAngleD)), axis);
-                    axis = normal.getNewVectorByTurningAroundOX(Utils.convertDegreesToRads(rand.nextInt(90)));
+                    axis.turnAroundOY(Utils.convertDegreesToRads(RandomNumberGenerator.getInstance().uniformInt(360)));
+                    normal.turnAroundVector(Utils.convertDegreesToRads(RandomNumberGenerator.getInstance().uniformInt(roughnessAngleD)), axis);
+                    axis = normal.getNewVectorByTurningAroundOX(Utils.convertDegreesToRads(RandomNumberGenerator.getInstance().uniformInt(90)));
 
                     angleVN = particle.getSpeed().getAngle(normal);
                     if (angleVN < Utils.convertDegreesToRads(slideAngleD)) {

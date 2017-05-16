@@ -1,6 +1,5 @@
 package com.private_void.core;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 //TODO: возможно, заменить двумерный массив на какой-то контейнер
@@ -8,7 +7,7 @@ import java.util.Arrays;
 public class Detector {
 
     private Point3D centerCoordinate;
-    private Point3D beginCoordinate;
+    private Point3D leftBottomPoint;
     private float width;
     private float cellSize;
     private float angleD;
@@ -17,8 +16,8 @@ public class Detector {
     private int detectedParticlesAmount;
     private int notDetectedParticlesAmount;
     private int outOfCapillarParticlesAmount;
-    private float capillarRadiusBig;
-    private float capillarRadiusSmall;
+    private float torusRadius;
+    private float radius;
 
     private float x;
     private float y;
@@ -30,20 +29,20 @@ public class Detector {
 
     private float[][] cells;
 
-    public Detector(final Point3D centerCoordinate, float width, float cellSize, float angleD, float capillarRadiusBig, float capillarRadiusSmall) {
+    public Detector(final Point3D centerCoordinate, float width, float cellSize, float angleD, float torusRadius, float radius) {
 
         this.centerCoordinate = centerCoordinate;
         this.width = width;
         this.cellSize = cellSize;
         this.angleD = angleD;
         this.angleR = Utils.convertDegreesToRads(angleD);
-        this.capillarRadiusBig = capillarRadiusBig;
-        this.capillarRadiusSmall = capillarRadiusSmall;
+        this.torusRadius = torusRadius;
+        this.radius = radius;
         this.detectedParticlesAmount = 0;
 
-        this.beginCoordinate.setX(centerCoordinate.getX());
-        this.beginCoordinate.setY(centerCoordinate.getY() - width);
-        this.beginCoordinate.setZ(centerCoordinate.getZ() - width);
+        this.leftBottomPoint.setX(centerCoordinate.getX());
+        this.leftBottomPoint.setY(centerCoordinate.getY() - width);
+        this.leftBottomPoint.setZ(centerCoordinate.getZ() - width);
         this.cellsAmount = (int) (2.0f * width / cellSize);
         this.cells = new float[cellsAmount][cellsAmount];
 
@@ -51,20 +50,20 @@ public class Detector {
 
     }
 
-    public Detector(final Point3D centerCoordinate, float width, float cellSize, float angleD, float capillarRadiusSmall) {
+    public Detector(final Point3D centerCoordinate, float width, float cellSize, float angleD, float radius) {
 
         this.centerCoordinate = centerCoordinate;
         this.width = width;
         this.cellSize = cellSize;
         this.angleD = angleD;
         this.angleR = Utils.convertDegreesToRads(angleD);
-        this.capillarRadiusBig = 0.0f;
-        this.capillarRadiusSmall = capillarRadiusSmall;
+        this.torusRadius = 0.0f;
+        this.radius = radius;
         this.detectedParticlesAmount = 0;
 
-        this.beginCoordinate.setX(centerCoordinate.getX());
-        this.beginCoordinate.setY(centerCoordinate.getY() - width);
-        this.beginCoordinate.setZ(centerCoordinate.getZ() - width);
+        this.leftBottomPoint.setX(centerCoordinate.getX());
+        this.leftBottomPoint.setY(centerCoordinate.getY() - width);
+        this.leftBottomPoint.setZ(centerCoordinate.getZ() - width);
         this.cellsAmount = (int) (2.0f * width / cellSize);
         this.cells = new float[cellsAmount][cellsAmount];
 
@@ -72,11 +71,12 @@ public class Detector {
 
     }
 
+    //TODO это сработает только для тора, сделать еще метод для цилиндра или переосмыслить логику и сделать униварсальный метод detect
     public void detect(Flux flux) {
 
         float sinR = (float) Math.sin(angleR);
         float tanR = (float) Math.tan(angleR);
-        float rR = capillarRadiusBig + capillarRadiusSmall;
+        float rR = torusRadius + radius;
 
         try {
 
@@ -96,7 +96,7 @@ public class Detector {
                                            (Vy / Vz) * ((x * Vz - z * Vx - rR * sinR * Vz) / (tanR * Vz - Vx) - z) + y,
                                            (x * Vz - z * Vx - rR * sinR * Vz) / (tanR * Vz - Vx));
 
-                    cells[(int) (Math.ceil((particle.getCoordinate().getZ() - beginCoordinate.getZ()) / cellSize))][(int) (Math.ceil((particle.getCoordinate().getY() - beginCoordinate.getY()) / cellSize))] += particle.getIntensity();
+                    cells[(int) (Math.ceil((particle.getCoordinate().getZ() - leftBottomPoint.getZ()) / cellSize))][(int) (Math.ceil((particle.getCoordinate().getY() - leftBottomPoint.getY()) / cellSize))] += particle.getIntensity();
                     detectedParticlesAmount++;
 
                 }
@@ -110,8 +110,6 @@ public class Detector {
         }
 
     }
-
-    //TODO сделать еще метод для тора. И разобраться, зачем в старом коде везде еще одна лишняя итерация после выхода из цикла перед попаданием частиц на детектор?
 
     public int getDetectedParticlesAmount() {
         return detectedParticlesAmount;
@@ -142,3 +140,7 @@ public class Detector {
     }
 
 }
+
+//particle.setCoordinate(tanR * (x * Vz - z * Vx - rR * sinR * Vz) / (tanR * Vz - Vx) + rR * sinR, (Vy / Vz) * ((x * Vz - z * Vx - rR * sinR * Vz) / (tanR * Vz - Vx) - z) + y, (x * Vz - z * Vx - rR * sinR * Vz) / (tanR * Vz - Vx));
+//Ray[i, j].SetCoordinate(Math.Tan(torus_angle) * (Ray[i, j].coordinate[0] * Ray[i, j].speed[2] - Ray[i, j].coordinate[2] * Ray[i, j].speed[0] - (L) * Ray[i, j].speed[2]) / (Math.Tan(torus_angle) * Ray[i, j].speed[2] - Ray[i, j].speed[0]) + (L), (Ray[i, j].speed[1] / Ray[i, j].speed[2]) * ((Ray[i, j].coordinate[0] * Ray[i, j].speed[2] - Ray[i, j].coordinate[2] * Ray[i, j].speed[0] - (L) * Ray[i, j].speed[2]) / (Math.Tan(torus_angle) * Ray[i, j].speed[2] - Ray[i, j].speed[0]) - Ray[i, j].coordinate[2]) + Ray[i, j].coordinate[1], (Ray[i, j].coordinate[0] * Ray[i, j].speed[2] - Ray[i, j].coordinate[2] * Ray[i, j].speed[0] - (L) * Ray[i, j].speed[2]) / (Math.Tan(torus_angle) * Ray[i, j].speed[2] - Ray[i, j].speed[0]));
+//Ray[i, j].SetCoordinate(Math.Tan(torus_angle) * (Ray[i, j].coordinate[0] * Ray[i, j].speed[2] - Ray[i, j].coordinate[2] * Ray[i, j].speed[0] - (R + r) * Math.Sin(torus_angle) * Ray[i, j].speed[2]) / (Math.Tan(torus_angle) * Ray[i, j].speed[2] - Ray[i, j].speed[0]) + (R + r) * Math.Sin(torus_angle), (Ray[i, j].speed[1] / Ray[i, j].speed[2]) * ((Ray[i, j].coordinate[0] * Ray[i, j].speed[2] - Ray[i, j].coordinate[2] * Ray[i, j].speed[0] - (R + r) * Math.Sin(torus_angle) * Ray[i, j].speed[2]) / (Math.Tan(torus_angle) * Ray[i, j].speed[2] - Ray[i, j].speed[0]) - Ray[i, j].coordinate[2]) + Ray[i, j].coordinate[1], (Ray[i, j].coordinate[0] * Ray[i, j].speed[2] - Ray[i, j].coordinate[2] * Ray[i, j].speed[0] - (R + r) * Math.Sin(torus_angle) * Ray[i, j].speed[2]) / (Math.Tan(torus_angle) * Ray[i, j].speed[2] - Ray[i, j].speed[0]));

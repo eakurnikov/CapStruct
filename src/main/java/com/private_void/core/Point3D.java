@@ -12,7 +12,7 @@ public class Point3D {
         this.z = z;
     }
 
-    public Point3D(Point3D point3D) {
+    public Point3D(final Point3D point3D) {
         this.x = point3D.getX();
         this.y = point3D.getY();
         this.z = point3D.getZ();

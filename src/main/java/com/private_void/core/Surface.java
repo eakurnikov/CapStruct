@@ -1,7 +1,5 @@
 package com.private_void.core;
 
-import java.util.Random;
-
 public abstract class Surface {
 
     protected Detector detector;
@@ -22,8 +20,6 @@ public abstract class Surface {
     protected float Vy;
     protected float Vz;
 
-    protected Random rand;
-
     protected Surface(final Point3D frontCoordinate, float radius, float roughnessSize, int roughnessAngleD,
                       float reflectivity, int slideAngleD) {
 
@@ -34,7 +30,6 @@ public abstract class Surface {
         this.reflectivity = reflectivity;
         this.slideAngleD = slideAngleD;
 
-        rand = new Random();
         normal = new Vector3D(0.0f, 1.0f, 0.0f);
         axis = new Vector3D(1.0f, 0.0f, 0.0f);
 
