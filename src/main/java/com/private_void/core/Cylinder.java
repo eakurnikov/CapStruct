@@ -110,7 +110,8 @@ public class Cylinder extends Surface{
                     if (angleVN < Utils.convertDegreesToRads(slideAngleD)) {
                         particle.getSpeed().turnAroundVector(angleVN, axis);
                         particle.decreaseIntensity(reflectivity);
-                    } else {
+                    }
+                    else {
                         particle.setAbsorbed(true);
                         break;
                     }

@@ -111,6 +111,8 @@ public class Detector {
 
     }
 
+    //TODO сделать еще метод для тора. И разобраться, зачем в старом коде везде еще одна лишняя итерация после выхода из цикла перед попаданием частиц на детектор?
+
     public int getDetectedParticlesAmount() {
         return detectedParticlesAmount;
     }

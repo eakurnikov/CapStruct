@@ -89,6 +89,67 @@ public class Torus extends Surface {
 
     @Override
     public Flux passThrough(Flux flux) {
-        return null;
+
+        Point3D newCoordinate;
+        float angleVN;
+        float x0 = frontCoordinate.getX();
+        int reboundsCountMax = 300;
+
+        for (Particle particle : flux.getParticles()) {
+
+            x = particle.getCoordinate().getX();
+            y = particle.getCoordinate().getY();
+            z = particle.getCoordinate().getZ();
+
+            Vx = particle.getSpeed().getX();
+            Vy = particle.getSpeed().getY();
+            Vz = particle.getSpeed().getZ();
+
+            if (((Vy / Vx) * (x0 - x) + y) * ((Vy / Vx) * (x0 - x) + y) +
+                    ((Vz / Vx) * (x0 - x) + z) * ((Vz / Vx) * (x0 - x) + z) < radius * radius) {
+
+                // Костыль для уничтожения частиц, у которых произошло слишком много отражений внутри каплляра
+                int reboundsCount = 0;
+
+                while (Math.asin(x / Math.sqrt(x * x + y * y + (z + torusRadius) * (z + torusRadius))) <= Utils.convertDegreesToRads(curvAngleD)) {
+
+                    newCoordinate = getHitPoint(particle);
+                    particle.increaseTrace(newCoordinate);
+                    particle.setCoordinate(newCoordinate);
+                    reboundsCount++;
+
+                    x = newCoordinate.getX();
+                    y = newCoordinate.getY();
+                    z = newCoordinate.getZ();
+
+                    setNormal((-2 * (x * x + y * y + (z + torusRadius) * (z + torusRadius) + torusRadius * torusRadius - radius * radius) * 2 * x + 8 * torusRadius * torusRadius * x),
+                              (-2 * (x * x + y * y + (z + torusRadius) * (z + torusRadius) + torusRadius * torusRadius - radius * radius) * 2 * y),
+                              (-2 * (x * x + y * y + (z + torusRadius) * (z + torusRadius) + torusRadius * torusRadius - radius * radius) * 2 * (z + torusRadius) + 8 * torusRadius * torusRadius * (z + torusRadius)));
+                    setAxis(1.0f, 0.0f, 0.0f);
+
+                    axis.turnAroundOY(Utils.convertDegreesToRads(rand.nextInt(360)));
+                    normal.turnAroundVector(Utils.convertDegreesToRads(rand.nextInt(roughnessAngleD)), axis);
+                    axis = normal.getNewVectorByTurningAroundOX(Utils.convertDegreesToRads(rand.nextInt(90)));
+
+                    angleVN = particle.getSpeed().getAngle(normal);
+                    if (angleVN < Utils.convertDegreesToRads(slideAngleD) && reboundsCount  < reboundsCountMax) {
+                        particle.getSpeed().turnAroundVector(angleVN, axis);
+                        particle.decreaseIntensity(reflectivity);
+                    }
+                    else {
+                        particle.setAbsorbed(true);
+                        break;
+                    }
+
+                }
+
+            }
+            else {
+                detector.increaseOutOfCapillarParticlesAmount();
+            }
+
+        }
+
+        return flux;
     }
 }
