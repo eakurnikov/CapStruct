@@ -17,13 +17,10 @@ public class RandomNumberGenerator {
     }
 
     public static RandomNumberGenerator getInstance() {
-
         if (instance == null) {
             instance = new RandomNumberGenerator(SEED);
         }
-
         return instance;
-
     }
 
     public int uniformInt(int bound) {

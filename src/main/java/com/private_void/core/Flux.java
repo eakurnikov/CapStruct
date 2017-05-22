@@ -5,6 +5,7 @@ import com.private_void.utils.Utils;
 
 import java.util.ArrayList;
 
+//TODO мб отнаследовать от пучка параллельный и расходящийся в виде самостоятельных классов?
 public class Flux {
 
     private Point3D fluxCoordinate;
