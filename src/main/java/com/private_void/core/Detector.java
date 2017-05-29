@@ -4,8 +4,6 @@ import com.private_void.utils.Utils;
 
 import java.util.Arrays;
 
-//TODO: возможно, заменить двумерный массив на какой-то контейнер
-//TODO: протестировать ceil, возможно он не будет давать то, что нужно, так как округляет не в меньшую сторону, а окружгляет к ближайшему инту
 public class Detector {
 
     private Point3D centerCoordinate;
@@ -31,8 +29,8 @@ public class Detector {
 
     private float[][] cells;
 
+    //TODO вохможно, оформить cells в отдельный класс и обрабатывать попадание частицы чуть изящнее
     public Detector(final Point3D centerCoordinate, float width, float cellSize, float angleD, float torusRadius, float radius) {
-
         this.centerCoordinate = centerCoordinate;
         this.width = width;
         this.cellSize = cellSize;
@@ -49,11 +47,9 @@ public class Detector {
         this.cells = new float[cellsAmount][cellsAmount];
 
         Arrays.fill(cells, 0.0f);
-
     }
 
     public Detector(final Point3D centerCoordinate, float width, float cellSize, float angleD, float radius) {
-
         this.centerCoordinate = centerCoordinate;
         this.width = width;
         this.cellSize = cellSize;
@@ -70,20 +66,16 @@ public class Detector {
         this.cells = new float[cellsAmount][cellsAmount];
 
         Arrays.fill(cells, 0.0f);
-
     }
 
     //TODO это сработает только для тора, сделать еще метод для цилиндра или переосмыслить логику и сделать униварсальный метод detect
     public void detect(Flux flux) {
-
         float sinR = (float) Math.sin(angleR);
         float tanR = (float) Math.tan(angleR);
         float rR = torusRadius + radius;
 
         try {
-
             for (Particle particle : flux.getParticles()) {
-
                 if (!particle.isAbsorbed() && particle.getIntensity() > flux.getMinIntensity()) {
 
                     x = particle.getCoordinate().getX();
@@ -100,17 +92,13 @@ public class Detector {
 
                     cells[(int) (Math.ceil((particle.getCoordinate().getZ() - leftBottomPoint.getZ()) / cellSize))][(int) (Math.ceil((particle.getCoordinate().getY() - leftBottomPoint.getY()) / cellSize))] += particle.getIntensity();
                     detectedParticlesAmount++;
-
                 }
-
             }
-
         }
         catch (Exception ex){
             notDetectedParticlesAmount++;
             System.out.println(ex.getMessage());
         }
-
     }
 
     public int getDetectedParticlesAmount() {

@@ -1,5 +1,6 @@
 package com.private_void.core;
 
+//TODO написать класс Cone
 public abstract class Surface {
 
     protected Detector detector;
@@ -20,9 +21,7 @@ public abstract class Surface {
     protected float Vy;
     protected float Vz;
 
-    protected Surface(final Point3D frontCoordinate, float radius, float roughnessSize, int roughnessAngleD,
-                      float reflectivity, int slideAngleD) {
-
+    protected Surface(final Point3D frontCoordinate, float radius, float roughnessSize, int roughnessAngleD, float reflectivity, int slideAngleD) {
         this.frontCoordinate = frontCoordinate;
         this.radius = radius;
         this.roughnessSize = roughnessSize;
@@ -32,7 +31,6 @@ public abstract class Surface {
 
         normal = new Vector3D(0.0f, 1.0f, 0.0f);
         axis = new Vector3D(1.0f, 0.0f, 0.0f);
-
     }
 
     public abstract Point3D getHitPoint(final Particle particle);

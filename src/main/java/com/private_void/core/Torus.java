@@ -1,6 +1,6 @@
 package com.private_void.core;
 
-import com.private_void.utils.RandomNumberGenerator;
+import com.private_void.utils.Generator;
 import com.private_void.utils.Utils;
 
 public class Torus extends Surface {
@@ -9,11 +9,8 @@ public class Torus extends Surface {
     private float curvAngleD;
     //private float curvAngleR;
 
-    public Torus(final Point3D frontCoordinate, float radius, float torusRadius, float curvAngleD, float roughnessSize,
-                 int roughnessAngleD, float reflectivity, int slideAngleD) {
-
+    public Torus(final Point3D frontCoordinate, float radius, float torusRadius, float curvAngleD, float roughnessSize, int roughnessAngleD, float reflectivity, int slideAngleD) {
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
-
         this.torusRadius = torusRadius;
         this.curvAngleD = curvAngleD;
         //this.curvAngleR = Utils.convertDegreesToRads(curvAngleD);
@@ -25,12 +22,10 @@ public class Torus extends Surface {
                                      curvAngleD,
                                      torusRadius,
                                      radius);
-
     }
 
     @Override
     public Point3D getHitPoint(final Particle particle) {
-
         float[] solution = {particle.getCoordinate().getX() + particle.getSpeed().getX() * radius,
                             particle.getCoordinate().getY() + particle.getSpeed().getY() * radius,
                             particle.getCoordinate().getZ() + particle.getSpeed().getZ() * radius};
@@ -39,7 +34,7 @@ public class Torus extends Surface {
         float[][] W = new float[3][3];
 
         float E = 0.05f;
-        float dr = RandomNumberGenerator.getInstance().uniformFloat() * roughnessSize;
+        float dr = Generator.getInstance().uniformFloat() * roughnessSize;
 
         int iterationsAmount = 0;
         int iterationsAmountMax = 200;
@@ -86,14 +81,11 @@ public class Torus extends Surface {
                 System.out.println(e.getMessage());
             }
         }
-
         return new Point3D(solution[0], solution[1], solution[2]);
-
     }
 
     @Override
     public Flux passThrough(Flux flux) {
-
         Point3D newCoordinate;
         float angleVN;
         float x0 = frontCoordinate.getX();
@@ -133,9 +125,9 @@ public class Torus extends Surface {
                               (-2 * (x * x + y * y + (z + torusRadius) * (z + torusRadius) + torusRadius * torusRadius - radius * radius) * 2 * (z + torusRadius) + 8 * torusRadius * torusRadius * (z + torusRadius)));
                     setAxis(1.0f, 0.0f, 0.0f);
 
-                    axis.turnAroundOY(Utils.convertDegreesToRads(RandomNumberGenerator.getInstance().uniformInt(360)));
-                    normal.turnAroundVector(Utils.convertDegreesToRads(RandomNumberGenerator.getInstance().uniformInt(roughnessAngleD)), axis);
-                    axis = normal.getNewVectorByTurningAroundOX(Utils.convertDegreesToRads(RandomNumberGenerator.getInstance().uniformInt(90)));
+                    axis.turnAroundOY(Utils.convertDegreesToRads(Generator.getInstance().uniformInt(360)));
+                    normal.turnAroundVector(Utils.convertDegreesToRads(Generator.getInstance().uniformInt(roughnessAngleD)), axis);
+                    axis = normal.getNewVectorByTurningAroundOX(Utils.convertDegreesToRads(Generator.getInstance().uniformInt(90)));
 
                     angleVN = particle.getSpeed().getAngle(normal);
                     if (angleVN < Utils.convertDegreesToRads(slideAngleD) && reboundsCount  < reboundsCountMax) {
@@ -146,16 +138,13 @@ public class Torus extends Surface {
                         particle.setAbsorbed(true);
                         break;
                     }
-
                 }
-
             }
             else {
                 detector.increaseOutOfCapillarParticlesAmount();
             }
-
         }
-
         return flux;
     }
+
 }

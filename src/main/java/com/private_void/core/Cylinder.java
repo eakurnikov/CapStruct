@@ -1,29 +1,24 @@
 package com.private_void.core;
 
-import com.private_void.utils.RandomNumberGenerator;
+import com.private_void.utils.Generator;
 import com.private_void.utils.Utils;
 
 public class Cylinder extends Surface{
 
     private float length;
 
-    public Cylinder(final Point3D frontCoordinate, float radius, float length, float roughnessSize, int roughnessAngleD,
-                    float reflectivity, int slideAngleD) {
-
+    public Cylinder(final Point3D frontCoordinate, float radius, float length, float roughnessSize, int roughnessAngleD, float reflectivity, int slideAngleD) {
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
-
         this.length = length;
         this.detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),
                                     2 * radius,
                                     1.0f,
                                     0,
                                      radius);
-
     }
 
     @Override
     public Point3D getHitPoint(final Particle particle) {
-
         float[] solution = {particle.getCoordinate().getX() + radius,
                             particle.getCoordinate().getY() + (particle.getSpeed().getY() / Math.abs(particle.getSpeed().getY())) * radius,
                             particle.getCoordinate().getZ() + (particle.getSpeed().getZ() / Math.abs(particle.getSpeed().getZ())) * radius};
@@ -32,10 +27,9 @@ public class Cylinder extends Surface{
         float[][] W = new float[3][3];
 
         float E = 0.05f;
-        float dr = RandomNumberGenerator.getInstance().uniformFloat() * roughnessSize;
+        float dr = Generator.getInstance().uniformFloat() * roughnessSize;
 
         while (Utils.getMax(delta) > E) {
-
             try {
 
                 W[0][0] = 0.0f;
@@ -59,7 +53,6 @@ public class Cylinder extends Surface{
                 for (int i = 0; i < 3; i++) {
                     solution[i] -= delta[i];
                 }
-
             }
             catch (ArithmeticException e) {
                 System.out.println("Division by zero.");
@@ -69,14 +62,11 @@ public class Cylinder extends Surface{
                 System.out.println(e.getMessage());
             }
         }
-
         return new Point3D(solution[0], solution[1], solution[2]);
-
     }
 
     @Override
     public Flux passThrough(Flux flux) {
-
         Point3D newCoordinate;
         float angleVN;
         float x0 = frontCoordinate.getX();
@@ -104,9 +94,9 @@ public class Cylinder extends Surface{
                     setNormal(0.0f, -2 * newCoordinate.getY(), -2 * newCoordinate.getZ());
                     setAxis(1.0f, 0.0f, 0.0f);
 
-                    axis.turnAroundOY(Utils.convertDegreesToRads(RandomNumberGenerator.getInstance().uniformInt(360)));
-                    normal.turnAroundVector(Utils.convertDegreesToRads(RandomNumberGenerator.getInstance().uniformInt(roughnessAngleD)), axis);
-                    axis = normal.getNewVectorByTurningAroundOX(Utils.convertDegreesToRads(RandomNumberGenerator.getInstance().uniformInt(90)));
+                    axis.turnAroundOY(Utils.convertDegreesToRads(Generator.getInstance().uniformInt(360)));
+                    normal.turnAroundVector(Utils.convertDegreesToRads(Generator.getInstance().uniformInt(roughnessAngleD)), axis);
+                    axis = normal.getNewVectorByTurningAroundOX(Utils.convertDegreesToRads(Generator.getInstance().uniformInt(90)));
 
                     angleVN = particle.getSpeed().getAngle(normal);
                     if (angleVN < Utils.convertDegreesToRads(slideAngleD)) {
@@ -117,18 +107,13 @@ public class Cylinder extends Surface{
                         particle.setAbsorbed(true);
                         break;
                     }
-
                 }
-
             }
             else {
                 detector.increaseOutOfCapillarParticlesAmount();
             }
-
         }
-
         return flux;
-
     }
 
 }

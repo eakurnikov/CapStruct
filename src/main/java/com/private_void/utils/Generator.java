@@ -4,34 +4,33 @@ import com.private_void.core.Point3D;
 
 import java.util.Random;
 
-// TODO: сделать синглтоном Билла Пью
-public final class RandomNumberGenerator {
+//TODO сделать синглтоном Билла Пью
+public class Generator {
 
     private static final int SEED = 1;
-    private static RandomNumberGenerator instance;
-    private static Random rand;
+    private static Generator instance;
+    private Random rand;
 
-    private RandomNumberGenerator(int seed) {
+    private Generator(int seed) {
         rand = new Random(seed);
     }
 
-    public static RandomNumberGenerator getInstance() {
+    public static Generator getInstance() {
         if (instance == null) {
-            instance = new RandomNumberGenerator(SEED);
+            instance = new Generator(SEED);
         }
         return instance;
     }
 
-    public static int uniformInt(int bound) {
+    public int uniformInt(int bound) {
         return rand.nextInt(bound);
     }
 
-    public static float uniformFloat() {
+    public float uniformFloat() {
         return rand.nextFloat();
     }
 
-    public static Point3D gauss(float mean, float dev) {
-
+    public Point3D gauss(float mean, float dev) {
         float u, v, s;
         float y, z;
 
@@ -45,7 +44,6 @@ public final class RandomNumberGenerator {
         z = u * (float) Math.sqrt(-2.0f * Math.log(s) / s);
 
         return new Point3D(0.0f, mean + y * dev, mean + z * dev);
-
     }
 
 }
