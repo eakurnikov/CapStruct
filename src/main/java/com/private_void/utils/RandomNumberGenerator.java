@@ -5,12 +5,11 @@ import com.private_void.core.Point3D;
 import java.util.Random;
 
 // TODO: сделать синглтоном Билла Пью
-public class RandomNumberGenerator {
+public final class RandomNumberGenerator {
 
-    //TODO впилить тестирование последовательностей на случайность и подобрать таким образом значение SEED
-    public static final int SEED = 1;
+    private static final int SEED = 1;
     private static RandomNumberGenerator instance;
-    private Random rand;
+    private static Random rand;
 
     private RandomNumberGenerator(int seed) {
         rand = new Random(seed);
@@ -23,15 +22,15 @@ public class RandomNumberGenerator {
         return instance;
     }
 
-    public int uniformInt(int bound) {
+    public static int uniformInt(int bound) {
         return rand.nextInt(bound);
     }
 
-    public float uniformFloat() {
+    public static float uniformFloat() {
         return rand.nextFloat();
     }
 
-    public Point3D gauss(float mean, float dev) {
+    public static Point3D gauss(float mean, float dev) {
 
         float u, v, s;
         float y, z;

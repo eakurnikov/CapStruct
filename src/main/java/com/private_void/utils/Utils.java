@@ -1,6 +1,5 @@
 package com.private_void.utils;
 
-//TODO: возможно, заменить использование массивов на какие-то контейнеры.
 public final class Utils {
 
     public static final float ZERO = 1e-5f;
