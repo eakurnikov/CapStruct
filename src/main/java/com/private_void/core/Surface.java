@@ -1,6 +1,5 @@
 package com.private_void.core;
 
-//TODO написать класс Cone
 public abstract class Surface {
 
     protected Detector detector;

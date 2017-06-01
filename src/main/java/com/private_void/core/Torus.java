@@ -6,10 +6,10 @@ import com.private_void.utils.Utils;
 public class Torus extends Surface {
 
     private float torusRadius;
-    private float curvAngleD;
+    private int curvAngleD;
     //private float curvAngleR;
 
-    public Torus(final Point3D frontCoordinate, float radius, float torusRadius, float curvAngleD, float roughnessSize, int roughnessAngleD, float reflectivity, int slideAngleD) {
+    public Torus(final Point3D frontCoordinate, float radius, float torusRadius, int curvAngleD, float roughnessSize, int roughnessAngleD, float reflectivity, int slideAngleD) {
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
         this.torusRadius = torusRadius;
         this.curvAngleD = curvAngleD;
@@ -72,12 +72,10 @@ public class Torus extends Surface {
                     solution[i] -= delta[i]; //возможно, нужно разыменовывать дельту
                 }
 
-            }
-            catch (ArithmeticException e) {
+            } catch (ArithmeticException e) {
                 System.out.println("Division by zero.");
                 System.out.println(e.getMessage());
-            }
-            catch (Exception e){
+            } catch (Exception e){
                 System.out.println(e.getMessage());
             }
         }
@@ -102,8 +100,7 @@ public class Torus extends Surface {
             Vz = particle.getSpeed().getZ();
 
             if (((Vy / Vx) * (x0 - x) + y) * ((Vy / Vx) * (x0 - x) + y) +
-                    ((Vz / Vx) * (x0 - x) + z) * ((Vz / Vx) * (x0 - x) + z) < radius * radius) {
-
+                ((Vz / Vx) * (x0 - x) + z) * ((Vz / Vx) * (x0 - x) + z) < radius * radius) {
                 // Костыль для уничтожения частиц, у которых произошло слишком много отражений внутри каплляра. В принципе он не нужен
                 // так как, если будет много отражений, интенсивность просто убьется. Но нужно протестировать
                 int reboundsCount = 0;
