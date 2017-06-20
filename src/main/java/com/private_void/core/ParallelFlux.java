@@ -2,7 +2,7 @@ package com.private_void.core;
 
 import com.private_void.utils.Generator;
 
-public class ParallelFlux extends Flux{
+public class ParallelFlux extends Flux {
     private int layersAmount;
     private float layerDistance;
 

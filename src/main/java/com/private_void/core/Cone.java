@@ -3,7 +3,9 @@ package com.private_void.core;
 import com.private_void.utils.Generator;
 import com.private_void.utils.Utils;
 
-public class Cone extends Surface{
+import static com.private_void.core.Constants.CELL_SIZE;
+
+public class Cone extends Surface {
     private float length;
     private float divergentAngleR;
 
@@ -17,7 +19,7 @@ public class Cone extends Surface{
         this.divergentAngleR = Utils.convertDegreesToRads(divergentAngleD);
         this.length = (float) (radius * (1 / Math.tan(divergentAngleR)) * coneCoefficient);
         this.detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),
-                                    2 * radius, 1.0f, 0, radius);
+                                    2 * radius, CELL_SIZE);
     }
 
     public Cone(final Point3D frontCoordinate, float radius, float length, float coneCoefficient, float roughnessSize,

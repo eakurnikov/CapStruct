@@ -1,6 +1,6 @@
 package com.private_void.core;
 
-public class Vector3D extends Point3D{
+public class Vector3D extends Point3D {
     private float[][] rotationMatrixXYZ;
     private float[][] rotationMatrixX;
     private float[][] rotationMatrixY;

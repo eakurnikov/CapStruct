@@ -4,8 +4,9 @@ import com.private_void.core.Point3D;
 
 import java.util.Random;
 
+import static com.private_void.core.Constants.SEED;
+
 public class Generator {
-    private static final int SEED = 1;
     private Random rand;
 
     private Generator(int seed) {

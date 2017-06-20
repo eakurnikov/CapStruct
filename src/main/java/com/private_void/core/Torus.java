@@ -3,22 +3,27 @@ package com.private_void.core;
 import com.private_void.utils.Generator;
 import com.private_void.utils.Utils;
 
+import static com.private_void.core.Constants.CELL_SIZE;
+
 public class Torus extends Surface {
     private float torusRadius;
-    private int curvAngleD;
     private float curvAngleR;
+
+    //TODO разобраться с типами углов. Радианы флоат, а градусы инт или флоат?
+    //TODO возможно заюзать мой метод square
+    //TODO припилить графический интерфейс
+    //TODO припилить Stream API или просто распараллелить через ThreadPool
 
     public Torus(final Point3D frontCoordinate, float radius, float torusRadius, int curvAngleD, float roughnessSize,
                  int roughnessAngleD, float reflectivity, int slideAngleD) {
 
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
         this.torusRadius = torusRadius;
-        this.curvAngleD = curvAngleD;
         this.curvAngleR = Utils.convertDegreesToRads(curvAngleD);
-        this.detector = new Detector(
+        this.detector = new RotatedDetector(
                 new Point3D((float) (frontCoordinate.getX() + torusRadius * Math.sin(curvAngleD)), frontCoordinate.getY(),
                             (float) (frontCoordinate.getZ() - torusRadius * (1 - Math.cos(curvAngleR)))),
-                2 * radius, 1.0f, curvAngleD, torusRadius, radius
+                2 * radius, CELL_SIZE, curvAngleD
         );
     }
 

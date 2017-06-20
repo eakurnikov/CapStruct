@@ -1,7 +1,8 @@
 package com.private_void.utils;
 
+import static com.private_void.core.Constants.ZERO;
+
 public final class Utils {
-    public static final float ZERO = 1e-5f;
 
     private Utils() {}
 

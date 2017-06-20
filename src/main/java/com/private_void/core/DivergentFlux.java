@@ -3,7 +3,7 @@ package com.private_void.core;
 import com.private_void.utils.Generator;
 import com.private_void.utils.Utils;
 
-public class DivergentFlux extends Flux{
+public class DivergentFlux extends Flux {
     private float divergentAngleR;
 
     public DivergentFlux(final Point3D fluxCoordinate, final Vector3D fluxAxis, int particlesAmount, float divergentAngleDegrees, float minIntensity) {
