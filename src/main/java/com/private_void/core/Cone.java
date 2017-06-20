@@ -7,16 +7,22 @@ public class Cone extends Surface{
     private float length;
     private float divergentAngleR;
 
-    public Cone(final Point3D frontCoordinate, float radius, int divergentAngleD, float coneCoefficient, float roughnessSize, int roughnessAngleD, float reflectivity, int slideAngleD) throws IllegalArgumentException{
+    public Cone(final Point3D frontCoordinate, float radius, int divergentAngleD, float coneCoefficient, float roughnessSize,
+                int roughnessAngleD, float reflectivity, int slideAngleD) throws IllegalArgumentException {
+
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
         if (coneCoefficient >= 1 || coneCoefficient <= 0) {
             throw new IllegalArgumentException();
         }
         this.divergentAngleR = Utils.convertDegreesToRads(divergentAngleD);
         this.length = (float) (radius * (1 / Math.tan(divergentAngleR)) * coneCoefficient);
+        this.detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),
+                                    2 * radius, 1.0f, 0, radius);
     }
 
-    public Cone(final Point3D frontCoordinate, float radius, float length, float coneCoefficient, float roughnessSize, int roughnessAngleD, float reflectivity, int slideAngleD) throws IllegalArgumentException{
+    public Cone(final Point3D frontCoordinate, float radius, float length, float coneCoefficient, float roughnessSize,
+                int roughnessAngleD, float reflectivity, int slideAngleD) throws IllegalArgumentException {
+
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
         if (coneCoefficient >= 1 || coneCoefficient <= 0) {
             throw new IllegalArgumentException();
@@ -136,6 +142,6 @@ public class Cone extends Surface{
                 detector.increaseOutOfCapillarParticlesAmount();
             }
         }
-        return flux;
+        return detector.detect(flux);
     }
 }

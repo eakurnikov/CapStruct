@@ -10,10 +10,7 @@ public class Cylinder extends Surface{
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
         this.length = length;
         this.detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),
-                                    2 * radius,
-                                    1.0f,
-                                    0,
-                                     radius);
+                                    2 * radius, 1.0f, 0, radius);
     }
 
     @Override
@@ -107,6 +104,6 @@ public class Cylinder extends Surface{
                 detector.increaseOutOfCapillarParticlesAmount();
             }
         }
-        return flux;
+        return detector.detect(flux);
     }
 }

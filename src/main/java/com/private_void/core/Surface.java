@@ -19,7 +19,9 @@ public abstract class Surface {
     protected float Vy;
     protected float Vz;
 
-    protected Surface(final Point3D frontCoordinate, float radius, float roughnessSize, int roughnessAngleD, float reflectivity, int slideAngleD) {
+    protected Surface(final Point3D frontCoordinate, float radius, float roughnessSize, int roughnessAngleD,
+                      float reflectivity, int slideAngleD) {
+
         this.frontCoordinate = frontCoordinate;
         this.radius = radius;
         this.roughnessSize = roughnessSize;

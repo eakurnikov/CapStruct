@@ -6,21 +6,20 @@ import com.private_void.utils.Utils;
 public class Torus extends Surface {
     private float torusRadius;
     private int curvAngleD;
-    //private float curvAngleR;
+    private float curvAngleR;
 
-    public Torus(final Point3D frontCoordinate, float radius, float torusRadius, int curvAngleD, float roughnessSize, int roughnessAngleD, float reflectivity, int slideAngleD) {
+    public Torus(final Point3D frontCoordinate, float radius, float torusRadius, int curvAngleD, float roughnessSize,
+                 int roughnessAngleD, float reflectivity, int slideAngleD) {
+
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
         this.torusRadius = torusRadius;
         this.curvAngleD = curvAngleD;
-        //this.curvAngleR = Utils.convertDegreesToRads(curvAngleD);
-        this.detector = new Detector(new Point3D(frontCoordinate.getX() /* + length*/, //TODO разобраться с заданием координаты Х детектора. Он должен находиться на конце тора, для этого скорее всего надо вычислять длину тора по его углу
-                                                 frontCoordinate.getY(),
-                                                 (float) (frontCoordinate.getZ() - radius - (torusRadius + radius) * (1 - Math.cos(Utils.convertDegreesToRads(curvAngleD))))),
-                                    2 * radius,
-                                    1.0f,
-                                     curvAngleD,
-                                     torusRadius,
-                                     radius);
+        this.curvAngleR = Utils.convertDegreesToRads(curvAngleD);
+        this.detector = new Detector(
+                new Point3D((float) (frontCoordinate.getX() + torusRadius * Math.sin(curvAngleD)), frontCoordinate.getY(),
+                            (float) (frontCoordinate.getZ() - torusRadius * (1 - Math.cos(curvAngleR)))),
+                2 * radius, 1.0f, curvAngleD, torusRadius, radius
+        );
     }
 
     @Override
@@ -106,7 +105,7 @@ public class Torus extends Surface {
                 y = newCoordinate.getY();
                 z = newCoordinate.getZ();
 
-                while (Math.asin(x / Math.sqrt(x * x + y * y + (z + torusRadius) * (z + torusRadius))) <= Utils.convertDegreesToRads(curvAngleD)) {
+                while (Math.asin(x / Math.sqrt(x * x + y * y + (z + torusRadius) * (z + torusRadius))) <= curvAngleR) {
                     particle.increaseTrace(newCoordinate);
                     particle.setCoordinate(newCoordinate);
                     reboundsCount++;
@@ -135,6 +134,6 @@ public class Torus extends Surface {
                 detector.increaseOutOfCapillarParticlesAmount();
             }
         }
-        return flux;
+        return detector.detect(flux);
     }
 }

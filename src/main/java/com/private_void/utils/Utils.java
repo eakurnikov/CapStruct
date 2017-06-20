@@ -75,4 +75,8 @@ public final class Utils {
     public static float convertDegreesToRads(final float angleDegrees) {
         return (float) Math.PI * angleDegrees / 180;
     }
+
+    public static float square(float value) {
+        return value * value;
+    }
 }

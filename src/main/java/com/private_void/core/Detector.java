@@ -68,7 +68,7 @@ public class Detector {
     }
 
     //TODO это сработает только для тора, сделать еще метод для цилиндра или переосмыслить логику и сделать униварсальный метод detect
-    public void detect(Flux flux) {
+    public Flux detect(Flux flux) {
         float sinR = (float) Math.sin(angleR);
         float tanR = (float) Math.tan(angleR);
         float rR = torusRadius + radius;
@@ -97,6 +97,7 @@ public class Detector {
             notDetectedParticlesAmount++;
             System.out.println(ex.getMessage());
         }
+        return flux;
     }
 
     public int getDetectedParticlesAmount() {
