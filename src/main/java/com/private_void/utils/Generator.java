@@ -4,22 +4,20 @@ import com.private_void.core.Point3D;
 
 import java.util.Random;
 
-//TODO сделать синглтоном Билла Пью
 public class Generator {
-
     private static final int SEED = 1;
-    private static Generator instance;
     private Random rand;
 
     private Generator(int seed) {
         rand = new Random(seed);
     }
 
+    private static class Holder {
+        private static final Generator instance = new Generator(SEED);
+    }
+
     public static Generator getInstance() {
-        if (instance == null) {
-            instance = new Generator(SEED);
-        }
-        return instance;
+        return Holder.instance;
     }
 
     public int uniformInt(int bound) {
@@ -45,5 +43,4 @@ public class Generator {
 
         return new Point3D(0.0f, mean + y * dev, mean + z * dev);
     }
-
 }
