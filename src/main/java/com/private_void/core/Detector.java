@@ -5,7 +5,6 @@ import com.private_void.utils.Utils;
 import java.util.Arrays;
 
 public class Detector {
-
     private Point3D centerCoordinate;
     private Point3D leftBottomPoint;
     private float width;
@@ -77,7 +76,6 @@ public class Detector {
         try {
             for (Particle particle : flux.getParticles()) {
                 if (!particle.isAbsorbed() && particle.getIntensity() > flux.getMinIntensity()) {
-
                     x = particle.getCoordinate().getX();
                     y = particle.getCoordinate().getY();
                     z = particle.getCoordinate().getZ();
@@ -128,7 +126,6 @@ public class Detector {
     public void increaseOutOfCapillarParticlesAmount() {
         outOfCapillarParticlesAmount++;
     }
-
 }
 
 //particle.setCoordinate(tanR * (x * Vz - z * Vx - rR * sinR * Vz) / (tanR * Vz - Vx) + rR * sinR, (Vy / Vz) * ((x * Vz - z * Vx - rR * sinR * Vz) / (tanR * Vz - Vx) - z) + y, (x * Vz - z * Vx - rR * sinR * Vz) / (tanR * Vz - Vx));

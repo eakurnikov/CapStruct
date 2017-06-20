@@ -3,7 +3,6 @@ package com.private_void.core;
 import java.util.ArrayList;
 
 public abstract class Flux {
-
     protected Point3D fluxCoordinate;
     protected Vector3D fluxAxis;
     protected int particlesAmount;

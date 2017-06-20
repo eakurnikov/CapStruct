@@ -1,7 +1,6 @@
 package com.private_void.core;
 
 public class Particle {
-
     private Point3D coordinate;
     private Vector3D speed;
     private float intensity;

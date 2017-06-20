@@ -4,7 +4,6 @@ import com.private_void.utils.Generator;
 import com.private_void.utils.Utils;
 
 public class Cylinder extends Surface{
-
     private float length;
 
     public Cylinder(final Point3D frontCoordinate, float radius, float length, float roughnessSize, int roughnessAngleD, float reflectivity, int slideAngleD) {
@@ -31,7 +30,6 @@ public class Cylinder extends Surface{
 
         while (Utils.getMax(delta) > E) {
             try {
-
                 W[0][0] = 0.0f;
                 W[0][1] = 2.0f * solution[1];
                 W[0][2] = 2.0f * solution[2];
@@ -70,7 +68,6 @@ public class Cylinder extends Surface{
         float x0 = frontCoordinate.getX();
 
         for (Particle particle : flux.getParticles()) {
-
             x = particle.getCoordinate().getX();
             y = particle.getCoordinate().getY();
             z = particle.getCoordinate().getZ();
@@ -85,7 +82,6 @@ public class Cylinder extends Surface{
                 newCoordinate = getHitPoint(particle);
 
                 while (newCoordinate.getX() <= length) {
-
                     particle.increaseTrace(newCoordinate);
                     particle.setCoordinate(newCoordinate);
 
@@ -113,5 +109,4 @@ public class Cylinder extends Surface{
         }
         return flux;
     }
-
 }

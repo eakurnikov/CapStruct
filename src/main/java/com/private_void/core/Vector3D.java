@@ -1,13 +1,11 @@
 package com.private_void.core;
 
 public class Vector3D extends Point3D{
-
     private float[][] rotationMatrixXYZ;
     private float[][] rotationMatrixX;
     private float[][] rotationMatrixY;
 
     public Vector3D(float x, float y, float z) {
-
         super(x, y, z);
 
         rotationMatrixXYZ = new float[3][3];
@@ -15,11 +13,9 @@ public class Vector3D extends Point3D{
         rotationMatrixY = new float[3][3];
 
         normalize();
-
     }
 
     public Vector3D(final Point3D point3D) {
-
         super(point3D);
 
         rotationMatrixXYZ = new float[3][3];
@@ -27,13 +23,10 @@ public class Vector3D extends Point3D{
         rotationMatrixY = new float[3][3];
 
         normalize();
-
     }
 
     private void normalize() {
-
         float norm = (float) Math.sqrt(x * x + y * y + z * z);
-
         try {
             x = x / norm;
             y = y / norm;
@@ -42,7 +35,6 @@ public class Vector3D extends Point3D{
         catch(ArithmeticException e) {
             System.out.println("Деление на ноль.");
         }
-
     }
 
     @Override
@@ -68,7 +60,6 @@ public class Vector3D extends Point3D{
     }
 
     public void setRotationMatrixX(float angle) {
-
         rotationMatrixX[0][0] = 1.0f;
         rotationMatrixX[1][0] = 0.0f;
         rotationMatrixX[2][0] = 0.0f;
@@ -80,11 +71,9 @@ public class Vector3D extends Point3D{
         rotationMatrixX[0][2] = 0.0f;
         rotationMatrixX[1][2] = (float) Math.sin(angle);
         rotationMatrixX[2][2] = (float) Math.cos(angle);
-
     }
 
     public void setRotationMatrixY(float angle) {
-
         rotationMatrixY[0][0] = (float) Math.cos(angle);
         rotationMatrixY[1][0] = 0.0f;
         rotationMatrixY[2][0] = (float) Math.sin(angle);
@@ -96,11 +85,9 @@ public class Vector3D extends Point3D{
         rotationMatrixY[0][2] = (float) -Math.sin(angle);
         rotationMatrixY[1][2] = 0.0f;
         rotationMatrixY[2][2] = (float) Math.cos(angle);
-
     }
 
     public void setRotationMatrixXYZ(float angle, final Vector3D axis) {
-
         rotationMatrixXYZ[0][0] = (float) (Math.cos(angle) + (1.0f - Math.cos(angle)) * axis.getX() * axis.getX());
         rotationMatrixXYZ[1][0] = (float) ((1.0f - Math.cos(angle)) * axis.getY() * axis.getX() - Math.sin(angle) * axis.getZ());
         rotationMatrixXYZ[2][0] = (float) ((1.0f - Math.cos(angle)) * axis.getZ() * axis.getX() + Math.sin(angle) * axis.getY());
@@ -112,11 +99,9 @@ public class Vector3D extends Point3D{
         rotationMatrixXYZ[0][2] = (float) ((1.0f - Math.cos(angle)) * axis.getX() * axis.getZ() - Math.sin(angle) * axis.getY());
         rotationMatrixXYZ[1][2] = (float) ((1.0f - Math.cos(angle)) * axis.getY() * axis.getZ() + Math.sin(angle) * axis.getX());
         rotationMatrixXYZ[2][2] = (float) (Math.cos(angle) + (1.0f - Math.cos(angle)) * axis.getZ() * axis.getZ());
-
     }
 
     public void turnAroundOX(float angle) {
-
         float[] temp = {0.0f, 0.0f, 0.0f};
         setRotationMatrixX(angle);
 
@@ -129,11 +114,9 @@ public class Vector3D extends Point3D{
         z = temp[2];
 
         normalize();
-
     }
 
     public void turnAroundOY(float angle) {
-
         float[] temp = {0.0f, 0.0f, 0.0f};
         setRotationMatrixY(angle);
 
@@ -146,11 +129,9 @@ public class Vector3D extends Point3D{
         z = temp[2];
 
         normalize();
-
     }
 
     public void turnAroundVector(float angle, final Vector3D axis) {
-
         float[] temp = {0.0f, 0.0f, 0.0f};
         setRotationMatrixXYZ(angle, axis);
 
@@ -163,11 +144,9 @@ public class Vector3D extends Point3D{
         z = temp[2];
 
         normalize();
-
     }
 
     public Vector3D getNewVectorByTurningAroundOX(float angle) {
-
         float[] temp = {0.0f, 0.0f, 0.0f};
         setRotationMatrixX(angle);
 
@@ -179,11 +158,9 @@ public class Vector3D extends Point3D{
         result.normalize();
 
         return result;
-
     }
 
     public Vector3D getNewVectorByTurningAroundVector(float angle, final Vector3D axis) {
-
         float[] temp = {0.0f, 0.0f, 0.0f};
         setRotationMatrixXYZ(angle, axis);
 
@@ -195,7 +172,5 @@ public class Vector3D extends Point3D{
         result.normalize();
 
         return result;
-
     }
-
 }

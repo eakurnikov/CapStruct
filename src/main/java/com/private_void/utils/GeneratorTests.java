@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Random;
 
 public final class GeneratorTests {
-
     private static int n1 = 16;
     private static int n2 = 8;
     private static int n3 = 5;
@@ -50,11 +49,8 @@ public final class GeneratorTests {
     }
 
     private static void test6(double[] e) {
-
         int k;
-
         for (s = 8; s <= 10; s++) {
-
             N = 600 * Math.pow(2, s);
 
             for (int i = 0; i < 10; i++) {
@@ -62,7 +58,6 @@ public final class GeneratorTests {
             }
 
             for (int j = 0; j < N - 2; j++) {
-
                 if (Math.floor(e[j] * 10) == Math.floor(e[j + 1] * 10)) {
                     n[0]++;
                     k = 1;
@@ -77,14 +72,12 @@ public final class GeneratorTests {
                     j += k;
                 }
             }
-
             nsum = n[0] + n[1] + n[2] + n[3] + n[4];
 
             for (int i = 0; i < 4; i++) {
                 X2[i] += Math.pow(n[i] - nsum * p[i], 2) / (nsum * p[i]) + Math.pow(n[4] - nsum * p[4], 2) / (nsum * p[4]);
             }
         }
-
         F = max(X2);
         System.out.println("F6 = " + F);
         try {
@@ -95,9 +88,7 @@ public final class GeneratorTests {
     }
 
     private static void test6_old(double[] e) {
-
         for (s = 8; s <= 10; s++) {
-
             N = 600 * Math.pow(2, s);
 
             for (int i = 0; i < 10; i++) {
@@ -105,7 +96,6 @@ public final class GeneratorTests {
             }
 
             for (int j = 0; j < N; j++) {
-
                 if (Math.floor(e[j] * 10) == Math.floor(e[j] * 100)) {
                     n[0]++;
 
@@ -130,15 +120,12 @@ public final class GeneratorTests {
                     }
                 }
             }
-
             nsum = n[0] + n[1] + n[2] + n[3] + n[4];
 
             for (int i = 0; i < 4; i++) {
                 X2[i] += Math.pow(n[i] - nsum * p[i], 2) / (nsum * p[i]) + Math.pow(n[4] - nsum * p[4], 2) / (nsum * p[4]);
             }
-
         }
-
         F = max(X2);
         System.out.println("F6 = " + F);
         try {
@@ -149,9 +136,7 @@ public final class GeneratorTests {
     }
 
     private static void test5(double[] e) {
-
         for (s = 6; s <= 10; s++) {
-
             N = 150 * Math.pow(2, s);
             sum = 0;
 
@@ -197,15 +182,12 @@ public final class GeneratorTests {
 
             X2[s - 6] = sum * 256 / N;
         }
-
         F = max(X2);
         System.out.println("F5 = " + F);
     }
 
     private static void test4(double[] e) {
-
         for (s = 4; s <= 10; s++) {
-
             N = 200 * Math.pow(2, s);
             sum = 0;
 
@@ -243,15 +225,12 @@ public final class GeneratorTests {
 
             X2[s - 4] = sum * 125 / N;
         }
-
         F = max(X2);
         System.out.println("F4 = " + F);
     }
 
     private static void test3(double[] e) {
-
         for (s = 2; s <= 10; s++) {
-
             N = 300 * Math.pow(2, s);
             sum = 0;
 
@@ -281,15 +260,12 @@ public final class GeneratorTests {
 
             X2[s - 2] = sum * 64 / N;
         }
-
         F = max(X2);
         System.out.println("F3 = " + F);
     }
 
     private static void test2(double[] e) {
-
         for (s = 1; s <= 10; s++) {
-
             N = 600 * Math.pow(2, s);
             sum = 0;
 
@@ -311,21 +287,16 @@ public final class GeneratorTests {
 
             X2[s - 1] = sum * 16 / N;
         }
-
         F = max(X2);
         System.out.println("F2 = " + F);
     }
 
     private static void test1(double[] e) {
-
         N = 600;
-
         for (int i = 0; i < 600; i++) {
             y[i] = e[i];
         }
-
         Arrays.sort(y);
-
         for (int i = 0; i < 600; i++) {
             if (Math.abs(y[i] - i / N) > Math.abs(y[i] - (i + 1) / N)) {
                 D[i] = Math.abs(y[i] - i / N);
@@ -334,7 +305,6 @@ public final class GeneratorTests {
                 D[i] = Math.abs(y[i] - (i + 1) / N);
             }
         }
-
         Dm = max(D);
         hip(Dm, N);
     }

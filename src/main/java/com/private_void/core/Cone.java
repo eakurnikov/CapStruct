@@ -4,7 +4,6 @@ import com.private_void.utils.Generator;
 import com.private_void.utils.Utils;
 
 public class Cone extends Surface{
-
     private float length;
     private float divergentAngleR;
 
@@ -71,7 +70,6 @@ public class Cone extends Surface{
                 for (int i = 0; i < 3; i++) {
                     solution[i] -= delta[i];
                 }
-
             } catch (ArithmeticException e) {
                 System.out.println("Division by zero.");
                 System.out.println(e.getMessage());
@@ -91,7 +89,6 @@ public class Cone extends Surface{
         int reboundsCountMax = 300;
 
         for (Particle particle : flux.getParticles()) {
-
             x = particle.getCoordinate().getX();
             y = particle.getCoordinate().getY();
             z = particle.getCoordinate().getZ();
@@ -113,7 +110,6 @@ public class Cone extends Surface{
                 z = newCoordinate.getZ();
 
                 while (newCoordinate.getX() <= length) {
-
                     particle.increaseTrace(newCoordinate);
                     particle.setCoordinate(newCoordinate);
                     reboundsCount++;

@@ -1,7 +1,6 @@
 package com.private_void.core;
 
 public abstract class Surface {
-
     protected Detector detector;
     protected Point3D frontCoordinate;
     protected Vector3D normal;
@@ -47,5 +46,4 @@ public abstract class Surface {
         axis.setY(y);
         axis.setZ(z);
     }
-
 }

@@ -1,7 +1,6 @@
 package com.private_void.utils;
 
 public final class Utils {
-
     public static final float ZERO = 1e-5f;
 
     private Utils() {}

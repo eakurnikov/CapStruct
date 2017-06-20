@@ -4,7 +4,6 @@ import com.private_void.utils.Generator;
 import com.private_void.utils.Utils;
 
 public class Torus extends Surface {
-
     private float torusRadius;
     private int curvAngleD;
     //private float curvAngleR;
@@ -40,9 +39,7 @@ public class Torus extends Surface {
         int iterationsAmountMax = 200;
 
         while (Utils.getMax(delta) > E) {
-
             try {
-
                 // Костыль для уничтожения частиц, вычисление координат которых зациклилось
                 iterationsAmount++;
                 if (iterationsAmount > iterationsAmountMax) {
@@ -71,7 +68,6 @@ public class Torus extends Surface {
                 for (int i = 0; i < 3; i++) {
                     solution[i] -= delta[i]; //возможно, нужно разыменовывать дельту
                 }
-
             } catch (ArithmeticException e) {
                 System.out.println("Division by zero.");
                 System.out.println(e.getMessage());
@@ -90,7 +86,6 @@ public class Torus extends Surface {
         int reboundsCountMax = 300;
 
         for (Particle particle : flux.getParticles()) {
-
             x = particle.getCoordinate().getX();
             y = particle.getCoordinate().getY();
             z = particle.getCoordinate().getZ();
@@ -112,7 +107,6 @@ public class Torus extends Surface {
                 z = newCoordinate.getZ();
 
                 while (Math.asin(x / Math.sqrt(x * x + y * y + (z + torusRadius) * (z + torusRadius))) <= Utils.convertDegreesToRads(curvAngleD)) {
-
                     particle.increaseTrace(newCoordinate);
                     particle.setCoordinate(newCoordinate);
                     reboundsCount++;
@@ -143,5 +137,4 @@ public class Torus extends Surface {
         }
         return flux;
     }
-
 }
