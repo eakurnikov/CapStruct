@@ -1,16 +1,17 @@
 package com.private_void.core;
 
-import com.private_void.utils.Generator;
 import com.private_void.utils.Utils;
 
 import static com.private_void.core.Constants.CELL_SIZE;
+import static com.private_void.core.Constants.PI;
+import static com.private_void.utils.Generator.generator;
 
 public class Cone extends Surface {
     private float length;
     private float divergentAngleR;
 
     public Cone(final Point3D frontCoordinate, float radius, int divergentAngleD, float coneCoefficient, float roughnessSize,
-                int roughnessAngleD, float reflectivity, int slideAngleD) throws IllegalArgumentException {
+                float roughnessAngleD, float reflectivity, float slideAngleD) throws IllegalArgumentException {
 
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
         if (coneCoefficient >= 1 || coneCoefficient <= 0) {
@@ -23,7 +24,7 @@ public class Cone extends Surface {
     }
 
     public Cone(final Point3D frontCoordinate, float radius, float length, float coneCoefficient, float roughnessSize,
-                int roughnessAngleD, float reflectivity, int slideAngleD) throws IllegalArgumentException {
+                float roughnessAngleD, float reflectivity, float slideAngleD) throws IllegalArgumentException {
 
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
         if (coneCoefficient >= 1 || coneCoefficient <= 0) {
@@ -43,7 +44,7 @@ public class Cone extends Surface {
         float[][] W = new float[3][3];
 
         float E = 0.05f;
-        float dr = Generator.getInstance().uniformFloat() * roughnessSize;
+        float dr = generator().uniformFloat(0.0f, roughnessSize);
 
         int iterationsAmount = 0;
         int iterationsAmountMax = 200;
@@ -125,12 +126,12 @@ public class Cone extends Surface {
                     setNormal(-1.0f, (float) (-y * (1.0f / Math.tan(divergentAngleR)) / (Math.sqrt(y * y + z * z))), (float) (-z * (1.0f / Math.tan(divergentAngleR)) / (Math.sqrt(y * y + z * z))));
                     setAxis(1.0f, 0.0f, 0.0f);
 
-                    axis.turnAroundOY(Utils.convertDegreesToRads(Generator.getInstance().uniformInt(360)));
-                    normal.turnAroundVector(Utils.convertDegreesToRads(Generator.getInstance().uniformInt(roughnessAngleD)), axis);
-                    axis = normal.getNewVectorByTurningAroundOX(Utils.convertDegreesToRads(Generator.getInstance().uniformInt(90)));
+                    axis.turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
+                    normal.turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
+                    axis = normal.getNewVectorByTurningAroundOX(generator().uniformFloat(0.0f, PI));
 
                     angleVN = particle.getSpeed().getAngle(normal);
-                    if (angleVN < Utils.convertDegreesToRads(slideAngleD) && reboundsCount  < reboundsCountMax) {
+                    if (angleVN < slideAngleR && reboundsCount  < reboundsCountMax) {
                         particle.getSpeed().turnAroundVector(angleVN, axis);
                         particle.decreaseIntensity(reflectivity);
                     }

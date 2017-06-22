@@ -1,5 +1,7 @@
 package com.private_void.core;
 
+import com.private_void.utils.Utils;
+
 public abstract class Surface {
     protected Detector detector;
     protected Point3D frontCoordinate;
@@ -7,9 +9,9 @@ public abstract class Surface {
     protected Vector3D axis;
     protected float radius;
     protected float roughnessSize;
-    protected int roughnessAngleD;
+    protected float roughnessAngleR;
     protected float reflectivity;
-    protected int slideAngleD;
+    protected float slideAngleR;
 
     protected float x;
     protected float y;
@@ -19,15 +21,13 @@ public abstract class Surface {
     protected float Vy;
     protected float Vz;
 
-    protected Surface(final Point3D frontCoordinate, float radius, float roughnessSize, int roughnessAngleD,
-                      float reflectivity, int slideAngleD) {
-
+    protected Surface(final Point3D frontCoordinate, float radius, float roughnessSize, float roughnessAngleD, float reflectivity, float slideAngleD) {
         this.frontCoordinate = frontCoordinate;
         this.radius = radius;
         this.roughnessSize = roughnessSize;
-        this.roughnessAngleD = roughnessAngleD;
+        this.roughnessAngleR = Utils.convertDegreesToRads(roughnessAngleD);
         this.reflectivity = reflectivity;
-        this.slideAngleD = slideAngleD;
+        this.slideAngleR = Utils.convertDegreesToRads(slideAngleD);
 
         normal = new Vector3D(0.0f, 1.0f, 0.0f);
         axis = new Vector3D(1.0f, 0.0f, 0.0f);

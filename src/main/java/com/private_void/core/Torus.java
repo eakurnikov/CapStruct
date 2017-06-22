@@ -1,21 +1,21 @@
 package com.private_void.core;
 
-import com.private_void.utils.Generator;
 import com.private_void.utils.Utils;
 
 import static com.private_void.core.Constants.CELL_SIZE;
+import static com.private_void.core.Constants.PI;
+import static com.private_void.utils.Generator.generator;
 
 public class Torus extends Surface {
     private float torusRadius;
     private float curvAngleR;
-
-    //TODO разобраться с типами углов. Радианы флоат, а градусы инт или флоат?
+    
     //TODO возможно заюзать мой метод square
     //TODO припилить графический интерфейс
     //TODO припилить Stream API или просто распараллелить через ThreadPool
 
-    public Torus(final Point3D frontCoordinate, float radius, float torusRadius, int curvAngleD, float roughnessSize,
-                 int roughnessAngleD, float reflectivity, int slideAngleD) {
+    public Torus(final Point3D frontCoordinate, float radius, float torusRadius, float curvAngleD, float roughnessSize,
+                 float roughnessAngleD, float reflectivity, float slideAngleD) {
 
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
         this.torusRadius = torusRadius;
@@ -37,7 +37,7 @@ public class Torus extends Surface {
         float[][] W = new float[3][3];
 
         float E = 0.05f;
-        float dr = Generator.getInstance().uniformFloat() * roughnessSize;
+        float dr = generator().uniformFloat(0.0f, roughnessSize);
 
         int iterationsAmount = 0;
         int iterationsAmountMax = 200;
@@ -120,12 +120,12 @@ public class Torus extends Surface {
                               (-2 * (x * x + y * y + (z + torusRadius) * (z + torusRadius) + torusRadius * torusRadius - radius * radius) * 2 * (z + torusRadius) + 8 * torusRadius * torusRadius * (z + torusRadius)));
                     setAxis(1.0f, 0.0f, 0.0f);
 
-                    axis.turnAroundOY(Utils.convertDegreesToRads(Generator.getInstance().uniformInt(360)));
-                    normal.turnAroundVector(Utils.convertDegreesToRads(Generator.getInstance().uniformInt(roughnessAngleD)), axis);
-                    axis = normal.getNewVectorByTurningAroundOX(Utils.convertDegreesToRads(Generator.getInstance().uniformInt(90)));
+                    axis.turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
+                    normal.turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
+                    axis = normal.getNewVectorByTurningAroundOX(generator().uniformFloat(0.0f, PI));
 
                     angleVN = particle.getSpeed().getAngle(normal);
-                    if (angleVN < Utils.convertDegreesToRads(slideAngleD) && reboundsCount  < reboundsCountMax) {
+                    if (angleVN < slideAngleR && reboundsCount  < reboundsCountMax) {
                         particle.getSpeed().turnAroundVector(angleVN, axis);
                         particle.decreaseIntensity(reflectivity);
                     }

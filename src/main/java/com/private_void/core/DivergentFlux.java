@@ -1,7 +1,9 @@
 package com.private_void.core;
 
-import com.private_void.utils.Generator;
 import com.private_void.utils.Utils;
+
+import static com.private_void.core.Constants.PI;
+import static com.private_void.utils.Generator.generator;
 
 public class DivergentFlux extends Flux {
     private float divergentAngleR;
@@ -16,8 +18,8 @@ public class DivergentFlux extends Flux {
     protected void createParticles() {
         for (int i = 0; i < particlesAmount; i++) {
             Vector3D axis = new Vector3D(new Point3D(-(fluxAxis.getY() + fluxAxis.getZ()) / fluxAxis.getX(), 1.0f, 1.0f));
-            axis.turnAroundVector(Utils.convertDegreesToRads(Generator.getInstance().uniformInt(360)), fluxAxis);
-            Vector3D particleSpeed = fluxAxis.getNewVectorByTurningAroundVector(Generator.getInstance().gauss(0.0f, divergentAngleR).getY(), axis);
+            axis.turnAroundVector(generator().uniformFloat(0.0f, 2.0f * PI), fluxAxis);
+            Vector3D particleSpeed = fluxAxis.getNewVectorByTurningAroundVector(generator().gauss(0.0f, divergentAngleR).getY(), axis);
             particles.add(new Particle(fluxCoordinate, particleSpeed));
         }
     }

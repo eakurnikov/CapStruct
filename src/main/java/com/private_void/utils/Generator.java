@@ -17,7 +17,7 @@ public class Generator {
         private static final Generator instance = new Generator(SEED);
     }
 
-    public static Generator getInstance() {
+    public static Generator generator() {
         return Holder.instance;
     }
 
@@ -25,8 +25,8 @@ public class Generator {
         return rand.nextInt(bound);
     }
 
-    public float uniformFloat() {
-        return rand.nextFloat();
+    public float uniformFloat(float minValue, float maxValue) {
+        return minValue + (maxValue - minValue) * rand.nextFloat();
     }
 
     public Point3D gauss(float mean, float dev) {

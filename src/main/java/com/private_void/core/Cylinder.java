@@ -1,14 +1,15 @@
 package com.private_void.core;
 
-import com.private_void.utils.Generator;
 import com.private_void.utils.Utils;
 
 import static com.private_void.core.Constants.CELL_SIZE;
+import static com.private_void.core.Constants.PI;
+import static com.private_void.utils.Generator.generator;
 
 public class Cylinder extends Surface {
     private float length;
 
-    public Cylinder(final Point3D frontCoordinate, float radius, float length, float roughnessSize, int roughnessAngleD, float reflectivity, int slideAngleD) {
+    public Cylinder(final Point3D frontCoordinate, float radius, float length, float roughnessSize, float roughnessAngleD, float reflectivity, float slideAngleD) {
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
         this.length = length;
         this.detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),
@@ -25,7 +26,7 @@ public class Cylinder extends Surface {
         float[][] W = new float[3][3];
 
         float E = 0.05f;
-        float dr = Generator.getInstance().uniformFloat() * roughnessSize;
+        float dr = generator().uniformFloat(0.0f, roughnessSize);
 
         while (Utils.getMax(delta) > E) {
             try {
@@ -87,12 +88,12 @@ public class Cylinder extends Surface {
                     setNormal(0.0f, -2 * newCoordinate.getY(), -2 * newCoordinate.getZ());
                     setAxis(1.0f, 0.0f, 0.0f);
 
-                    axis.turnAroundOY(Utils.convertDegreesToRads(Generator.getInstance().uniformInt(360)));
-                    normal.turnAroundVector(Utils.convertDegreesToRads(Generator.getInstance().uniformInt(roughnessAngleD)), axis);
-                    axis = normal.getNewVectorByTurningAroundOX(Utils.convertDegreesToRads(Generator.getInstance().uniformInt(90)));
+                    axis.turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
+                    normal.turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
+                    axis = normal.getNewVectorByTurningAroundOX(generator().uniformFloat(0.0f, PI));
 
                     angleVN = particle.getSpeed().getAngle(normal);
-                    if (angleVN < Utils.convertDegreesToRads(slideAngleD)) {
+                    if (angleVN < slideAngleR) {
                         particle.getSpeed().turnAroundVector(angleVN, axis);
                         particle.decreaseIntensity(reflectivity);
                     }
