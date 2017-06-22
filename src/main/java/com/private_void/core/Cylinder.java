@@ -9,7 +9,9 @@ import static com.private_void.utils.Generator.generator;
 public class Cylinder extends Surface {
     private float length;
 
-    public Cylinder(final Point3D frontCoordinate, float radius, float length, float roughnessSize, float roughnessAngleD, float reflectivity, float slideAngleD) {
+    public Cylinder(final Point3D frontCoordinate, float radius, float length, float roughnessSize, float roughnessAngleD,
+                    float reflectivity, float slideAngleD) {
+
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
         this.length = length;
         this.detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),

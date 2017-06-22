@@ -6,7 +6,9 @@ public class ParallelFlux extends Flux {
     private int layersAmount;
     private float layerDistance;
 
-    public ParallelFlux(final Point3D fluxCoordinate, final Vector3D fluxAxis, int layersAmount, int particlesAmount, float layerDistance, float minIntensity) {
+    public ParallelFlux(final Point3D fluxCoordinate, final Vector3D fluxAxis, int layersAmount, int particlesAmount,
+                        float layerDistance, float minIntensity) {
+
         super(fluxCoordinate, fluxAxis, particlesAmount, minIntensity);
         this.layersAmount = layersAmount;
         this.layerDistance = layerDistance;

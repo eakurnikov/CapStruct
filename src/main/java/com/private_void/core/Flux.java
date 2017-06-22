@@ -14,6 +14,7 @@ public abstract class Flux {
         this.fluxAxis = fluxAxis;
         this.particlesAmount = particlesAmount;
         this.minIntensity = minIntensity;
+        this.particles = new ArrayList<>();
     }
 
     protected abstract void createParticles();

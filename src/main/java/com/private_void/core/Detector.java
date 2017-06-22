@@ -32,13 +32,13 @@ public class Detector {
         this.cellSize = cellSize;
         this.detectedParticlesAmount = 0;
 
-        this.leftBottomPoint.setX(centerCoordinate.getX());
-        this.leftBottomPoint.setY(centerCoordinate.getY() - width);
-        this.leftBottomPoint.setZ(centerCoordinate.getZ() - width);
+        this.leftBottomPoint = new Point3D(centerCoordinate.getX(), centerCoordinate.getY() - width, centerCoordinate.getZ() - width);
         this.cellsAmount = (int) (2.0f * width / cellSize);
         this.cells = new float[cellsAmount][cellsAmount];
 
-        Arrays.fill(cells, 0.0f);
+        for(float[] line : cells) {
+            Arrays.fill(line, 0.0f);
+        }
     }
 
     public Flux detect(Flux flux) {
