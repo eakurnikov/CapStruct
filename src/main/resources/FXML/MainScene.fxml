@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -26,17 +27,60 @@
                     </VBox.margin>
                 </Text>
 
-                <TabPane prefHeight="225.0" prefWidth="278.0" tabClosingPolicy="UNAVAILABLE">
+                <TabPane prefHeight="250.0" prefWidth="280.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
                         <Tab id="parallelFlux_tab" fx:id="parallelFlux_tab" closable="false" text="Parallel flux">
                             <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="293.0" />
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="293.0">
+                           <children>
+                               <Label id="par_coord" fx:id="par_coord" layoutX="15.0" layoutY="15.0" text="Flux's front coordinate: " />
+                               <TextField id="par_coord_x_param" fx:id="par_coord_x_param" alignment="CENTER" layoutX="140.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+                               <TextField id="par_coord_y_param" fx:id="par_coord_y_param" alignment="CENTER" layoutX="186.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+                               <TextField id="par_coord_z_param" fx:id="par_coord_z_param" alignment="CENTER" layoutX="231.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+
+                               <Label id="par_axis" fx:id="par_axis" layoutX="15.0" layoutY="50.0" text="Flux's axis: " />
+                               <TextField id="par_axis_x_param" fx:id="par_axis_x_param" alignment="CENTER" layoutX="140.0" layoutY="45.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+                               <TextField id="par_axis_y_param" fx:id="par_axis_y_param" alignment="CENTER" layoutX="186.0" layoutY="45.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+                               <TextField id="par_axis_z_param" fx:id="par_axis_z_param" alignment="CENTER" layoutX="231.0" layoutY="45.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+
+                               <Label id="par_amount" fx:id="par_amount" layoutX="15.0" layoutY="85.0" text="Amount of particles in layer: " />
+                               <TextField id="par_amount_param" fx:id="par_amount_param" alignment="CENTER" layoutX="176.0" layoutY="80.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+
+                               <Label id="par_layers" fx:id="par_layers" layoutX="15.0" layoutY="120.0" text="Amount of layers: " />
+                               <TextField id="par_layers_param" fx:id="par_layers_param" alignment="CENTER" layoutX="176.0" layoutY="115.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+
+                               <Label id="par_dist" fx:id="par_dist" layoutX="15.0" layoutY="155.0" text="Distance between two layers: " />
+                               <TextField id="par_dist_param" fx:id="par_dist_param" alignment="CENTER" layoutX="176.0" layoutY="150.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+
+                               <Label id="par_min_i" fx:id="par_min_i" layoutX="15.0" layoutY="190.0" text="Minimal intensity: " />
+                               <TextField id="par_min_i_param" fx:id="par_min_i_param" alignment="CENTER" layoutX="176.0" layoutY="185.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                           </children></AnchorPane>
                             </content>
                         </Tab>
 
                         <Tab id="divergentFlux_tab" fx:id="divergentFlux_tab" closable="false" text="Divergent flux">
                             <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                               <Label id="div_coord" fx:id="div_coord" layoutX="15.0" layoutY="15.0" text="Flux's front coordinate: " />
+                               <TextField id="div_coord_x_param" fx:id="div_coord_x_param" alignment="CENTER" layoutX="140.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+                               <TextField id="div_coord_y_param" fx:id="div_coord_y_param" alignment="CENTER" layoutX="186.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+                               <TextField id="div_coord_z_param" fx:id="div_coord_z_param" alignment="CENTER" layoutX="231.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+
+                               <Label id="div_axis" fx:id="div_axis" layoutX="15.0" layoutY="50.0" text="Flux's axis: " />
+                               <TextField id="div_axis_x_param" fx:id="div_axis_x_param" alignment="CENTER" layoutX="140.0" layoutY="45.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+                               <TextField id="div_axis_y_param" fx:id="div_axis_y_param" alignment="CENTER" layoutX="186.0" layoutY="45.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+                               <TextField id="div_axis_z_param" fx:id="div_axis_z_param" alignment="CENTER" layoutX="231.0" layoutY="45.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+
+                               <Label id="div_amount" fx:id="div_amount" layoutX="15.0" layoutY="85.0" text="Total amount of particles: " />
+                               <TextField id="div_amount_param" fx:id="div_amount_param" alignment="CENTER" layoutX="176.0" layoutY="80.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+
+                               <Label id="div_angle" fx:id="div_angle" layoutX="15.0" layoutY="120.0" text="Angle of divergency (deg): " />
+                               <TextField id="div_layers_param" fx:id="div_layers_param" alignment="CENTER" layoutX="176.0" layoutY="115.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+
+                               <Label id="div_min_i" fx:id="div_min_i" layoutX="15.0" layoutY="155.0" text="Distance between two layers: " />
+                               <TextField id="div_min_i_param" fx:id="div_min_i_param" alignment="CENTER" layoutX="176.0" layoutY="150.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                           </children></AnchorPane>
                             </content>
                         </Tab>
                     </tabs>
@@ -92,13 +136,13 @@
              </ScatterChart>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
-                   <Label id="i_on" fx:id="i_on" layoutX="14.0" layoutY="42.0" text="Total intensity on detector: " />
-                   <Label id="i_on_param" fx:id="i_on_param" layoutX="168.0" layoutY="42.0" text="0" />
-                   <Label id="i_abs" fx:id="i_abs" layoutX="14.0" layoutY="67.0" text="Total intensity absorbed: " />
-                   <Label id="i_abs_param" fx:id="i_abs_param" layoutX="168.0" layoutY="67.0" text="0" />
-                  <Label id="i_out" fx:id="i_out" layoutX="278.0" layoutY="42.0" text="Total intensity out of detector: " />
-                  <Label id="i_out_param" fx:id="i_out_param" layoutX="456.0" layoutY="42.0" text="0" />
-                  <Label id="success" fx:id="success" layoutX="246.0" layoutY="2.0" text="SUCCESSFULLY" textAlignment="CENTER">
+                   <Label id="i_on" fx:id="i_on" layoutX="60.0" layoutY="42.0" text="Total intensity on detector: " />
+                   <Label id="i_on_param" fx:id="i_on_param" layoutX="214.0" layoutY="42.0" text="0" />
+                   <Label id="i_abs" fx:id="i_abs" layoutX="60.0" layoutY="67.0" text="Total intensity absorbed: " />
+                   <Label id="i_abs_param" fx:id="i_abs_param" layoutX="214.0" layoutY="67.0" text="0" />
+                   <Label id="i_out" fx:id="i_out" layoutX="344.0" layoutY="42.0" text="Total intensity out of detector: " />
+                   <Label id="i_out_param" fx:id="i_out_param" layoutX="523.0" layoutY="42.0" text="0" />
+                   <Label id="success" fx:id="success" layoutX="246.0" layoutY="2.0" text="SUCCESSFULLY" textAlignment="CENTER">
                      <font>
                         <Font size="16.0" />
                      </font></Label>
