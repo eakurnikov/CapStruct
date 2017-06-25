@@ -107,6 +107,7 @@ public class Cylinder extends Surface {
             }
             else {
                 detector.increaseOutOfCapillarParticlesAmount();
+                detector.increaseOutOfCapillarInensity(particle.getIntensity());
             }
         }
         return detector.detect(flux);

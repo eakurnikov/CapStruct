@@ -137,6 +137,7 @@ public class Torus extends Surface {
             }
             else {
                 detector.increaseOutOfCapillarParticlesAmount();
+                detector.increaseOutOfCapillarInensity(particle.getIntensity());
             }
         }
         return detector.detect(flux);

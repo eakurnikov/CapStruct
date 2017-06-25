@@ -48,4 +48,28 @@ public abstract class Surface {
         axis.setY(y);
         axis.setZ(z);
     }
+
+    public int getDetectedParticlesAmount() {
+        return detector.detectedParticlesAmount;
+    }
+
+    public int getNotDetectedParticlesAmount() {
+        return detector.notDetectedParticlesAmount;
+    }
+
+    public int getOutOfCapillarParticlesAmount() {
+        return detector.outOfCapillarParticlesAmount;
+    }
+
+    public float getDetectedIntensity() {
+        return detector.detectedIntensity;
+    }
+
+    public float getNotDetectedIntensity() {
+        return detector.notDetectedIntensity;
+    }
+
+    public float getOutOfCapillarIntensity() {
+        return detector.outOfCapillarIntensity;
+    }
 }

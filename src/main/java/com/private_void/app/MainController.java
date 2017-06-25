@@ -6,7 +6,9 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 
 public class MainController {
@@ -76,17 +78,32 @@ public class MainController {
     @FXML
     public ScatterChart chart;
 
-    private Flux flux;
-    private Surface capillar;
+    @FXML
+    public Label intensityOn;
+    public Label intensityAbsorbed;
+    public Label intensityOut;
+    public Label successLabel;
 
     @FXML
-    private void initialize() {}
+    private void initialize() {
+        dFluxAxisX.setText("1.0");
+        dFluxParticlesAmount.setText("1000");
+        dFluxAngle.setText("20");
+        dFluxMinIntensity.setText("0.5");
+
+        cylRadius.setText("20");
+        cylLength.setText("1000");
+        cylRoughSize.setText("0.1");
+        cylRoughAngle.setText("5");
+        cylReflect.setText("1");
+        cylSlideAngle.setText("5");
+    }
 
     public void startBtnClick(ActionEvent actionEvent) {
-        flux = createFlux();
-        capillar = createCapillar();
+        Flux flux = createFlux();
+        Surface capillar = createCapillar();
         flux = capillar.passThrough(flux);
-        showResult(flux);
+        showResult(flux, capillar);
     }
 
     private Flux createFlux() {
@@ -95,11 +112,9 @@ public class MainController {
                     new Point3D(Float.parseFloat(pFluxX.getText()),
                                 Float.parseFloat(pFluxY.getText()),
                                 Float.parseFloat(pFluxZ.getText())),
-
                     new Vector3D(Float.parseFloat(pFluxAxisX.getText()),
                                  Float.parseFloat(pFluxAxisX.getText()),
                                  Float.parseFloat(pFluxAxisX.getText())),
-
                     Integer.parseInt(pFluxLayersAmount.getText()),
                     Integer.parseInt(pFluxParticlesAmount.getText()),
                     Float.parseFloat(pFluxLayersDist.getText()),
@@ -111,11 +126,9 @@ public class MainController {
                     new Point3D(Float.parseFloat(dFluxX.getText()),
                                 Float.parseFloat(dFluxY.getText()),
                                 Float.parseFloat(dFluxZ.getText())),
-
                     new Vector3D(Float.parseFloat(dFluxAxisX.getText()),
                                  Float.parseFloat(dFluxAxisX.getText()),
                                  Float.parseFloat(dFluxAxisX.getText())),
-
                     Integer.parseInt(dFluxParticlesAmount.getText()),
                     Float.parseFloat(dFluxAngle.getText()),
                     Float.parseFloat(dFluxMinIntensity.getText())
@@ -165,12 +178,36 @@ public class MainController {
         }
     }
 
-    private void showResult(Flux flux) {
+    private void showResult(Flux flux, Surface capillar) {
         XYChart.Series series = new XYChart.Series();
         series.setName("Particles");
         for (Particle particle : flux.getParticles()) {
             series.getData().add(new XYChart.Data(particle.getCoordinate().getZ(), particle.getCoordinate().getY()));
         }
+
+        //TODO как-то разукрашивать точки в зависимости от их интенсивности. Тогда детектор как счетчик интенсивности со своими ячейками ваще не нужен, нужна будет тупо его плоскость
         chart.getData().addAll(series);
+
+//        Node fill = series.getNode().lookup(".chart-series-area-fill"); // only for AreaChart
+//        Node line = series.getNode().lookup(".chart-series-area-line");
+//
+//        Color color = Color.RED; // or any other color
+//
+//        String rgb = String.format("%d, %d, %d",
+//                (int) (color.getRed() * 255),
+//                (int) (color.getGreen() * 255),
+//                (int) (color.getBlue() * 255));
+//
+//        fill.setStyle("-fx-fill: rgba(" + rgb + ", 0.15);");
+//        line.setStyle("-fx-stroke: rgba(" + rgb + ", 1.0);");
+
+        chart.getXAxis().autosize();
+        chart.getYAxis().autosize();
+
+        intensityOn.setText(String.valueOf(capillar.getDetectedParticlesAmount()));
+        intensityAbsorbed.setText(String.valueOf(capillar.getNotDetectedParticlesAmount()));
+        intensityOut.setText(String.valueOf(capillar.getOutOfCapillarParticlesAmount()));
+
+        successLabel.setVisible(true);
     }
 }
