@@ -63,6 +63,8 @@ public class Cylinder extends Surface {
         return new Point3D(solution[0], solution[1], solution[2]);
     }
 
+    //TODO частицы зацикливаются и не идут по трубке почему-то, нужно отладиться нормально
+
     @Override
     public Flux passThrough(Flux flux) {
         Point3D newCoordinate;
@@ -81,9 +83,8 @@ public class Cylinder extends Surface {
             if (((Vy / Vx) * (x0 - x) + y) * ((Vy / Vx) * (x0 - x) + y) +
                 ((Vz / Vx) * (x0 - x) + z) * ((Vz / Vx) * (x0 - x) + z) < radius * radius) {
 
-                newCoordinate = getHitPoint(particle);
-
-                while (newCoordinate.getX() <= length) {
+                while (particle.getCoordinate().getX() <= length) {
+                    newCoordinate = getHitPoint(particle);
                     particle.increaseTrace(newCoordinate);
                     particle.setCoordinate(newCoordinate);
 
@@ -95,7 +96,7 @@ public class Cylinder extends Surface {
                     axis = normal.getNewVectorByTurningAroundOX(generator().uniformFloat(0.0f, PI));
 
                     angleVN = particle.getSpeed().getAngle(normal);
-                    if (angleVN < slideAngleR) {
+                    if (angleVN < slideAngleR + PI / 2) {
                         particle.getSpeed().turnAroundVector(angleVN, axis);
                         particle.decreaseIntensity(reflectivity);
                     }
