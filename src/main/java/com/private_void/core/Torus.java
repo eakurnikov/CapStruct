@@ -11,7 +11,6 @@ public class Torus extends Surface {
     private float curvAngleR;
     
     //TODO возможно заюзать мой метод square
-    //TODO припилить графический интерфейс
     //TODO припилить Stream API или просто распараллелить через ThreadPool
 
     public Torus(final Point3D frontCoordinate, float radius, float torusRadius, float curvAngleD, float roughnessSize,

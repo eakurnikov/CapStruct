@@ -3,12 +3,10 @@ package com.private_void.app;
 import com.private_void.core.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 
 public class MainController {
@@ -86,6 +84,14 @@ public class MainController {
 
     @FXML
     private void initialize() {
+        pFluxAxisX.setText("1.0");
+        pFluxAxisY.setText("1.0");
+
+        pFluxParticlesAmount.setText("1000");
+        pFluxLayersAmount.setText("10");
+        pFluxLayersDist.setText("1");
+        pFluxMinIntensity.setText("0.5");
+
         dFluxAxisX.setText("1.0");
         dFluxParticlesAmount.setText("1000");
         dFluxAngle.setText("20");
@@ -113,8 +119,8 @@ public class MainController {
                                 Float.parseFloat(pFluxY.getText()),
                                 Float.parseFloat(pFluxZ.getText())),
                     new Vector3D(Float.parseFloat(pFluxAxisX.getText()),
-                                 Float.parseFloat(pFluxAxisX.getText()),
-                                 Float.parseFloat(pFluxAxisX.getText())),
+                                 Float.parseFloat(pFluxAxisY.getText()),
+                                 Float.parseFloat(pFluxAxisZ.getText())),
                     Integer.parseInt(pFluxLayersAmount.getText()),
                     Integer.parseInt(pFluxParticlesAmount.getText()),
                     Float.parseFloat(pFluxLayersDist.getText()),
@@ -127,8 +133,8 @@ public class MainController {
                                 Float.parseFloat(dFluxY.getText()),
                                 Float.parseFloat(dFluxZ.getText())),
                     new Vector3D(Float.parseFloat(dFluxAxisX.getText()),
-                                 Float.parseFloat(dFluxAxisX.getText()),
-                                 Float.parseFloat(dFluxAxisX.getText())),
+                                 Float.parseFloat(dFluxAxisY.getText()),
+                                 Float.parseFloat(dFluxAxisZ.getText())),
                     Integer.parseInt(dFluxParticlesAmount.getText()),
                     Float.parseFloat(dFluxAngle.getText()),
                     Float.parseFloat(dFluxMinIntensity.getText())

@@ -83,8 +83,9 @@ public class Cylinder extends Surface {
             if (((Vy / Vx) * (x0 - x) + y) * ((Vy / Vx) * (x0 - x) + y) +
                 ((Vz / Vx) * (x0 - x) + z) * ((Vz / Vx) * (x0 - x) + z) < radius * radius) {
 
-                while (particle.getCoordinate().getX() <= length) {
-                    newCoordinate = getHitPoint(particle);
+                newCoordinate = getHitPoint(particle);
+
+                while (newCoordinate.getX() <= length) {
                     particle.increaseTrace(newCoordinate);
                     particle.setCoordinate(newCoordinate);
 
@@ -99,6 +100,7 @@ public class Cylinder extends Surface {
                     if (angleVN < slideAngleR + PI / 2) {
                         particle.getSpeed().turnAroundVector(angleVN, axis);
                         particle.decreaseIntensity(reflectivity);
+                        newCoordinate = getHitPoint(particle);
                     }
                     else {
                         particle.setAbsorbed(true);

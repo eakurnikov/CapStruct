@@ -15,6 +15,8 @@ public abstract class Flux {
         this.particlesAmount = particlesAmount;
         this.minIntensity = minIntensity;
         this.particles = new ArrayList<>();
+
+        checkParameters();
     }
 
     protected abstract void createParticles();
@@ -29,5 +31,17 @@ public abstract class Flux {
 
     public void setMinIntensity(float minIntensity) {
         this.minIntensity = minIntensity;
+    }
+
+    protected void checkParameters() {
+        if (fluxAxis.getX() == 0.0f) {
+            fluxAxis.setX(0.000001f);
+        }
+        if (fluxAxis.getY() == 0.0f) {
+            fluxAxis.setY(0.000001f);
+        }
+        if (fluxAxis.getZ() == 0.0f) {
+            fluxAxis.setZ(0.000001f);
+        }
     }
 }
