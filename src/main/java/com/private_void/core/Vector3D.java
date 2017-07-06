@@ -33,6 +33,7 @@ public class Vector3D extends Point3D {
             z = z / norm;
         }
         catch(ArithmeticException e) {
+            e.printStackTrace();
             System.out.println("Деление на ноль.");
         }
     }
@@ -56,7 +57,7 @@ public class Vector3D extends Point3D {
     }
 
     public float getAngle(final Vector3D vector3D) {
-        return 2 * (float) (Math.acos((x * vector3D.getX() + y * vector3D.getY() + z * vector3D.getZ()) / (Math.sqrt(x * x + y * y + z * z) * Math.sqrt(vector3D.getX() * vector3D.getX() + vector3D.getY() * vector3D.getY() + vector3D.getZ() * vector3D.getZ()))) - Math.PI / 2);
+        return (float) (Math.acos((x * vector3D.getX() + y * vector3D.getY() + z * vector3D.getZ()) / (Math.sqrt(x * x + y * y + z * z) * Math.sqrt(vector3D.getX() * vector3D.getX() + vector3D.getY() * vector3D.getY() + vector3D.getZ() * vector3D.getZ()))) - Math.PI / 2);
     }
 
     public void setRotationMatrixX(float angle) {

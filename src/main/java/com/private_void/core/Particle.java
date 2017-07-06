@@ -27,11 +27,13 @@ public class Particle {
         return coordinate;
     }
 
-    public void setCoordinate(final Point3D coordinate) {
-        this.coordinate = coordinate;
+    public void setCoordinate(final Point3D newCoordinate) {
+        increaseTrace(newCoordinate);
+        this.coordinate = newCoordinate;
     }
 
     public void setCoordinate(float x, float y, float z) {
+        increaseTrace(new Point3D(x, y, z));
         this.coordinate.setX(x);
         this.coordinate.setY(y);
         this.coordinate.setZ(z);

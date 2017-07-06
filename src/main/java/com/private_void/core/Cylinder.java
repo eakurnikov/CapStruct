@@ -86,7 +86,6 @@ public class Cylinder extends Surface {
                 newCoordinate = getHitPoint(particle);
 
                 while (newCoordinate.getX() <= length) {
-                    particle.increaseTrace(newCoordinate);
                     particle.setCoordinate(newCoordinate);
 
                     setNormal(0.0f, -2 * newCoordinate.getY(), -2 * newCoordinate.getZ());
@@ -97,8 +96,8 @@ public class Cylinder extends Surface {
                     axis = normal.getNewVectorByTurningAroundOX(generator().uniformFloat(0.0f, PI));
 
                     angleVN = particle.getSpeed().getAngle(normal);
-                    if (angleVN < slideAngleR + PI / 2) {
-                        particle.getSpeed().turnAroundVector(angleVN, axis);
+                    if (angleVN <= slideAngleR) {
+                        particle.getSpeed().turnAroundVector(2 * angleVN, axis);
                         particle.decreaseIntensity(reflectivity);
                         newCoordinate = getHitPoint(particle);
                     }

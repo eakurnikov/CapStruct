@@ -25,6 +25,10 @@ public abstract class Flux {
         return particles;
     }
 
+    public void setParticles(ArrayList<Particle> newParticles) {
+        particles = newParticles;
+    }
+
     public float getMinIntensity() {
         return minIntensity;
     }

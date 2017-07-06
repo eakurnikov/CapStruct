@@ -119,7 +119,6 @@ public class Cone extends Surface {
                 z = newCoordinate.getZ();
 
                 while (newCoordinate.getX() <= length) {
-                    particle.increaseTrace(newCoordinate);
                     particle.setCoordinate(newCoordinate);
                     reboundsCount++;
 
@@ -131,8 +130,8 @@ public class Cone extends Surface {
                     axis = normal.getNewVectorByTurningAroundOX(generator().uniformFloat(0.0f, PI));
 
                     angleVN = particle.getSpeed().getAngle(normal);
-                    if (angleVN < slideAngleR && reboundsCount  < reboundsCountMax) {
-                        particle.getSpeed().turnAroundVector(angleVN, axis);
+                    if (angleVN <= slideAngleR && reboundsCount  < reboundsCountMax) {
+                        particle.getSpeed().turnAroundVector(2 * angleVN, axis);
                         particle.decreaseIntensity(reflectivity);
                     }
                     else {

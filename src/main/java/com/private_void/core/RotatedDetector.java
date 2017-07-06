@@ -2,6 +2,8 @@ package com.private_void.core;
 
 import com.private_void.utils.Utils;
 
+import java.util.ArrayList;
+
 public class RotatedDetector extends Detector {
     private float angleR;
 
@@ -12,6 +14,7 @@ public class RotatedDetector extends Detector {
 
     @Override
     public Flux detect(Flux flux) {
+        ArrayList<Particle> detectedParticles = new ArrayList<>();
         float tanR = (float) Math.tan(angleR);
         float L = centerCoordinate.getX();
         try {
@@ -29,16 +32,18 @@ public class RotatedDetector extends Detector {
                                            (Vy / Vz) * ((x * Vz - z * Vx - L * Vz) / (tanR * Vz - Vx) - z) + y,
                                            (x * Vz - z * Vx - L * Vz) / (tanR * Vz - Vx));
 
-                    cellIndexZ = (int) (Math.ceil((particle.getCoordinate().getZ() - leftBottomPoint.getZ()) / cellSize));
-                    cellIndexY = (int) (Math.ceil((particle.getCoordinate().getY() - leftBottomPoint.getY()) / cellSize));
-                    cells[cellIndexZ][cellIndexY] += particle.getIntensity();
+                    
                     detectedParticlesAmount++;
+                    detectedIntensity += particle.getIntensity();
+                    detectedParticles.add(particle);
+                } else {
+                    notDetectedParticlesAmount++;
+                    notDetectedIntensity += 1;
                 }
             }
         }
         catch (Exception ex){
-            notDetectedParticlesAmount++;
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
         return flux;
     }

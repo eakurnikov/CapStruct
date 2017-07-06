@@ -110,7 +110,6 @@ public class Torus extends Surface {
                 z = newCoordinate.getZ();
 
                 while (Math.asin(x / Math.sqrt(x * x + y * y + (z + torusRadius) * (z + torusRadius))) <= curvAngleR) {
-                    particle.increaseTrace(newCoordinate);
                     particle.setCoordinate(newCoordinate);
                     reboundsCount++;
 
@@ -124,8 +123,8 @@ public class Torus extends Surface {
                     axis = normal.getNewVectorByTurningAroundOX(generator().uniformFloat(0.0f, PI));
 
                     angleVN = particle.getSpeed().getAngle(normal);
-                    if (angleVN < slideAngleR && reboundsCount  < reboundsCountMax) {
-                        particle.getSpeed().turnAroundVector(angleVN, axis);
+                    if (angleVN <= slideAngleR && reboundsCount  < reboundsCountMax) {
+                        particle.getSpeed().turnAroundVector(2 * angleVN, axis);
                         particle.decreaseIntensity(reflectivity);
                     }
                     else {
