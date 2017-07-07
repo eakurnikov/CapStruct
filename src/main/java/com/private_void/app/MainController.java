@@ -3,6 +3,7 @@ package com.private_void.app;
 import com.private_void.core.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
@@ -82,6 +83,9 @@ public class MainController {
     public Label intensityOut;
     public Label successLabel;
 
+    public NumberAxis yAxis;
+    public NumberAxis xAxis;
+
     @FXML
     private void initialize() {
         pFluxAxisX.setText("1.0");
@@ -103,6 +107,14 @@ public class MainController {
         cylRoughAngle.setText("5");
         cylReflect.setText("1");
         cylSlideAngle.setText("5");
+
+        torRadius.setText("20");
+        torBigRadius.setText("1000");
+        torAngle.setText("5");
+        torRoughSize.setText("0.2");
+        torRoughAngle.setText("5");
+        torReflect.setText("1");
+        torSlideAngle.setText("5");
     }
 
     public void startBtnClick(ActionEvent actionEvent) {
@@ -209,6 +221,18 @@ public class MainController {
 
         chart.getXAxis().autosize();
         chart.getYAxis().autosize();
+
+//        if (xAxis.getUpperBound() > yAxis.getUpperBound()) {
+//            yAxis.setUpperBound(xAxis.getUpperBound());
+//        } else {
+//            xAxis.setUpperBound(yAxis.getUpperBound());
+//        }
+//
+//        if (xAxis.getLowerBound() < yAxis.getLowerBound()) {
+//            yAxis.setLowerBound(xAxis.getLowerBound());
+//        } else {
+//            xAxis.setLowerBound(yAxis.getLowerBound());
+//        }
 
         intensityOn.setText(String.valueOf(capillar.getDetectedParticlesAmount()));
         intensityAbsorbed.setText(String.valueOf(capillar.getNotDetectedParticlesAmount()));
