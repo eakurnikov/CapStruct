@@ -212,10 +212,10 @@
       
              <ScatterChart id="chart" fx:id="chart" minHeight="600.0" minWidth="600.0" prefHeight="600.0" prefWidth="600.0" title="Result distribution" stylesheets="../styles/styles.css">
                  <xAxis>
-                     <NumberAxis side="BOTTOM" lowerBound="-25" upperBound="25" tickUnit="1" label="Z"/>
+                     <NumberAxis fx:id="xAxis" side="BOTTOM" lowerBound="-25" upperBound="25" tickUnit="1" label="Z"/>
                  </xAxis>
                  <yAxis>
-                     <NumberAxis side="LEFT" lowerBound="-25" upperBound="25" tickUnit="1" label="Y"/>
+                     <NumberAxis fx:id="yAxis" side="LEFT" lowerBound="-25" upperBound="25" tickUnit="1" label="Y"/>
                  </yAxis>
              </ScatterChart>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">

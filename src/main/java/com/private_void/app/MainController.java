@@ -206,19 +206,6 @@ public class MainController {
         //TODO как-то разукрашивать точки в зависимости от их интенсивности. Тогда детектор как счетчик интенсивности со своими ячейками ваще не нужен, нужна будет тупо его плоскость
         chart.getData().addAll(series);
 
-//        Node fill = series.getNode().lookup(".chart-series-area-fill"); // only for AreaChart
-//        Node line = series.getNode().lookup(".chart-series-area-line");
-//
-//        Color color = Color.RED; // or any other color
-//
-//        String rgb = String.format("%d, %d, %d",
-//                (int) (color.getRed() * 255),
-//                (int) (color.getGreen() * 255),
-//                (int) (color.getBlue() * 255));
-//
-//        fill.setStyle("-fx-fill: rgba(" + rgb + ", 0.15);");
-//        line.setStyle("-fx-stroke: rgba(" + rgb + ", 1.0);");
-
         chart.getXAxis().autosize();
         chart.getYAxis().autosize();
 

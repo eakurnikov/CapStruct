@@ -45,6 +45,7 @@ public class RotatedDetector extends Detector {
         catch (Exception ex){
             ex.printStackTrace();
         }
+        flux.setParticles(detectedParticles);
         return flux;
     }
 }
