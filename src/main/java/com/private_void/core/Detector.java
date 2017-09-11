@@ -67,6 +67,7 @@ public class Detector {
         }
 
         flux.setParticles(detectedParticles);
+        flux.computeScatter(width);
         return flux;
     }
 

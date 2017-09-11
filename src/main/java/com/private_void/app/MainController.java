@@ -205,26 +205,23 @@ public class MainController {
 
         //TODO как-то разукрашивать точки в зависимости от их интенсивности. Тогда детектор как счетчик интенсивности со своими ячейками ваще не нужен, нужна будет тупо его плоскость
         chart.getData().addAll(series);
-
-        chart.getXAxis().autosize();
-        chart.getYAxis().autosize();
-
-//        if (xAxis.getUpperBound() > yAxis.getUpperBound()) {
-//            yAxis.setUpperBound(xAxis.getUpperBound());
-//        } else {
-//            xAxis.setUpperBound(yAxis.getUpperBound());
-//        }
-//
-//        if (xAxis.getLowerBound() < yAxis.getLowerBound()) {
-//            yAxis.setLowerBound(xAxis.getLowerBound());
-//        } else {
-//            xAxis.setLowerBound(yAxis.getLowerBound());
-//        }
+        setChartScale(flux.getUpperBound(), flux.getLowerBound());
 
         intensityOn.setText(String.valueOf(capillar.getDetectedParticlesAmount()));
         intensityAbsorbed.setText(String.valueOf(capillar.getNotDetectedParticlesAmount()));
         intensityOut.setText(String.valueOf(capillar.getOutOfCapillarParticlesAmount()));
 
         successLabel.setVisible(true);
+    }
+
+    private void setChartScale(double upperBound, double lowerBound) {
+        xAxis.setAutoRanging(false);
+        yAxis.setAutoRanging(false);
+
+        xAxis.setUpperBound(upperBound);
+        yAxis.setUpperBound(upperBound);
+
+        xAxis.setLowerBound(lowerBound);
+        yAxis.setLowerBound(lowerBound);
     }
 }

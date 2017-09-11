@@ -7,6 +7,8 @@ public abstract class Flux {
     protected Vector3D fluxAxis;
     protected int particlesAmount;
     protected float minIntensity;
+    protected double upperBound;
+    protected double lowerBound;
     protected ArrayList<Particle> particles;
 
     protected Flux(final Point3D fluxCoordinate, final Vector3D fluxAxis, int particlesAmount, float minIntensity) {
@@ -37,6 +39,14 @@ public abstract class Flux {
         this.minIntensity = minIntensity;
     }
 
+    public double getUpperBound() {
+        return upperBound;
+    }
+
+    public double getLowerBound() {
+        return lowerBound;
+    }
+
     protected void checkParameters() {
         if (fluxAxis.getX() == 0.0f) {
             fluxAxis.setX(0.000001f);
@@ -46,6 +56,29 @@ public abstract class Flux {
         }
         if (fluxAxis.getZ() == 0.0f) {
             fluxAxis.setZ(0.000001f);
+        }
+    }
+
+    public void computeScatter(float maxWidth) {
+        for (Particle particle : particles) {
+            if (particle.getCoordinate().getX() > upperBound) {
+                upperBound = particle.getCoordinate().getX();
+            }
+            if (particle.getCoordinate().getY() > upperBound) {
+                upperBound = particle.getCoordinate().getY();
+            }
+            if (particle.getCoordinate().getX() < lowerBound) {
+                lowerBound = particle.getCoordinate().getX();
+            }
+            if (particle.getCoordinate().getY() < lowerBound) {
+                lowerBound = particle.getCoordinate().getY();
+            }
+        }
+        if (upperBound > maxWidth) {
+            upperBound = maxWidth;
+        }
+        if (lowerBound < -maxWidth) {
+            lowerBound = -maxWidth;
         }
     }
 }
