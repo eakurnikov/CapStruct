@@ -34,6 +34,8 @@ public class Cone extends Surface {
         }
         this.length = length;
         this.divergentAngleR = (float) Math.atan((radius / length) * coneCoefficient);
+        this.detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),
+                2 * radius, CELL_SIZE);
     }
 
     @Override

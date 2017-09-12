@@ -5,4 +5,5 @@ public class Constants {
     public static final float PI = (float) Math.PI;
     public static final int SEED = 1;
     public static final float CELL_SIZE = 1.0f;
+    public static final float CONE_COEFFICIENT = 0.5f;
 }

@@ -115,6 +115,14 @@ public class MainController {
         torRoughAngle.setText("5");
         torReflect.setText("1");
         torSlideAngle.setText("5");
+
+        coneRadius.setText("20");
+        coneAngle.setText("30");
+        coneCoefficient.setText("0.1");
+        coneRoughSize.setText("0.2");
+        coneRoughAngle.setText("5");
+        coneReflect.setText("1");
+        coneSlideAngle.setText("5");
     }
 
     public void startBtnClick(ActionEvent actionEvent) {
@@ -181,18 +189,34 @@ public class MainController {
                     Float.parseFloat(torSlideAngle.getText())
             );
         } else {
-            return new Cone(
-                    new Point3D(Float.parseFloat(coneX.getText()),
+            try {
+                return new Cone(
+                        new Point3D(Float.parseFloat(coneX.getText()),
                                 Float.parseFloat(coneY.getText()),
                                 Float.parseFloat(coneZ.getText())),
-                    Float.parseFloat(coneRadius.getText()),
-                    Float.parseFloat(coneAngle.getText()),
-                    Float.parseFloat(coneCoefficient.getText()),
-                    Float.parseFloat(coneRoughSize.getText()),
-                    Float.parseFloat(coneRoughAngle.getText()),
-                    Float.parseFloat(coneReflect.getText()),
-                    Float.parseFloat(coneSlideAngle.getText())
-            );
+                        Float.parseFloat(coneRadius.getText()),
+                        Float.parseFloat(coneAngle.getText()),
+                        Float.parseFloat(coneCoefficient.getText()),
+                        Float.parseFloat(coneRoughSize.getText()),
+                        Float.parseFloat(coneRoughAngle.getText()),
+                        Float.parseFloat(coneReflect.getText()),
+                        Float.parseFloat(coneSlideAngle.getText())
+                );
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+                return new Cone(
+                        new Point3D(Float.parseFloat(coneX.getText()),
+                                Float.parseFloat(coneY.getText()),
+                                Float.parseFloat(coneZ.getText())),
+                        Float.parseFloat(coneRadius.getText()),
+                        Float.parseFloat(coneAngle.getText()),
+                        Constants.CONE_COEFFICIENT,
+                        Float.parseFloat(coneRoughSize.getText()),
+                        Float.parseFloat(coneRoughAngle.getText()),
+                        Float.parseFloat(coneReflect.getText()),
+                        Float.parseFloat(coneSlideAngle.getText())
+                );
+            }
         }
     }
 
