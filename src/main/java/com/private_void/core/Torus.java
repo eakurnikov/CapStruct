@@ -2,6 +2,8 @@ package com.private_void.core;
 
 import com.private_void.utils.Utils;
 
+import java.util.Iterator;
+
 import static com.private_void.core.Constants.CELL_SIZE;
 import static com.private_void.core.Constants.PI;
 import static com.private_void.utils.Generator.generator;
@@ -82,13 +84,18 @@ public class Torus extends Surface {
     }
 
     @Override
-    public Flux passThrough(Flux flux) {
+    public void passThrough(Flux flux) {
         Point3D newCoordinate;
         float angleVN;
         float x0 = frontCoordinate.getX();
         int reboundsCountMax = 300;
 
-        for (Particle particle : flux.getParticles()) {
+        Iterator<Particle> iterator = flux.getParticles().iterator();
+        Particle particle;
+
+        while (iterator.hasNext()) {
+            particle = iterator.next();
+
             x = particle.getCoordinate().getX();
             y = particle.getCoordinate().getY();
             z = particle.getCoordinate().getZ();
@@ -135,8 +142,9 @@ public class Torus extends Surface {
             else {
                 detector.increaseOutOfCapillarParticlesAmount();
                 detector.increaseOutOfCapillarInensity(particle.getIntensity());
+                iterator.remove();
             }
         }
-        return detector.detect(flux);
+        detector.detect(flux);
     }
 }

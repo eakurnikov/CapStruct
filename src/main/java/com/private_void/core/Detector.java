@@ -1,6 +1,7 @@
 package com.private_void.core;
 
-import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class Detector {
     protected Point3D centerCoordinate;
@@ -8,15 +9,17 @@ public class Detector {
 
     protected int cellsAmount;
     protected int detectedParticlesAmount;
-    protected int notDetectedParticlesAmount;
+    protected int absorbedParticlesAmount;
     protected int outOfCapillarParticlesAmount;
 
     protected float detectedIntensity;
-    protected float notDetectedIntensity;
+    protected float absorbedIntensity;
     protected float outOfCapillarIntensity;
 
     protected float width;
     protected float cellSize;
+    protected double upperBound;
+    protected double lowerBound;
 
     protected float x;
     protected float y;
@@ -30,6 +33,8 @@ public class Detector {
         this.centerCoordinate = centerCoordinate;
         this.width = width;
         this.cellSize = cellSize;
+        this.upperBound = width;
+        this.lowerBound = -width;
         this.detectedParticlesAmount = 0;
         this.detectedIntensity = 0.0f;
 
@@ -37,11 +42,15 @@ public class Detector {
         this.cellsAmount = (int) (2.0f * width / cellSize);
     }
 
-    public Flux detect(Flux flux) {
-        ArrayList<Particle> detectedParticles = new ArrayList<>();
+    public void detect(Flux flux) {
         float L = centerCoordinate.getX();
         try {
-            for (Particle particle : flux.getParticles()) {
+            Iterator<Particle> iterator = flux.getParticles().iterator();
+            Particle particle;
+
+            while (iterator.hasNext()) {
+                particle = iterator.next();
+
                 if (!particle.isAbsorbed() && particle.getIntensity() > flux.getMinIntensity()) {
                     x = particle.getCoordinate().getX();
                     y = particle.getCoordinate().getY();
@@ -55,33 +64,73 @@ public class Detector {
 
                     detectedParticlesAmount++;
                     detectedIntensity += particle.getIntensity();
-                    detectedParticles.add(particle);
                 } else {
-                    notDetectedParticlesAmount++;
-                    notDetectedIntensity += 1;
+                    absorbedParticlesAmount++;
+                    absorbedIntensity += particle.getIntensity();
+                    iterator.remove();
                 }
             }
         }
         catch (Exception ex){
             ex.printStackTrace();
         }
-
-        flux.setParticles(detectedParticles);
-        flux.computeScatter(width);
-        return flux;
+        computeScatter(flux.getParticles());
     }
 
-//    public int getDetectedParticlesAmount() {
-//        return detectedParticlesAmount;
-//    }
-//
-//    public int getNotDetectedParticlesAmount() {
-//        return notDetectedParticlesAmount;
-//    }
-//
-//    public int getOutOfCapillarParticlesAmount() {
-//        return outOfCapillarParticlesAmount;
-//    }
+    protected void computeScatter(List<Particle> particles) {
+        for (Particle particle : particles) {
+            if (particle.getCoordinate().getX() > upperBound) {
+                upperBound = particle.getCoordinate().getX();
+            }
+            if (particle.getCoordinate().getY() > upperBound) {
+                upperBound = particle.getCoordinate().getY();
+            }
+            if (particle.getCoordinate().getX() < lowerBound) {
+                lowerBound = particle.getCoordinate().getX();
+            }
+            if (particle.getCoordinate().getY() < lowerBound) {
+                lowerBound = particle.getCoordinate().getY();
+            }
+        }
+        if (upperBound > width / 2) {
+            upperBound = width / 2;
+        }
+        if (lowerBound < -width / 2) {
+            lowerBound = -width / 2;
+        }
+    }
+
+    public double getUpperBound() {
+        return upperBound;
+    }
+
+    public double getLowerBound() {
+        return lowerBound;
+    }
+
+    public int getDetectedParticlesAmount() {
+        return detectedParticlesAmount;
+    }
+
+    public int getAbsorbedParticlesAmount() {
+        return absorbedParticlesAmount;
+    }
+
+    public int getOutOfCapillarParticlesAmount() {
+        return outOfCapillarParticlesAmount;
+    }
+
+    public float getDetectedIntensity() {
+        return detectedIntensity;
+    }
+
+    public float getAbsorbedIntensity() {
+        return absorbedIntensity;
+    }
+
+    public float getOutOfCapillarIntensity() {
+        return outOfCapillarIntensity;
+    }
 
     public void increaseOutOfCapillarParticlesAmount() {
         outOfCapillarParticlesAmount++;

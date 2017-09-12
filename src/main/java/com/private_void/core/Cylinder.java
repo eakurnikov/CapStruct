@@ -2,6 +2,8 @@ package com.private_void.core;
 
 import com.private_void.utils.Utils;
 
+import java.util.Iterator;
+
 import static com.private_void.core.Constants.CELL_SIZE;
 import static com.private_void.core.Constants.PI;
 import static com.private_void.utils.Generator.generator;
@@ -74,12 +76,17 @@ public class Cylinder extends Surface {
     }
 
     @Override
-    public Flux passThrough(Flux flux) {
+    public void passThrough(Flux flux) {
         Point3D newCoordinate;
         float angleVN;
         float x0 = frontCoordinate.getX();
 
-        for (Particle particle : flux.getParticles()) {
+        Iterator<Particle> iterator = flux.getParticles().iterator();
+        Particle particle;
+
+        while (iterator.hasNext()) {
+            particle = iterator.next();
+
             x = particle.getCoordinate().getX();
             y = particle.getCoordinate().getY();
             z = particle.getCoordinate().getZ();
@@ -89,7 +96,7 @@ public class Cylinder extends Surface {
             Vz = particle.getSpeed().getZ();
 
             if (((Vy / Vx) * (x0 - x) + y) * ((Vy / Vx) * (x0 - x) + y) +
-                ((Vz / Vx) * (x0 - x) + z) * ((Vz / Vx) * (x0 - x) + z) < radius * radius) {
+                    ((Vz / Vx) * (x0 - x) + z) * ((Vz / Vx) * (x0 - x) + z) < radius * radius) {
 
                 newCoordinate = getHitPoint(particle);
 
@@ -113,12 +120,12 @@ public class Cylinder extends Surface {
                         break;
                     }
                 }
-            }
-            else {
+            } else {
                 detector.increaseOutOfCapillarParticlesAmount();
                 detector.increaseOutOfCapillarInensity(particle.getIntensity());
+                iterator.remove();
             }
         }
-        return detector.detect(flux);
+        detector.detect(flux);
     }
 }

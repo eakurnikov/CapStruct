@@ -2,7 +2,7 @@ package com.private_void.core;
 
 import com.private_void.utils.Utils;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 
 public class RotatedDetector extends Detector {
     private float angleR;
@@ -13,12 +13,16 @@ public class RotatedDetector extends Detector {
     }
 
     @Override
-    public Flux detect(Flux flux) {
-        ArrayList<Particle> detectedParticles = new ArrayList<>();
+    public void detect(Flux flux) {
         float tanR = (float) Math.tan(angleR);
         float L = centerCoordinate.getX();
         try {
-            for (Particle particle : flux.getParticles()) {
+            Iterator<Particle> iterator = flux.getParticles().iterator();
+            Particle particle;
+
+            while (iterator.hasNext()) {
+                particle = iterator.next();
+
                 if (!particle.isAbsorbed() && particle.getIntensity() > flux.getMinIntensity()) {
                     x = particle.getCoordinate().getX();
                     y = particle.getCoordinate().getY();
@@ -32,21 +36,18 @@ public class RotatedDetector extends Detector {
                                            (Vy / Vz) * ((x * Vz - z * Vx - L * Vz) / (tanR * Vz - Vx) - z) + y,
                                            (x * Vz - z * Vx - L * Vz) / (tanR * Vz - Vx));
 
-                    
                     detectedParticlesAmount++;
                     detectedIntensity += particle.getIntensity();
-                    detectedParticles.add(particle);
                 } else {
-                    notDetectedParticlesAmount++;
-                    notDetectedIntensity += 1;
+                    absorbedParticlesAmount++;
+                    absorbedIntensity += particle.getIntensity();
+                    iterator.remove();
                 }
             }
         }
         catch (Exception ex){
             ex.printStackTrace();
         }
-        flux.setParticles(detectedParticles);
-        flux.computeScatter(width);
-        return flux;
+        computeScatter(flux.getParticles());
     }
 }

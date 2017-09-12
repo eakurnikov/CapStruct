@@ -120,7 +120,7 @@ public class MainController {
     public void startBtnClick(ActionEvent actionEvent) {
         Flux flux = createFlux();
         Surface capillar = createCapillar();
-        flux = capillar.passThrough(flux);
+        capillar.passThrough(flux);
         showResult(flux, capillar);
     }
 
@@ -197,19 +197,21 @@ public class MainController {
     }
 
     private void showResult(Flux flux, Surface capillar) {
+        Detector detector = capillar.getDetector();
         XYChart.Series series = new XYChart.Series();
         series.setName("Particles");
         for (Particle particle : flux.getParticles()) {
             series.getData().add(new XYChart.Data(particle.getCoordinate().getZ(), particle.getCoordinate().getY()));
         }
 
+        //TODO прикрутить зум по сколлу колесика мыши
         //TODO как-то разукрашивать точки в зависимости от их интенсивности. Тогда детектор как счетчик интенсивности со своими ячейками ваще не нужен, нужна будет тупо его плоскость
         chart.getData().addAll(series);
-        setChartScale(flux.getUpperBound(), flux.getLowerBound());
+        setChartScale(detector.getUpperBound(), detector.getLowerBound());
 
-        intensityOn.setText(String.valueOf(capillar.getDetectedParticlesAmount()));
-        intensityAbsorbed.setText(String.valueOf(capillar.getNotDetectedParticlesAmount()));
-        intensityOut.setText(String.valueOf(capillar.getOutOfCapillarParticlesAmount()));
+        intensityOn.setText(String.valueOf(detector.getDetectedIntensity()));
+        intensityAbsorbed.setText(String.valueOf(detector.getAbsorbedIntensity()));
+        intensityOut.setText(String.valueOf(detector.getOutOfCapillarIntensity()));
 
         successLabel.setVisible(true);
     }

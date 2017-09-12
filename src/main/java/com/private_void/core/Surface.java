@@ -35,7 +35,7 @@ public abstract class Surface {
 
     public abstract Point3D getHitPoint(final Particle particle);
 
-    public abstract Flux passThrough(Flux flux);
+    public abstract void passThrough(Flux flux);
 
     public void setNormal(float x, float y, float z) {
         normal.setX(x);
@@ -49,27 +49,7 @@ public abstract class Surface {
         axis.setZ(z);
     }
 
-    public int getDetectedParticlesAmount() {
-        return detector.detectedParticlesAmount;
-    }
-
-    public int getNotDetectedParticlesAmount() {
-        return detector.notDetectedParticlesAmount;
-    }
-
-    public int getOutOfCapillarParticlesAmount() {
-        return detector.outOfCapillarParticlesAmount;
-    }
-
-    public float getDetectedIntensity() {
-        return detector.detectedIntensity;
-    }
-
-    public float getNotDetectedIntensity() {
-        return detector.notDetectedIntensity;
-    }
-
-    public float getOutOfCapillarIntensity() {
-        return detector.outOfCapillarIntensity;
+    public Detector getDetector() {
+        return detector;
     }
 }
