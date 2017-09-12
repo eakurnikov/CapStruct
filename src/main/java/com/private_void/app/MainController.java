@@ -10,6 +10,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 
+import static com.private_void.core.Constants.CONE_COEFFICIENT;
+
 public class MainController {
     @FXML
     public Tab pFluxTab;
@@ -106,7 +108,7 @@ public class MainController {
         cylRoughSize.setText("0.1");
         cylRoughAngle.setText("5");
         cylReflect.setText("1");
-        cylSlideAngle.setText("5");
+        cylSlideAngle.setText("90");
 
         torRadius.setText("20");
         torBigRadius.setText("1000");
@@ -114,7 +116,7 @@ public class MainController {
         torRoughSize.setText("0.2");
         torRoughAngle.setText("5");
         torReflect.setText("1");
-        torSlideAngle.setText("5");
+        torSlideAngle.setText("90");
 
         coneRadius.setText("20");
         coneAngle.setText("30");
@@ -122,7 +124,7 @@ public class MainController {
         coneRoughSize.setText("0.2");
         coneRoughAngle.setText("5");
         coneReflect.setText("1");
-        coneSlideAngle.setText("5");
+        coneSlideAngle.setText("90");
     }
 
     public void startBtnClick(ActionEvent actionEvent) {
@@ -210,7 +212,7 @@ public class MainController {
                                 Float.parseFloat(coneZ.getText())),
                         Float.parseFloat(coneRadius.getText()),
                         Float.parseFloat(coneAngle.getText()),
-                        Constants.CONE_COEFFICIENT,
+                        CONE_COEFFICIENT,
                         Float.parseFloat(coneRoughSize.getText()),
                         Float.parseFloat(coneRoughAngle.getText()),
                         Float.parseFloat(coneReflect.getText()),

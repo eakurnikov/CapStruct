@@ -129,10 +129,11 @@ public class Torus extends Surface {
                     normal.turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
                     axis = normal.getNewVectorByTurningAroundOX(PI / 2);
 
-                    angleVN = particle.getSpeed().getAngle(normal);
-                    if (angleVN <= slideAngleR && reboundsCount  < reboundsCountMax) {
-                        particle.getSpeed().turnAroundVector(2 * angleVN, axis);
+                    angleVN = particle.getSpeed().getAngleWithShift(normal.inverse());
+                    if (angleVN >= antiSlideAngleR && reboundsCount  < reboundsCountMax) {
+                        particle.getSpeed().turnAroundVector(2 * Math.abs(PI / 2 - angleVN), axis);
                         particle.decreaseIntensity(reflectivity);
+                        newCoordinate = getHitPoint(particle);
                     } else {
                         particle.setAbsorbed(true);
                         break;

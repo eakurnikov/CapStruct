@@ -66,7 +66,6 @@ public class Cylinder extends Surface {
                     solution[i] -= delta[i];
                 }
             } catch (ArithmeticException e) {
-                System.out.println("Division by zero.");
                 System.out.println(e.getMessage());
             } catch (Exception e){
                 System.out.println(e.getMessage());
@@ -110,10 +109,11 @@ public class Cylinder extends Surface {
                     normal.turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
                     axis = normal.getNewVectorByTurningAroundOX(PI / 2);
 
-                    angleVN = particle.getSpeed().getAngle(normal);
-                    if (angleVN <= slideAngleR) {
-                        particle.getSpeed().turnAroundVector(2 * angleVN, axis);
+                    angleVN = particle.getSpeed().getAngle(normal.inverse());
+                    if (angleVN >= antiSlideAngleR) {
+                        particle.getSpeed().turnAroundVector(2 * Math.abs(PI / 2 - angleVN), axis);
                         particle.decreaseIntensity(reflectivity);
+                        //TODO тут иногда координата х не меняется (при расходящемся, например)
                         newCoordinate = getHitPoint(particle);
                     } else {
                         particle.setAbsorbed(true);

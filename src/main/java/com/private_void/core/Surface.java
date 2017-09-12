@@ -2,6 +2,8 @@ package com.private_void.core;
 
 import com.private_void.utils.Utils;
 
+import static com.private_void.core.Constants.PI;
+
 public abstract class Surface {
     protected Detector detector;
     protected Point3D frontCoordinate;
@@ -12,6 +14,7 @@ public abstract class Surface {
     protected float roughnessAngleR;
     protected float reflectivity;
     protected float slideAngleR;
+    protected float antiSlideAngleR;
 
     protected float x;
     protected float y;
@@ -28,6 +31,7 @@ public abstract class Surface {
         this.roughnessAngleR = Utils.convertDegreesToRads(roughnessAngleD);
         this.reflectivity = reflectivity;
         this.slideAngleR = Utils.convertDegreesToRads(slideAngleD);
+        this.antiSlideAngleR = PI / 2 - slideAngleR;
 
         normal = new Vector3D(0.0f, 1.0f, 0.0f);
         axis = new Vector3D(1.0f, 0.0f, 0.0f);

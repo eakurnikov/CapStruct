@@ -31,10 +31,8 @@ public class Vector3D extends Point3D {
             x = x / norm;
             y = y / norm;
             z = z / norm;
-        }
-        catch(ArithmeticException e) {
+        } catch (ArithmeticException e) {
             e.printStackTrace();
-            System.out.println("Деление на ноль.");
         }
     }
 
@@ -56,8 +54,23 @@ public class Vector3D extends Point3D {
         normalize();
     }
 
+    public Vector3D inverse() {
+        super.setX(-x);
+        super.setY(-y);
+        super.setZ(-z);
+        normalize();
+        return this;
+    }
+
     public float getAngle(final Vector3D vector3D) {
-        return (float) (Math.acos((x * vector3D.getX() + y * vector3D.getY() + z * vector3D.getZ()) / (Math.sqrt(x * x + y * y + z * z) * Math.sqrt(vector3D.getX() * vector3D.getX() + vector3D.getY() * vector3D.getY() + vector3D.getZ() * vector3D.getZ()))) - Math.PI / 2);
+        return (float) (Math.acos((x * vector3D.getX() + y * vector3D.getY() + z * vector3D.getZ()) /
+                (Math.sqrt(x * x + y * y + z * z) * Math.sqrt(vector3D.getX() * vector3D.getX() + vector3D.getY() * vector3D.getY() + vector3D.getZ() * vector3D.getZ()))));
+    }
+
+    public float getAngleWithShift(final Vector3D vector3D) {
+        return (float) (Math.acos((x * vector3D.getX() + y * vector3D.getY() + z * vector3D.getZ()) /
+                (Math.sqrt(x * x + y * y + z * z) * Math.sqrt(vector3D.getX() * vector3D.getX() + vector3D.getY() * vector3D.getY() + vector3D.getZ() * vector3D.getZ())))
+                - Math.PI / 2);
     }
 
     public void setRotationMatrixX(float angle) {

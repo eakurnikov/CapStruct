@@ -16,7 +16,6 @@ public abstract class Flux {
         this.particlesAmount = particlesAmount;
         this.minIntensity = minIntensity;
         this.particles = new LinkedList<>();
-
         checkParameters();
     }
 
