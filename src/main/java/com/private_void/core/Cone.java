@@ -127,10 +127,11 @@ public class Cone extends Surface {
                 y = newCoordinate.getY();
                 z = newCoordinate.getZ();
 
-                while (newCoordinate.getX() <= length) {
-                    particle.setCoordinate(newCoordinate);
-                    reboundsCount++;
+                Vx = particle.getSpeed().getX();
+                Vy = particle.getSpeed().getY();
+                Vz = particle.getSpeed().getZ();
 
+                while (newCoordinate.getX() <= length) {
                     setNormal(-1.0f, (float) (-y * (1.0f / Math.tan(divergentAngleR)) / (Math.sqrt(y * y + z * z))), (float) (-z * (1.0f / Math.tan(divergentAngleR)) / (Math.sqrt(y * y + z * z))));
                     setAxis(1.0f, 0.0f, 0.0f);
 
@@ -140,9 +141,20 @@ public class Cone extends Surface {
 
                     angleVN = particle.getSpeed().getAngleWithShift(normal.inverse());
                     if (angleVN >= antiSlideAngleR && reboundsCount  < reboundsCountMax) {
+                        reboundsCount++;
+                        particle.setCoordinate(newCoordinate);
                         particle.getSpeed().turnAroundVector(2 * Math.abs(PI / 2 - angleVN), axis);
                         particle.decreaseIntensity(reflectivity);
+
                         newCoordinate = getHitPoint(particle);
+
+                        x = newCoordinate.getX();
+                        y = newCoordinate.getY();
+                        z = newCoordinate.getZ();
+
+                        Vx = particle.getSpeed().getX();
+                        Vy = particle.getSpeed().getY();
+                        Vz = particle.getSpeed().getZ();
                     } else {
                         particle.setAbsorbed(true);
                         break;

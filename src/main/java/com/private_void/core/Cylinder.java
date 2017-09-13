@@ -33,7 +33,7 @@ public class Cylinder extends Surface {
         float dr = generator().uniformFloat(0.0f, roughnessSize);
 
         int iterationsAmount = 0;
-        int iterationsAmountMax = 200;
+        int iterationsAmountMax = 100;
 
         while (Utils.getMax(delta) > E) {
             try {
@@ -100,8 +100,6 @@ public class Cylinder extends Surface {
                 newCoordinate = getHitPoint(particle);
 
                 while (newCoordinate.getX() <= length) {
-                    particle.setCoordinate(newCoordinate);
-
                     setNormal(0.0f, -2 * newCoordinate.getY(), -2 * newCoordinate.getZ());
                     setAxis(1.0f, 0.0f, 0.0f);
 
@@ -111,6 +109,7 @@ public class Cylinder extends Surface {
 
                     angleVN = particle.getSpeed().getAngle(normal.inverse());
                     if (angleVN >= antiSlideAngleR) {
+                        particle.setCoordinate(newCoordinate);
                         particle.getSpeed().turnAroundVector(2 * Math.abs(PI / 2 - angleVN), axis);
                         particle.decreaseIntensity(reflectivity);
                         //TODO тут иногда координата х не меняется (при расходящемся, например)

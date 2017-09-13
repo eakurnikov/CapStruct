@@ -116,10 +116,11 @@ public class Torus extends Surface {
                 y = newCoordinate.getY();
                 z = newCoordinate.getZ();
 
-                while (Math.asin(x / Math.sqrt(x * x + y * y + (z + torusRadius) * (z + torusRadius))) <= curvAngleR) {
-                    particle.setCoordinate(newCoordinate);
-                    reboundsCount++;
+                Vx = particle.getSpeed().getX();
+                Vy = particle.getSpeed().getY();
+                Vz = particle.getSpeed().getZ();
 
+                while (Math.asin(x / Math.sqrt(x * x + y * y + (z + torusRadius) * (z + torusRadius))) <= curvAngleR) {
                     setNormal((-2 * (x * x + y * y + (z + torusRadius) * (z + torusRadius) + torusRadius * torusRadius - radius * radius) * 2 * x + 8 * torusRadius * torusRadius * x),
                               (-2 * (x * x + y * y + (z + torusRadius) * (z + torusRadius) + torusRadius * torusRadius - radius * radius) * 2 * y),
                               (-2 * (x * x + y * y + (z + torusRadius) * (z + torusRadius) + torusRadius * torusRadius - radius * radius) * 2 * (z + torusRadius) + 8 * torusRadius * torusRadius * (z + torusRadius)));
@@ -131,9 +132,20 @@ public class Torus extends Surface {
 
                     angleVN = particle.getSpeed().getAngleWithShift(normal.inverse());
                     if (angleVN >= antiSlideAngleR && reboundsCount  < reboundsCountMax) {
+                        reboundsCount++;
+                        particle.setCoordinate(newCoordinate);
                         particle.getSpeed().turnAroundVector(2 * Math.abs(PI / 2 - angleVN), axis);
                         particle.decreaseIntensity(reflectivity);
+
                         newCoordinate = getHitPoint(particle);
+
+                        x = newCoordinate.getX();
+                        y = newCoordinate.getY();
+                        z = newCoordinate.getZ();
+
+                        Vx = particle.getSpeed().getX();
+                        Vy = particle.getSpeed().getY();
+                        Vz = particle.getSpeed().getZ();
                     } else {
                         particle.setAbsorbed(true);
                         break;
