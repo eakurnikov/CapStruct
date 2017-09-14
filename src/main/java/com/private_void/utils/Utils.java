@@ -1,6 +1,6 @@
 package com.private_void.utils;
 
-import static com.private_void.core.Constants.ZERO;
+import static com.private_void.utils.Constants.ZERO;
 
 public final class Utils {
 

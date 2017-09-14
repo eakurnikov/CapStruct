@@ -1,11 +1,15 @@
-package com.private_void.core;
+package com.private_void.core.capillars;
 
+import com.private_void.core.detectors.RotatedDetector;
+import com.private_void.core.fluxes.Flux;
+import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.particles.Particle;
 import com.private_void.utils.Utils;
 
 import java.util.Iterator;
 
-import static com.private_void.core.Constants.CELL_SIZE;
-import static com.private_void.core.Constants.PI;
+import static com.private_void.utils.Constants.*;
 import static com.private_void.utils.Generator.generator;
 
 public class Torus extends Surface {
@@ -30,9 +34,9 @@ public class Torus extends Surface {
 
     @Override
     public Point3D getHitPoint(final Particle particle) {
-        float[] solution = {particle.getCoordinate().getX() + particle.getSpeed().getX() * radius,
-                            particle.getCoordinate().getY() + particle.getSpeed().getY() * radius,
-                            particle.getCoordinate().getZ() + particle.getSpeed().getZ() * radius};
+        float[] solution = {particle.getCoordinate().getX() + particle.getSpeed().getX() * radius * particle.getRecursiveIterationCount(),
+                            particle.getCoordinate().getY() + particle.getSpeed().getY() * radius * particle.getRecursiveIterationCount(),
+                            particle.getCoordinate().getZ() + particle.getSpeed().getZ() * radius * particle.getRecursiveIterationCount()};
         float[] delta = {1.0f, 1.0f, 1.0f};
         float[] F  = new float[3];
         float[][] W = new float[3][3];
@@ -41,15 +45,19 @@ public class Torus extends Surface {
         float dr = generator().uniformFloat(0.0f, roughnessSize);
 
         int iterationsAmount = 0;
-        int iterationsAmountMax = 200;
 
         while (Utils.getMax(delta) > E) {
             try {
                 // Костыль для уничтожения частиц, вычисление координат которых зациклилось
                 iterationsAmount++;
-                if (iterationsAmount > iterationsAmountMax) {
-                    particle.setAbsorbed(true);
-                    break;
+                if (iterationsAmount > ITERATIONS_MAX) {
+                    if (particle.isRecursiveIterationsLimitReached()) {
+                        particle.setAbsorbed(true);
+                        return particle.getCoordinate();
+                    } else {
+                        particle.recursiveIteration();
+                        return getHitPoint(particle);
+                    }
                 }
 
                 W[0][0] = 2 * (solution[0] * solution[0] + solution[1] * solution[1] + (solution[2] + torusRadius) * (solution[2] + torusRadius) + torusRadius * torusRadius - (radius - dr) * (radius - dr)) * 2 * solution[0] - 8 * torusRadius * torusRadius * solution[0];
@@ -74,78 +82,55 @@ public class Torus extends Surface {
                     solution[i] -= delta[i]; //возможно, нужно разыменовывать дельту
                 }
             } catch (ArithmeticException e) {
-                System.out.println("Division by zero.");
                 System.out.println(e.getMessage());
             } catch (Exception e){
                 System.out.println(e.getMessage());
             }
         }
-        return new Point3D(solution[0], solution[1], solution[2]);
+
+        Point3D newCoordinate = new Point3D(solution[0], solution[1], solution[2]);
+        if (newCoordinate.isNear(particle.getCoordinate()) && !particle.isRecursiveIterationsLimitReached()) {
+            particle.recursiveIteration();
+            return getHitPoint(particle);
+        } else {
+            particle.stopRecursiveIterations();
+            return newCoordinate;
+        }
     }
 
     @Override
     public void passThrough(Flux flux) {
+        Particle particle;
         Point3D newCoordinate;
         float angleVN;
-        float x0 = frontCoordinate.getX();
-        int reboundsCountMax = 300;
 
         Iterator<Particle> iterator = flux.getParticles().iterator();
-        Particle particle;
-
         while (iterator.hasNext()) {
             particle = iterator.next();
 
-            x = particle.getCoordinate().getX();
-            y = particle.getCoordinate().getY();
-            z = particle.getCoordinate().getZ();
-
-            Vx = particle.getSpeed().getX();
-            Vy = particle.getSpeed().getY();
-            Vz = particle.getSpeed().getZ();
-
-            if (((Vy / Vx) * (x0 - x) + y) * ((Vy / Vx) * (x0 - x) + y) +
-                ((Vz / Vx) * (x0 - x) + z) * ((Vz / Vx) * (x0 - x) + z) < radius * radius) {
+            if (willParticleGetInside(particle)) {
                 // Костыль для уничтожения частиц, у которых произошло слишком много отражений внутри каплляра. В принципе он не нужен
                 // так как, если будет много отражений, интенсивность просто убьется. Но нужно протестировать
                 int reboundsCount = 0;
-
                 newCoordinate = getHitPoint(particle);
 
-                x = newCoordinate.getX();
-                y = newCoordinate.getY();
-                z = newCoordinate.getZ();
+                while (isPointInside(newCoordinate)) {
+                    axis = new Vector3D(1.0f, 0.0f, 0.0f)
+                            .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
 
-                Vx = particle.getSpeed().getX();
-                Vy = particle.getSpeed().getY();
-                Vz = particle.getSpeed().getZ();
+                    normal = getNormal(newCoordinate)
+                            .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
 
-                while (Math.asin(x / Math.sqrt(x * x + y * y + (z + torusRadius) * (z + torusRadius))) <= curvAngleR) {
-                    setNormal((-2 * (x * x + y * y + (z + torusRadius) * (z + torusRadius) + torusRadius * torusRadius - radius * radius) * 2 * x + 8 * torusRadius * torusRadius * x),
-                              (-2 * (x * x + y * y + (z + torusRadius) * (z + torusRadius) + torusRadius * torusRadius - radius * radius) * 2 * y),
-                              (-2 * (x * x + y * y + (z + torusRadius) * (z + torusRadius) + torusRadius * torusRadius - radius * radius) * 2 * (z + torusRadius) + 8 * torusRadius * torusRadius * (z + torusRadius)));
-                    setAxis(1.0f, 0.0f, 0.0f);
+                    axis = normal.getNewByTurningAroundOX(PI / 2);
 
-                    axis.turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
-                    normal.turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
-                    axis = normal.getNewVectorByTurningAroundOX(PI / 2);
+                    angleVN = particle.getSpeed().getAngle(normal.inverse());
 
-                    angleVN = particle.getSpeed().getAngleWithShift(normal.inverse());
-                    if (angleVN >= antiSlideAngleR && reboundsCount  < reboundsCountMax) {
+                    if (angleVN >= antiSlideAngleR && reboundsCount  < REBOUNDS_COUNT_MAX) {
                         reboundsCount++;
                         particle.setCoordinate(newCoordinate);
-                        particle.getSpeed().turnAroundVector(2 * Math.abs(PI / 2 - angleVN), axis);
+                        particle.setSpeed(particle.getSpeed().getNewByTurningAroundVector(2 * Math.abs(PI / 2 - angleVN), axis));
                         particle.decreaseIntensity(reflectivity);
-
                         newCoordinate = getHitPoint(particle);
-
-                        x = newCoordinate.getX();
-                        y = newCoordinate.getY();
-                        z = newCoordinate.getZ();
-
-                        Vx = particle.getSpeed().getX();
-                        Vy = particle.getSpeed().getY();
-                        Vz = particle.getSpeed().getZ();
                     } else {
                         particle.setAbsorbed(true);
                         break;
@@ -159,5 +144,25 @@ public class Torus extends Surface {
             }
         }
         detector.detect(flux);
+    }
+
+    @Override
+    protected boolean isPointInside(Point3D point) {
+        float x = point.getX();
+        float y = point.getY();
+        float z = point.getZ();
+
+        return Math.asin(x / Math.sqrt(x * x + y * y + (z + torusRadius) * (z + torusRadius))) <= curvAngleR;
+    }
+
+    @Override
+    protected Vector3D getNormal(Point3D point) {
+        float x = point.getX();
+        float y = point.getY();
+        float z = point.getZ();
+
+        return new Vector3D((-2 * (x * x + y * y + (z + torusRadius) * (z + torusRadius) + torusRadius * torusRadius - radius * radius) * 2 * x + 8 * torusRadius * torusRadius * x),
+                (-2 * (x * x + y * y + (z + torusRadius) * (z + torusRadius) + torusRadius * torusRadius - radius * radius) * 2 * y),
+                (-2 * (x * x + y * y + (z + torusRadius) * (z + torusRadius) + torusRadius * torusRadius - radius * radius) * 2 * (z + torusRadius) + 8 * torusRadius * torusRadius * (z + torusRadius)));
     }
 }

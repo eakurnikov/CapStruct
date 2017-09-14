@@ -1,14 +1,19 @@
-package com.private_void.core;
+package com.private_void.core.detectors;
+
+import com.private_void.core.fluxes.Flux;
+import com.private_void.core.particles.Particle;
+import com.private_void.core.geometry.Point3D;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Detector {
     protected Point3D centerCoordinate;
-//    protected Point3D leftBottomPoint;
+    protected float width;
 
-//    protected int cellsAmount;
+    protected double upperBound;
+    protected double lowerBound;
+
     protected int detectedParticlesAmount;
     protected int absorbedParticlesAmount;
     protected int outOfCapillarParticlesAmount;
@@ -17,88 +22,76 @@ public class Detector {
     protected float detectedIntensity;
     protected float absorbedIntensity;
     protected float outOfCapillarIntensity;
-    protected int outOfDetectorIntensity;
+    protected float outOfDetectorIntensity;
 
-    protected float width;
+//    protected Point3D leftBottomPoint;
 //    protected float cellSize;
-    protected double upperBound;
-    protected double lowerBound;
-
-    protected float x;
-    protected float y;
-    protected float z;
-
-    protected float Vx;
-    protected float Vy;
-    protected float Vz;
+//    protected int cellsAmount;
 
     public Detector(final Point3D centerCoordinate, float width, float cellSize) {
         this.centerCoordinate = centerCoordinate;
         this.width = width;
-//        this.cellSize = cellSize;
         this.upperBound = width / 2;
         this.lowerBound = -width / 2;
         this.detectedParticlesAmount = 0;
         this.detectedIntensity = 0.0f;
 
 //        this.leftBottomPoint = new Point3D(centerCoordinate.getX(), centerCoordinate.getY() - width, centerCoordinate.getZ() - width);
+//        this.cellSize = cellSize;
 //        this.cellsAmount = (int) (2.0f * width / cellSize);
     }
 
     public void detect(Flux flux) {
-        float L = centerCoordinate.getX();
-        try {
-            Iterator<Particle> iterator = flux.getParticles().iterator();
-            Particle particle;
-
-            while (iterator.hasNext()) {
-                particle = iterator.next();
-
-                if (!particle.isAbsorbed() && particle.getIntensity() > flux.getMinIntensity()) {
-                    x = particle.getCoordinate().getX();
-                    y = particle.getCoordinate().getY();
-                    z = particle.getCoordinate().getZ();
-
-                    Vx = particle.getSpeed().getX();
-                    Vy = particle.getSpeed().getY();
-                    Vz = particle.getSpeed().getZ();
-
-                    particle.setCoordinate(L, (Vy / Vx) * (L - x) + y, (Vz / Vx) * (L - x) + z);
-
-                    if (Math.abs(particle.getCoordinate().getY()) > width / 2 || Math.abs(particle.getCoordinate().getZ()) > width / 2) {
-                        outOfDetectorParticlesAmount++;
-                        outOfDetectorIntensity += particle.getIntensity();
-                        iterator.remove();
-                    } else {
-                        detectedParticlesAmount++;
-                        detectedIntensity += particle.getIntensity();
-                    }
+        Particle particle;
+        Iterator<Particle> iterator = flux.getParticles().iterator();
+        while (iterator.hasNext()) {
+            particle = iterator.next();
+            if (!particle.isAbsorbed() && particle.getIntensity() > flux.getMinIntensity()) {
+                particle.setCoordinate(getCoordinateOnDetector(particle));
+                if (Math.abs(particle.getCoordinate().getY()) > width / 2 || Math.abs(particle.getCoordinate().getZ()) > width / 2) {
+                    outOfDetectorParticlesAmount++;
+                    outOfDetectorIntensity += particle.getIntensity();
+//                        iterator.remove();
                 } else {
-                    absorbedParticlesAmount++;
-                    absorbedIntensity += particle.getIntensity();
-                    iterator.remove();
+                    detectedParticlesAmount++;
+                    detectedIntensity += particle.getIntensity();
                 }
+            } else {
+                absorbedParticlesAmount++;
+                absorbedIntensity += particle.getIntensity();
+                iterator.remove();
             }
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
         }
         computeScatter(flux.getParticles());
     }
 
+    protected Point3D getCoordinateOnDetector(Particle particle) {
+        float L = centerCoordinate.getX();
+
+        float x = particle.getCoordinate().getX();
+        float y = particle.getCoordinate().getY();
+        float z = particle.getCoordinate().getZ();
+
+        float Vx = particle.getSpeed().getX();
+        float Vy = particle.getSpeed().getY();
+        float Vz = particle.getSpeed().getZ();
+
+        return new Point3D(L, (Vy / Vx) * (L - x) + y, (Vz / Vx) * (L - x) + z);
+    }
+
     protected void computeScatter(List<Particle> particles) {
         for (Particle particle : particles) {
-            if (particle.getCoordinate().getX() > upperBound) {
-                upperBound = particle.getCoordinate().getX();
-            }
             if (particle.getCoordinate().getY() > upperBound) {
                 upperBound = particle.getCoordinate().getY();
             }
-            if (particle.getCoordinate().getX() < lowerBound) {
-                lowerBound = particle.getCoordinate().getX();
+            if (particle.getCoordinate().getZ() > upperBound) {
+                upperBound = particle.getCoordinate().getZ();
             }
             if (particle.getCoordinate().getY() < lowerBound) {
                 lowerBound = particle.getCoordinate().getY();
+            }
+            if (particle.getCoordinate().getZ() < lowerBound) {
+                lowerBound = particle.getCoordinate().getZ();
             }
         }
         if (upperBound > width / 2) {
@@ -145,7 +138,7 @@ public class Detector {
         return outOfCapillarIntensity;
     }
 
-    public int getOutOfDetectorIntensity() {
+    public float getOutOfDetectorIntensity() {
         return outOfDetectorIntensity;
     }
 

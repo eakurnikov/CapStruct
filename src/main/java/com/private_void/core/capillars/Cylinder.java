@@ -1,11 +1,15 @@
-package com.private_void.core;
+package com.private_void.core.capillars;
 
+import com.private_void.core.detectors.Detector;
+import com.private_void.core.fluxes.Flux;
+import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.particles.Particle;
 import com.private_void.utils.Utils;
 
 import java.util.Iterator;
 
-import static com.private_void.core.Constants.CELL_SIZE;
-import static com.private_void.core.Constants.PI;
+import static com.private_void.utils.Constants.*;
 import static com.private_void.utils.Generator.generator;
 
 public class Cylinder extends Surface {
@@ -22,7 +26,7 @@ public class Cylinder extends Surface {
 
     @Override
     public Point3D getHitPoint(final Particle particle) {
-        float[] solution = {particle.getCoordinate().getX() + radius,
+        float[] solution = {particle.getCoordinate().getX() + radius * particle.getRecursiveIterationCount(),
                             particle.getCoordinate().getY() + (particle.getSpeed().getY() / Math.abs(particle.getSpeed().getY())) * radius,
                             particle.getCoordinate().getZ() + (particle.getSpeed().getZ() / Math.abs(particle.getSpeed().getZ())) * radius};
         float[] delta = {1.0f, 1.0f, 1.0f};
@@ -33,15 +37,19 @@ public class Cylinder extends Surface {
         float dr = generator().uniformFloat(0.0f, roughnessSize);
 
         int iterationsAmount = 0;
-        int iterationsAmountMax = 100;
 
         while (Utils.getMax(delta) > E) {
             try {
                 // Костыль для уничтожения частиц, вычисление координат которых зациклилось
                 iterationsAmount++;
-                if (iterationsAmount > iterationsAmountMax) {
-                    particle.setAbsorbed(true);
-                    break;
+                if (iterationsAmount > ITERATIONS_MAX) {
+                    if (particle.isRecursiveIterationsLimitReached()) {
+                        particle.setAbsorbed(true);
+                        return particle.getCoordinate();
+                    } else {
+                        particle.recursiveIteration();
+                        return getHitPoint(particle);
+                    }
                 }
 
                 W[0][0] = 0.0f;
@@ -71,48 +79,59 @@ public class Cylinder extends Surface {
                 System.out.println(e.getMessage());
             }
         }
-        return new Point3D(solution[0], solution[1], solution[2]);
+
+//        Point3D newCoordinate = new Point3D(solution[0], solution[1], solution[2]);
+//        if (newCoordinate.isNear(particle.getCoordinate())) {
+//            if (particle.isRecursiveIterationsLimitReached()) {
+//                particle.setAbsorbed(true);
+//                return newCoordinate;
+//            } else {
+//                particle.recursiveIteration();
+//                return getHitPoint(particle);
+//            }
+//        } else {
+//            particle.stopRecursiveIterations();
+//            return newCoordinate;
+//        }
+
+        Point3D newCoordinate = new Point3D(solution[0], solution[1], solution[2]);
+        if (newCoordinate.isNear(particle.getCoordinate()) && !particle.isRecursiveIterationsLimitReached()) {
+            particle.recursiveIteration();
+            return getHitPoint(particle);
+        } else {
+            particle.stopRecursiveIterations();
+            return newCoordinate;
+        }
     }
 
     @Override
     public void passThrough(Flux flux) {
+        Particle particle;
         Point3D newCoordinate;
         float angleVN;
-        float x0 = frontCoordinate.getX();
 
         Iterator<Particle> iterator = flux.getParticles().iterator();
-        Particle particle;
-
         while (iterator.hasNext()) {
             particle = iterator.next();
 
-            x = particle.getCoordinate().getX();
-            y = particle.getCoordinate().getY();
-            z = particle.getCoordinate().getZ();
-
-            Vx = particle.getSpeed().getX();
-            Vy = particle.getSpeed().getY();
-            Vz = particle.getSpeed().getZ();
-
-            if (((Vy / Vx) * (x0 - x) + y) * ((Vy / Vx) * (x0 - x) + y) +
-                    ((Vz / Vx) * (x0 - x) + z) * ((Vz / Vx) * (x0 - x) + z) < radius * radius) {
-
+            if (willParticleGetInside(particle)) {
                 newCoordinate = getHitPoint(particle);
 
-                while (newCoordinate.getX() <= length) {
-                    setNormal(0.0f, -2 * newCoordinate.getY(), -2 * newCoordinate.getZ());
-                    setAxis(1.0f, 0.0f, 0.0f);
+                while (isPointInside(newCoordinate)) {
+                    axis = new Vector3D(1.0f, 0.0f, 0.0f)
+                            .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
 
-                    axis.turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
-                    normal.turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
-                    axis = normal.getNewVectorByTurningAroundOX(PI / 2);
+                    normal = getNormal(newCoordinate)
+                            .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
+
+                    axis = normal.getNewByTurningAroundOX(PI / 2);
 
                     angleVN = particle.getSpeed().getAngle(normal.inverse());
+
                     if (angleVN >= antiSlideAngleR) {
                         particle.setCoordinate(newCoordinate);
-                        particle.getSpeed().turnAroundVector(2 * Math.abs(PI / 2 - angleVN), axis);
+                        particle.setSpeed(particle.getSpeed().getNewByTurningAroundVector(2 * Math.abs(PI / 2 - angleVN), axis));
                         particle.decreaseIntensity(reflectivity);
-                        //TODO тут иногда координата х не меняется (при расходящемся, например)
                         newCoordinate = getHitPoint(particle);
                     } else {
                         particle.setAbsorbed(true);
@@ -126,5 +145,15 @@ public class Cylinder extends Surface {
             }
         }
         detector.detect(flux);
+    }
+
+    @Override
+    protected boolean isPointInside(Point3D point) {
+        return point.getX() <= length;
+    }
+
+    @Override
+    protected Vector3D getNormal(Point3D point) {
+        return new Vector3D(0.0f, -2 * point.getY(), -2 * point.getZ());
     }
 }

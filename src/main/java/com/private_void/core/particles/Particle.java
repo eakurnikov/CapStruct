@@ -1,4 +1,9 @@
-package com.private_void.core;
+package com.private_void.core.particles;
+
+import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.Vector3D;
+
+import static com.private_void.utils.Constants.RECURSIVE_ITERATIONS_MAX;
 
 public class Particle {
     private Point3D coordinate;
@@ -6,6 +11,7 @@ public class Particle {
     private float intensity;
     private float trace;
     private boolean absorbed;
+    private int recursiveIterationCount;
 
     public Particle(final Point3D coordinate, final Vector3D speed) {
         this.coordinate = coordinate;
@@ -13,6 +19,7 @@ public class Particle {
         this.intensity = 1.0f;
         this.trace = 0.0f;
         this.absorbed = false;
+        this.recursiveIterationCount = 1;
     }
 
     public Particle(final Point3D point3D, final Vector3D vector3D, float intensity) {
@@ -21,6 +28,33 @@ public class Particle {
         this.intensity = intensity;
         this.trace = 0.0f;
         this.absorbed = false;
+        this.recursiveIterationCount = 1;
+    }
+
+    public void decreaseIntensity(float reflectivity) {
+        this.intensity *= reflectivity;
+    }
+
+    public void increaseTrace(final Point3D point3D) {
+        trace = (float) Math.sqrt((point3D.getX() - coordinate.getX()) * (point3D.getX() - coordinate.getX())
+                + (point3D.getY() - coordinate.getY()) * (point3D.getY() - coordinate.getY())
+                + (point3D.getZ() - coordinate.getZ()) * (point3D.getZ() - coordinate.getZ()));
+    }
+
+    public boolean isRecursiveIterationsLimitReached() {
+        return recursiveIterationCount == RECURSIVE_ITERATIONS_MAX;
+    }
+
+    public void recursiveIteration() {
+        this.recursiveIterationCount++;
+    }
+
+    public int getRecursiveIterationCount() {
+        return recursiveIterationCount;
+    }
+
+    public void stopRecursiveIterations() {
+        recursiveIterationCount = 1;
     }
 
     public Point3D getCoordinate() {
@@ -75,15 +109,5 @@ public class Particle {
 
     public void setAbsorbed(boolean absorbed) {
         this.absorbed = absorbed;
-    }
-
-    public void decreaseIntensity(float reflectivity) {
-        this.intensity *= reflectivity;
-    }
-
-    public void increaseTrace(final Point3D point3D) {
-        trace = (float) Math.sqrt((point3D.getX() - coordinate.getX()) * (point3D.getX() - coordinate.getX())
-                                + (point3D.getY() - coordinate.getY()) * (point3D.getY() - coordinate.getY())
-                                + (point3D.getZ() - coordinate.getZ()) * (point3D.getZ() - coordinate.getZ()));
     }
 }

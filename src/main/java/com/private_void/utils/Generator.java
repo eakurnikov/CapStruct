@@ -1,10 +1,10 @@
 package com.private_void.utils;
 
-import com.private_void.core.Point3D;
+import com.private_void.core.geometry.Point3D;
 
 import java.util.Random;
 
-import static com.private_void.core.Constants.SEED;
+import static com.private_void.utils.Constants.SEED;
 
 public class Generator {
     private Random rand;

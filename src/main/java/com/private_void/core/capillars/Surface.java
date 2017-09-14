@@ -1,8 +1,13 @@
-package com.private_void.core;
+package com.private_void.core.capillars;
 
+import com.private_void.core.detectors.Detector;
+import com.private_void.core.fluxes.Flux;
+import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.particles.Particle;
 import com.private_void.utils.Utils;
 
-import static com.private_void.core.Constants.PI;
+import static com.private_void.utils.Constants.PI;
 
 public abstract class Surface {
     protected Detector detector;
@@ -15,14 +20,6 @@ public abstract class Surface {
     protected float reflectivity;
     protected float slideAngleR;
     protected float antiSlideAngleR;
-
-    protected float x;
-    protected float y;
-    protected float z;
-
-    protected float Vx;
-    protected float Vy;
-    protected float Vz;
 
     protected Surface(final Point3D frontCoordinate, float radius, float roughnessSize, float roughnessAngleD, float reflectivity, float slideAngleD) {
         this.frontCoordinate = frontCoordinate;
@@ -41,17 +38,24 @@ public abstract class Surface {
 
     public abstract void passThrough(Flux flux);
 
-    public void setNormal(float x, float y, float z) {
-        normal.setX(x);
-        normal.setY(y);
-        normal.setZ(z);
+    protected boolean willParticleGetInside(Particle particle) {
+        float x0 = frontCoordinate.getX();
+
+        float x = particle.getCoordinate().getX();
+        float y = particle.getCoordinate().getY();
+        float z = particle.getCoordinate().getZ();
+
+        float Vx = particle.getSpeed().getX();
+        float Vy = particle.getSpeed().getY();
+        float Vz = particle.getSpeed().getZ();
+
+        return ((Vy / Vx) * (x0 - x) + y) * ((Vy / Vx) * (x0 - x) + y) +
+                ((Vz / Vx) * (x0 - x) + z) * ((Vz / Vx) * (x0 - x) + z) < radius * radius;
     }
 
-    public void setAxis(float x, float y, float z) {
-        axis.setX(x);
-        axis.setY(y);
-        axis.setZ(z);
-    }
+    protected abstract boolean isPointInside(Point3D point);
+
+    protected abstract Vector3D getNormal(Point3D point);
 
     public Detector getDetector() {
         return detector;

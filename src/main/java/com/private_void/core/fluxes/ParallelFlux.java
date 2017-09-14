@@ -1,4 +1,8 @@
-package com.private_void.core;
+package com.private_void.core.fluxes;
+
+import com.private_void.core.particles.Particle;
+import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.Vector3D;
 
 import static com.private_void.utils.Generator.generator;
 

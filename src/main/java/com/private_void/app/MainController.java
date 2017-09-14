@@ -1,6 +1,16 @@
 package com.private_void.app;
 
-import com.private_void.core.*;
+import com.private_void.core.capillars.Cone;
+import com.private_void.core.capillars.Cylinder;
+import com.private_void.core.capillars.Surface;
+import com.private_void.core.capillars.Torus;
+import com.private_void.core.detectors.Detector;
+import com.private_void.core.fluxes.DivergentFlux;
+import com.private_void.core.fluxes.Flux;
+import com.private_void.core.fluxes.ParallelFlux;
+import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.particles.Particle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.NumberAxis;
@@ -10,7 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 
-import static com.private_void.core.Constants.CONE_COEFFICIENT;
+import static com.private_void.utils.Constants.CONE_COEFFICIENT;
 
 public class MainController {
     @FXML
@@ -248,10 +258,10 @@ public class MainController {
         xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
 
-        xAxis.setUpperBound(upperBound);
-        yAxis.setUpperBound(upperBound);
+        xAxis.setUpperBound(2 * upperBound);
+        yAxis.setUpperBound(2 * upperBound);
 
-        xAxis.setLowerBound(lowerBound);
-        yAxis.setLowerBound(lowerBound);
+        xAxis.setLowerBound(2 * lowerBound);
+        yAxis.setLowerBound(2 * lowerBound);
     }
 }
