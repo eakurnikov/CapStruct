@@ -1,5 +1,7 @@
 package com.private_void.core;
 
+import static com.private_void.core.Constants.PI;
+
 public class Vector3D extends Point3D {
     private float[][] rotationMatrixXYZ;
     private float[][] rotationMatrixX;
@@ -116,6 +118,10 @@ public class Vector3D extends Point3D {
     }
 
     public void turnAroundOX(float angle) {
+        if (angle == 0.0f || angle == 2 * PI) {
+            return;
+        }
+
         float[] temp = {0.0f, 0.0f, 0.0f};
         setRotationMatrixX(angle);
 
@@ -131,6 +137,10 @@ public class Vector3D extends Point3D {
     }
 
     public void turnAroundOY(float angle) {
+        if (angle == 0.0f || angle == 2 * PI) {
+            return;
+        }
+
         float[] temp = {0.0f, 0.0f, 0.0f};
         setRotationMatrixY(angle);
 
@@ -146,6 +156,10 @@ public class Vector3D extends Point3D {
     }
 
     public void turnAroundVector(float angle, final Vector3D axis) {
+        if (angle == 0.0f || angle == 2 * PI) {
+            return;
+        }
+
         float[] temp = {0.0f, 0.0f, 0.0f};
         setRotationMatrixXYZ(angle, axis);
 
@@ -161,6 +175,10 @@ public class Vector3D extends Point3D {
     }
 
     public Vector3D getNewVectorByTurningAroundOX(float angle) {
+        if (angle == 0.0f || angle == 2 * PI) {
+            return this;
+        }
+
         float[] temp = {0.0f, 0.0f, 0.0f};
         setRotationMatrixX(angle);
 
@@ -175,6 +193,10 @@ public class Vector3D extends Point3D {
     }
 
     public Vector3D getNewVectorByTurningAroundVector(float angle, final Vector3D axis) {
+        if (angle == 0.0f || angle == 2 * PI) {
+            return this;
+        }
+
         float[] temp = {0.0f, 0.0f, 0.0f};
         setRotationMatrixXYZ(angle, axis);
 

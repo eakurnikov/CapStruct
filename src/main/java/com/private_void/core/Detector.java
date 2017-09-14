@@ -12,10 +12,12 @@ public class Detector {
     protected int detectedParticlesAmount;
     protected int absorbedParticlesAmount;
     protected int outOfCapillarParticlesAmount;
+    protected int outOfDetectorParticlesAmount;
 
     protected float detectedIntensity;
     protected float absorbedIntensity;
     protected float outOfCapillarIntensity;
+    protected int outOfDetectorIntensity;
 
     protected float width;
 //    protected float cellSize;
@@ -64,6 +66,8 @@ public class Detector {
                     particle.setCoordinate(L, (Vy / Vx) * (L - x) + y, (Vz / Vx) * (L - x) + z);
 
                     if (Math.abs(particle.getCoordinate().getY()) > width / 2 || Math.abs(particle.getCoordinate().getZ()) > width / 2) {
+                        outOfDetectorParticlesAmount++;
+                        outOfDetectorIntensity += particle.getIntensity();
                         iterator.remove();
                     } else {
                         detectedParticlesAmount++;
@@ -125,6 +129,10 @@ public class Detector {
         return outOfCapillarParticlesAmount;
     }
 
+    public int getOutOfDetectorParticlesAmount() {
+        return outOfDetectorParticlesAmount;
+    }
+
     public float getDetectedIntensity() {
         return detectedIntensity;
     }
@@ -135,6 +143,10 @@ public class Detector {
 
     public float getOutOfCapillarIntensity() {
         return outOfCapillarIntensity;
+    }
+
+    public int getOutOfDetectorIntensity() {
+        return outOfDetectorIntensity;
     }
 
     public void increaseOutOfCapillarParticlesAmount() {

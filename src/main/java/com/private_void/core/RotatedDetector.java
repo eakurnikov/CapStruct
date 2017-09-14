@@ -37,6 +37,8 @@ public class RotatedDetector extends Detector {
                                            (x * Vz - z * Vx - L * Vz) / (tanR * Vz - Vx));
 
                     if (Math.abs(particle.getCoordinate().getY()) > width / 2 || Math.abs(particle.getCoordinate().getZ()) > width / 2) {
+                        outOfDetectorParticlesAmount++;
+                        outOfDetectorIntensity += particle.getIntensity();
                         iterator.remove();
                     } else {
                         detectedParticlesAmount++;

@@ -82,7 +82,8 @@ public class MainController {
     @FXML
     public Label intensityOn;
     public Label intensityAbsorbed;
-    public Label intensityOut;
+    public Label intensityOutOfCap;
+    public Label intensityOutOfDet;
     public Label successLabel;
 
     public NumberAxis yAxis;
@@ -237,7 +238,8 @@ public class MainController {
 
         intensityOn.setText(String.valueOf(detector.getDetectedIntensity()));
         intensityAbsorbed.setText(String.valueOf(detector.getAbsorbedIntensity()));
-        intensityOut.setText(String.valueOf(detector.getOutOfCapillarIntensity()));
+        intensityOutOfCap.setText(String.valueOf(detector.getOutOfCapillarIntensity()));
+        intensityOutOfDet.setText(String.valueOf(detector.getOutOfDetectorIntensity()));
 
         successLabel.setVisible(true);
     }
