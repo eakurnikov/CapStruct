@@ -98,53 +98,53 @@ public class Torus extends Surface {
         }
     }
 
-    @Override
-    public void passThrough(Flux flux) {
-        Particle particle;
-        Point3D newCoordinate;
-        float angleVN;
-
-        Iterator<Particle> iterator = flux.getParticles().iterator();
-        while (iterator.hasNext()) {
-            particle = iterator.next();
-
-            if (willParticleGetInside(particle)) {
-                // Костыль для уничтожения частиц, у которых произошло слишком много отражений внутри каплляра. В принципе он не нужен
-                // так как, если будет много отражений, интенсивность просто убьется. Но нужно протестировать
-                int reboundsCount = 0;
-                newCoordinate = getHitPoint(particle);
-
-                while (isPointInside(newCoordinate)) {
-                    axis = new Vector3D(1.0f, 0.0f, 0.0f)
-                            .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
-
-                    normal = getNormal(newCoordinate)
-                            .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
-
-                    axis = normal.getNewByTurningAroundOX(PI / 2);
-
-                    angleVN = particle.getSpeed().getAngle(normal.inverse());
-
-                    if (angleVN >= antiSlideAngleR && reboundsCount  < REBOUNDS_COUNT_MAX) {
-                        reboundsCount++;
-                        particle.setCoordinate(newCoordinate);
-                        particle.setSpeed(particle.getSpeed().getNewByTurningAroundVector(2 * Math.abs(PI / 2 - angleVN), axis));
-                        particle.decreaseIntensity(reflectivity);
-                        newCoordinate = getHitPoint(particle);
-                    } else {
-                        particle.setAbsorbed(true);
-                        break;
-                    }
-                }
-            }
-            else {
-                detector.increaseOutOfCapillarParticlesAmount();
-                detector.increaseOutOfCapillarInensity(particle.getIntensity());
-                iterator.remove();
-            }
-        }
-        detector.detect(flux);
-    }
+//    @Override
+//    public void passThrough(Flux flux) {
+//        Particle particle;
+//        Point3D newCoordinate;
+//        float angleVN;
+//
+//        Iterator<Particle> iterator = flux.getParticles().iterator();
+//        while (iterator.hasNext()) {
+//            particle = iterator.next();
+//
+//            if (willParticleGetInside(particle)) {
+//                // Костыль для уничтожения частиц, у которых произошло слишком много отражений внутри каплляра. В принципе он не нужен
+//                // так как, если будет много отражений, интенсивность просто убьется. Но нужно протестировать
+//                int reboundsCount = 0;
+//                newCoordinate = getHitPoint(particle);
+//
+//                while (isPointInside(newCoordinate)) {
+//                    axis = new Vector3D(1.0f, 0.0f, 0.0f)
+//                            .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
+//
+//                    normal = getNormal(newCoordinate)
+//                            .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
+//
+//                    axis = normal.getNewByTurningAroundOX(PI / 2);
+//
+//                    angleVN = particle.getSpeed().getAngle(normal.inverse());
+//
+//                    if (angleVN >= antiSlideAngleR && reboundsCount  < REBOUNDS_COUNT_MAX) {
+//                        reboundsCount++;
+//                        particle.setCoordinate(newCoordinate);
+//                        particle.setSpeed(particle.getSpeed().getNewByTurningAroundVector(2 * Math.abs(PI / 2 - angleVN), axis));
+//                        particle.decreaseIntensity(reflectivity);
+//                        newCoordinate = getHitPoint(particle);
+//                    } else {
+//                        particle.setAbsorbed(true);
+//                        break;
+//                    }
+//                }
+//            }
+//            else {
+//                detector.increaseOutOfCapillarParticlesAmount();
+//                detector.increaseOutOfCapillarInensity(particle.getIntensity());
+//                iterator.remove();
+//            }
+//        }
+//        detector.detect(flux);
+//    }
 
     @Override
     protected boolean isPointInside(Point3D point) {

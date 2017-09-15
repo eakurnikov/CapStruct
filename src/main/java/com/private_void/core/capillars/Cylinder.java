@@ -1,13 +1,10 @@
 package com.private_void.core.capillars;
 
 import com.private_void.core.detectors.Detector;
-import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.Particle;
 import com.private_void.utils.Utils;
-
-import java.util.Iterator;
 
 import static com.private_void.utils.Constants.*;
 import static com.private_void.utils.Generator.generator;
@@ -74,9 +71,10 @@ public class Cylinder extends Surface {
                     solution[i] -= delta[i];
                 }
             } catch (ArithmeticException e) {
-                System.out.println(e.getMessage());
+                e.printStackTrace();
+                return particle.getCoordinate();
             } catch (Exception e){
-                System.out.println(e.getMessage());
+                e.printStackTrace();
             }
         }
 
@@ -102,49 +100,6 @@ public class Cylinder extends Surface {
             particle.stopRecursiveIterations();
             return newCoordinate;
         }
-    }
-
-    @Override
-    public void passThrough(Flux flux) {
-        Particle particle;
-        Point3D newCoordinate;
-        float angleVN;
-
-        Iterator<Particle> iterator = flux.getParticles().iterator();
-        while (iterator.hasNext()) {
-            particle = iterator.next();
-
-            if (willParticleGetInside(particle)) {
-                newCoordinate = getHitPoint(particle);
-
-                while (isPointInside(newCoordinate)) {
-                    axis = new Vector3D(1.0f, 0.0f, 0.0f)
-                            .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
-
-                    normal = getNormal(newCoordinate)
-                            .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
-
-                    axis = normal.getNewByTurningAroundOX(PI / 2);
-
-                    angleVN = particle.getSpeed().getAngle(normal.inverse());
-
-                    if (angleVN >= antiSlideAngleR) {
-                        particle.setCoordinate(newCoordinate);
-                        particle.setSpeed(particle.getSpeed().getNewByTurningAroundVector(2 * Math.abs(PI / 2 - angleVN), axis));
-                        particle.decreaseIntensity(reflectivity);
-                        newCoordinate = getHitPoint(particle);
-                    } else {
-                        particle.setAbsorbed(true);
-                        break;
-                    }
-                }
-            } else {
-                detector.increaseOutOfCapillarParticlesAmount();
-                detector.increaseOutOfCapillarInensity(particle.getIntensity());
-                iterator.remove();
-            }
-        }
-        detector.detect(flux);
     }
 
     @Override
