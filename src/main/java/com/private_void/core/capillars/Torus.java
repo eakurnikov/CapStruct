@@ -28,8 +28,7 @@ public class Torus extends Surface {
         this.detector = new RotatedDetector(
                 new Point3D((float) (frontCoordinate.getX() + torusRadius * Math.sin(curvAngleD)), frontCoordinate.getY(),
                             (float) (frontCoordinate.getZ() - torusRadius * (1 - Math.cos(curvAngleR)))),
-                2 * radius, CELL_SIZE, curvAngleD
-        );
+                2 * radius, CELL_SIZE, curvAngleD);
     }
 
     @Override

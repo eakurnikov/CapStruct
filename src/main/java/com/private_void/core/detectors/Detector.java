@@ -9,6 +9,7 @@ import java.util.List;
 
 public class Detector {
     protected Point3D centerCoordinate;
+    protected float L;
     protected float width;
 
     protected double upperBound;
@@ -30,6 +31,7 @@ public class Detector {
 
     public Detector(final Point3D centerCoordinate, float width, float cellSize) {
         this.centerCoordinate = centerCoordinate;
+        this.L = centerCoordinate.getX();
         this.width = width;
         this.upperBound = width / 2;
         this.lowerBound = -width / 2;
@@ -66,8 +68,6 @@ public class Detector {
     }
 
     protected Point3D getCoordinateOnDetector(Particle particle) {
-        float L = centerCoordinate.getX();
-
         float x = particle.getCoordinate().getX();
         float y = particle.getCoordinate().getY();
         float z = particle.getCoordinate().getZ();

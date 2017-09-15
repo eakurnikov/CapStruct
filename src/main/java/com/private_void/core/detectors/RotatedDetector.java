@@ -5,18 +5,15 @@ import com.private_void.core.geometry.Point3D;
 import com.private_void.utils.Utils;
 
 public class RotatedDetector extends Detector {
-    private float angleR;
+    private float tgAngleR;
 
     public RotatedDetector(final Point3D centerCoordinate, float width, float cellSize, float angleD) {
         super(centerCoordinate, width, cellSize);
-        this.angleR = Utils.convertDegreesToRads(angleD);
+        this.tgAngleR = (float) Math.tan(Utils.convertDegreesToRads(angleD));
     }
 
     @Override
     protected Point3D getCoordinateOnDetector(Particle particle) {
-        float tanR = (float) Math.tan(angleR);
-        float L = centerCoordinate.getX();
-
         float x = particle.getCoordinate().getX();
         float y = particle.getCoordinate().getY();
         float z = particle.getCoordinate().getZ();
@@ -25,8 +22,8 @@ public class RotatedDetector extends Detector {
         float Vy = particle.getSpeed().getY();
         float Vz = particle.getSpeed().getZ();
 
-        return new Point3D(tanR * (x * Vz - z * Vx - L * Vz) / (tanR * Vz - Vx) + L,
-                (Vy / Vz) * ((x * Vz - z * Vx - L * Vz) / (tanR * Vz - Vx) - z) + y,
-                (x * Vz - z * Vx - L * Vz) / (tanR * Vz - Vx));
+        return new Point3D(tgAngleR * (x * Vz - z * Vx - L * Vz) / (tgAngleR * Vz - Vx) + L,
+                (Vy / Vz) * ((x * Vz - z * Vx - L * Vz) / (tgAngleR * Vz - Vx) - z) + y,
+                (x * Vz - z * Vx - L * Vz) / (tgAngleR * Vz - Vx));
     }
 }
