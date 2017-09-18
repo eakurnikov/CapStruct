@@ -15,28 +15,24 @@ public class Cone extends Surface {
 
     public Cone(final Point3D frontCoordinate, float radius, int divergentAngleD, float coneCoefficient, float roughnessSize,
                 float roughnessAngleD, float reflectivity, float slideAngleD) throws IllegalArgumentException {
-
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
         if (coneCoefficient >= 1 || coneCoefficient <= 0) {
             throw new IllegalArgumentException();
         }
         this.divergentAngleR = Utils.convertDegreesToRads(divergentAngleD);
         this.length = (float) (radius * (1 / Math.tan(divergentAngleR)) * coneCoefficient);
-        this.detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),
-                                    2 * radius, CELL_SIZE);
+        this.detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),2 * radius);
     }
 
     public Cone(final Point3D frontCoordinate, float radius, float length, float coneCoefficient, float roughnessSize,
                 float roughnessAngleD, float reflectivity, float slideAngleD) throws IllegalArgumentException {
-
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
         if (coneCoefficient >= 1 || coneCoefficient <= 0) {
             throw new IllegalArgumentException();
         }
         this.length = length;
         this.divergentAngleR = (float) Math.atan((radius / length) * coneCoefficient);
-        this.detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),
-                2 * radius, CELL_SIZE);
+        this.detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),2 * radius);
     }
 
     @Override

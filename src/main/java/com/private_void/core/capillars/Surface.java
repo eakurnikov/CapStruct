@@ -12,6 +12,8 @@ import java.util.Iterator;
 import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
+//TODO припилить Stream API или просто распараллелить через ThreadPool
+
 public abstract class Surface {
     protected Detector detector;
     protected Point3D frontCoordinate;

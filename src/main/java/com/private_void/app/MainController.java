@@ -5,6 +5,7 @@ import com.private_void.core.capillars.Cylinder;
 import com.private_void.core.capillars.Surface;
 import com.private_void.core.capillars.Torus;
 import com.private_void.core.detectors.Detector;
+import com.private_void.core.detectors.RotatedDetector;
 import com.private_void.core.fluxes.DivergentFlux;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.fluxes.ParallelFlux;
@@ -237,8 +238,16 @@ public class MainController {
         Detector detector = capillar.getDetector();
         XYChart.Series series = new XYChart.Series();
         series.setName("Particles");
-        for (Particle particle : flux.getParticles()) {
-            series.getData().add(new XYChart.Data(particle.getCoordinate().getZ(), particle.getCoordinate().getY()));
+        if (detector instanceof RotatedDetector) {
+            float angle = -((RotatedDetector) detector).getAngle();
+            for (Particle particle : flux.getParticles()) {
+                Point3D newCoordinate = particle.getRotatedCoordinate(angle);
+                series.getData().add(new XYChart.Data(newCoordinate.getZ(), newCoordinate.getY()));
+            }
+        } else {
+            for (Particle particle : flux.getParticles()) {
+                series.getData().add(new XYChart.Data(particle.getCoordinate().getZ(), particle.getCoordinate().getY()));
+            }
         }
 
         //TODO прикрутить зум по сколлу колесика мыши

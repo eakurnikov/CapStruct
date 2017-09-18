@@ -14,11 +14,9 @@ public class Cylinder extends Surface {
 
     public Cylinder(final Point3D frontCoordinate, float radius, float length, float roughnessSize, float roughnessAngleD,
                     float reflectivity, float slideAngleD) {
-
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
         this.length = length;
-        this.detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),
-                                    2 * radius, CELL_SIZE);
+        this.detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),2 * radius);
     }
 
     @Override

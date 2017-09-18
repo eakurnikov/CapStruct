@@ -9,9 +9,8 @@ import java.util.List;
 
 public class Detector {
     protected Point3D centerCoordinate;
-    protected float L;
+    private float L;
     protected float width;
-
     protected double upperBound;
     protected double lowerBound;
 
@@ -25,11 +24,7 @@ public class Detector {
     protected float outOfCapillarIntensity;
     protected float outOfDetectorIntensity;
 
-//    protected Point3D leftBottomPoint;
-//    protected float cellSize;
-//    protected int cellsAmount;
-
-    public Detector(final Point3D centerCoordinate, float width, float cellSize) {
+    public Detector(final Point3D centerCoordinate, float width) {
         this.centerCoordinate = centerCoordinate;
         this.L = centerCoordinate.getX();
         this.width = width;
@@ -37,10 +32,6 @@ public class Detector {
         this.lowerBound = -width / 2;
         this.detectedParticlesAmount = 0;
         this.detectedIntensity = 0.0f;
-
-//        this.leftBottomPoint = new Point3D(centerCoordinate.getX(), centerCoordinate.getY() - width, centerCoordinate.getZ() - width);
-//        this.cellSize = cellSize;
-//        this.cellsAmount = (int) (2.0f * width / cellSize);
     }
 
     public void detect(Flux flux) {

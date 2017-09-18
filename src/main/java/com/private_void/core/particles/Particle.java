@@ -31,6 +31,29 @@ public class Particle {
         this.recursiveIterationCount = 1;
     }
 
+    public Point3D getRotatedCoordinate(float angle) {
+        float[][] rotationMatrixY = new float[3][3];
+
+        rotationMatrixY[0][0] = (float) Math.cos(angle);
+        rotationMatrixY[1][0] = 0.0f;
+        rotationMatrixY[2][0] = (float) Math.sin(angle);
+
+        rotationMatrixY[0][1] = 0.0f;
+        rotationMatrixY[1][1] = 1.0f;
+        rotationMatrixY[2][1] = 0.0f;
+
+        rotationMatrixY[0][2] = (float) -Math.sin(angle);
+        rotationMatrixY[1][2] = 0.0f;
+        rotationMatrixY[2][2] = (float) Math.cos(angle);
+
+        float[] temp = {0.0f, 0.0f, 0.0f};
+        for (int i = 0; i < 3; i++) {
+            temp[i] = rotationMatrixY[0][i] * coordinate.getX() + rotationMatrixY[1][i] * coordinate.getY() + rotationMatrixY[2][i] * coordinate.getZ();
+        }
+
+        return new Point3D(temp[0], temp[1], temp[2]);
+    }
+
     public void decreaseIntensity(float reflectivity) {
         this.intensity *= reflectivity;
     }
