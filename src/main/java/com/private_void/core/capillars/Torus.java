@@ -72,7 +72,7 @@ public class Torus extends Surface {
                 delta = Utils.matrixMultiplication(Utils.inverseMatrix(W), F);
 
                 for (int i = 0; i < 3; i++) {
-                    solution[i] -= delta[i]; //возможно, нужно разыменовывать дельту
+                    solution[i] -= delta[i];
                 }
             } catch (ArithmeticException e) {
                 System.out.println(e.getMessage());

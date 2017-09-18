@@ -1,6 +1,7 @@
 package com.private_void.core.detectors;
 
 import com.private_void.core.fluxes.Flux;
+import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.geometry.Point3D;
 
@@ -9,6 +10,8 @@ import java.util.List;
 
 public class Detector {
     protected Point3D centerCoordinate;
+
+
     private float L;
     protected float width;
     protected double upperBound;
@@ -26,6 +29,7 @@ public class Detector {
 
     public Detector(final Point3D centerCoordinate, float width) {
         this.centerCoordinate = centerCoordinate;
+//        this.normal = new Vector3D(1.0f, 0.0f, 0.0f);
         this.L = centerCoordinate.getX();
         this.width = width;
         this.upperBound = width / 2;
