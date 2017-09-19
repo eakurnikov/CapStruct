@@ -60,8 +60,7 @@ public abstract class Surface {
                     normal = getNormal(newCoordinate)
                             .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
 
-                    // TODO: НЕТ. нужно как-то иначе высчитывать ось, она не должна быть туда напарвлена всегда в случае тора
-                    axis = normal.getNewByTurningAroundOX(PI / 2);
+                    axis = getAxis(newCoordinate);
 
                     angleVN = particle.getSpeed().getAngle(normal.inverse());
 
@@ -96,12 +95,14 @@ public abstract class Surface {
         float Vz = particle.getSpeed().getZ();
 
         return ((Vy / Vx) * (x0 - x) + y) * ((Vy / Vx) * (x0 - x) + y) +
-                ((Vz / Vx) * (x0 - x) + z) * ((Vz / Vx) * (x0 - x) + z) < radius * radius;
+               ((Vz / Vx) * (x0 - x) + z) * ((Vz / Vx) * (x0 - x) + z) < radius * radius;
     }
 
     protected abstract boolean isPointInside(Point3D point);
 
     protected abstract Vector3D getNormal(Point3D point);
+
+    protected abstract Vector3D getAxis(Point3D point);
 
     public Detector getDetector() {
         return detector;

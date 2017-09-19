@@ -109,4 +109,9 @@ public class Cylinder extends Surface {
     protected Vector3D getNormal(Point3D point) {
         return new Vector3D(0.0f, -2 * point.getY(), -2 * point.getZ());
     }
+
+    @Override
+    protected Vector3D getAxis(Point3D point) {
+        return normal.getNewByTurningAroundOX(PI / 2);
+    }
 }

@@ -114,4 +114,9 @@ public class Cone extends Surface {
                 (float) (-point.getY() * (1.0f / Math.tan(divergentAngleR)) / (Math.sqrt(point.getY() * point.getY() + point.getZ() * point.getZ()))),
                 (float) (-point.getZ() * (1.0f / Math.tan(divergentAngleR)) / (Math.sqrt(point.getY() * point.getY() + point.getZ() * point.getZ()))));
     }
+
+    @Override
+    protected Vector3D getAxis(Point3D point) {
+        return normal.getNewByTurningAroundOX(PI / 2);
+    }
 }

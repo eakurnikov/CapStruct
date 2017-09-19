@@ -55,7 +55,7 @@ public class Torus extends Surface {
 
                 W[0][0] = 2 * (solution[0] * solution[0] + solution[1] * solution[1] + (solution[2] + curvRadius) * (solution[2] + curvRadius) + curvRadius * curvRadius - (radius - dr) * (radius - dr)) * 2 * solution[0] - 8 * curvRadius * curvRadius * solution[0];
                 W[0][1] = 2 * (solution[0] * solution[0] + solution[1] * solution[1] + (solution[2] + curvRadius) * (solution[2] + curvRadius) + curvRadius * curvRadius - (radius - dr) * (radius - dr)) * 2 * solution[1];
-                W[0][2] = 2 * (solution[0] * solution[0] + solution[1] * solution[1] + (solution[2] + curvRadius) * (solution[2] + curvRadius) + curvRadius * curvRadius - (radius - dr) * (radius - dr)) * 2 * solution[0] - 8 * curvRadius * curvRadius * (solution[2] + curvRadius);
+                W[0][2] = 2 * (solution[0] * solution[0] + solution[1] * solution[1] + (solution[2] + curvRadius) * (solution[2] + curvRadius) + curvRadius * curvRadius - (radius - dr) * (radius - dr)) * 2 * (solution[2] + curvRadius) - 8 * curvRadius * curvRadius * (solution[2] + curvRadius);
 
                 W[1][0] =  1.0f / particle.getSpeed().getX();
                 W[1][1] = -1.0f / particle.getSpeed().getY();
@@ -91,13 +91,17 @@ public class Torus extends Surface {
         }
     }
 
-    @Override
-    protected boolean isPointInside(Point3D point) {
+    private float getPointsAngle(Point3D point) {
         float x = point.getX();
         float y = point.getY();
         float z = point.getZ();
 
-        return Math.asin(x / Math.sqrt(x * x + y * y + (z + curvRadius) * (z + curvRadius))) <= curvAngleR;
+        return (float) Math.asin(x / Math.sqrt(x * x + y * y + (z + curvRadius) * (z + curvRadius)));
+    }
+
+    @Override
+    protected boolean isPointInside(Point3D point) {
+        return getPointsAngle(point) <= curvAngleR;
     }
 
     @Override
@@ -109,5 +113,10 @@ public class Torus extends Surface {
         return new Vector3D((-2 * (x * x + y * y + (z + curvRadius) * (z + curvRadius) + curvRadius * curvRadius - radius * radius) * 2 * x + 8 * curvRadius * curvRadius * x),
                             (-2 * (x * x + y * y + (z + curvRadius) * (z + curvRadius) + curvRadius * curvRadius - radius * radius) * 2 * y),
                             (-2 * (x * x + y * y + (z + curvRadius) * (z + curvRadius) + curvRadius * curvRadius - radius * radius) * 2 * (z + curvRadius) + 8 * curvRadius * curvRadius * (z + curvRadius)));
+    }
+
+    @Override
+    protected Vector3D getAxis(Point3D point) {
+        return normal.getNewByTurningAroundOX(PI / 2).turnAroundOY(getPointsAngle(point));
     }
 }

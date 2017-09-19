@@ -60,8 +60,8 @@ public class Particle {
 
     public void increaseTrace(final Point3D point3D) {
         trace = (float) Math.sqrt((point3D.getX() - coordinate.getX()) * (point3D.getX() - coordinate.getX())
-                + (point3D.getY() - coordinate.getY()) * (point3D.getY() - coordinate.getY())
-                + (point3D.getZ() - coordinate.getZ()) * (point3D.getZ() - coordinate.getZ()));
+                                + (point3D.getY() - coordinate.getY()) * (point3D.getY() - coordinate.getY())
+                                + (point3D.getZ() - coordinate.getZ()) * (point3D.getZ() - coordinate.getZ()));
     }
 
     public boolean isRecursiveIterationsLimitReached() {
