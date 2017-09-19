@@ -60,6 +60,7 @@ public abstract class Surface {
                     normal = getNormal(newCoordinate)
                             .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
 
+                    // TODO: НЕТ. нужно как-то иначе высчитывать ось, она не должна быть туда напарвлена всегда в случае тора
                     axis = normal.getNewByTurningAroundOX(PI / 2);
 
                     angleVN = particle.getSpeed().getAngle(normal.inverse());

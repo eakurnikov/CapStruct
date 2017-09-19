@@ -3,15 +3,14 @@ package com.private_void.core.detectors;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.geometry.Point3D;
-import com.private_void.utils.Utils;
 
 public class RotatedDetector extends Detector {
     private float angleR;
     private Vector3D normal;
 
-    public RotatedDetector(final Point3D centerCoordinate, float width, float angleD) {
+    public RotatedDetector(final Point3D centerCoordinate, float width, float angleR) {
         super(centerCoordinate, width);
-        this.angleR = Utils.convertDegreesToRads(angleD);
+        this.angleR = angleR;
         this.normal = new Vector3D(1.0f, 0.0f, 0.0f).turnAroundOY(angleR);
     }
 
