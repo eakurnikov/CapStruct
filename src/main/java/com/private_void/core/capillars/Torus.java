@@ -65,7 +65,7 @@ public class Torus extends Surface {
                 W[2][1] =  1.0f / particle.getSpeed().getY();
                 W[2][2] = -1.0f / particle.getSpeed().getZ();
 
-                F[0] = (solution[0] * solution[0] + solution[1] * solution[1] + (solution[2] + curvRadius) * (solution[2] + curvRadius) + curvRadius * curvRadius - (radius - dr) * (curvRadius - dr)) * (solution[0] * solution[0] + solution[1] * solution[1] + (solution[2] + curvRadius) * (solution[2] + curvRadius) + curvRadius * curvRadius - (radius - dr) * (radius - dr)) - 4 * curvRadius * curvRadius * (solution[0] * solution[0] + (solution[2] + curvRadius) * (solution[2] + curvRadius));
+                F[0] = (solution[0] * solution[0] + solution[1] * solution[1] + (solution[2] + curvRadius) * (solution[2] + curvRadius) + curvRadius * curvRadius - (radius - dr) * (radius - dr)) * (solution[0] * solution[0] + solution[1] * solution[1] + (solution[2] + curvRadius) * (solution[2] + curvRadius) + curvRadius * curvRadius - (radius - dr) * (radius - dr)) - 4 * curvRadius * curvRadius * (solution[0] * solution[0] + (solution[2] + curvRadius) * (solution[2] + curvRadius));
                 F[1] = (solution[0] - particle.getCoordinate().getX()) / particle.getSpeed().getX() - (solution[1] - particle.getCoordinate().getY()) / particle.getSpeed().getY();
                 F[2] = (solution[1] - particle.getCoordinate().getY()) / particle.getSpeed().getY() - (solution[2] - particle.getCoordinate().getZ()) / particle.getSpeed().getZ();
 
