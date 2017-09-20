@@ -99,6 +99,10 @@ public class Detector {
         }
     }
 
+    public Point3D getCenterCoordinate() {
+        return centerCoordinate;
+    }
+
     public double getUpperBound() {
         return upperBound;
     }
