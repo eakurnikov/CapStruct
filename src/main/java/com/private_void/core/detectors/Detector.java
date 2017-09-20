@@ -27,7 +27,6 @@ public class Detector {
 
     public Detector(final Point3D centerCoordinate, float width) {
         this.centerCoordinate = centerCoordinate;
-//        this.normal = new Vector3D(1.0f, 0.0f, 0.0f);
         this.L = centerCoordinate.getX();
         this.width = width;
         this.upperBound = width / 2;
@@ -43,10 +42,10 @@ public class Detector {
             particle = iterator.next();
             if (!particle.isAbsorbed() && particle.getIntensity() > flux.getMinIntensity()) {
                 particle.setCoordinate(getCoordinateOnDetector(particle));
-                if (Math.abs(particle.getCoordinate().getY()) > width / 2 || Math.abs(particle.getCoordinate().getZ()) > width / 2) {
+                if (!isParticleWithinBorders(particle)) {
                     outOfDetectorParticlesAmount++;
                     outOfDetectorIntensity += particle.getIntensity();
-//                        iterator.remove();
+//                    iterator.remove();
                 } else {
                     detectedParticlesAmount++;
                     detectedIntensity += particle.getIntensity();
@@ -70,6 +69,11 @@ public class Detector {
         float Vz = particle.getSpeed().getZ();
 
         return new Point3D(L, (Vy / Vx) * (L - x) + y, (Vz / Vx) * (L - x) + z);
+    }
+
+    protected boolean isParticleWithinBorders(Particle particle) {
+        return particle.getCoordinate().getY() * particle.getCoordinate().getY() +
+               particle.getCoordinate().getZ() * particle.getCoordinate().getZ() <= (width / 2) * (width / 2);
     }
 
     protected void computeScatter(List<Particle> particles) {

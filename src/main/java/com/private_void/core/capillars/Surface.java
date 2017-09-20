@@ -30,9 +30,9 @@ public abstract class Surface {
         this.frontCoordinate = frontCoordinate;
         this.radius = radius;
         this.roughnessSize = roughnessSize;
-        this.roughnessAngleR = Utils.convertDegreesToRads(roughnessAngleD);
+        this.roughnessAngleR = Utils.convertDegreesToRadians(roughnessAngleD);
         this.reflectivity = reflectivity;
-        this.slideAngleR = Utils.convertDegreesToRads(slideAngleD);
+        this.slideAngleR = Utils.convertDegreesToRadians(slideAngleD);
         this.antiSlideAngleR = PI / 2 - slideAngleR;
 
         normal = new Vector3D(0.0f, 1.0f, 0.0f);

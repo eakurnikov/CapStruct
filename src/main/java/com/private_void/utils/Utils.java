@@ -73,7 +73,7 @@ public final class Utils {
         return max;
     }
 
-    public static float convertDegreesToRads(final float angleDegrees) {
+    public static float convertDegreesToRadians(final float angleDegrees) {
         return (float) Math.PI * angleDegrees / 180;
     }
 

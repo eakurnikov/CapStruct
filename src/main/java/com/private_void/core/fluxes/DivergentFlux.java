@@ -13,7 +13,7 @@ public class DivergentFlux extends Flux {
 
     public DivergentFlux(final Point3D fluxCoordinate, final Vector3D fluxAxis, int particlesAmount, float divergentAngleDegrees, float minIntensity) {
         super(fluxCoordinate, fluxAxis, particlesAmount, minIntensity);
-        this.divergentAngleR = Utils.convertDegreesToRads(divergentAngleDegrees);
+        this.divergentAngleR = Utils.convertDegreesToRadians(divergentAngleDegrees);
         createParticles();
     }
 

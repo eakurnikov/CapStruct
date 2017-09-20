@@ -17,7 +17,7 @@ public class Torus extends Surface {
                  float roughnessAngleD, float reflectivity, float slideAngleD) {
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
         this.curvRadius = curvRadius;
-        this.curvAngleR = Utils.convertDegreesToRads(curvAngleD);
+        this.curvAngleR = Utils.convertDegreesToRadians(curvAngleD);
         this.detector = new RotatedDetector(new Point3D((float) (frontCoordinate.getX() + curvRadius * Math.sin(curvAngleR)),
                                                         frontCoordinate.getY(),
                                                         (float) (frontCoordinate.getZ() - curvRadius * (1 - Math.cos(curvAngleR)))),
@@ -101,7 +101,8 @@ public class Torus extends Surface {
 
     @Override
     protected boolean isPointInside(Point3D point) {
-        return getPointsAngle(point) <= curvAngleR;
+        float angle = getPointsAngle(point);
+        return angle >= 0 && angle <= curvAngleR;
     }
 
     @Override

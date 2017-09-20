@@ -241,8 +241,8 @@ public class MainController {
         if (detector instanceof RotatedDetector) {
             float angle = -((RotatedDetector) detector).getAngle();
             for (Particle particle : flux.getParticles()) {
-                Point3D newCoordinate = particle.getRotatedCoordinate(angle);
-                series.getData().add(new XYChart.Data(newCoordinate.getZ(), newCoordinate.getY()));
+                Point3D rotatedCoordinate = particle.getRotatedCoordinate(angle);
+                series.getData().add(new XYChart.Data(detector.getCenterCoordinate().getZ() + rotatedCoordinate.getZ(), rotatedCoordinate.getY()));
             }
         } else {
             for (Particle particle : flux.getParticles()) {
@@ -267,10 +267,10 @@ public class MainController {
         xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
 
-        xAxis.setUpperBound(2 * upperBound);
-        yAxis.setUpperBound(2 * upperBound);
+        xAxis.setUpperBound(1.2f * upperBound);
+        yAxis.setUpperBound(1.2f * upperBound);
 
-        xAxis.setLowerBound(2 * lowerBound);
-        yAxis.setLowerBound(2 * lowerBound);
+        xAxis.setLowerBound(1.2f * lowerBound);
+        yAxis.setLowerBound(1.2f * lowerBound);
     }
 }
