@@ -45,8 +45,8 @@ public abstract class Surface {
         Particle particle;
         Point3D newCoordinate;
         float angleVN;
-
         Iterator<Particle> iterator = flux.getParticles().iterator();
+
         while (iterator.hasNext()) {
             particle = iterator.next();
 
@@ -56,10 +56,8 @@ public abstract class Surface {
                 while (isPointInside(newCoordinate)) {
                     axis = new Vector3D(1.0f, 0.0f, 0.0f)
                             .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
-
                     normal = getNormal(newCoordinate)
                             .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
-
                     axis = getAxis(newCoordinate);
 
                     angleVN = particle.getSpeed().getAngle(normal.inverse());

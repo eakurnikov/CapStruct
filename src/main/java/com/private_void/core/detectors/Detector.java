@@ -38,10 +38,13 @@ public class Detector {
     public void detect(Flux flux) {
         Particle particle;
         Iterator<Particle> iterator = flux.getParticles().iterator();
+
         while (iterator.hasNext()) {
             particle = iterator.next();
+
             if (!particle.isAbsorbed() && particle.getIntensity() > flux.getMinIntensity()) {
                 particle.setCoordinate(getCoordinateOnDetector(particle));
+
                 if (!isParticleWithinBorders(particle)) {
                     outOfDetectorParticlesAmount++;
                     outOfDetectorIntensity += particle.getIntensity();
