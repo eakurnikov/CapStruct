@@ -1,20 +1,23 @@
 package com.private_void.core.fluxes;
 
-import com.private_void.core.particles.Particle;
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.particles.Particle;
+import com.private_void.core.particles.ParticleFactory;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public abstract class Flux {
+    protected ParticleFactory particleFactory;
     protected Point3D fluxCoordinate;
     protected Vector3D fluxAxis;
     protected int particlesAmount;
     protected float minIntensity;
-    protected List<Particle> particles;
+    protected List<? extends Particle> particles;
 
-    protected Flux(final Point3D fluxCoordinate, final Vector3D fluxAxis, int particlesAmount, float minIntensity) {
+    protected Flux(ParticleFactory factory, final Point3D fluxCoordinate, final Vector3D fluxAxis, int particlesAmount, float minIntensity) {
+        this.particleFactory = factory;
         this.fluxCoordinate = fluxCoordinate;
         this.fluxAxis = fluxAxis;
         this.particlesAmount = particlesAmount;
@@ -25,11 +28,11 @@ public abstract class Flux {
 
     protected abstract void createParticles();
 
-    public List<Particle> getParticles() {
+    public List<? extends Particle> getParticles() {
         return particles;
     }
 
-    public void setParticles(List<Particle> newParticles) {
+    public void setParticles(List<? extends Particle> newParticles) {
         particles = newParticles;
     }
 

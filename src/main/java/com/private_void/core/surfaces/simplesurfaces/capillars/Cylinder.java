@@ -1,29 +1,30 @@
-package com.private_void.core.capillars;
+package com.private_void.core.surfaces.simplesurfaces.capillars;
 
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
-import com.private_void.core.particles.Particle;
+import com.private_void.core.particles.NeutralParticle;
+import com.private_void.core.surfaces.simplesurfaces.capillars.Capillar;
 import com.private_void.utils.Utils;
 
 import static com.private_void.utils.Constants.*;
 import static com.private_void.utils.Generator.generator;
 
-public class Cylinder extends Surface {
+public class Cylinder extends Capillar {
     private float length;
 
     public Cylinder(final Point3D frontCoordinate, float radius, float length, float roughnessSize, float roughnessAngleD,
-                    float reflectivity, float slideAngleD) {
-        super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
+                    float reflectivity, float criticalAngleD) {
+        super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
         this.length = length;
         this.detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),2 * radius);
     }
 
     @Override
-    public Point3D getHitPoint(final Particle particle) {
-        float[] solution = {particle.getCoordinate().getX() + radius * particle.getRecursiveIterationCount(),
-                            particle.getCoordinate().getY() + (particle.getSpeed().getY() / Math.abs(particle.getSpeed().getY())) * radius,
-                            particle.getCoordinate().getZ() + (particle.getSpeed().getZ() / Math.abs(particle.getSpeed().getZ())) * radius};
+    protected Point3D getHitPoint(final NeutralParticle p) {
+        float[] solution = {p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),
+                            p.getCoordinate().getY() + (p.getSpeed().getY() / Math.abs(p.getSpeed().getY())) * radius,
+                            p.getCoordinate().getZ() + (p.getSpeed().getZ() / Math.abs(p.getSpeed().getZ())) * radius};
         float[] delta = {1.0f, 1.0f, 1.0f};
         float[] F  = new float[3];
         float[][] W = new float[3][3];
@@ -38,12 +39,12 @@ public class Cylinder extends Surface {
                 // Костыль для уничтожения частиц, вычисление координат которых зациклилось
                 iterationsAmount++;
                 if (iterationsAmount > ITERATIONS_MAX) {
-                    if (particle.isRecursiveIterationsLimitReached()) {
-                        particle.setAbsorbed(true);
-                        return particle.getCoordinate();
+                    if (p.isRecursiveIterationsLimitReached()) {
+                        p.setAbsorbed(true);
+                        return p.getCoordinate();
                     } else {
-                        particle.recursiveIteration();
-                        return getHitPoint(particle);
+                        p.recursiveIteration();
+                        return getHitPoint(p);
                     }
                 }
 
@@ -51,17 +52,17 @@ public class Cylinder extends Surface {
                 W[0][1] = 2.0f * solution[1];
                 W[0][2] = 2.0f * solution[2];
 
-                W[1][0] = 1.0f / particle.getSpeed().getX();
-                W[1][1] = -1.0f / particle.getSpeed().getY();
+                W[1][0] = 1.0f / p.getSpeed().getX();
+                W[1][1] = -1.0f / p.getSpeed().getY();
                 W[1][2] = 0.0f;
 
-                W[2][0] = 1.0f / particle.getSpeed().getX();
+                W[2][0] = 1.0f / p.getSpeed().getX();
                 W[2][1] = 0.0f;
-                W[2][2] = -1.0f / particle.getSpeed().getZ();
+                W[2][2] = -1.0f / p.getSpeed().getZ();
 
                 F[0] = solution[1] * solution[1] + solution[2] * solution[2] - (radius - dr) * (radius - dr);
-                F[1] = (solution[0] - particle.getCoordinate().getX()) / particle.getSpeed().getX() - (solution[1] - particle.getCoordinate().getY()) / particle.getSpeed().getY();
-                F[2] = -(solution[2] - particle.getCoordinate().getZ()) / particle.getSpeed().getZ() + (solution[0] - particle.getCoordinate().getX()) / particle.getSpeed().getX();
+                F[1] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX() - (solution[1] - p.getCoordinate().getY()) / p.getSpeed().getY();
+                F[2] = -(solution[2] - p.getCoordinate().getZ()) / p.getSpeed().getZ() + (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX();
 
                 delta = Utils.matrixMultiplication(Utils.inverseMatrix(W), F);
 
@@ -70,32 +71,32 @@ public class Cylinder extends Surface {
                 }
             } catch (ArithmeticException e) {
                 e.printStackTrace();
-                return particle.getCoordinate();
+                return p.getCoordinate();
             } catch (Exception e){
                 e.printStackTrace();
             }
         }
 
 //        Point3D newCoordinate = new Point3D(solution[0], solution[1], solution[2]);
-//        if (newCoordinate.isNear(particle.getCoordinate())) {
-//            if (particle.isRecursiveIterationsLimitReached()) {
-//                particle.setAbsorbed(true);
+//        if (newCoordinate.isNear(p.getCoordinate())) {
+//            if (p.isRecursiveIterationsLimitReached()) {
+//                p.setAbsorbed(true);
 //                return newCoordinate;
 //            } else {
-//                particle.recursiveIteration();
-//                return getHitPoint(particle);
+//                p.recursiveIteration();
+//                return getHitPoint(p);
 //            }
 //        } else {
-//            particle.stopRecursiveIterations();
+//            p.stopRecursiveIterations();
 //            return newCoordinate;
 //        }
 
         Point3D newCoordinate = new Point3D(solution[0], solution[1], solution[2]);
-        if (newCoordinate.isNear(particle.getCoordinate()) && !particle.isRecursiveIterationsLimitReached()) {
-            particle.recursiveIteration();
-            return getHitPoint(particle);
+        if (newCoordinate.isNear(p.getCoordinate()) && !p.isRecursiveIterationsLimitReached()) {
+            p.recursiveIteration();
+            return getHitPoint(p);
         } else {
-            particle.stopRecursiveIterations();
+            p.stopRecursiveIterations();
             return newCoordinate;
         }
     }

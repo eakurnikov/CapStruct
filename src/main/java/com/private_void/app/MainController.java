@@ -1,9 +1,9 @@
 package com.private_void.app;
 
-import com.private_void.core.capillars.Cone;
-import com.private_void.core.capillars.Cylinder;
-import com.private_void.core.capillars.Surface;
-import com.private_void.core.capillars.Torus;
+import com.private_void.core.surfaces.simplesurfaces.capillars.Cone;
+import com.private_void.core.surfaces.simplesurfaces.capillars.Cylinder;
+import com.private_void.core.surfaces.simplesurfaces.SimpleSurface;
+import com.private_void.core.surfaces.simplesurfaces.capillars.Torus;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.detectors.RotatedDetector;
 import com.private_void.core.fluxes.DivergentFlux;
@@ -11,6 +11,7 @@ import com.private_void.core.fluxes.Flux;
 import com.private_void.core.fluxes.ParallelFlux;
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -141,7 +142,7 @@ public class MainController {
 
     public void startBtnClick(ActionEvent actionEvent) {
         Flux flux = createFlux();
-        Surface capillar = createCapillar();
+        SimpleSurface capillar = createCapillar();
         capillar.passThrough(flux);
         showResult(flux, capillar);
     }
@@ -149,6 +150,7 @@ public class MainController {
     private Flux createFlux() {
         if (pFluxTab.isSelected()) {
             return new ParallelFlux(
+                    NeutralParticle.getFactory(),
                     new Point3D(Float.parseFloat(pFluxX.getText()),
                                 Float.parseFloat(pFluxY.getText()),
                                 Float.parseFloat(pFluxZ.getText())),
@@ -163,6 +165,7 @@ public class MainController {
         }
         else {
             return new DivergentFlux(
+                    NeutralParticle.getFactory(),
                     new Point3D(Float.parseFloat(dFluxX.getText()),
                                 Float.parseFloat(dFluxY.getText()),
                                 Float.parseFloat(dFluxZ.getText())),
@@ -176,7 +179,7 @@ public class MainController {
         }
     }
 
-    private Surface createCapillar() {
+    private SimpleSurface createCapillar() {
         if (cylTab.isSelected()) {
             return new Cylinder(
                     new Point3D(Float.parseFloat(cylX.getText()),
@@ -234,19 +237,19 @@ public class MainController {
         }
     }
 
-    private void showResult(Flux flux, Surface capillar) {
+    private void showResult(Flux flux, SimpleSurface capillar) {
         Detector detector = capillar.getDetector();
         XYChart.Series series = new XYChart.Series();
         series.setName("Particles");
         if (detector instanceof RotatedDetector) {
             float angle = -((RotatedDetector) detector).getAngle();
-            for (Particle particle : flux.getParticles()) {
-                Point3D rotatedCoordinate = particle.getRotatedCoordinate(angle);
+            for (Particle p : flux.getParticles()) {
+                Point3D rotatedCoordinate = p.getProjection(angle);
                 series.getData().add(new XYChart.Data(detector.getCenterCoordinate().getZ() + rotatedCoordinate.getZ(), rotatedCoordinate.getY()));
             }
         } else {
-            for (Particle particle : flux.getParticles()) {
-                series.getData().add(new XYChart.Data(particle.getCoordinate().getZ(), particle.getCoordinate().getY()));
+            for (Particle p : flux.getParticles()) {
+                series.getData().add(new XYChart.Data(p.getCoordinate().getZ(), p.getCoordinate().getY()));
             }
         }
 

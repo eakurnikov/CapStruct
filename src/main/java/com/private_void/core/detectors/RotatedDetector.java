@@ -1,8 +1,8 @@
 package com.private_void.core.detectors;
 
 import com.private_void.core.geometry.Vector3D;
-import com.private_void.core.particles.Particle;
 import com.private_void.core.geometry.Point3D;
+import com.private_void.core.particles.Particle;
 
 public class RotatedDetector extends Detector {
     private float angleR;
@@ -15,14 +15,14 @@ public class RotatedDetector extends Detector {
     }
 
     @Override
-    protected Point3D getCoordinateOnDetector(Particle particle) {
-        float x = particle.getCoordinate().getX();
-        float y = particle.getCoordinate().getY();
-        float z = particle.getCoordinate().getZ();
+    protected Point3D getCoordinateOnDetector(Particle p) {
+        float x = p.getCoordinate().getX();
+        float y = p.getCoordinate().getY();
+        float z = p.getCoordinate().getZ();
 
-        float Vx = particle.getSpeed().getX();
-        float Vy = particle.getSpeed().getY();
-        float Vz = particle.getSpeed().getZ();
+        float Vx = p.getSpeed().getX();
+        float Vy = p.getSpeed().getY();
+        float Vz = p.getSpeed().getZ();
 
         float temp = (normal.getX() * (centerCoordinate.getX() - x) + normal.getY() * (centerCoordinate.getY() - y) + normal.getZ() * (centerCoordinate.getZ() - z)) /
                      (normal.getX() * Vx + normal.getY() * Vy + normal.getZ() * Vz);
@@ -31,10 +31,10 @@ public class RotatedDetector extends Detector {
     }
 
     @Override
-    protected boolean isParticleWithinBorders(Particle particle) {
-        Point3D rotatedCoordinate = particle.getRotatedCoordinate(-angleR);
+    protected boolean isParticleWithinBorders(Particle p) {
+        Point3D rotatedCoordinate = p.getProjection(-angleR);
         return rotatedCoordinate.getY() * rotatedCoordinate.getY() +
-                (centerCoordinate.getZ() + rotatedCoordinate.getZ()) * (centerCoordinate.getZ() + rotatedCoordinate.getZ()) <= (width / 2) * (width / 2);
+               (centerCoordinate.getZ() + rotatedCoordinate.getZ()) * (centerCoordinate.getZ() + rotatedCoordinate.getZ()) <= (width / 2) * (width / 2);
     }
 
     public float getAngle() {

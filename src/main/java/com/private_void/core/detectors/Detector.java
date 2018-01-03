@@ -1,8 +1,8 @@
 package com.private_void.core.detectors;
 
 import com.private_void.core.fluxes.Flux;
-import com.private_void.core.particles.Particle;
 import com.private_void.core.geometry.Point3D;
+import com.private_void.core.particles.Particle;
 
 import java.util.Iterator;
 import java.util.List;
@@ -36,62 +36,62 @@ public class Detector {
     }
 
     public void detect(Flux flux) {
-        Particle particle;
-        Iterator<Particle> iterator = flux.getParticles().iterator();
+        Particle p;
+        Iterator<? extends Particle> iterator = flux.getParticles().iterator();
 
         while (iterator.hasNext()) {
-            particle = iterator.next();
+            p = iterator.next();
 
-            if (!particle.isAbsorbed() && particle.getIntensity() > flux.getMinIntensity()) {
-                particle.setCoordinate(getCoordinateOnDetector(particle));
+            if (!p.isAbsorbed()) {
+                p.setCoordinate(getCoordinateOnDetector(p));
 
-                if (!isParticleWithinBorders(particle)) {
+                if (!isParticleWithinBorders(p)) {
                     outOfDetectorParticlesAmount++;
-                    outOfDetectorIntensity += particle.getIntensity();
+                    outOfDetectorIntensity += p.getIntensity();
 //                    iterator.remove();
                 } else {
                     detectedParticlesAmount++;
-                    detectedIntensity += particle.getIntensity();
+                    detectedIntensity += p.getIntensity();
                 }
             } else {
                 absorbedParticlesAmount++;
-                absorbedIntensity += particle.getIntensity();
+                absorbedIntensity += p.getIntensity();
                 iterator.remove();
             }
         }
         computeScatter(flux.getParticles());
     }
 
-    protected Point3D getCoordinateOnDetector(Particle particle) {
-        float x = particle.getCoordinate().getX();
-        float y = particle.getCoordinate().getY();
-        float z = particle.getCoordinate().getZ();
+    protected Point3D getCoordinateOnDetector(Particle p) {
+        float x = p.getCoordinate().getX();
+        float y = p.getCoordinate().getY();
+        float z = p.getCoordinate().getZ();
 
-        float Vx = particle.getSpeed().getX();
-        float Vy = particle.getSpeed().getY();
-        float Vz = particle.getSpeed().getZ();
+        float Vx = p.getSpeed().getX();
+        float Vy = p.getSpeed().getY();
+        float Vz = p.getSpeed().getZ();
 
         return new Point3D(L, (Vy / Vx) * (L - x) + y, (Vz / Vx) * (L - x) + z);
     }
 
-    protected boolean isParticleWithinBorders(Particle particle) {
-        return particle.getCoordinate().getY() * particle.getCoordinate().getY() +
-               particle.getCoordinate().getZ() * particle.getCoordinate().getZ() <= (width / 2) * (width / 2);
+    protected boolean isParticleWithinBorders(Particle p) {
+        return p.getCoordinate().getY() * p.getCoordinate().getY() +
+               p.getCoordinate().getZ() * p.getCoordinate().getZ() <= (width / 2) * (width / 2);
     }
 
-    protected void computeScatter(List<Particle> particles) {
-        for (Particle particle : particles) {
-            if (particle.getCoordinate().getY() > upperBound) {
-                upperBound = particle.getCoordinate().getY();
+    protected void computeScatter(List<? extends Particle> particles) {
+        for (Particle p : particles) {
+            if (p.getCoordinate().getY() > upperBound) {
+                upperBound = p.getCoordinate().getY();
             }
-            if (particle.getCoordinate().getZ() > upperBound) {
-                upperBound = particle.getCoordinate().getZ();
+            if (p.getCoordinate().getZ() > upperBound) {
+                upperBound = p.getCoordinate().getZ();
             }
-            if (particle.getCoordinate().getY() < lowerBound) {
-                lowerBound = particle.getCoordinate().getY();
+            if (p.getCoordinate().getY() < lowerBound) {
+                lowerBound = p.getCoordinate().getY();
             }
-            if (particle.getCoordinate().getZ() < lowerBound) {
-                lowerBound = particle.getCoordinate().getZ();
+            if (p.getCoordinate().getZ() < lowerBound) {
+                lowerBound = p.getCoordinate().getZ();
             }
         }
         if (upperBound > width / 2) {
@@ -114,6 +114,7 @@ public class Detector {
         return lowerBound;
     }
 
+
     public int getDetectedParticlesAmount() {
         return detectedParticlesAmount;
     }
@@ -129,6 +130,7 @@ public class Detector {
     public int getOutOfDetectorParticlesAmount() {
         return outOfDetectorParticlesAmount;
     }
+
 
     public float getDetectedIntensity() {
         return detectedIntensity;
@@ -146,11 +148,20 @@ public class Detector {
         return outOfDetectorIntensity;
     }
 
+
     public void increaseOutOfCapillarParticlesAmount() {
         outOfCapillarParticlesAmount++;
     }
 
-    public void increaseOutOfCapillarInensity(float intensity) {
+    public void increaseOutOfCapillarIntensity(float intensity) {
         outOfCapillarIntensity += intensity;
+    }
+
+    public void increaseAbsorbedIntensity(float intensity) {
+        absorbedIntensity += intensity;
+    }
+
+    public void increaseAbsorbedParticlesAmount() {
+        absorbedParticlesAmount++;
     }
 }

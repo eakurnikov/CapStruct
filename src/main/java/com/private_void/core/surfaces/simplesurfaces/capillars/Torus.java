@@ -1,21 +1,22 @@
-package com.private_void.core.capillars;
+package com.private_void.core.surfaces.simplesurfaces.capillars;
 
 import com.private_void.core.detectors.RotatedDetector;
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
-import com.private_void.core.particles.Particle;
+import com.private_void.core.particles.NeutralParticle;
+import com.private_void.core.surfaces.simplesurfaces.capillars.Capillar;
 import com.private_void.utils.Utils;
 
 import static com.private_void.utils.Constants.*;
 import static com.private_void.utils.Generator.generator;
 
-public class Torus extends Surface {
+public class Torus extends Capillar {
     private float curvRadius;
     private float curvAngleR;
 
     public Torus(final Point3D frontCoordinate, float radius, float curvRadius, float curvAngleD, float roughnessSize,
-                 float roughnessAngleD, float reflectivity, float slideAngleD) {
-        super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
+                 float roughnessAngleD, float reflectivity, float criticalAngleD) {
+        super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
         this.curvRadius = curvRadius;
         this.curvAngleR = Utils.convertDegreesToRadians(curvAngleD);
         this.detector = new RotatedDetector(new Point3D((float) (frontCoordinate.getX() + curvRadius * Math.sin(curvAngleR)),
@@ -26,10 +27,10 @@ public class Torus extends Surface {
     }
 
     @Override
-    public Point3D getHitPoint(final Particle particle) {
-        float[] solution = {particle.getCoordinate().getX() + particle.getSpeed().getX() * radius * particle.getRecursiveIterationCount(),
-                            particle.getCoordinate().getY() + particle.getSpeed().getY() * radius * particle.getRecursiveIterationCount(),
-                            particle.getCoordinate().getZ() + particle.getSpeed().getZ() * radius * particle.getRecursiveIterationCount()};
+    protected Point3D getHitPoint(final NeutralParticle p) {
+        float[] solution = {p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
+                            p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
+                            p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()};
         float[] delta = {1.0f, 1.0f, 1.0f};
         float[] F  = new float[3];
         float[][] W = new float[3][3];
@@ -44,12 +45,12 @@ public class Torus extends Surface {
                 // Костыль для уничтожения частиц, вычисление координат которых зациклилось
                 iterationsAmount++;
                 if (iterationsAmount > ITERATIONS_MAX) {
-                    if (particle.isRecursiveIterationsLimitReached()) {
-                        particle.setAbsorbed(true);
-                        return particle.getCoordinate();
+                    if (p.isRecursiveIterationsLimitReached()) {
+                        p.setAbsorbed(true);
+                        return p.getCoordinate();
                     } else {
-                        particle.recursiveIteration();
-                        return getHitPoint(particle);
+                        p.recursiveIteration();
+                        return getHitPoint(p);
                     }
                 }
 
@@ -57,17 +58,17 @@ public class Torus extends Surface {
                 W[0][1] = 2 * (solution[0] * solution[0] + solution[1] * solution[1] + (solution[2] + curvRadius) * (solution[2] + curvRadius) + curvRadius * curvRadius - (radius - dr) * (radius - dr)) * 2 * solution[1];
                 W[0][2] = 2 * (solution[0] * solution[0] + solution[1] * solution[1] + (solution[2] + curvRadius) * (solution[2] + curvRadius) + curvRadius * curvRadius - (radius - dr) * (radius - dr)) * 2 * (solution[2] + curvRadius) - 8 * curvRadius * curvRadius * (solution[2] + curvRadius);
 
-                W[1][0] =  1.0f / particle.getSpeed().getX();
-                W[1][1] = -1.0f / particle.getSpeed().getY();
+                W[1][0] =  1.0f / p.getSpeed().getX();
+                W[1][1] = -1.0f / p.getSpeed().getY();
                 W[1][2] =  0.0f;
 
                 W[2][0] =  0.0f;
-                W[2][1] =  1.0f / particle.getSpeed().getY();
-                W[2][2] = -1.0f / particle.getSpeed().getZ();
+                W[2][1] =  1.0f / p.getSpeed().getY();
+                W[2][2] = -1.0f / p.getSpeed().getZ();
 
                 F[0] = (solution[0] * solution[0] + solution[1] * solution[1] + (solution[2] + curvRadius) * (solution[2] + curvRadius) + curvRadius * curvRadius - (radius - dr) * (radius - dr)) * (solution[0] * solution[0] + solution[1] * solution[1] + (solution[2] + curvRadius) * (solution[2] + curvRadius) + curvRadius * curvRadius - (radius - dr) * (radius - dr)) - 4 * curvRadius * curvRadius * (solution[0] * solution[0] + (solution[2] + curvRadius) * (solution[2] + curvRadius));
-                F[1] = (solution[0] - particle.getCoordinate().getX()) / particle.getSpeed().getX() - (solution[1] - particle.getCoordinate().getY()) / particle.getSpeed().getY();
-                F[2] = (solution[1] - particle.getCoordinate().getY()) / particle.getSpeed().getY() - (solution[2] - particle.getCoordinate().getZ()) / particle.getSpeed().getZ();
+                F[1] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX() - (solution[1] - p.getCoordinate().getY()) / p.getSpeed().getY();
+                F[2] = (solution[1] - p.getCoordinate().getY()) / p.getSpeed().getY() - (solution[2] - p.getCoordinate().getZ()) / p.getSpeed().getZ();
 
                 delta = Utils.matrixMultiplication(Utils.inverseMatrix(W), F);
 
@@ -82,11 +83,11 @@ public class Torus extends Surface {
         }
 
         Point3D newCoordinate = new Point3D(solution[0], solution[1], solution[2]);
-        if (newCoordinate.isNear(particle.getCoordinate()) && !particle.isRecursiveIterationsLimitReached()) {
-            particle.recursiveIteration();
-            return getHitPoint(particle);
+        if (newCoordinate.isNear(p.getCoordinate()) && !p.isRecursiveIterationsLimitReached()) {
+            p.recursiveIteration();
+            return getHitPoint(p);
         } else {
-            particle.stopRecursiveIterations();
+            p.stopRecursiveIterations();
             return newCoordinate;
         }
     }

@@ -1,21 +1,23 @@
-package com.private_void.core.capillars;
+package com.private_void.core.surfaces.simplesurfaces.capillars;
 
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
-import com.private_void.core.particles.Particle;
+import com.private_void.core.particles.NeutralParticle;
+import com.private_void.core.surfaces.simplesurfaces.capillars.Capillar;
 import com.private_void.utils.Utils;
 
 import static com.private_void.utils.Constants.*;
 import static com.private_void.utils.Generator.generator;
 
-public class Cone extends Surface {
+public class Cone extends Capillar {
     private float length;
     private float divergentAngleR;
 
     public Cone(final Point3D frontCoordinate, float radius, int divergentAngleD, float coneCoefficient, float roughnessSize,
-                float roughnessAngleD, float reflectivity, float slideAngleD) throws IllegalArgumentException {
-        super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
+                float roughnessAngleD, float reflectivity, float criticalAngleD) throws IllegalArgumentException {
+
+        super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
         if (coneCoefficient >= 1 || coneCoefficient <= 0) {
             throw new IllegalArgumentException();
         }
@@ -25,8 +27,9 @@ public class Cone extends Surface {
     }
 
     public Cone(final Point3D frontCoordinate, float radius, float length, float coneCoefficient, float roughnessSize,
-                float roughnessAngleD, float reflectivity, float slideAngleD) throws IllegalArgumentException {
-        super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, slideAngleD);
+                float roughnessAngleD, float reflectivity, float criticalAngleD) throws IllegalArgumentException {
+
+        super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
         if (coneCoefficient >= 1 || coneCoefficient <= 0) {
             throw new IllegalArgumentException();
         }
@@ -36,10 +39,10 @@ public class Cone extends Surface {
     }
 
     @Override
-    public Point3D getHitPoint(Particle particle) {
-        float[] solution = {particle.getCoordinate().getX() + radius * particle.getRecursiveIterationCount(),
-                            particle.getCoordinate().getY() + (particle.getSpeed().getY() / Math.abs(particle.getSpeed().getY())) * radius,
-                            particle.getCoordinate().getZ() + (particle.getSpeed().getZ() / Math.abs(particle.getSpeed().getZ())) * radius};
+    protected Point3D getHitPoint(NeutralParticle p) {
+        float[] solution = {p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),
+                            p.getCoordinate().getY() + (p.getSpeed().getY() / Math.abs(p.getSpeed().getY())) * radius,
+                            p.getCoordinate().getZ() + (p.getSpeed().getZ() / Math.abs(p.getSpeed().getZ())) * radius};
         float[] delta = {1.0f, 1.0f, 1.0f};
         float[] F  = new float[3];
         float[][] W = new float[3][3];
@@ -54,12 +57,12 @@ public class Cone extends Surface {
                 // Костыль для уничтожения частиц, вычисление координат которых зациклилось
                 iterationsAmount++;
                 if (iterationsAmount > ITERATIONS_MAX) {
-                    if (particle.isRecursiveIterationsLimitReached()) {
-                        particle.setAbsorbed(true);
-                        return particle.getCoordinate();
+                    if (p.isRecursiveIterationsLimitReached()) {
+                        p.setAbsorbed(true);
+                        return p.getCoordinate();
                     } else {
-                        particle.recursiveIteration();
-                        return getHitPoint(particle);
+                        p.recursiveIteration();
+                        return getHitPoint(p);
                     }
                 }
 
@@ -67,17 +70,17 @@ public class Cone extends Surface {
                 W[0][1] = (float) (solution[1] * (1.0f / Math.tan(divergentAngleR)) / (Math.sqrt(solution[1] * solution[1] + solution[2] * solution[2])));
                 W[0][2] = (float) (solution[2] * (1.0f / Math.tan(divergentAngleR)) / (Math.sqrt(solution[1] * solution[1] + solution[2] * solution[2])));
 
-                W[1][0] = 1.0f / particle.getSpeed().getX();
-                W[1][1] = -1.0f / particle.getSpeed().getY();
+                W[1][0] = 1.0f / p.getSpeed().getX();
+                W[1][1] = -1.0f / p.getSpeed().getY();
                 W[1][2] = 0.0f;
 
-                W[2][0] = 1.0f / particle.getSpeed().getX();
+                W[2][0] = 1.0f / p.getSpeed().getX();
                 W[2][1] = 0.0f;
-                W[2][2] = -1.0f / particle.getSpeed().getZ();
+                W[2][2] = -1.0f / p.getSpeed().getZ();
 
                 F[0] = (float) (solution[1] + Math.sqrt(solution[1] * solution[1] + solution[2] * solution[2]) * (1.0f / Math.tan(divergentAngleR)) - (radius - dr) * (1.0f / Math.tan(divergentAngleR)));
-                F[1] = (solution[0] - particle.getCoordinate().getX()) / particle.getSpeed().getX() - (solution[1] - particle.getCoordinate().getY()) / particle.getSpeed().getY();
-                F[2] = (solution[0] - particle.getCoordinate().getX()) / particle.getSpeed().getX() - (solution[2] - particle.getCoordinate().getZ()) / particle.getSpeed().getZ();
+                F[1] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX() - (solution[1] - p.getCoordinate().getY()) / p.getSpeed().getY();
+                F[2] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX() - (solution[2] - p.getCoordinate().getZ()) / p.getSpeed().getZ();
 
                 delta = Utils.matrixMultiplication(Utils.inverseMatrix(W), F);
 
@@ -86,7 +89,7 @@ public class Cone extends Surface {
                 }
             } catch (ArithmeticException e) {
                 e.printStackTrace();
-                return particle.getCoordinate();
+                return p.getCoordinate();
             }
             catch (Exception e){
                 e.printStackTrace();
@@ -94,11 +97,11 @@ public class Cone extends Surface {
         }
 
         Point3D newCoordinate = new Point3D(solution[0], solution[1], solution[2]);
-        if (newCoordinate.isNear(particle.getCoordinate()) && !particle.isRecursiveIterationsLimitReached()) {
-            particle.recursiveIteration();
-            return getHitPoint(particle);
+        if (newCoordinate.isNear(p.getCoordinate()) && !p.isRecursiveIterationsLimitReached()) {
+            p.recursiveIteration();
+            return getHitPoint(p);
         } else {
-            particle.stopRecursiveIterations();
+            p.stopRecursiveIterations();
             return newCoordinate;
         }
     }
