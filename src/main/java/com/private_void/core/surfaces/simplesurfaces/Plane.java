@@ -14,14 +14,15 @@ import static com.private_void.utils.Constants.PI;
 public class Plane extends SimpleSurface {
     private float size;
 
-    public Plane(final Point3D frontCoordinate, float size, float roughnessSize, float roughnessAngleD, float reflectivity, float criticalAngleD) {
+    public Plane(final Point3D frontCoordinate, float size, float roughnessSize, float roughnessAngleD,
+                 float reflectivity, float criticalAngleD) {
         super(frontCoordinate, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
         this.size = size;
         this.detector = new Detector(new Point3D(frontCoordinate.getX() + size, frontCoordinate.getY(), frontCoordinate.getZ()), size);
     }
 
     @Override
-    public void passThrough(Flux flux) {
+    public void interact(Flux flux) {
         NeutralParticle p;
         Point3D hitPoint;
         float angleVN;

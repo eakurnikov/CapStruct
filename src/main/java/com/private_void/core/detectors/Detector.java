@@ -47,15 +47,15 @@ public class Detector {
 
                 if (!isParticleWithinBorders(p)) {
                     outOfDetectorParticlesAmount++;
-                    outOfDetectorIntensity += p.getIntensity();
+//                    outOfDetectorIntensity += p.getIntensity();
 //                    iterator.remove();
                 } else {
                     detectedParticlesAmount++;
-                    detectedIntensity += p.getIntensity();
+//                    detectedIntensity += p.getIntensity();
                 }
             } else {
                 absorbedParticlesAmount++;
-                absorbedIntensity += p.getIntensity();
+//                absorbedIntensity += p.getIntensity();
                 iterator.remove();
             }
         }

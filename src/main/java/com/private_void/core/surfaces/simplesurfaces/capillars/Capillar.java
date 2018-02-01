@@ -21,7 +21,7 @@ public abstract  class Capillar extends SimpleSurface {
     }
 
     @Override
-    public void passThrough(Flux flux) {
+    public void interact(Flux flux) {
         NeutralParticle p;
         Point3D newCoordinate;
         float angleVN;

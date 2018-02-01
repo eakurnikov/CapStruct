@@ -16,13 +16,13 @@ public abstract class Flux {
     protected float minIntensity;
     protected List<? extends Particle> particles;
 
-    protected Flux(ParticleFactory factory, final Point3D fluxCoordinate, final Vector3D fluxAxis, int particlesAmount, float minIntensity) {
+    protected Flux(ParticleFactory factory, final Point3D fluxCoordinate, final Vector3D fluxAxis, int particlesAmount,
+                   float minIntensity) {
         this.particleFactory = factory;
         this.fluxCoordinate = fluxCoordinate;
         this.fluxAxis = fluxAxis;
         this.particlesAmount = particlesAmount;
         this.minIntensity = minIntensity;
-        this.particles = new LinkedList<>();
         checkParameters();
     }
 

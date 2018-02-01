@@ -143,7 +143,7 @@ public class MainController {
     public void startBtnClick(ActionEvent actionEvent) {
         Flux flux = createFlux();
         SimpleSurface capillar = createCapillar();
-        capillar.passThrough(flux);
+        capillar.interact(flux);
         showResult(flux, capillar);
     }
 
