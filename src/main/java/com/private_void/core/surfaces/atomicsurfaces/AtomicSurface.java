@@ -15,9 +15,9 @@ public abstract class AtomicSurface extends Surface {
     protected AtomFactory atomFactory;
     protected List<Atom> atoms;
 
-    public AtomicSurface(final Point3D frontCoordinate, final AtomFactory factory,  float period, float chargeNumber) {
+    public AtomicSurface(final AtomFactory atomFactory, final Point3D frontCoordinate, float period, float chargeNumber) {
         super(frontCoordinate);
-        this.atomFactory = factory;
+        this.atomFactory = atomFactory;
         this.period = period;
         this.chargeNumber = chargeNumber;
         this.atoms = new ArrayList<>();

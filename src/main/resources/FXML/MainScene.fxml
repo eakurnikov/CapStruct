@@ -161,7 +161,6 @@
                         </Tab>
 
                         <Tab id="cone_tab" fx:id="coneTab" closable="false" text="Cone">
-
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
@@ -190,6 +189,28 @@
 
                                         <Label id="tor_slide" fx:id="coneSlideAngleLabel" layoutX="15.0" layoutY="260.0" text="Slide angle: " />
                                         <TextField id="tor_slide_param" fx:id="coneSlideAngle" alignment="CENTER" layoutX="176.0" layoutY="255.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+
+                        <Tab id="plane_tab" fx:id="planeTab" closable="false" text="Plane">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                        <Label id="plane_coord" fx:id="planeCoordinateLabel" layoutX="15.0" layoutY="15.0" text="Front coordinate: " />
+                                        <TextField id="plane_x_param" fx:id="planeX" alignment="CENTER" layoutX="140.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+                                        <TextField id="plane_y_param" fx:id="planeY" alignment="CENTER" layoutX="186.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+                                        <TextField id="plane_z_param" fx:id="planeZ" alignment="CENTER" layoutX="231.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+
+                                        <Label id="plane_period" fx:id="planePeriodLabel" layoutX="15.0" layoutY="50.0" text="Plane's period: " />
+                                        <TextField id="plane_period_param" fx:id="planePeriod" alignment="CENTER" layoutX="176.0" layoutY="45.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+
+                                        <Label id="plane_charge_num" fx:id="planeChargeNumLabel" layoutX="15.0" layoutY="85.0" text="Plane's atoms charge number: " />
+                                        <TextField id="plane_charge_num_param" fx:id="planeChargeNum" alignment="CENTER" layoutX="176.0" layoutY="80.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+
+                                        <Label id="plane_size" fx:id="planeSizeLabel" layoutX="15.0" layoutY="120.0" text="Plane's size: " />
+                                        <TextField id="plane_size_param" fx:id="planeSize" alignment="CENTER" layoutX="176.0" layoutY="115.0" prefHeight="25.0" prefWidth="90.0" text="0" />
                                     </children>
                                 </AnchorPane>
                             </content>

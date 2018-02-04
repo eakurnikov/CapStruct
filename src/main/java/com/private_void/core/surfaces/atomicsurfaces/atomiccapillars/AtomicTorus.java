@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 public class AtomicTorus extends AtomicCapillar {
 
-    public AtomicTorus(final Point3D frontCoordinate, final AtomFactory factory, float period, float chargeNumber,
+    public AtomicTorus(final AtomFactory atomFactory, final Point3D frontCoordinate, float period, float chargeNumber,
                        float radius) {
-        super(frontCoordinate, factory, period, chargeNumber, radius);
+        super(atomFactory, frontCoordinate, period, chargeNumber, radius);
     }
 
     @Override

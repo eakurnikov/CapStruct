@@ -13,12 +13,31 @@ import java.util.Iterator;
 public class AtomicPlane extends AtomicSurface {
     private float size;
 
-    public AtomicPlane(final Point3D frontCoordinate, final AtomFactory factory, float period, float chargeNumber,
+    public AtomicPlane(final AtomFactory atomFactory, final Point3D frontCoordinate, float period, float chargeNumber,
                        float size) {
-        super(frontCoordinate, factory, period, chargeNumber);
+        super(atomFactory, frontCoordinate, period, chargeNumber);
         this.size = size;
         this.detector = new Detector(new Point3D(frontCoordinate.getX() + size, frontCoordinate.getY(), frontCoordinate.getZ()), size);
         createAtoms();
+    }
+
+    @Override
+    public void interact(Flux flux) {
+        ChargedParticle p;
+        Point3D newCoordinate;
+        Iterator<? extends Particle> iterator = flux.getParticles().iterator();
+
+        while (iterator.hasNext()) {
+            try {
+                p = (ChargedParticle) iterator.next();
+                float potential = getPotential(p);
+                //////////get prev potential -> get speed -> get coord
+            } catch (Exception e) {
+
+            }
+        }
+
+        detector.detect(flux);
     }
 
     @Override
@@ -47,18 +66,5 @@ public class AtomicPlane extends AtomicSurface {
     @Override
     protected float getPotential(ChargedParticle particle) {
         return 0;
-    }
-
-    @Override
-    public void interact(Flux flux) {
-        ChargedParticle p;
-        Point3D newCoordinate;
-        Iterator<? extends Particle> iterator = flux.getParticles().iterator();
-
-        while (iterator.hasNext()) {
-
-        }
-
-        detector.detect(flux);
     }
 }

@@ -9,9 +9,9 @@ import java.util.ArrayList;
 public class AtomicCylinder extends AtomicCapillar {
     private float length;
 
-    public AtomicCylinder(final Point3D frontCoordinate, final AtomFactory factory, float period, float chargeNumber,
+    public AtomicCylinder(final AtomFactory atomFactory, final Point3D frontCoordinate, float period, float chargeNumber,
                           float radius, float length) {
-        super(frontCoordinate, factory, period, chargeNumber, radius);
+        super(atomFactory, frontCoordinate, period, chargeNumber, radius);
         this.length = length;
     }
 

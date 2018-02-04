@@ -12,9 +12,9 @@ import java.util.Iterator;
 public abstract class AtomicCapillar extends AtomicSurface {
     protected float radius;
 
-    public AtomicCapillar(final Point3D frontCoordinate, final AtomFactory factory, float period, float chargeNumber,
+    public AtomicCapillar(final AtomFactory atomFactory, final Point3D frontCoordinate, float period, float chargeNumber,
                           float radius) {
-        super(frontCoordinate, factory, period, chargeNumber);
+        super(atomFactory, frontCoordinate, period, chargeNumber);
         this.radius = radius;
     }
 

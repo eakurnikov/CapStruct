@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 public class AtomicCone extends AtomicCapillar {
 
-    public AtomicCone(final Point3D frontCoordinate, final AtomFactory factory, float period, float chargeNumber,
+    public AtomicCone(final AtomFactory atomFactory, final Point3D frontCoordinate, float period, float chargeNumber,
                       float radius) {
-        super(frontCoordinate, factory, period, chargeNumber, radius);
+        super(atomFactory, frontCoordinate, period, chargeNumber, radius);
     }
 
     @Override

@@ -1,8 +1,11 @@
 package com.private_void.app;
 
+import com.private_void.core.particles.Atom;
+import com.private_void.core.surfaces.Surface;
+import com.private_void.core.surfaces.atomicsurfaces.AtomicPlane;
+import com.private_void.core.surfaces.simplesurfaces.Plane;
 import com.private_void.core.surfaces.simplesurfaces.capillars.Cone;
 import com.private_void.core.surfaces.simplesurfaces.capillars.Cylinder;
-import com.private_void.core.surfaces.simplesurfaces.SimpleSurface;
 import com.private_void.core.surfaces.simplesurfaces.capillars.Torus;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.detectors.RotatedDetector;
@@ -89,6 +92,15 @@ public class MainController {
     public TextField coneSlideAngle;
 
     @FXML
+    public Tab planeTab;
+    public TextField planeX;
+    public TextField planeY;
+    public TextField planeZ;
+    public TextField planePeriod;
+    public TextField planeChargeNum;
+    public TextField planeSize;
+
+    @FXML
     public ScatterChart chart;
 
     @FXML
@@ -138,13 +150,19 @@ public class MainController {
         coneRoughAngle.setText("5");
         coneReflect.setText("1");
         coneSlideAngle.setText("90");
+
+        planePeriod.setText("1");
+        planeChargeNum.setText("-1");
+        planeSize.setText("50");
     }
 
     public void startBtnClick(ActionEvent actionEvent) {
         Flux flux = createFlux();
-        SimpleSurface capillar = createCapillar();
-        capillar.interact(flux);
-        showResult(flux, capillar);
+        Surface capillar = createCapillar();
+        if (capillar != null) {
+            capillar.interact(flux);
+            showResult(flux, capillar);
+        }
     }
 
     private Flux createFlux() {
@@ -179,7 +197,7 @@ public class MainController {
         }
     }
 
-    private SimpleSurface createCapillar() {
+    private Surface createCapillar() {
         if (cylTab.isSelected()) {
             return new Cylinder(
                     new Point3D(Float.parseFloat(cylX.getText()),
@@ -192,7 +210,9 @@ public class MainController {
                     Float.parseFloat(cylReflect.getText()),
                     Float.parseFloat(cylSlideAngle.getText())
             );
-        } else if (torusTab.isSelected()) {
+        }
+
+        if (torusTab.isSelected()) {
             return new Torus(
                     new Point3D(Float.parseFloat(torX.getText()),
                                 Float.parseFloat(torY.getText()),
@@ -205,7 +225,9 @@ public class MainController {
                     Float.parseFloat(torReflect.getText()),
                     Float.parseFloat(torSlideAngle.getText())
             );
-        } else {
+        }
+
+        if (coneTab.isSelected()) {
             try {
                 return new Cone(
                         new Point3D(Float.parseFloat(coneX.getText()),
@@ -235,9 +257,36 @@ public class MainController {
                 );
             }
         }
+
+        if (planeTab.isSelected()) {
+            return new Plane(
+                    new Point3D(Float.parseFloat(planeX.getText()),
+                            Float.parseFloat(planeY.getText()),
+                            Float.parseFloat(planeZ.getText())),
+                    50f,
+                    0.2f,
+                    5f,
+                    1f,
+                    90f
+            );
+        }
+
+//        if (planeTab.isSelected()) {
+//            return new AtomicPlane(
+//                    Atom.getFactory(),
+//                    new Point3D(Float.parseFloat(planeX.getText()),
+//                            Float.parseFloat(planeY.getText()),
+//                            Float.parseFloat(planeZ.getText())),
+//                    Float.parseFloat(planePeriod.getText()),
+//                    Float.parseFloat(planeChargeNum.getText()),
+//                    Float.parseFloat(planeSize.getText())
+//            );
+//        }
+
+        return null;
     }
 
-    private void showResult(Flux flux, SimpleSurface capillar) {
+    private void showResult(Flux flux, Surface capillar) {
         Detector detector = capillar.getDetector();
         XYChart.Series series = new XYChart.Series();
         series.setName("Particles");
