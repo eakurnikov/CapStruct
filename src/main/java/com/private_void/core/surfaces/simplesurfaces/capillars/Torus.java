@@ -27,6 +27,22 @@ public class Torus extends Capillar {
     }
 
     @Override
+    protected Vector3D getNormal(final Point3D point) {
+        float x = point.getX();
+        float y = point.getY();
+        float z = point.getZ();
+
+        return new Vector3D((-2 * (x * x + y * y + (z + curvRadius) * (z + curvRadius) + curvRadius * curvRadius - radius * radius) * 2 * x + 8 * curvRadius * curvRadius * x),
+                (-2 * (x * x + y * y + (z + curvRadius) * (z + curvRadius) + curvRadius * curvRadius - radius * radius) * 2 * y),
+                (-2 * (x * x + y * y + (z + curvRadius) * (z + curvRadius) + curvRadius * curvRadius - radius * radius) * 2 * (z + curvRadius) + 8 * curvRadius * curvRadius * (z + curvRadius)));
+    }
+
+    @Override
+    protected Vector3D getAxis(final Point3D point) {
+        return normal.getNewByTurningAroundOX(PI / 2).turnAroundOY(getPointsAngle(point));
+    }
+
+    @Override
     protected Point3D getHitPoint(final NeutralParticle p) {
         float[] solution = {p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
                             p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
@@ -92,33 +108,17 @@ public class Torus extends Capillar {
         }
     }
 
-    private float getPointsAngle(Point3D point) {
+    @Override
+    protected boolean isPointInside(final Point3D point) {
+        float angle = getPointsAngle(point);
+        return angle >= 0 && angle <= curvAngleR;
+    }
+
+    private float getPointsAngle(final Point3D point) {
         float x = point.getX();
         float y = point.getY();
         float z = point.getZ();
 
         return (float) Math.asin(x / Math.sqrt(x * x + y * y + (z + curvRadius) * (z + curvRadius)));
-    }
-
-    @Override
-    protected boolean isPointInside(Point3D point) {
-        float angle = getPointsAngle(point);
-        return angle >= 0 && angle <= curvAngleR;
-    }
-
-    @Override
-    protected Vector3D getNormal(Point3D point) {
-        float x = point.getX();
-        float y = point.getY();
-        float z = point.getZ();
-
-        return new Vector3D((-2 * (x * x + y * y + (z + curvRadius) * (z + curvRadius) + curvRadius * curvRadius - radius * radius) * 2 * x + 8 * curvRadius * curvRadius * x),
-                            (-2 * (x * x + y * y + (z + curvRadius) * (z + curvRadius) + curvRadius * curvRadius - radius * radius) * 2 * y),
-                            (-2 * (x * x + y * y + (z + curvRadius) * (z + curvRadius) + curvRadius * curvRadius - radius * radius) * 2 * (z + curvRadius) + 8 * curvRadius * curvRadius * (z + curvRadius)));
-    }
-
-    @Override
-    protected Vector3D getAxis(Point3D point) {
-        return normal.getNewByTurningAroundOX(PI / 2).turnAroundOY(getPointsAngle(point));
     }
 }

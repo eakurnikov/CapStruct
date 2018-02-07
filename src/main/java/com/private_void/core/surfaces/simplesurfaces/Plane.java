@@ -33,7 +33,7 @@ public class Plane extends SimpleSurface {
                 p = (NeutralParticle) iterator.next();
                 hitPoint = getHitPoint(p);
 
-                if (hitPoint.getX() <= size) {
+                if (doesPointBelongToPlane(hitPoint)) {
                     angleVN = p.getSpeed().getAngle(getNormal(hitPoint).inverse());
                     p.decreaseIntensity(reflectivity);
 
@@ -61,7 +61,17 @@ public class Plane extends SimpleSurface {
     }
 
     @Override
-    protected Point3D getHitPoint(NeutralParticle p) {
+    protected Vector3D getNormal(final Point3D point) {
+        return new Vector3D(0.0f, 1.0f, 0.0f);
+    }
+
+    @Override
+    protected Vector3D getAxis(final Point3D point) {
+        return new Vector3D(0.0f, 0.0f, 1.0f);
+    }
+
+    @Override
+    protected Point3D getHitPoint(final NeutralParticle p) {
         float x = p.getCoordinate().getX();
         float y = p.getCoordinate().getY();
         float z = p.getCoordinate().getZ();
@@ -76,13 +86,13 @@ public class Plane extends SimpleSurface {
                 (Vz / Vy) * (frontCoordinate.getY() - y) + z);
     }
 
-    @Override
-    protected Vector3D getNormal(Point3D point) {
-        return new Vector3D(0.0f, 1.0f, 0.0f);
-    }
+    private boolean doesPointBelongToPlane(final Point3D point) {
+        float x = point.getX();
+        float z = point.getZ();
 
-    @Override
-    protected Vector3D getAxis(Point3D point) {
-        return new Vector3D(0.0f, 0.0f, 1.0f);
+        return  x >= frontCoordinate.getX() &&
+                x <= frontCoordinate.getX() + size &&
+                z >= frontCoordinate.getZ() - size / 2 &&
+                z <= frontCoordinate.getZ() + size / 2;
     }
 }

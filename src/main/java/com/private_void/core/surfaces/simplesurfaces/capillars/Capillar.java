@@ -68,7 +68,7 @@ public abstract  class Capillar extends SimpleSurface {
         detector.detect(flux);
     }
 
-    protected boolean willParticleGetInside(Particle p) {
+    protected boolean willParticleGetInside(final Particle p) {
         float x0 = frontCoordinate.getX();
 
         float x = p.getCoordinate().getX();
@@ -79,18 +79,11 @@ public abstract  class Capillar extends SimpleSurface {
         float Vy = p.getSpeed().getY();
         float Vz = p.getSpeed().getZ();
 
-        return ((Vy / Vx) * (x0 - x) + y) * ((Vy / Vx) * (x0 - x) + y) +
-               ((Vz / Vx) * (x0 - x) + z) * ((Vz / Vx) * (x0 - x) + z) < radius * radius;
+        float newY = (Vy / Vx) * (x0 - x) + y;
+        float newZ = (Vz / Vx) * (x0 - x) + z;
+
+        return newY * newY + newZ * newZ < radius * radius;
     }
 
     protected abstract boolean isPointInside(Point3D point);
-
-    @Override
-    protected abstract Point3D getHitPoint(final NeutralParticle p);
-
-    @Override
-    protected abstract Vector3D getNormal(Point3D point);
-
-    @Override
-    protected abstract Vector3D getAxis(Point3D point);
 }

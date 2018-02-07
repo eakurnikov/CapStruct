@@ -1,6 +1,7 @@
 package com.private_void.core.surfaces.atomicsurfaces;
 
 import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.Atom;
 import com.private_void.core.particles.AtomFactory;
 import com.private_void.core.particles.ChargedParticle;
@@ -25,7 +26,11 @@ public abstract class AtomicSurface extends Surface {
 
     protected abstract void createAtoms();
 
-    protected abstract float getCriticalAngle(ChargedParticle particle);
+    protected abstract Point3D getNewCoordinate(final ChargedParticle p);
 
-    protected abstract float getPotential(ChargedParticle particle);
+    protected abstract float getCriticalAngle(final ChargedParticle particle);
+
+    protected abstract float getPotential(final Point3D coordinate);
+
+    protected abstract Vector3D getSpeedByPotential(float potential);
 }

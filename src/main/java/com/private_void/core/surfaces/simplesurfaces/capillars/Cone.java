@@ -39,7 +39,19 @@ public class Cone extends Capillar {
     }
 
     @Override
-    protected Point3D getHitPoint(NeutralParticle p) {
+    protected Vector3D getNormal(final Point3D point) {
+        return new Vector3D(-1.0f,
+                (float) (-point.getY() * (1.0f / Math.tan(divergentAngleR)) / (Math.sqrt(point.getY() * point.getY() + point.getZ() * point.getZ()))),
+                (float) (-point.getZ() * (1.0f / Math.tan(divergentAngleR)) / (Math.sqrt(point.getY() * point.getY() + point.getZ() * point.getZ()))));
+    }
+
+    @Override
+    protected Vector3D getAxis(final Point3D point) {
+        return normal.getNewByTurningAroundOX(PI / 2);
+    }
+
+    @Override
+    protected Point3D getHitPoint(final NeutralParticle p) {
         float[] solution = {p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),
                             p.getCoordinate().getY() + (p.getSpeed().getY() / Math.abs(p.getSpeed().getY())) * radius,
                             p.getCoordinate().getZ() + (p.getSpeed().getZ() / Math.abs(p.getSpeed().getZ())) * radius};
@@ -107,19 +119,7 @@ public class Cone extends Capillar {
     }
 
     @Override
-    protected boolean isPointInside(Point3D point) {
-        return point.getX() <= length;
-    }
-
-    @Override
-    protected Vector3D getNormal(Point3D point) {
-        return new Vector3D(-1.0f,
-                (float) (-point.getY() * (1.0f / Math.tan(divergentAngleR)) / (Math.sqrt(point.getY() * point.getY() + point.getZ() * point.getZ()))),
-                (float) (-point.getZ() * (1.0f / Math.tan(divergentAngleR)) / (Math.sqrt(point.getY() * point.getY() + point.getZ() * point.getZ()))));
-    }
-
-    @Override
-    protected Vector3D getAxis(Point3D point) {
-        return normal.getNewByTurningAroundOX(PI / 2);
+    protected boolean isPointInside(final Point3D point) {
+        return point.getX() <= frontCoordinate.getX() + length;
     }
 }

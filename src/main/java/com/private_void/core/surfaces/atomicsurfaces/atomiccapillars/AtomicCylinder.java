@@ -1,6 +1,7 @@
 package com.private_void.core.surfaces.atomicsurfaces.atomiccapillars;
 
 import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.AtomFactory;
 import com.private_void.core.particles.ChargedParticle;
 
@@ -13,6 +14,16 @@ public class AtomicCylinder extends AtomicCapillar {
                           float radius, float length) {
         super(atomFactory, frontCoordinate, period, chargeNumber, radius);
         this.length = length;
+    }
+
+    @Override
+    protected Vector3D getNormal(final Point3D point) {
+        return null;
+    }
+
+    @Override
+    protected Vector3D getAxis(final Point3D point) {
+        return null;
     }
 
     @Override
@@ -30,12 +41,22 @@ public class AtomicCylinder extends AtomicCapillar {
     }
 
     @Override
-    protected float getCriticalAngle(ChargedParticle particle) {
+    protected Point3D getNewCoordinate(final ChargedParticle p) {
+        return null;
+    }
+
+    @Override
+    protected float getCriticalAngle(final ChargedParticle particle) {
         return 0;
     }
 
     @Override
-    protected float getPotential(ChargedParticle particle) {
+    protected float getPotential(final Point3D coordinate) {
         return 0;
+    }
+
+    @Override
+    protected Vector3D getSpeedByPotential(float potential) {
+        return null;
     }
 }

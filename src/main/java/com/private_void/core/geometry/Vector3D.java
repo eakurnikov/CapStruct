@@ -118,7 +118,7 @@ public class Vector3D extends Point3D {
 
     public float getAngle(final Vector3D vector3D) {
         return (float) (Math.acos((x * vector3D.getX() + y * vector3D.getY() + z * vector3D.getZ()) /
-                (Math.sqrt(x * x + y * y + z * z) * Math.sqrt(vector3D.getX() * vector3D.getX() + vector3D.getY() * vector3D.getY() + vector3D.getZ() * vector3D.getZ()))));
+                       (Math.sqrt(x * x + y * y + z * z) * Math.sqrt(vector3D.getX() * vector3D.getX() + vector3D.getY() * vector3D.getY() + vector3D.getZ() * vector3D.getZ()))));
     }
 
     private void setRotationMatrixX(float angle) {
