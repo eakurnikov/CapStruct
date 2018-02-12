@@ -24,7 +24,7 @@ public abstract  class Capillar extends SimpleSurface {
     public void interact(Flux flux) {
         NeutralParticle p;
         Point3D newCoordinate;
-        float angleVN;
+        float angleWithSurface;
         Iterator<? extends Particle> iterator = flux.getParticles().iterator();
 
         while (iterator.hasNext()) {
@@ -41,12 +41,12 @@ public abstract  class Capillar extends SimpleSurface {
                                 .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
                         axis = getAxis(newCoordinate);
 
-                        angleVN = p.getSpeed().getAngle(normal.inverse());
+                        angleWithSurface = p.getSpeed().getAngle(normal) - PI / 2;
                         p.decreaseIntensity(reflectivity);
 
-                        if (angleVN >= antiCriticalAngleR && p.getIntensity() >= flux.getMinIntensity()) {
+                        if (angleWithSurface <= criticalAngleR && p.getIntensity() >= flux.getMinIntensity()) {
                             p.setCoordinate(newCoordinate);
-                            p.setSpeed(p.getSpeed().getNewByTurningAroundVector(2 * Math.abs(PI / 2 - angleVN), axis));
+                            p.setSpeed(p.getSpeed().getNewByTurningAroundVector(2 * Math.abs(angleWithSurface), axis));
                             newCoordinate = getHitPoint(p);
                         } else {
                             p.setAbsorbed(true);

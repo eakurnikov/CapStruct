@@ -25,7 +25,7 @@ public class Plane extends SimpleSurface {
     public void interact(Flux flux) {
         NeutralParticle p;
         Point3D hitPoint;
-        float angleVN;
+        float angleWithSurface;
         Iterator<? extends Particle> iterator = flux.getParticles().iterator();
 
         while (iterator.hasNext()) {
@@ -34,12 +34,12 @@ public class Plane extends SimpleSurface {
                 hitPoint = getHitPoint(p);
 
                 if (doesPointBelongToPlane(hitPoint)) {
-                    angleVN = p.getSpeed().getAngle(getNormal(hitPoint).inverse());
+                    angleWithSurface = p.getSpeed().getAngle(normal) - PI / 2;
                     p.decreaseIntensity(reflectivity);
 
-                    if (angleVN >= antiCriticalAngleR && p.getIntensity() >= flux.getMinIntensity()) {
+                    if (angleWithSurface <= criticalAngleR && p.getIntensity() >= flux.getMinIntensity()) {
                         p.setCoordinate(hitPoint);
-                        p.setSpeed(p.getSpeed().getNewByTurningAroundVector(2 * Math.abs(PI / 2 - angleVN), getAxis(hitPoint)));
+                        p.setSpeed(p.getSpeed().getNewByTurningAroundVector(2 * Math.abs(angleWithSurface), getAxis(hitPoint)));
 
                     } else {
                         p.setAbsorbed(true);

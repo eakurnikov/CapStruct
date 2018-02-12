@@ -7,6 +7,7 @@ import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.AtomFactory;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.particles.Particle;
+import com.private_void.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,15 +29,15 @@ public class AtomicPlane extends AtomicSurface {
     public void interact(Flux flux) {
         ChargedParticle p;
         Point3D newCoordinate;
-        float angle;
+        float angleWithSurface;
         Iterator<? extends Particle> iterator = flux.getParticles().iterator();
 
         while (iterator.hasNext()) {
             try {
                 p = (ChargedParticle) iterator.next();
-                angle = PI / 2 - p.getSpeed().getAngle(getNormal(p.getCoordinate()).inverse());
+                angleWithSurface = p.getSpeed().getAngle(getNormal(p.getCoordinate())) - PI / 2;
 
-                if (angle < getCriticalAngle(p)) {
+                if (angleWithSurface <= getCriticalAngle(p)) {
                     newCoordinate = p.getCoordinate();
 
                     while (newCoordinate.getX() <= frontCoordinate.getX() + size) {
@@ -98,7 +99,17 @@ public class AtomicPlane extends AtomicSurface {
 
     @Override
     protected float getCriticalAngle(final ChargedParticle particle) {
-        return 0;
+        // CriticalAngle = ( (2PI N d` Z1 Z2 e^2 a) / E ) ^ (1/2)
+        // Nd` - среднее число атомов на единицу площади
+        // d` - расстояние между соседними плоскостями
+        // N - среднее число атомов в единице объема
+        // Z1, Z2 - заряды частиц
+        // e - заряд электрона, 1.60217662 × 10 ^ -19 Кулона
+        // a - расстояние экранировки
+        // E - энергия налетающей частицы
+
+        // Пока критический угол подбирается равным 10 градусам
+        return Utils.convertDegreesToRadians(10);
     }
 
     @Override
