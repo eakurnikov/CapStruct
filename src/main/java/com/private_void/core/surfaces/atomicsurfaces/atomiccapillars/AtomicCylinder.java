@@ -51,7 +51,7 @@ public class AtomicCylinder extends AtomicCapillar {
     }
 
     @Override
-    protected float getPotential(final Point3D coordinate) {
+    protected float getPotential(final ChargedParticle particle) {
         return 0;
     }
 

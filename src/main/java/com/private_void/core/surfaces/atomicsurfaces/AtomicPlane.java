@@ -12,15 +12,18 @@ import com.private_void.utils.Utils;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import static com.private_void.utils.Constants.ELECTRON_CHARGE;
 import static com.private_void.utils.Constants.PI;
 
 public class AtomicPlane extends AtomicSurface {
     private float size;
+    private float chargePlanarDensity;
 
     public AtomicPlane(final AtomFactory atomFactory, final Point3D frontCoordinate, float period, float chargeNumber,
                        float size) {
         super(atomFactory, frontCoordinate, period, chargeNumber);
         this.size = size;
+        this.chargePlanarDensity = 1 / (period * period);
         this.detector = new Detector(new Point3D(frontCoordinate.getX() + size, frontCoordinate.getY(), frontCoordinate.getZ()), size);
         createAtoms();
     }
@@ -32,6 +35,8 @@ public class AtomicPlane extends AtomicSurface {
         float angleWithSurface;
         Iterator<? extends Particle> iterator = flux.getParticles().iterator();
 
+        setShieldingDistance(((ChargedParticle) flux.getParticles().get(0)).getChargeNumber());
+
         while (iterator.hasNext()) {
             try {
                 p = (ChargedParticle) iterator.next();
@@ -42,7 +47,7 @@ public class AtomicPlane extends AtomicSurface {
 
                     while (newCoordinate.getX() <= frontCoordinate.getX() + size) {
                         p.setCoordinate(newCoordinate);
-                        p.setSpeed(getSpeedByPotential(getPotential(newCoordinate)));
+                        p.setSpeed(getSpeedByPotential(getPotential(p)));
                         newCoordinate = getNewCoordinate(p);
                     }
                 } else {
@@ -108,13 +113,19 @@ public class AtomicPlane extends AtomicSurface {
         // a - расстояние экранировки
         // E - энергия налетающей частицы
 
-        // Пока критический угол подбирается равным 10 градусам
-        return Utils.convertDegreesToRadians(10);
+        return (float) Math.sqrt((2 * PI * particle.getChargeNumber() * chargeNumber *
+                (ELECTRON_CHARGE * ELECTRON_CHARGE) * shieldingDistance * chargePlanarDensity) / particle.getEnergy());
     }
 
     @Override
-    protected float getPotential(final Point3D coordinate) {
-        return 0;
+    protected float getPotential(final ChargedParticle particle) {
+        float distanceToPlane = particle.getCoordinate().getY() - frontCoordinate.getY();
+        float y = distanceToPlane / shieldingDistance;
+        float C2 = 3;
+
+        return 2 * PI * particle.getChargeNumber() * chargeNumber *
+                (ELECTRON_CHARGE * ELECTRON_CHARGE) * shieldingDistance * chargePlanarDensity *
+                ((float) Math.sqrt(y * y + C2) - y);
     }
 
     @Override
