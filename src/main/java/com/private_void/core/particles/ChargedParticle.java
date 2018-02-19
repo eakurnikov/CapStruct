@@ -5,20 +5,26 @@ import com.private_void.core.geometry.Vector3D;
 
 public class ChargedParticle extends Particle {
     private float chargeNumber;
+    private float mass;
     private float energy;
 
-    private ChargedParticle(Point3D coordinate, Vector3D speed, float chargeNumber, float energy) {
+    private ChargedParticle(Point3D coordinate, Vector3D speed, float chargeNumber, float mass, float energy) {
         super(coordinate, speed);
         this.chargeNumber = chargeNumber;
+        this.mass = mass;
         this.energy = energy;
     }
 
     public static ParticleFactory getFactory() {
-        return (final Point3D coordinate, final Vector3D speed) -> new ChargedParticle(coordinate, speed, -1.0f, 1);
+        return (final Point3D coordinate, final Vector3D speed) -> new ChargedParticle(coordinate, speed, 1.0f, 1.0f, 1.0f);
     }
 
     public float getChargeNumber() {
         return chargeNumber;
+    }
+
+    public float getMass() {
+        return mass;
     }
 
     public float getEnergy() {

@@ -47,7 +47,7 @@ public class AtomicPlane extends AtomicSurface {
 
                     while (newCoordinate.getX() <= frontCoordinate.getX() + size) {
                         p.setCoordinate(newCoordinate);
-                        p.setSpeed(getSpeedByPotential(getPotential(p)));
+                        p.setSpeed(getNewSpeed(p));
                         newCoordinate = getNewCoordinate(p);
                     }
                 } else {
@@ -90,6 +90,37 @@ public class AtomicPlane extends AtomicSurface {
     }
 
     @Override
+    protected float getCriticalAngle(final ChargedParticle particle) {
+        // CriticalAngle = ( (2PI N d` Z1 Z2 e^2 a) / E ) ^ (1/2)
+        // Nd` - среднее число атомов на единицу площади
+        // d` - расстояние между соседними плоскостями
+        // n - концентрация на плоскости = Nd`
+        // N - среднее число атомов в единице объема
+        // Z1, Z2 - заряды частиц (1, 26)
+        // e - заряд электрона, 1.60217662 × 10 ^ -19 Кулона
+        // a - расстояние экранировки (0.885  * а боровский ((Z1)^(1/2) + (Z2)^(1/2)) ^ -(2/3)), а боровский = 0.529 ангстрем
+        // E - энергия налетающей частицы (10 КэВ - 1 МэВ)
+
+        return Utils.convertDegreesToRadians(45);
+//        return (float) Math.sqrt((2 * PI * particle.getChargeNumber() * chargeNumber *
+//                (ELECTRON_CHARGE * ELECTRON_CHARGE) * shieldingDistance * chargePlanarDensity) / particle.getEnergy());
+    }
+
+    @Override
+    protected Vector3D getNewSpeed(final ChargedParticle particle) {
+        float y = particle.getCoordinate().getY() - frontCoordinate.getY();
+        float C2 = 3.0f;
+        float timeInterval = 1.0f;
+
+        float Fy = 2.0f * PI *  particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE)
+                * chargePlanarDensity * (float) (1.0f - y / Math.sqrt((y / shieldingDistance) * (y / shieldingDistance) + C2));
+        float dVy = (Fy / particle.getMass()) * timeInterval;
+
+        return new Vector3D(particle.getSpeed().getX(), particle.getSpeed().getY() + 0.009f, particle.getSpeed().getZ());
+//        return new Vector3D(particle.getSpeed().getX(), particle.getSpeed().getY() + dVy, particle.getSpeed().getZ());
+    }
+
+    @Override
     protected Point3D getNewCoordinate(final ChargedParticle p) {
         float x = p.getCoordinate().getX();
         float y = p.getCoordinate().getY();
@@ -102,37 +133,13 @@ public class AtomicPlane extends AtomicSurface {
         return new Point3D(x + Vx, y + Vy, z + Vz);
     }
 
-    @Override
-    protected float getCriticalAngle(final ChargedParticle particle) {
-        // CriticalAngle = ( (2PI N d` Z1 Z2 e^2 a) / E ) ^ (1/2)
-        // Nd` - среднее число атомов на единицу площади
-        // d` - расстояние между соседними плоскостями
-        // n - концентрация на плоскости = Nd`
-        // N - среднее число атомов в единице объема
-        // Z1, Z2 - заряды частиц (1, 26)
-        // e - заряд электрона, 1.60217662 × 10 ^ -19 Кулона
-        // a - расстояние экранировки (0.885  * а боровский ((Z1)^(1/2) + (Z2)^(1/2)) ^ -(2/3)), а боровский = 0.529 ангстрем
-        // E - энергия налетающей частицы (10 КэВ - 1 МэВ)
-
-        float n = atoms.size() / (size * size);
-
-        return (float) Math.sqrt((2 * PI * particle.getChargeNumber() * chargeNumber *
-                (ELECTRON_CHARGE * ELECTRON_CHARGE) * shieldingDistance * chargePlanarDensity) / particle.getEnergy());
-    }
-
-    @Override
-    protected float getPotential(final ChargedParticle particle) {
-        float distanceToPlane = particle.getCoordinate().getY() - frontCoordinate.getY();
-        float y = distanceToPlane / shieldingDistance;
-        float C2 = 3;
-
-        return 2 * PI * particle.getChargeNumber() * chargeNumber *
-                (ELECTRON_CHARGE * ELECTRON_CHARGE) * shieldingDistance * chargePlanarDensity *
-                ((float) Math.sqrt(y * y + C2) - y);
-    }
-
-    @Override
-    protected Vector3D getSpeedByPotential(float potential) {
-        return null;
-    }
+//    @Override
+//    protected float getPotential(final ChargedParticle particle) {
+//        float y = (particle.getCoordinate().getY() - frontCoordinate.getY()) / shieldingDistance;
+//        float C2 = 3.0f;
+//
+//        return 2.0f * PI * particle.getChargeNumber() * chargeNumber *
+//                (ELECTRON_CHARGE * ELECTRON_CHARGE) * shieldingDistance * chargePlanarDensity *
+//                ((float) Math.sqrt(y * y + C2) - y);
+//    }
 }

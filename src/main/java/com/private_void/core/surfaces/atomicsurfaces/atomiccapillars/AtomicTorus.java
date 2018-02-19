@@ -30,22 +30,17 @@ public class AtomicTorus extends AtomicCapillar {
     }
 
     @Override
-    protected Point3D getNewCoordinate(final ChargedParticle p) {
-        return null;
-    }
-
-    @Override
     protected float getCriticalAngle(final ChargedParticle particle) {
         return 0;
     }
 
     @Override
-    protected float getPotential(final ChargedParticle particle) {
-        return 0;
+    protected Vector3D getNewSpeed(final ChargedParticle particle) {
+        return null;
     }
 
     @Override
-    protected Vector3D getSpeedByPotential(float potential) {
+    protected Point3D getNewCoordinate(final ChargedParticle p) {
         return null;
     }
 }

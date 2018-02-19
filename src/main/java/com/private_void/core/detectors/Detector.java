@@ -94,12 +94,12 @@ public class Detector {
                 lowerBound = p.getCoordinate().getZ();
             }
         }
-        if (upperBound > width / 2) {
-            upperBound = width / 2;
-        }
-        if (lowerBound < -width / 2) {
-            lowerBound = -width / 2;
-        }
+//        if (upperBound > width / 2) {
+//            upperBound = width / 2;
+//        }
+//        if (lowerBound < -width / 2) {
+//            lowerBound = -width / 2;
+//        }
     }
 
     public Point3D getCenterCoordinate() {

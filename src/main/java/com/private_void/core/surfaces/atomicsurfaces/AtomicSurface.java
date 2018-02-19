@@ -24,21 +24,21 @@ public abstract class AtomicSurface extends Surface {
         this.atomFactory = atomFactory;
         this.period = period;
         this.chargeNumber = chargeNumber;
-        this.shieldingDistance = 0.0f;
+        this.shieldingDistance = 1.0f;
         this.atoms = new ArrayList<>();
     }
 
-    protected float setShieldingDistance(float particleChargeNumber) {
-        return 0.885f * BOHR_RADIUS * (float) (Math.pow(Math.sqrt(particleChargeNumber) + Math.sqrt(chargeNumber),  2/3));
+    protected void setShieldingDistance(float particleChargeNumber) {
+        this.shieldingDistance = 0.885f * BOHR_RADIUS * (float) (Math.pow(Math.sqrt(particleChargeNumber) + Math.sqrt(chargeNumber),  2/3));
     }
 
     protected abstract void createAtoms();
 
-    protected abstract Point3D getNewCoordinate(final ChargedParticle p);
-
     protected abstract float getCriticalAngle(final ChargedParticle particle);
 
-    protected abstract float getPotential(final ChargedParticle particle);
+    protected abstract Vector3D getNewSpeed(final ChargedParticle particle);
 
-    protected abstract Vector3D getSpeedByPotential(float potential);
+    protected abstract Point3D getNewCoordinate(final ChargedParticle p);
+
+    //protected abstract float getPotential(final ChargedParticle particle);
 }

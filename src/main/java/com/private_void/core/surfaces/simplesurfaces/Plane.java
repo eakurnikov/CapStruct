@@ -33,7 +33,7 @@ public class Plane extends SimpleSurface {
                 p = (NeutralParticle) iterator.next();
                 hitPoint = getHitPoint(p);
 
-                if (doesPointBelongToPlane(hitPoint)) {
+                if (true /*doesPointBelongToPlane(hitPoint)*/) {
                     angleWithSurface = p.getSpeed().getAngle(normal) - PI / 2;
                     p.decreaseIntensity(reflectivity);
 
