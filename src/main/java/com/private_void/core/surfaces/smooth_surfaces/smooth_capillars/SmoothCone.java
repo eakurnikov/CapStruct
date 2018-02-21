@@ -1,21 +1,21 @@
-package com.private_void.core.surfaces.simplesurfaces.capillars;
+package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
-import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.NeutralParticle;
-import com.private_void.core.surfaces.simplesurfaces.capillars.Capillar;
+import com.private_void.core.surfaces.CapillarFactory;
 import com.private_void.utils.Utils;
 
 import static com.private_void.utils.Constants.*;
 import static com.private_void.utils.Generator.generator;
 
-public class Cone extends Capillar {
+public class SmoothCone extends SmoothCapillar {
     private float length;
     private float divergentAngleR;
 
-    public Cone(final Point3D frontCoordinate, float radius, int divergentAngleD, float coneCoefficient, float roughnessSize,
-                float roughnessAngleD, float reflectivity, float criticalAngleD) throws IllegalArgumentException {
+    public SmoothCone(final Point3D frontCoordinate, float radius, int divergentAngleD, float coneCoefficient,
+                      float roughnessSize, float roughnessAngleD, float reflectivity, float criticalAngleD)
+            throws IllegalArgumentException {
 
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
         if (coneCoefficient >= 1 || coneCoefficient <= 0) {
@@ -23,11 +23,10 @@ public class Cone extends Capillar {
         }
         this.divergentAngleR = Utils.convertDegreesToRadians(divergentAngleD);
         this.length = (float) (radius * (1 / Math.tan(divergentAngleR)) * coneCoefficient);
-        this.detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),2 * radius);
     }
 
-    public Cone(final Point3D frontCoordinate, float radius, float length, float coneCoefficient, float roughnessSize,
-                float roughnessAngleD, float reflectivity, float criticalAngleD) throws IllegalArgumentException {
+    public SmoothCone(final Point3D frontCoordinate, float radius, float length, float coneCoefficient, float roughnessSize,
+                      float roughnessAngleD, float reflectivity, float criticalAngleD) throws IllegalArgumentException {
 
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
         if (coneCoefficient >= 1 || coneCoefficient <= 0) {
@@ -35,14 +34,16 @@ public class Cone extends Capillar {
         }
         this.length = length;
         this.divergentAngleR = (float) Math.atan((radius / length) * coneCoefficient);
-        this.detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),2 * radius);
     }
 
     @Override
     protected Vector3D getNormal(final Point3D point) {
-        return new Vector3D(-1.0f,
-                (float) (-point.getY() * (1.0f / Math.tan(divergentAngleR)) / (Math.sqrt(point.getY() * point.getY() + point.getZ() * point.getZ()))),
-                (float) (-point.getZ() * (1.0f / Math.tan(divergentAngleR)) / (Math.sqrt(point.getY() * point.getY() + point.getZ() * point.getZ()))));
+        return new Vector3D(
+                -1.0f,
+                (float) (-point.getY() * (1.0f / Math.tan(divergentAngleR))
+                        / (Math.sqrt(point.getY() * point.getY() + point.getZ() * point.getZ()))),
+                (float) (-point.getZ() * (1.0f / Math.tan(divergentAngleR))
+                        / (Math.sqrt(point.getY() * point.getY() + point.getZ() * point.getZ()))));
     }
 
     @Override
@@ -52,9 +53,11 @@ public class Cone extends Capillar {
 
     @Override
     protected Point3D getHitPoint(final NeutralParticle p) {
-        float[] solution = {p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),
-                            p.getCoordinate().getY() + (p.getSpeed().getY() / Math.abs(p.getSpeed().getY())) * radius,
-                            p.getCoordinate().getZ() + (p.getSpeed().getZ() / Math.abs(p.getSpeed().getZ())) * radius};
+        float[] solution = {
+                p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),
+                p.getCoordinate().getY() + (p.getSpeed().getY() / Math.abs(p.getSpeed().getY())) * radius,
+                p.getCoordinate().getZ() + (p.getSpeed().getZ() / Math.abs(p.getSpeed().getZ())) * radius
+        };
         float[] delta = {1.0f, 1.0f, 1.0f};
         float[] F  = new float[3];
         float[][] W = new float[3][3];
@@ -79,8 +82,12 @@ public class Cone extends Capillar {
                 }
 
                 W[0][0] = 1.0f;
-                W[0][1] = (float) (solution[1] * (1.0f / Math.tan(divergentAngleR)) / (Math.sqrt(solution[1] * solution[1] + solution[2] * solution[2])));
-                W[0][2] = (float) (solution[2] * (1.0f / Math.tan(divergentAngleR)) / (Math.sqrt(solution[1] * solution[1] + solution[2] * solution[2])));
+
+                W[0][1] = (float) (solution[1] * (1.0f / Math.tan(divergentAngleR))
+                        / (Math.sqrt(solution[1] * solution[1] + solution[2] * solution[2])));
+
+                W[0][2] = (float) (solution[2] * (1.0f / Math.tan(divergentAngleR))
+                        / (Math.sqrt(solution[1] * solution[1] + solution[2] * solution[2])));
 
                 W[1][0] = 1.0f / p.getSpeed().getX();
                 W[1][1] = -1.0f / p.getSpeed().getY();
@@ -90,9 +97,14 @@ public class Cone extends Capillar {
                 W[2][1] = 0.0f;
                 W[2][2] = -1.0f / p.getSpeed().getZ();
 
-                F[0] = (float) (solution[1] + Math.sqrt(solution[1] * solution[1] + solution[2] * solution[2]) * (1.0f / Math.tan(divergentAngleR)) - (radius - dr) * (1.0f / Math.tan(divergentAngleR)));
-                F[1] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX() - (solution[1] - p.getCoordinate().getY()) / p.getSpeed().getY();
-                F[2] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX() - (solution[2] - p.getCoordinate().getZ()) / p.getSpeed().getZ();
+                F[0] = (float) (solution[1] + Math.sqrt(solution[1] * solution[1] + solution[2] * solution[2])
+                        * (1.0f / Math.tan(divergentAngleR)) - (radius - dr) * (1.0f / Math.tan(divergentAngleR)));
+
+                F[1] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX()
+                        - (solution[1] - p.getCoordinate().getY()) / p.getSpeed().getY();
+
+                F[2] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX()
+                        - (solution[2] - p.getCoordinate().getZ()) / p.getSpeed().getZ();
 
                 delta = Utils.matrixMultiplication(Utils.inverseMatrix(W), F);
 
@@ -120,6 +132,13 @@ public class Cone extends Capillar {
 
     @Override
     protected boolean isPointInside(final Point3D point) {
-        return point.getX() <= frontCoordinate.getX() + length;
+        return point.getX() <= front.getX() + length;
+    }
+
+    public static CapillarFactory getFactory(float radius, int divergentAngleD, float coneCoefficient, float roughnessSize,
+                                             float roughnessAngleD, float reflectivity, float criticalAngleD) {
+        return (final Point3D coordinate) ->
+                new SmoothCone(coordinate, radius, divergentAngleD, coneCoefficient, roughnessSize, roughnessAngleD,
+                        reflectivity, criticalAngleD);
     }
 }

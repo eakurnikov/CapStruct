@@ -1,4 +1,4 @@
-package com.private_void.core.surfaces.simplesurfaces;
+package com.private_void.core.surfaces.smooth_surfaces;
 
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.fluxes.Flux;
@@ -6,19 +6,23 @@ import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
+import com.private_void.core.surfaces.Plane;
 
 import java.util.Iterator;
 
 import static com.private_void.utils.Constants.PI;
 
-public class Plane extends SimpleSurface {
+public class SmoothPlane extends SmoothSurface implements Plane{
     private float size;
+    protected Detector detector;
 
-    public Plane(final Point3D frontCoordinate, float size, float roughnessSize, float roughnessAngleD,
-                 float reflectivity, float criticalAngleD) {
+    public SmoothPlane(final Point3D frontCoordinate, float size, float roughnessSize, float roughnessAngleD,
+                       float reflectivity, float criticalAngleD) {
         super(frontCoordinate, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
         this.size = size;
-        this.detector = new Detector(new Point3D(frontCoordinate.getX() + size, frontCoordinate.getY(), frontCoordinate.getZ()), size);
+        this.detector = new Detector(
+                new Point3D(frontCoordinate.getX() + size, frontCoordinate.getY(), frontCoordinate.getZ()),
+                size);
     }
 
     @Override
@@ -81,18 +85,22 @@ public class Plane extends SimpleSurface {
         float Vz = p.getSpeed().getZ();
 
         return new Point3D(
-                (Vx / Vy) * (frontCoordinate.getY() - y) + x,
-                frontCoordinate.getY(),
-                (Vz / Vy) * (frontCoordinate.getY() - y) + z);
+                (Vx / Vy) * (front.getY() - y) + x,
+                front.getY(),
+                (Vz / Vy) * (front.getY() - y) + z);
     }
 
     private boolean doesPointBelongToPlane(final Point3D point) {
         float x = point.getX();
         float z = point.getZ();
 
-        return  x >= frontCoordinate.getX() &&
-                x <= frontCoordinate.getX() + size &&
-                z >= frontCoordinate.getZ() - size / 2 &&
-                z <= frontCoordinate.getZ() + size / 2;
+        return  x >= front.getX() &&
+                x <= front.getX() + size &&
+                z >= front.getZ() - size / 2 &&
+                z <= front.getZ() + size / 2;
+    }
+
+    public Detector getDetector() {
+        return detector;
     }
 }

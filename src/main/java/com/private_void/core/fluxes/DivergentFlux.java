@@ -15,8 +15,9 @@ import static com.private_void.utils.Generator.generator;
 public class DivergentFlux extends Flux {
     private float divergentAngleR;
 
-    public DivergentFlux(final ParticleFactory factory, final Point3D fluxCoordinate, final Vector3D fluxAxis, int particlesAmount, float divergentAngleDegrees, float minIntensity) {
-        super(factory, fluxCoordinate, fluxAxis, particlesAmount, minIntensity);
+    public DivergentFlux(final ParticleFactory particleFactory, final Point3D fluxCoordinate, final Vector3D fluxAxis,
+                         int particlesAmount, float divergentAngleDegrees, float minIntensity) {
+        super(particleFactory, fluxCoordinate, fluxAxis, particlesAmount, minIntensity);
         this.divergentAngleR = Utils.convertDegreesToRadians(divergentAngleDegrees);
         createParticles();
     }

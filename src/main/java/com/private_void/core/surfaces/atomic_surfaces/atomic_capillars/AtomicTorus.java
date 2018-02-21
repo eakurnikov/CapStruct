@@ -1,9 +1,10 @@
-package com.private_void.core.surfaces.atomicsurfaces.atomiccapillars;
+package com.private_void.core.surfaces.atomic_surfaces.atomic_capillars;
 
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.AtomFactory;
 import com.private_void.core.particles.ChargedParticle;
+import com.private_void.core.surfaces.CapillarFactory;
 
 import java.util.ArrayList;
 
@@ -42,5 +43,14 @@ public class AtomicTorus extends AtomicCapillar {
     @Override
     protected Point3D getNewCoordinate(final ChargedParticle p) {
         return null;
+    }
+
+    @Override
+    protected boolean isPointInside(Point3D point) {
+        return false;
+    }
+
+    public static CapillarFactory getFactory(final AtomFactory atomFactory, float period, float chargeNumber, float radius) {
+        return (final Point3D coordinate) -> new AtomicTorus(atomFactory, coordinate, period, chargeNumber, radius);
     }
 }

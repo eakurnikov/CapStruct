@@ -1,4 +1,4 @@
-package com.private_void.core.surfaces.atomicsurfaces;
+package com.private_void.core.surfaces.atomic_surfaces;
 
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;

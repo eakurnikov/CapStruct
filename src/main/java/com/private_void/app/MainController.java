@@ -1,13 +1,10 @@
 package com.private_void.app;
 
-import com.private_void.core.particles.Atom;
-import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.surfaces.Surface;
-import com.private_void.core.surfaces.atomicsurfaces.AtomicPlane;
-import com.private_void.core.surfaces.simplesurfaces.Plane;
-import com.private_void.core.surfaces.simplesurfaces.capillars.Cone;
-import com.private_void.core.surfaces.simplesurfaces.capillars.Cylinder;
-import com.private_void.core.surfaces.simplesurfaces.capillars.Torus;
+import com.private_void.core.surfaces.smooth_surfaces.SmoothPlane;
+import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothCone;
+import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothCylinder;
+import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothTorus;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.detectors.RotatedDetector;
 import com.private_void.core.fluxes.DivergentFlux;
@@ -169,8 +166,8 @@ public class MainController {
     private Flux createFlux() {
         if (pFluxTab.isSelected()) {
             return new ParallelFlux(
-                    ChargedParticle.getFactory(),
-//                    NeutralParticle.getFactory(),
+//                    ChargedParticle.getFactory(),
+                    NeutralParticle.getFactory(),
                     new Point3D(Float.parseFloat(pFluxX.getText()),
                                 Float.parseFloat(pFluxY.getText()),
                                 Float.parseFloat(pFluxZ.getText())),
@@ -201,7 +198,7 @@ public class MainController {
 
     private Surface createCapillar() {
         if (cylTab.isSelected()) {
-            return new Cylinder(
+            return new SmoothCylinder(
                     new Point3D(Float.parseFloat(cylX.getText()),
                                 Float.parseFloat(cylY.getText()),
                                 Float.parseFloat(cylZ.getText())),
@@ -215,7 +212,7 @@ public class MainController {
         }
 
         if (torusTab.isSelected()) {
-            return new Torus(
+            return new SmoothTorus(
                     new Point3D(Float.parseFloat(torX.getText()),
                                 Float.parseFloat(torY.getText()),
                                 Float.parseFloat(torZ.getText())),
@@ -231,7 +228,7 @@ public class MainController {
 
         if (coneTab.isSelected()) {
             try {
-                return new Cone(
+                return new SmoothCone(
                         new Point3D(Float.parseFloat(coneX.getText()),
                                 Float.parseFloat(coneY.getText()),
                                 Float.parseFloat(coneZ.getText())),
@@ -245,7 +242,7 @@ public class MainController {
                 );
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
-                return new Cone(
+                return new SmoothCone(
                         new Point3D(Float.parseFloat(coneX.getText()),
                                 Float.parseFloat(coneY.getText()),
                                 Float.parseFloat(coneZ.getText())),
@@ -260,30 +257,30 @@ public class MainController {
             }
         }
 
-//        if (planeTab.isSelected()) {
-//            return new Plane(
-//                    new Point3D(Float.parseFloat(planeX.getText()),
-//                            Float.parseFloat(planeY.getText()),
-//                            Float.parseFloat(planeZ.getText())),
-//                    Float.parseFloat(planeSize.getText()),
-//                    0.2f,
-//                    5f,
-//                    1f,
-//                    90f
-//            );
-//        }
-
         if (planeTab.isSelected()) {
-            return new AtomicPlane(
-                    Atom.getFactory(),
+            return new SmoothPlane(
                     new Point3D(Float.parseFloat(planeX.getText()),
                             Float.parseFloat(planeY.getText()),
                             Float.parseFloat(planeZ.getText())),
-                    Float.parseFloat(planePeriod.getText()),
-                    Float.parseFloat(planeChargeNum.getText()),
-                    Float.parseFloat(planeSize.getText())
+                    Float.parseFloat(planeSize.getText()),
+                    0.2f,
+                    5f,
+                    1f,
+                    90f
             );
         }
+
+//        if (planeTab.isSelected()) {
+//            return new AtomicPlane(
+//                    Atom.getFactory(),
+//                    new Point3D(Float.parseFloat(planeX.getText()),
+//                            Float.parseFloat(planeY.getText()),
+//                            Float.parseFloat(planeZ.getText())),
+//                    Float.parseFloat(planePeriod.getText()),
+//                    Float.parseFloat(planeChargeNum.getText()),
+//                    Float.parseFloat(planeSize.getText())
+//            );
+//        }
 
         return null;
     }
@@ -321,16 +318,10 @@ public class MainController {
         xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
 
-//        xAxis.setUpperBound(1.2f * upperBound);
-//        yAxis.setUpperBound(1.2f * upperBound);
-//
-//        xAxis.setLowerBound(1.2f * lowerBound);
-//        yAxis.setLowerBound(1.2f * lowerBound);
+        xAxis.setUpperBound(1.2f * upperBound);
+        yAxis.setUpperBound(1.2f * upperBound);
 
-        xAxis.setUpperBound(upperBound);
-        yAxis.setUpperBound(upperBound);
-
-        xAxis.setLowerBound(lowerBound);
-        yAxis.setLowerBound(lowerBound);
+        xAxis.setLowerBound(1.2f * lowerBound);
+        yAxis.setLowerBound(1.2f * lowerBound);
     }
 }

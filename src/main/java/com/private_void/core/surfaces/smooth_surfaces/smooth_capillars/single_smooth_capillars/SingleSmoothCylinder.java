@@ -1,23 +1,23 @@
-package com.private_void.core.surfaces.simplesurfaces.capillars;
+package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars;
 
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.NeutralParticle;
-import com.private_void.core.surfaces.simplesurfaces.capillars.Capillar;
 import com.private_void.utils.Utils;
 
-import static com.private_void.utils.Constants.*;
+import static com.private_void.utils.Constants.ITERATIONS_MAX;
+import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
-public class Cylinder extends Capillar {
+public class SingleSmoothCylinder extends SingleSmoothCapillar{
     private float length;
 
-    public Cylinder(final Point3D frontCoordinate, float radius, float length, float roughnessSize, float roughnessAngleD,
-                    float reflectivity, float criticalAngleD) {
+    public SingleSmoothCylinder(final Point3D frontCoordinate, float radius, float length, float roughnessSize,
+                          float roughnessAngleD, float reflectivity, float criticalAngleD) {
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
         this.length = length;
-        this.detector = new Detector(new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),2 * radius);
+        this.detector = new Detector(getDetectorsCoordinate(), 2 * radius);
     }
 
     @Override
@@ -32,9 +32,11 @@ public class Cylinder extends Capillar {
 
     @Override
     protected Point3D getHitPoint(final NeutralParticle p) {
-        float[] solution = {p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),
-                            p.getCoordinate().getY() + (p.getSpeed().getY() / Math.abs(p.getSpeed().getY())) * radius,
-                            p.getCoordinate().getZ() + (p.getSpeed().getZ() / Math.abs(p.getSpeed().getZ())) * radius};
+        float[] solution = {
+                p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),
+                p.getCoordinate().getY() + (p.getSpeed().getY() / Math.abs(p.getSpeed().getY())) * radius,
+                p.getCoordinate().getZ() + (p.getSpeed().getZ() / Math.abs(p.getSpeed().getZ())) * radius
+        };
         float[] delta = {1.0f, 1.0f, 1.0f};
         float[] F  = new float[3];
         float[][] W = new float[3][3];
@@ -71,8 +73,12 @@ public class Cylinder extends Capillar {
                 W[2][2] = -1.0f / p.getSpeed().getZ();
 
                 F[0] = solution[1] * solution[1] + solution[2] * solution[2] - (radius - dr) * (radius - dr);
-                F[1] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX() - (solution[1] - p.getCoordinate().getY()) / p.getSpeed().getY();
-                F[2] = -(solution[2] - p.getCoordinate().getZ()) / p.getSpeed().getZ() + (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX();
+
+                F[1] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX()
+                        - (solution[1] - p.getCoordinate().getY()) / p.getSpeed().getY();
+
+                F[2] = -(solution[2] - p.getCoordinate().getZ()) / p.getSpeed().getZ()
+                        + (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX();
 
                 delta = Utils.matrixMultiplication(Utils.inverseMatrix(W), F);
 
@@ -113,6 +119,11 @@ public class Cylinder extends Capillar {
 
     @Override
     protected boolean isPointInside(final Point3D point) {
-        return point.getX() <= frontCoordinate.getX() + length;
+        return point.getX() <= front.getX() + length;
+    }
+
+    @Override
+    protected Point3D getDetectorsCoordinate() {
+        return new Point3D(front.getX() + length, front.getY(), front.getZ());
     }
 }

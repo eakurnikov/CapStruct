@@ -1,26 +1,28 @@
-package com.private_void.core.surfaces.simplesurfaces.capillars;
+package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars;
 
+import com.private_void.core.detectors.Detector;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
-import com.private_void.core.surfaces.simplesurfaces.SimpleSurface;
+import com.private_void.core.surfaces.smooth_surfaces.SmoothSurface;
 
 import java.util.Iterator;
 
 import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
-public abstract  class Capillar extends SimpleSurface {
+public abstract class SingleSmoothCapillar extends SmoothSurface {
     protected float radius;
+    protected Detector detector;
 
-    protected Capillar(final Point3D frontCoordinate, float radius, float roughnessSize, float roughnessAngleD, float reflectivity, float criticalAngleD) {
+    protected SingleSmoothCapillar(final Point3D frontCoordinate, float radius, float roughnessSize, float roughnessAngleD,
+                             float reflectivity, float criticalAngleD) {
         super(frontCoordinate, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
         this.radius = radius;
     }
 
-    @Override
     public void interact(Flux flux) {
         NeutralParticle p;
         Point3D newCoordinate;
@@ -69,7 +71,7 @@ public abstract  class Capillar extends SimpleSurface {
     }
 
     protected boolean willParticleGetInside(final Particle p) {
-        float x0 = frontCoordinate.getX();
+        float x0 = front.getX();
 
         float x = p.getCoordinate().getX();
         float y = p.getCoordinate().getY();
@@ -86,4 +88,10 @@ public abstract  class Capillar extends SimpleSurface {
     }
 
     protected abstract boolean isPointInside(Point3D point);
+
+    protected abstract Point3D getDetectorsCoordinate();
+
+    public Detector getDetector() {
+        return detector;
+    }
 }

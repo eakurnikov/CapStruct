@@ -8,15 +8,16 @@ public class ChargedParticle extends Particle {
     private float mass;
     private float energy;
 
-    private ChargedParticle(Point3D coordinate, Vector3D speed, float chargeNumber, float mass, float energy) {
+    private ChargedParticle(final Point3D coordinate, final Vector3D speed, float chargeNumber, float mass, float energy) {
         super(coordinate, speed);
         this.chargeNumber = chargeNumber;
         this.mass = mass;
         this.energy = energy;
     }
 
-    public static ParticleFactory getFactory() {
-        return (final Point3D coordinate, final Vector3D speed) -> new ChargedParticle(coordinate, speed, 1.0f, 1.0f, 1.0f);
+    public static ParticleFactory getFactory(float chargeNumber, float mass, float energy) {
+        return (final Point3D coordinate, final Vector3D speed) ->
+                new ChargedParticle(coordinate, speed, chargeNumber, mass, energy);
     }
 
     public float getChargeNumber() {

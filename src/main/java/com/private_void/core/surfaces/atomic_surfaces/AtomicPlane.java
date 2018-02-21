@@ -1,4 +1,4 @@
-package com.private_void.core.surfaces.atomicsurfaces;
+package com.private_void.core.surfaces.atomic_surfaces;
 
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.fluxes.Flux;
@@ -7,6 +7,7 @@ import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.AtomFactory;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.particles.Particle;
+import com.private_void.core.surfaces.Plane;
 import com.private_void.utils.Utils;
 
 import java.util.ArrayList;
@@ -15,9 +16,10 @@ import java.util.Iterator;
 import static com.private_void.utils.Constants.ELECTRON_CHARGE;
 import static com.private_void.utils.Constants.PI;
 
-public class AtomicPlane extends AtomicSurface {
+public class AtomicPlane extends AtomicSurface implements Plane {
     private float size;
     private float chargePlanarDensity;
+    protected Detector detector;
 
     public AtomicPlane(final AtomFactory atomFactory, final Point3D frontCoordinate, float period, float chargeNumber,
                        float size) {
@@ -45,7 +47,7 @@ public class AtomicPlane extends AtomicSurface {
                 if (angleWithSurface <= getCriticalAngle(p)) {
                     newCoordinate = p.getCoordinate();
 
-                    while (newCoordinate.getX() <= frontCoordinate.getX() + size) {
+                    while (newCoordinate.getX() <= front.getX() + size) {
                         p.setCoordinate(newCoordinate);
                         p.setSpeed(getNewSpeed(p));
                         newCoordinate = getNewCoordinate(p);
@@ -75,17 +77,17 @@ public class AtomicPlane extends AtomicSurface {
     protected void createAtoms() {
         atoms = new ArrayList<>();
 
-        float x = frontCoordinate.getX();
-        float y = frontCoordinate.getY();
-        float z = frontCoordinate.getZ() - size / 2;
+        float x = front.getX();
+        float y = front.getY();
+        float z = front.getZ() - size / 2;
 
-        while (x <= frontCoordinate.getX() + size) {
-            while (z <= frontCoordinate.getZ() + size / 2) {
+        while (x <= front.getX() + size) {
+            while (z <= front.getZ() + size / 2) {
                 atoms.add(atomFactory.getNewAtom(new Point3D(x, y, z), chargeNumber));
                 z += period;
             }
             x += period;
-            z = frontCoordinate.getZ() - size / 2;
+            z = front.getZ() - size / 2;
         }
     }
 
@@ -108,7 +110,7 @@ public class AtomicPlane extends AtomicSurface {
 
     @Override
     protected Vector3D getNewSpeed(final ChargedParticle particle) {
-        float y = particle.getCoordinate().getY() - frontCoordinate.getY();
+        float y = particle.getCoordinate().getY() - front.getY();
         float C2 = 3.0f;
         float timeInterval = 1.0f;
 
@@ -135,11 +137,15 @@ public class AtomicPlane extends AtomicSurface {
 
 //    @Override
 //    protected float getPotential(final ChargedParticle particle) {
-//        float y = (particle.getCoordinate().getY() - frontCoordinate.getY()) / shieldingDistance;
+//        float y = (particle.getCoordinate().getY() - front.getY()) / shieldingDistance;
 //        float C2 = 3.0f;
 //
 //        return 2.0f * PI * particle.getChargeNumber() * chargeNumber *
 //                (ELECTRON_CHARGE * ELECTRON_CHARGE) * shieldingDistance * chargePlanarDensity *
 //                ((float) Math.sqrt(y * y + C2) - y);
 //    }
+
+    public Detector getDetector() {
+        return detector;
+    }
 }

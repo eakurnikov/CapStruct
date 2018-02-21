@@ -39,7 +39,7 @@ public class NeutralParticle extends Particle {
         recursiveIterationCount = 1;
     }
 
-    public static ParticleFactory getFactory() {
-        return (final Point3D coordinate, final Vector3D speed) -> new NeutralParticle(coordinate, speed, 1.0f);
+    public static ParticleFactory getFactory(float intensity) {
+        return (final Point3D coordinate, final Vector3D speed) -> new NeutralParticle(coordinate, speed, intensity);
     }
 }

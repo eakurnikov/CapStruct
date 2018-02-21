@@ -1,9 +1,10 @@
-package com.private_void.core.surfaces.atomicsurfaces.atomiccapillars;
+package com.private_void.core.surfaces.atomic_surfaces.atomic_capillars;
 
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.AtomFactory;
 import com.private_void.core.particles.ChargedParticle;
+import com.private_void.core.surfaces.CapillarFactory;
 
 import java.util.ArrayList;
 
@@ -30,11 +31,11 @@ public class AtomicCylinder extends AtomicCapillar {
     protected void createAtoms() {
         atoms = new ArrayList<>();
 
-        float x = frontCoordinate.getX();
-        //float y = frontCoordinate.getY();
-        //float z = frontCoordinate.getZ() - size / 2;
+        float x = front.getX();
+        //float y = front.getY();
+        //float z = front.getZ() - size / 2;
 
-        while (x <= frontCoordinate.getX() + length) {
+        while (x <= front.getX() + length) {
 
             x += period;
         }
@@ -53,5 +54,16 @@ public class AtomicCylinder extends AtomicCapillar {
     @Override
     protected Point3D getNewCoordinate(final ChargedParticle p) {
         return null;
+    }
+
+    @Override
+    protected boolean isPointInside(Point3D point) {
+        return false;
+    }
+
+    public static CapillarFactory getFactory(final AtomFactory atomFactory, float period, float chargeNumber,
+                                             float radius, float length) {
+        return (final Point3D coordinate) -> new AtomicCylinder(atomFactory, coordinate, period, chargeNumber,
+                radius, length);
     }
 }
