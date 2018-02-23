@@ -2,6 +2,10 @@
     //-fx-background: #000000
 }
 
+.chart-plot-background {
+    -fx-background-color: #fff;
+}
+
 .chart-symbol {
     -fx-background-radius: 10px;
     -fx-padding: 1px;

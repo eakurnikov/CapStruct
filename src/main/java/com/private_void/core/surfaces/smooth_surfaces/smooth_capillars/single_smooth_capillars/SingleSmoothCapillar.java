@@ -9,6 +9,8 @@ import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.smooth_surfaces.SmoothSurface;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.*;
 
 import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
@@ -24,6 +26,8 @@ public abstract class SingleSmoothCapillar extends SmoothSurface {
     }
 
     public void interact(Flux flux) {
+        long start = System.nanoTime();
+
         NeutralParticle p;
         Point3D newCoordinate;
         float angleWithSurface;
@@ -54,7 +58,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface {
                             p.setAbsorbed(true);
                             detector.increaseAbsorbedParticlesAmount();
                             detector.increaseAbsorbedIntensity(p.getIntensity());
-                            iterator.remove();
+                            //iterator.remove();
                             break;
                         }
                     }
@@ -67,7 +71,199 @@ public abstract class SingleSmoothCapillar extends SmoothSurface {
                 e.printStackTrace();
             }
         }
-        detector.detect(flux);
+
+        long finish = System.nanoTime();
+
+        System.out.println("time = " + (finish - start) / 1_000_000);
+    }
+
+    public void interactParallel(Flux flux) {
+        long start = System.nanoTime();
+
+        ExecutorService exec = Executors.newFixedThreadPool(4);
+
+        class Interaction implements Runnable {
+            private NeutralParticle particle;
+            private Point3D newCoordinate;
+            private float angleWithSurface;
+
+
+            public Interaction(NeutralParticle particle) {
+                this.particle = particle;
+            }
+
+            @Override
+            public void run() {
+                //count.set(count.get() + 1);
+                if (willParticleGetInside(particle)) {
+                    newCoordinate = getHitPoint(particle);
+
+                    while (isPointInside(newCoordinate)) {
+                        axis = new Vector3D(1.0f, 0.0f, 0.0f)
+                                .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
+                        normal = getNormal(newCoordinate)
+                                .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
+                        axis = getAxis(newCoordinate);
+
+                        angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2;
+                        particle.decreaseIntensity(reflectivity);
+
+                        if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
+                            particle.setCoordinate(newCoordinate);
+                            particle.setSpeed(particle.getSpeed().getNewByTurningAroundVector(2 * Math.abs(angleWithSurface), axis));
+                            newCoordinate = getHitPoint(particle);
+                        } else {
+                            particle.setAbsorbed(true);
+                            detector.increaseAbsorbedParticlesAmount();
+                            detector.increaseAbsorbedIntensity(particle.getIntensity());
+                            //iterator.remove();
+                            break;
+                        }
+                    }
+                } else {
+                    detector.increaseOutOfCapillarParticlesAmount();
+                    detector.increaseOutOfCapillarIntensity(particle.getIntensity());
+                    //iterator.remove();
+                    particle.setAbsorbed(true);
+                }
+
+                Thread.yield();
+                //return particle;
+            }
+        }
+
+        for (Particle particle : flux.getParticles()) {
+            NeutralParticle neutralParticle = (NeutralParticle) particle;
+            exec.execute(new Interaction(neutralParticle));
+        }
+        exec.shutdown();
+
+        try {
+            exec.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        long finish = System.nanoTime();
+
+        System.out.println("time = " + (finish - start) / 1_000_000);
+    }
+
+    public void interactStream(Flux flux) {
+        long start = System.nanoTime();
+
+        flux.getParticles().forEach(p -> {
+            NeutralParticle particle = (NeutralParticle) p;
+            if (willParticleGetInside(particle)) {
+                Point3D newCoordinate = getHitPoint(particle);
+
+                while (isPointInside(newCoordinate)) {
+                    axis = new Vector3D(1.0f, 0.0f, 0.0f)
+                            .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
+                    normal = getNormal(newCoordinate)
+                            .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
+                    axis = getAxis(newCoordinate);
+
+                    float angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2;
+                    particle.decreaseIntensity(reflectivity);
+
+                    if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
+                        particle.setCoordinate(newCoordinate);
+                        particle.setSpeed(particle.getSpeed().getNewByTurningAroundVector(2 * Math.abs(angleWithSurface), axis));
+                        newCoordinate = getHitPoint(particle);
+                    } else {
+                        particle.setAbsorbed(true);
+                        detector.increaseAbsorbedParticlesAmount();
+                        detector.increaseAbsorbedIntensity(particle.getIntensity());
+                        //iterator.remove();
+                        break;
+                    }
+                }
+            } else {
+                detector.increaseOutOfCapillarParticlesAmount();
+                detector.increaseOutOfCapillarIntensity(particle.getIntensity());
+                //iterator.remove();
+                particle.setAbsorbed(true);
+            }
+        });
+
+        long finish = System.nanoTime();
+
+        System.out.println("time = " + (finish - start) / 1_000_000);
+    }
+
+    public void interactFork(Flux flux) {
+        long start = System.nanoTime();
+
+        class Interaction extends RecursiveAction {
+            private List<? extends Particle> particles;
+            private int startIndex;
+            private int length;
+
+            public Interaction(List<? extends Particle> particles, int startIndex, int length) {
+                this.particles = particles;
+                this.startIndex = startIndex;
+                this.length = length;
+            }
+
+            private void interact() {
+                for (int i = startIndex; i < startIndex + length; i++) {
+                    NeutralParticle particle = (NeutralParticle) particles.get(i);
+
+                    if (willParticleGetInside(particle)) {
+                        Point3D newCoordinate = getHitPoint(particle);
+
+                        while (isPointInside(newCoordinate)) {
+                            axis = new Vector3D(1.0f, 0.0f, 0.0f)
+                                    .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
+                            normal = getNormal(newCoordinate)
+                                    .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
+                            axis = getAxis(newCoordinate);
+
+                            float angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2;
+                            particle.decreaseIntensity(reflectivity);
+
+                            if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
+                                particle.setCoordinate(newCoordinate);
+                                particle.setSpeed(particle.getSpeed().getNewByTurningAroundVector(2 * Math.abs(angleWithSurface), axis));
+                                newCoordinate = getHitPoint(particle);
+                            } else {
+                                particle.setAbsorbed(true);
+                                detector.increaseAbsorbedParticlesAmount();
+                                detector.increaseAbsorbedIntensity(particle.getIntensity());
+                                //iterator.remove();
+                                break;
+                            }
+                        }
+                    } else {
+                        detector.increaseOutOfCapillarParticlesAmount();
+                        detector.increaseOutOfCapillarIntensity(particle.getIntensity());
+                        //iterator.remove();
+                        particle.setAbsorbed(true);
+                    }
+                }
+            }
+
+            @Override
+            protected void compute() {
+                if (length < particles.size() / 200) {
+                    interact();
+                } else {
+                    int newLength = length / 2;
+                    invokeAll(
+                            new Interaction(particles, startIndex, newLength),
+                            new Interaction(particles,startIndex + newLength, length - newLength));
+                }
+            }
+        }
+
+        List<? extends Particle> particles = flux.getParticles();
+        Interaction interaction = new Interaction(particles, 0, particles.size());
+        ForkJoinPool pool = new ForkJoinPool();
+        pool.invoke(interaction);
+
+        long finish = System.nanoTime();
+        System.out.println("time = " + (finish - start) / 1_000_000);
     }
 
     protected boolean willParticleGetInside(final Particle p) {

@@ -1,10 +1,5 @@
 package com.private_void.app;
 
-import com.private_void.core.surfaces.Surface;
-import com.private_void.core.surfaces.smooth_surfaces.SmoothPlane;
-import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothCone;
-import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothCylinder;
-import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothTorus;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.detectors.RotatedDetector;
 import com.private_void.core.fluxes.DivergentFlux;
@@ -14,6 +9,10 @@ import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
+import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCapillar;
+import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone;
+import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCylinder;
+import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothTorus;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.NumberAxis;
@@ -114,7 +113,7 @@ public class MainController {
     @FXML
     private void initialize() {
         pFluxAxisX.setText("1.0");
-        pFluxAxisY.setText("1.0");
+        pFluxAxisY.setText("-0.1");
 
         pFluxParticlesAmount.setText("1000");
         pFluxLayersAmount.setText("10");
@@ -156,10 +155,15 @@ public class MainController {
 
     public void startBtnClick(ActionEvent actionEvent) {
         Flux flux = createFlux();
-        Surface capillar = createCapillar();
+        SingleSmoothCapillar capillar = createCapillar();
         if (capillar != null) {
-            capillar.interact(flux);
-            showResult(flux, capillar);
+//            capillar.interact(flux);
+//            capillar.interactStream(flux);
+//            capillar.interactParallel(flux);
+            capillar.interactFork(flux);
+
+//            capillar.getDetector().detect(flux);
+//            showResult(flux, capillar);
         }
     }
 
@@ -167,7 +171,7 @@ public class MainController {
         if (pFluxTab.isSelected()) {
             return new ParallelFlux(
 //                    ChargedParticle.getFactory(),
-                    NeutralParticle.getFactory(),
+                    NeutralParticle.getFactory(1.0f),
                     new Point3D(Float.parseFloat(pFluxX.getText()),
                                 Float.parseFloat(pFluxY.getText()),
                                 Float.parseFloat(pFluxZ.getText())),
@@ -182,7 +186,7 @@ public class MainController {
         }
         else {
             return new DivergentFlux(
-                    NeutralParticle.getFactory(),
+                    NeutralParticle.getFactory(1.0f),
                     new Point3D(Float.parseFloat(dFluxX.getText()),
                                 Float.parseFloat(dFluxY.getText()),
                                 Float.parseFloat(dFluxZ.getText())),
@@ -196,9 +200,9 @@ public class MainController {
         }
     }
 
-    private Surface createCapillar() {
+    private SingleSmoothCapillar createCapillar() {
         if (cylTab.isSelected()) {
-            return new SmoothCylinder(
+            return new SingleSmoothCylinder(
                     new Point3D(Float.parseFloat(cylX.getText()),
                                 Float.parseFloat(cylY.getText()),
                                 Float.parseFloat(cylZ.getText())),
@@ -212,7 +216,7 @@ public class MainController {
         }
 
         if (torusTab.isSelected()) {
-            return new SmoothTorus(
+            return new SingleSmoothTorus(
                     new Point3D(Float.parseFloat(torX.getText()),
                                 Float.parseFloat(torY.getText()),
                                 Float.parseFloat(torZ.getText())),
@@ -228,7 +232,7 @@ public class MainController {
 
         if (coneTab.isSelected()) {
             try {
-                return new SmoothCone(
+                return new SingleSmoothCone(
                         new Point3D(Float.parseFloat(coneX.getText()),
                                 Float.parseFloat(coneY.getText()),
                                 Float.parseFloat(coneZ.getText())),
@@ -242,7 +246,7 @@ public class MainController {
                 );
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
-                return new SmoothCone(
+                return new SingleSmoothCone(
                         new Point3D(Float.parseFloat(coneX.getText()),
                                 Float.parseFloat(coneY.getText()),
                                 Float.parseFloat(coneZ.getText())),
@@ -257,18 +261,18 @@ public class MainController {
             }
         }
 
-        if (planeTab.isSelected()) {
-            return new SmoothPlane(
-                    new Point3D(Float.parseFloat(planeX.getText()),
-                            Float.parseFloat(planeY.getText()),
-                            Float.parseFloat(planeZ.getText())),
-                    Float.parseFloat(planeSize.getText()),
-                    0.2f,
-                    5f,
-                    1f,
-                    90f
-            );
-        }
+//        if (planeTab.isSelected()) {
+//            return new SmoothPlane(
+//                    new Point3D(Float.parseFloat(planeX.getText()),
+//                            Float.parseFloat(planeY.getText()),
+//                            Float.parseFloat(planeZ.getText())),
+//                    Float.parseFloat(planeSize.getText()),
+//                    0.2f,
+//                    5f,
+//                    1f,
+//                    90f
+//            );
+//        }
 
 //        if (planeTab.isSelected()) {
 //            return new AtomicPlane(
@@ -285,7 +289,7 @@ public class MainController {
         return null;
     }
 
-    private void showResult(Flux flux, Surface capillar) {
+    private void showResult(Flux flux, SingleSmoothCapillar capillar) {
         Detector detector = capillar.getDetector();
         XYChart.Series series = new XYChart.Series();
         series.setName("Particles");

@@ -5,7 +5,7 @@ import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.particles.ParticleFactory;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.private_void.utils.Generator.generator;
@@ -25,7 +25,7 @@ public class ParallelFlux extends Flux {
 
     @Override
     protected void createParticles() {
-        List<Particle> newParticles = new LinkedList<>();
+        List<Particle> newParticles = new ArrayList<>();
         for (int i = 0; i < layersAmount; i++) {
             for (int j = 0; j < particlesAmount; j++) {
                 Point3D particleCoordinate = generator().gauss(0.0f, 1.0f);
