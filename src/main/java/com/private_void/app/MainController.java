@@ -239,6 +239,7 @@ public class MainController {
         float capillarLength = Float.parseFloat(cylLength.getText());
         float capillarRoughnessSize = Float.parseFloat(cylRoughSize.getText());
         float capillarRougnessAngleD = Float.parseFloat(cylRoughAngle.getText());
+        float capillarRougnessAngleR = Utils.convertDegreesToRadians(capillarRougnessAngleD);
         float capillarReflectivity = Float.parseFloat(cylReflect.getText());
         float capillarSlideAngle = Float.parseFloat(cylSlideAngle.getText());
 
@@ -255,7 +256,7 @@ public class MainController {
                         capillarRadius,
                         capillarLength,
                         capillarRoughnessSize,
-                        capillarRougnessAngleD,
+                        capillarRougnessAngleR,
                         capillarReflectivity,
                         capillarSlideAngle);
 
@@ -285,17 +286,19 @@ public class MainController {
             float length = Float.parseFloat(cylLength.getText());
             float rougnessSize = Float.parseFloat(cylRoughSize.getText());
             float rougnessAngleD = Float.parseFloat(cylRoughAngle.getText());
+            float rougnessAngleR = Utils.convertDegreesToRadians(rougnessAngleD);
             float reflectivity = Float.parseFloat(cylReflect.getText());
-            float slideAngle = Float.parseFloat(cylSlideAngle.getText());
+            float criticalAngleD = Float.parseFloat(cylSlideAngle.getText());
+            float criticalAngleR = Utils.convertDegreesToRadians(criticalAngleD);
 
             return new SingleSmoothCylinder(
                     new Point3D(frontX, frontY, frontZ),
                     radius,
                     length,
                     rougnessSize,
-                    rougnessAngleD,
+                    rougnessAngleR,
                     reflectivity,
-                    slideAngle);
+                    criticalAngleR);
         }
 
         if (torusTab.isSelected()) {
@@ -306,20 +309,22 @@ public class MainController {
             float smallRadius = Float.parseFloat(torRadius.getText());
             float bigRadius = Float.parseFloat(torBigRadius.getText());
             float curvAngleD = Float.parseFloat(torAngle.getText());
+            float curvAngleR = Utils.convertDegreesToRadians(curvAngleD);
             float roughnessSize = Float.parseFloat(torRoughSize.getText());
             float roughnessAngle = Float.parseFloat(torRoughAngle.getText());
             float reflectivity = Float.parseFloat(torReflect.getText());
-            float slideAngle = Float.parseFloat(torSlideAngle.getText());
+            float criticalAngleD = Float.parseFloat(torSlideAngle.getText());
+            float criticalAngleR = Utils.convertDegreesToRadians(criticalAngleD);
 
             return new SingleSmoothTorus(
                     new Point3D(frontX, frontY, frontZ),
                     smallRadius,
                     bigRadius,
-                    curvAngleD,
+                    curvAngleR,
                     roughnessSize,
                     roughnessAngle,
                     reflectivity,
-                    slideAngle);
+                    criticalAngleR);
         }
 
         if (coneTab.isSelected()) {
@@ -332,8 +337,10 @@ public class MainController {
             float coneCoefficient = Float.parseFloat(this.coneCoefficient.getText());
             float roughnessSize = Float.parseFloat(coneRoughSize.getText());
             float roughnessAngleD = Float.parseFloat(coneRoughAngle.getText());
+            float roughnessAngleR = Utils.convertDegreesToRadians(roughnessAngleD);
             float reflectivity = Float.parseFloat(coneReflect.getText());
             float criticalAngleD = Float.parseFloat(coneSlideAngle.getText());
+            float criticalAngleR = Utils.convertDegreesToRadians(criticalAngleD);
 
             try {
                 return new SingleSmoothCone(
@@ -342,9 +349,9 @@ public class MainController {
                         length,
                         coneCoefficient,
                         roughnessSize,
-                        roughnessAngleD,
+                        roughnessAngleR,
                         reflectivity,
-                        criticalAngleD);
+                        criticalAngleR);
 
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
@@ -355,9 +362,9 @@ public class MainController {
                         length,
                         CONE_COEFFICIENT,
                         roughnessSize,
-                        roughnessAngleD,
+                        roughnessAngleR,
                         reflectivity,
-                        criticalAngleD);
+                        criticalAngleR);
             }
         }
 

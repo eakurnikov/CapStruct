@@ -13,24 +13,24 @@ import static com.private_void.utils.Generator.generator;
 public class SingleSmoothCone extends SingleSmoothCapillar {
     private float divergentAngleR;
 
-    public SingleSmoothCone(final Point3D frontCoordinate, float radius, int divergentAngleD, float coneCoefficient,
-                      float roughnessSize, float roughnessAngleD, float reflectivity, float criticalAngleD)
+    public SingleSmoothCone(final Point3D frontCoordinate, float radius, int divergentAngleR, float coneCoefficient,
+                      float roughnessSize, float roughnessAngleR, float reflectivity, float criticalAngleR)
             throws IllegalArgumentException {
 
-        super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
+        super(frontCoordinate, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         if (coneCoefficient >= 1 || coneCoefficient <= 0) {
             throw new IllegalArgumentException();
         }
-        this.divergentAngleR = Utils.convertDegreesToRadians(divergentAngleD);
+        this.divergentAngleR = divergentAngleR;
         this.length = Utils.getConeLength(radius, divergentAngleR, coneCoefficient);
         this.detector = new Detector(getDetectorsCoordinate(), 2 * radius);
     }
 
     public SingleSmoothCone(final Point3D frontCoordinate, float radius, float length, float coneCoefficient,
-                            float roughnessSize, float roughnessAngleD, float reflectivity, float criticalAngleD)
+                            float roughnessSize, float roughnessAngleR, float reflectivity, float criticalAngleR)
             throws IllegalArgumentException {
 
-        super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
+        super(frontCoordinate, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         if (coneCoefficient >= 1 || coneCoefficient <= 0) {
             throw new IllegalArgumentException();
         }

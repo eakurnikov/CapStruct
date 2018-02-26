@@ -7,7 +7,6 @@ import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.CapillarSystem;
-import com.private_void.core.surfaces.Plane;
 
 import java.util.Iterator;
 
@@ -17,9 +16,9 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
     private float size;
     protected Detector detector;
 
-    public SmoothPlane(final Point3D frontCoordinate, float size, float roughnessSize, float roughnessAngleD,
-                       float reflectivity, float criticalAngleD) {
-        super(frontCoordinate, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
+    public SmoothPlane(final Point3D frontCoordinate, float size, float roughnessSize, float roughnessAngleR,
+                       float reflectivity, float criticalAngleR) {
+        super(frontCoordinate, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.size = size;
         this.detector = new Detector(
                 new Point3D(frontCoordinate.getX() + size, frontCoordinate.getY(), frontCoordinate.getZ()),

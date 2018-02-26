@@ -13,22 +13,23 @@ import static com.private_void.utils.Generator.generator;
 public class SmoothCone extends SmoothCapillar {
     private float divergentAngleR;
 
-    public SmoothCone(final Point3D frontCoordinate, float radius, int divergentAngleD, float coneCoefficient,
-                      float roughnessSize, float roughnessAngleD, float reflectivity, float criticalAngleD)
+    public SmoothCone(final Point3D frontCoordinate, float radius, int divergentAngleR, float coneCoefficient,
+                      float roughnessSize, float roughnessAngleR, float reflectivity, float criticalAngleR)
             throws IllegalArgumentException {
 
-        super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
+        super(frontCoordinate, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         if (coneCoefficient >= 1 || coneCoefficient <= 0) {
             throw new IllegalArgumentException();
         }
-        this.divergentAngleR = Utils.convertDegreesToRadians(divergentAngleD);
+        this.divergentAngleR = divergentAngleR;
         this.length = Utils.getConeLength(radius, divergentAngleR, coneCoefficient);
     }
 
     public SmoothCone(final Point3D frontCoordinate, float radius, float length, float coneCoefficient, float roughnessSize,
-                      float roughnessAngleD, float reflectivity, float criticalAngleD) throws IllegalArgumentException {
+                      float roughnessAngleR, float reflectivity, float criticalAngleR)
+            throws IllegalArgumentException {
 
-        super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
+        super(frontCoordinate, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         if (coneCoefficient >= 1 || coneCoefficient <= 0) {
             throw new IllegalArgumentException();
         }
@@ -136,13 +137,13 @@ public class SmoothCone extends SmoothCapillar {
     }
 
     public static CapillarFactory getFactory(float radius, float length, float coneCoefficient, float roughnessSize,
-                                             float roughnessAngleD, float reflectivity, float criticalAngleD) {
+                                             float roughnessAngleR, float reflectivity, float criticalAngleR) {
         return new CapillarFactory() {
 
             @Override
             public Capillar getNewCapillar(Point3D coordinate) {
-                return new SmoothCone(coordinate, radius, length, coneCoefficient, roughnessSize, roughnessAngleD,
-                        reflectivity, criticalAngleD);
+                return new SmoothCone(coordinate, radius, length, coneCoefficient, roughnessSize, roughnessAngleR,
+                        reflectivity, criticalAngleR);
             }
 
             @Override

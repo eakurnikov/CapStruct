@@ -21,9 +21,9 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
     protected float radius;
     protected Detector detector;
 
-    protected SingleSmoothCapillar(final Point3D frontCoordinate, float radius, float roughnessSize, float roughnessAngleD,
-                             float reflectivity, float criticalAngleD) {
-        super(frontCoordinate, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
+    protected SingleSmoothCapillar(final Point3D frontCoordinate, float radius, float roughnessSize, float roughnessAngleR,
+                             float reflectivity, float criticalAngleR) {
+        super(frontCoordinate, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.radius = radius;
     }
 

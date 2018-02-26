@@ -14,9 +14,9 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
     protected float length;
     protected float radius;
 
-    protected SmoothCapillar(final Point3D frontCoordinate, float radius, float roughnessSize, float roughnessAngleD,
-                             float reflectivity, float criticalAngleD) {
-        super(frontCoordinate, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
+    protected SmoothCapillar(final Point3D frontCoordinate, float radius, float roughnessSize, float roughnessAngleR,
+                             float reflectivity, float criticalAngleR) {
+        super(frontCoordinate, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.radius = radius;
     }
 

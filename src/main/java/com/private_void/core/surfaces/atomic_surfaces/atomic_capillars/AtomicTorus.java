@@ -15,10 +15,10 @@ public class AtomicTorus extends AtomicCapillar {
     private float curvAngleR;
 
     public AtomicTorus(final AtomFactory atomFactory, final Point3D frontCoordinate, float period, float chargeNumber,
-                       float radius, float curvRadius, float curvAngleD) {
+                       float radius, float curvRadius, float curvAngleR) {
         super(atomFactory, frontCoordinate, period, chargeNumber, radius);
         this.curvRadius = curvRadius;
-        this.curvAngleR = Utils.convertDegreesToRadians(curvAngleD);
+        this.curvAngleR = curvAngleR;
         this.length = Utils.getTorusLength(curvRadius, curvAngleR);
     }
 
@@ -58,12 +58,12 @@ public class AtomicTorus extends AtomicCapillar {
     }
 
     public static CapillarFactory getFactory(final AtomFactory atomFactory, float period, float chargeNumber,
-                                             float radius, float curvRadius, float curvAngleD) {
+                                             float radius, float curvRadius, float curvAngleR) {
         return new CapillarFactory() {
 
             @Override
             public Capillar getNewCapillar(Point3D coordinate) {
-                return new AtomicTorus(atomFactory, coordinate, period, chargeNumber, radius, curvRadius, curvAngleD);
+                return new AtomicTorus(atomFactory, coordinate, period, chargeNumber, radius, curvRadius, curvAngleR);
             }
 
             @Override
@@ -73,7 +73,7 @@ public class AtomicTorus extends AtomicCapillar {
 
             @Override
             public float getLength() {
-                return Utils.getTorusLength(curvRadius, Utils.convertDegreesToRadians(curvAngleD));
+                return Utils.getTorusLength(curvRadius, curvAngleR);
             }
         };
     }

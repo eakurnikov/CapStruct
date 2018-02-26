@@ -13,8 +13,8 @@ import static com.private_void.utils.Generator.generator;
 public class SmoothCylinder extends SmoothCapillar {
 
     public SmoothCylinder(final Point3D frontCoordinate, float radius, float length, float roughnessSize,
-                          float roughnessAngleD, float reflectivity, float criticalAngleD) {
-        super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
+                          float roughnessAngleR, float reflectivity, float criticalAngleR) {
+        super(frontCoordinate, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.length = length;
     }
 
@@ -120,13 +120,13 @@ public class SmoothCylinder extends SmoothCapillar {
         return point.getX() <= front.getX() + length;
     }
 
-    public static CapillarFactory getFactory(float radius, float length, float roughnessSize, float roughnessAngleD,
-                                             float reflectivity, float criticalAngleD) {
+    public static CapillarFactory getFactory(float radius, float length, float roughnessSize, float roughnessAngleR,
+                                             float reflectivity, float criticalAngleR) {
         return new CapillarFactory() {
 
             @Override
             public Capillar getNewCapillar(Point3D coordinate) {
-                return new SmoothCylinder(coordinate, radius, length, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
+                return new SmoothCylinder(coordinate, radius, length, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
             }
 
             @Override

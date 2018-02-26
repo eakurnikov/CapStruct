@@ -14,11 +14,11 @@ public class SmoothTorus extends SmoothCapillar {
     private float curvRadius;
     private float curvAngleR;
 
-    public SmoothTorus(final Point3D frontCoordinate, float radius, float curvRadius, float curvAngleD,
-                       float roughnessSize, float roughnessAngleD, float reflectivity, float criticalAngleD) {
-        super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
+    public SmoothTorus(final Point3D frontCoordinate, float radius, float curvRadius, float curvAngleR,
+                       float roughnessSize, float roughnessAngleR, float reflectivity, float criticalAngleR) {
+        super(frontCoordinate, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.curvRadius = curvRadius;
-        this.curvAngleR = Utils.convertDegreesToRadians(curvAngleD);
+        this.curvAngleR = curvAngleR;
         this.length = Utils.getTorusLength(curvRadius, curvAngleR);
     }
 
@@ -139,14 +139,14 @@ public class SmoothTorus extends SmoothCapillar {
         return (float) Math.asin(x / Math.sqrt(x * x + y * y + (z + curvRadius) * (z + curvRadius)));
     }
 
-    public static CapillarFactory getFactory(float radius, float curvRadius, float curvAngleD, float roughnessSize,
-                                             float roughnessAngleD, float reflectivity, float criticalAngleD) {
+    public static CapillarFactory getFactory(float radius, float curvRadius, float curvAngleR, float roughnessSize,
+                                             float roughnessAngleR, float reflectivity, float criticalAngleR) {
         return new CapillarFactory() {
 
             @Override
             public Capillar getNewCapillar(Point3D coordinate) {
-                return new SmoothTorus(coordinate, radius, curvRadius, curvAngleD, roughnessSize, roughnessAngleD,
-                        reflectivity, criticalAngleD);
+                return new SmoothTorus(coordinate, radius, curvRadius, curvAngleR, roughnessSize, roughnessAngleR,
+                        reflectivity, criticalAngleR);
             }
 
             @Override
@@ -156,7 +156,7 @@ public class SmoothTorus extends SmoothCapillar {
 
             @Override
             public float getLength() {
-                return Utils.getTorusLength(curvRadius, Utils.convertDegreesToRadians(curvAngleD));
+                return Utils.getTorusLength(curvRadius, curvAngleR);
             }
         };
     }

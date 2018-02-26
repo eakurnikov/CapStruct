@@ -13,8 +13,8 @@ import static com.private_void.utils.Generator.generator;
 public class SingleSmoothCylinder extends SingleSmoothCapillar {
 
     public SingleSmoothCylinder(final Point3D frontCoordinate, float radius, float length, float roughnessSize,
-                          float roughnessAngleD, float reflectivity, float criticalAngleD) {
-        super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
+                          float roughnessAngleR, float reflectivity, float criticalAngleR) {
+        super(frontCoordinate, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.length = length;
         this.detector = new Detector(getDetectorsCoordinate(), 2 * radius);
     }
