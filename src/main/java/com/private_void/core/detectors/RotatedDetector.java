@@ -24,9 +24,9 @@ public class RotatedDetector extends Detector {
         float Vy = p.getSpeed().getY();
         float Vz = p.getSpeed().getZ();
 
-        float temp = (normal.getX() * (centerCoordinate.getX() - x)
-                    + normal.getY() * (centerCoordinate.getY() - y)
-                    + normal.getZ() * (centerCoordinate.getZ() - z))
+        float temp = (normal.getX() * (center.getX() - x)
+                    + normal.getY() * (center.getY() - y)
+                    + normal.getZ() * (center.getZ() - z))
                 / (normal.getX() * Vx + normal.getY() * Vy + normal.getZ() * Vz);
 
         return new Point3D(x + Vx * temp, y + Vy * temp, z + Vz * temp);
@@ -36,7 +36,7 @@ public class RotatedDetector extends Detector {
     protected boolean isParticleWithinBorders(Particle p) {
         Point3D rotatedCoordinate = p.getProjection(-angleR);
         return rotatedCoordinate.getY() * rotatedCoordinate.getY() +
-               (centerCoordinate.getZ() + rotatedCoordinate.getZ()) * (centerCoordinate.getZ() + rotatedCoordinate.getZ())
+               (center.getZ() + rotatedCoordinate.getZ()) * (center.getZ() + rotatedCoordinate.getZ())
                 <= (width / 2) * (width / 2);
     }
 

@@ -41,8 +41,6 @@ public abstract class Plate implements CapillarSystem {
             for (Capillar capillar : capillars) {
                 if (capillar.willParticleGetInside(particle)) {
                     capillar.interact(particle);
-                } else {
-                    particle.setAbsorbed(true);
                 }
             }
         }

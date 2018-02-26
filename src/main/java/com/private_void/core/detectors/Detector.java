@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Detector {
-    protected Point3D centerCoordinate;
+    protected Point3D center;
 
     private float L;
     protected float width;
@@ -25,9 +25,9 @@ public class Detector {
     protected float outOfCapillarIntensity;
     protected float outOfDetectorIntensity;
 
-    public Detector(final Point3D centerCoordinate, float width) {
-        this.centerCoordinate = centerCoordinate;
-        this.L = centerCoordinate.getX();
+    public Detector(final Point3D center, float width) {
+        this.center = center;
+        this.L = center.getX();
         this.width = width;
         this.upperBound = width / 2;
         this.lowerBound = -width / 2;
@@ -75,8 +75,13 @@ public class Detector {
     }
 
     protected boolean isParticleWithinBorders(Particle p) {
-        return p.getCoordinate().getY() * p.getCoordinate().getY() +
-               p.getCoordinate().getZ() * p.getCoordinate().getZ() <= (width / 2) * (width / 2);
+        return  p.getCoordinate().getY() > center.getY() - width / 2 &&
+                p.getCoordinate().getY() < center.getY() + width / 2 &&
+                p.getCoordinate().getZ() > center.getZ() - width / 2 &&
+                p.getCoordinate().getZ() < center.getZ() + width / 2;
+
+//        return p.getCoordinate().getY() * p.getCoordinate().getY() +
+//               p.getCoordinate().getZ() * p.getCoordinate().getZ() <= (width / 2) * (width / 2);
     }
 
     protected void computeScatter(List<? extends Particle> particles) {
@@ -102,8 +107,8 @@ public class Detector {
 //        }
     }
 
-    public Point3D getCenterCoordinate() {
-        return centerCoordinate;
+    public Point3D getCenter() {
+        return center;
     }
 
     public double getUpperBound() {

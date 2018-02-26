@@ -288,7 +288,8 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         float newY = (Vy / Vx) * (x0 - x) + y;
         float newZ = (Vz / Vx) * (x0 - x) + z;
 
-        return newY * newY + newZ * newZ < radius * radius;
+        return (newY - front.getY()) * (newY - front.getY()) + (newZ - front.getZ()) * (newZ - front.getZ())
+                < radius * radius;
     }
 
     protected abstract boolean isPointInside(Point3D point);

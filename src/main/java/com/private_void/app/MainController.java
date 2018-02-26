@@ -241,14 +241,15 @@ public class MainController {
         float capillarRougnessAngleD = Float.parseFloat(cylRoughAngle.getText());
         float capillarRougnessAngleR = Utils.convertDegreesToRadians(capillarRougnessAngleD);
         float capillarReflectivity = Float.parseFloat(cylReflect.getText());
-        float capillarSlideAngle = Float.parseFloat(cylSlideAngle.getText());
+        float capillarSlideAngleD = Float.parseFloat(cylSlideAngle.getText());
+        float capillarSlideAngleR = Utils.convertDegreesToRadians(capillarSlideAngleD);
 
         float plateCenterX = Float.parseFloat(cylX.getText());
         float plateCenterY = Float.parseFloat(cylY.getText());
         float plateCenterZ = Float.parseFloat(cylZ.getText());
 
-        float plateLength = capillarRadius * 3.0f;
-        float plateHeight = capillarRadius * 3.0f;
+        float plateLength = capillarRadius * 5.0f;
+        float plateHeight = capillarRadius * 5.0f;
         float plateCapillarsDensity = 2.0f / (plateLength * plateHeight);
 
         CapillarFactory smoothCylinderFactory =
@@ -258,7 +259,7 @@ public class MainController {
                         capillarRoughnessSize,
                         capillarRougnessAngleR,
                         capillarReflectivity,
-                        capillarSlideAngle);
+                        capillarSlideAngleR);
 
         CoordinateFactory uniformDistributionFactory =
                 generator().getVolumeUniformDistributionFactory(
@@ -410,7 +411,7 @@ public class MainController {
             float angle = -((RotatedDetector) detector).getAngle();
             for (Particle p : flux.getParticles()) {
                 Point3D rotatedCoordinate = p.getProjection(angle);
-                series.getData().add(new XYChart.Data(detector.getCenterCoordinate().getZ() + rotatedCoordinate.getZ(), rotatedCoordinate.getY()));
+                series.getData().add(new XYChart.Data(detector.getCenter().getZ() + rotatedCoordinate.getZ(), rotatedCoordinate.getY()));
             }
         } else {
             for (Particle p : flux.getParticles()) {
