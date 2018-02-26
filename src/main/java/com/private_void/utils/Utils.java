@@ -77,7 +77,15 @@ public final class Utils {
         return (float) Math.PI * angleDegrees / 180;
     }
 
-    public static float square(float value) {
-        return value * value;
+    public static float getConeLength(float radius, float divergentAngleR, float coneCoefficient) {
+        return radius * (1 / (float) Math.tan(divergentAngleR)) * coneCoefficient;
+    }
+
+    public static float getConeDivergentAngle(float radius, float length, float coneCoefficient) {
+        return (float) Math.atan((radius / length) * coneCoefficient);
+    }
+
+    public static float getTorusLength(float curvRadius, float curvAngleR) {
+        return curvRadius * (float) Math.sin(curvAngleR);
     }
 }

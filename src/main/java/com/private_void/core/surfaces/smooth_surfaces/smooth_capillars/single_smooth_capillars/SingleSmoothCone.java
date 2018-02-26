@@ -11,7 +11,6 @@ import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
 public class SingleSmoothCone extends SingleSmoothCapillar {
-    private float length;
     private float divergentAngleR;
 
     public SingleSmoothCone(final Point3D frontCoordinate, float radius, int divergentAngleD, float coneCoefficient,
@@ -23,7 +22,7 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
             throw new IllegalArgumentException();
         }
         this.divergentAngleR = Utils.convertDegreesToRadians(divergentAngleD);
-        this.length = (float) (radius * (1 / Math.tan(divergentAngleR)) * coneCoefficient);
+        this.length = Utils.getConeLength(radius, divergentAngleR, coneCoefficient);
         this.detector = new Detector(getDetectorsCoordinate(), 2 * radius);
     }
 
@@ -36,10 +35,8 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
             throw new IllegalArgumentException();
         }
         this.length = length;
-        this.divergentAngleR = (float) Math.atan((radius / length) * coneCoefficient);
-        this.detector = new Detector(
-                new Point3D(frontCoordinate.getX() + length, frontCoordinate.getY(), frontCoordinate.getZ()),
-                2 * radius);
+        this.divergentAngleR = Utils.getConeDivergentAngle(radius, length, coneCoefficient);
+        this.detector = new Detector(getDetectorsCoordinate(), 2 * radius);
     }
 
     @Override

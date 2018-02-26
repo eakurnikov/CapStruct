@@ -4,15 +4,22 @@ import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.AtomFactory;
 import com.private_void.core.particles.ChargedParticle;
+import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarFactory;
+import com.private_void.utils.Utils;
 
 import java.util.ArrayList;
 
 public class AtomicTorus extends AtomicCapillar {
+    private float curvRadius;
+    private float curvAngleR;
 
     public AtomicTorus(final AtomFactory atomFactory, final Point3D frontCoordinate, float period, float chargeNumber,
-                       float radius) {
+                       float radius, float curvRadius, float curvAngleD) {
         super(atomFactory, frontCoordinate, period, chargeNumber, radius);
+        this.curvRadius = curvRadius;
+        this.curvAngleR = Utils.convertDegreesToRadians(curvAngleD);
+        this.length = Utils.getTorusLength(curvRadius, curvAngleR);
     }
 
     @Override
@@ -50,7 +57,24 @@ public class AtomicTorus extends AtomicCapillar {
         return false;
     }
 
-    public static CapillarFactory getFactory(final AtomFactory atomFactory, float period, float chargeNumber, float radius) {
-        return (final Point3D coordinate) -> new AtomicTorus(atomFactory, coordinate, period, chargeNumber, radius);
+    public static CapillarFactory getFactory(final AtomFactory atomFactory, float period, float chargeNumber,
+                                             float radius, float curvRadius, float curvAngleD) {
+        return new CapillarFactory() {
+
+            @Override
+            public Capillar getNewCapillar(Point3D coordinate) {
+                return new AtomicTorus(atomFactory, coordinate, period, chargeNumber, radius, curvRadius, curvAngleD);
+            }
+
+            @Override
+            public float getRadius() {
+                return radius;
+            }
+
+            @Override
+            public float getLength() {
+                return Utils.getTorusLength(curvRadius, Utils.convertDegreesToRadians(curvAngleD));
+            }
+        };
     }
 }

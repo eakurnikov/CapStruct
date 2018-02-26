@@ -1,30 +1,35 @@
 package com.private_void.core.plates;
 
+import com.private_void.core.detectors.Detector;
+import com.private_void.core.geometry.CoordinateFactory;
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarFactory;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.private_void.utils.Generator.generator;
-
 public class FlatPlate extends Plate {
-    public FlatPlate(final CapillarFactory capillarFactory, final Point3D center, float length, float width, float height,
-                     float capillarsDensity, float capillarRadius) {
-        super(capillarFactory, center, length, width, height, capillarsDensity, capillarRadius);
+    public FlatPlate(final CapillarFactory capillarFactory, final CoordinateFactory coordinateFactory,
+                     final Point3D center, float length, float height, float capillarsDensity) {
+        super(capillarFactory, coordinateFactory, center, length, height, capillarsDensity);
+        this.detector = new Detector(getDetectorsCoordinate(), length);
+        createCapillars();
     }
 
     @Override
     protected void createCapillars() {
-        List<Capillar> newCapillars = new LinkedList<>();
-        float frontSqure = getFrontSquare();
-        float capillarsAmount = capillarsDensity * frontSqure;
+        List<Capillar> newCapillars = new ArrayList<>();
+        float frontSquare = getFrontSquare();
+        float capillarsAmount = capillarsDensity * frontSquare;
 
         for (int i = 0; i < capillarsAmount; i++) {
-            Point3D coordinate = new Point3D(center.getX(),
-                    generator().uniformFloat(center.getY() - height / 2, center.getY() + height / 2),
-                    generator().uniformFloat(center.getZ() - length / 2, center.getZ() + length / 2));
+            Point3D coordinate = coordinateFactory.getCoordinate();
+
+//            while (coordinate удовлетворяет условию) {
+//                разыгрываем новую
+//            }
+
             newCapillars.add(capillarFactory.getNewCapillar(coordinate));
         }
 

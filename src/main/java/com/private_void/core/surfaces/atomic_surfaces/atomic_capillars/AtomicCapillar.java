@@ -7,6 +7,7 @@ import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.atomic_surfaces.AtomicSurface;
 
 public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
+    protected float length;
     protected float radius;
 
     public AtomicCapillar(final AtomFactory atomFactory, final Point3D frontCoordinate, float period, float chargeNumber,

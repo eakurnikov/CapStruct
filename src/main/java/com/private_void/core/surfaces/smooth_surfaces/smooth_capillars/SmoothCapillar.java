@@ -11,6 +11,7 @@ import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
 public abstract  class SmoothCapillar extends SmoothSurface implements Capillar {
+    protected float length;
     protected float radius;
 
     protected SmoothCapillar(final Point3D frontCoordinate, float radius, float roughnessSize, float roughnessAngleD,
@@ -23,28 +24,25 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
     public void interact(Particle particle) {
         try {
             NeutralParticle p = (NeutralParticle) particle;
+            Point3D newCoordinate = getHitPoint(p);
 
-            if (willParticleGetInside(p)) {
-                Point3D newCoordinate = getHitPoint(p);
+            while (isPointInside(newCoordinate)) {
+                axis = new Vector3D(1.0f, 0.0f, 0.0f)
+                        .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
+                normal = getNormal(newCoordinate)
+                        .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
+                axis = getAxis(newCoordinate);
 
-                while (isPointInside(newCoordinate)) {
-                    axis = new Vector3D(1.0f, 0.0f, 0.0f)
-                            .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
-                    normal = getNormal(newCoordinate)
-                            .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
-                    axis = getAxis(newCoordinate);
+                float angleWithSurface = p.getSpeed().getAngle(normal) - PI / 2;
+                p.decreaseIntensity(reflectivity);
 
-                    float angleWithSurface = p.getSpeed().getAngle(normal) - PI / 2;
-                    p.decreaseIntensity(reflectivity);
-
-                    if (angleWithSurface <= criticalAngleR) {
-                        p.setCoordinate(newCoordinate);
-                        p.setSpeed(p.getSpeed().getNewByTurningAroundVector(2 * Math.abs(angleWithSurface), axis));
-                        newCoordinate = getHitPoint(p);
-                    } else {
-                        p.setAbsorbed(true);
-                        break;
-                    }
+                if (angleWithSurface <= criticalAngleR) {
+                    p.setCoordinate(newCoordinate);
+                    p.setSpeed(p.getSpeed().getNewByTurningAroundVector(2 * Math.abs(angleWithSurface), axis));
+                    newCoordinate = getHitPoint(p);
+                } else {
+                    p.setAbsorbed(true);
+                    break;
                 }
             }
         } catch (ClassCastException e) {
@@ -67,7 +65,8 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
         float newY = (Vy / Vx) * (x0 - x) + y;
         float newZ = (Vz / Vx) * (x0 - x) + z;
 
-        return newY * newY + newZ * newZ < radius * radius;
+        return (newY - front.getY()) * (newY - front.getY()) + (newZ - front.getZ()) * (newZ - front.getZ())
+                < radius * radius;
     }
 
     protected abstract boolean isPointInside(Point3D point);

@@ -4,21 +4,24 @@ import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.particles.ParticleFactory;
+import com.private_void.core.geometry.CoordinateFactory;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public abstract class Flux {
     protected ParticleFactory particleFactory;
+    protected CoordinateFactory coordinateFactory;
     protected Point3D fluxCoordinate;
     protected Vector3D fluxAxis;
     protected int particlesAmount;
     protected float minIntensity;
     protected List<? extends Particle> particles;
 
-    protected Flux(ParticleFactory particleFactory, final Point3D fluxCoordinate, final Vector3D fluxAxis, int particlesAmount,
-                   float minIntensity) {
+    protected Flux(final ParticleFactory particleFactory, final CoordinateFactory coordinateFactory,
+                   final Point3D fluxCoordinate, final Vector3D fluxAxis,
+                   int particlesAmount, float minIntensity) {
         this.particleFactory = particleFactory;
+        this.coordinateFactory = coordinateFactory;
         this.fluxCoordinate = fluxCoordinate;
         this.fluxAxis = fluxAxis;
         this.particlesAmount = particlesAmount;

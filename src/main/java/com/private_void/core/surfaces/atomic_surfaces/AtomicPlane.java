@@ -7,7 +7,7 @@ import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.AtomFactory;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.particles.Particle;
-import com.private_void.core.surfaces.Plane;
+import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.utils.Utils;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.Iterator;
 import static com.private_void.utils.Constants.ELECTRON_CHARGE;
 import static com.private_void.utils.Constants.PI;
 
-public class AtomicPlane extends AtomicSurface implements Plane {
+public class AtomicPlane extends AtomicSurface implements CapillarSystem {
     private float size;
     private float chargePlanarDensity;
     protected Detector detector;

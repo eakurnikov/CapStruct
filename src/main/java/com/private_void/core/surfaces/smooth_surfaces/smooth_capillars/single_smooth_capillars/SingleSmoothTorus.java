@@ -19,6 +19,7 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
         this.curvRadius = curvRadius;
         this.curvAngleR = Utils.convertDegreesToRadians(curvAngleD);
+        this.length = Utils.getTorusLength(curvRadius, curvAngleR);
         this.detector = new RotatedDetector(getDetectorsCoordinate(), 2 * radius, curvAngleR);
     }
 
@@ -131,6 +132,8 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
     protected boolean isPointInside(final Point3D point) {
         float angle = getPointsAngle(point);
         return angle >= 0 && angle <= curvAngleR;
+
+        //return point.getX() <= front.getX() + length;
     }
 
     @Override

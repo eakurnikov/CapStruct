@@ -3,6 +3,7 @@ package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.NeutralParticle;
+import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarFactory;
 import com.private_void.utils.Utils;
 
@@ -18,6 +19,7 @@ public class SmoothTorus extends SmoothCapillar {
         super(frontCoordinate, radius, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
         this.curvRadius = curvRadius;
         this.curvAngleR = Utils.convertDegreesToRadians(curvAngleD);
+        this.length = Utils.getTorusLength(curvRadius, curvAngleR);
     }
 
     @Override
@@ -139,8 +141,23 @@ public class SmoothTorus extends SmoothCapillar {
 
     public static CapillarFactory getFactory(float radius, float curvRadius, float curvAngleD, float roughnessSize,
                                              float roughnessAngleD, float reflectivity, float criticalAngleD) {
-        return (final Point3D coordinate) ->
-                new SmoothTorus(coordinate, radius, curvRadius, curvAngleD, roughnessSize, roughnessAngleD,
+        return new CapillarFactory() {
+
+            @Override
+            public Capillar getNewCapillar(Point3D coordinate) {
+                return new SmoothTorus(coordinate, radius, curvRadius, curvAngleD, roughnessSize, roughnessAngleD,
                         reflectivity, criticalAngleD);
+            }
+
+            @Override
+            public float getRadius() {
+                return radius;
+            }
+
+            @Override
+            public float getLength() {
+                return Utils.getTorusLength(curvRadius, Utils.convertDegreesToRadians(curvAngleD));
+            }
+        };
     }
 }

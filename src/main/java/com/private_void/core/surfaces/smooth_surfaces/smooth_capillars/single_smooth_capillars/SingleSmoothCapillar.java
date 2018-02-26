@@ -6,6 +6,7 @@ import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
+import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.core.surfaces.smooth_surfaces.SmoothSurface;
 
 import java.util.Iterator;
@@ -15,7 +16,8 @@ import java.util.concurrent.*;
 import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
-public abstract class SingleSmoothCapillar extends SmoothSurface {
+public abstract class SingleSmoothCapillar extends SmoothSurface implements CapillarSystem {
+    protected float length;
     protected float radius;
     protected Detector detector;
 
@@ -25,6 +27,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface {
         this.radius = radius;
     }
 
+    @Override
     public void interact(Flux flux) {
         long start = System.nanoTime();
 
@@ -266,6 +269,11 @@ public abstract class SingleSmoothCapillar extends SmoothSurface {
         System.out.println("time = " + (finish - start) / 1_000_000);
     }
 
+    @Override
+    public Detector getDetector() {
+        return detector;
+    }
+
     protected boolean willParticleGetInside(final Particle p) {
         float x0 = front.getX();
 
@@ -286,8 +294,4 @@ public abstract class SingleSmoothCapillar extends SmoothSurface {
     protected abstract boolean isPointInside(Point3D point);
 
     protected abstract Point3D getDetectorsCoordinate();
-
-    public Detector getDetector() {
-        return detector;
-    }
 }

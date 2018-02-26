@@ -3,6 +3,7 @@ package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.NeutralParticle;
+import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarFactory;
 import com.private_void.utils.Utils;
 
@@ -10,7 +11,6 @@ import static com.private_void.utils.Constants.*;
 import static com.private_void.utils.Generator.generator;
 
 public class SmoothCylinder extends SmoothCapillar {
-    private float length;
 
     public SmoothCylinder(final Point3D frontCoordinate, float radius, float length, float roughnessSize,
                           float roughnessAngleD, float reflectivity, float criticalAngleD) {
@@ -122,7 +122,22 @@ public class SmoothCylinder extends SmoothCapillar {
 
     public static CapillarFactory getFactory(float radius, float length, float roughnessSize, float roughnessAngleD,
                                              float reflectivity, float criticalAngleD) {
-        return (final Point3D coordinate) ->
-                new SmoothCylinder(coordinate, radius, length, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
+        return new CapillarFactory() {
+
+            @Override
+            public Capillar getNewCapillar(Point3D coordinate) {
+                return new SmoothCylinder(coordinate, radius, length, roughnessSize, roughnessAngleD, reflectivity, criticalAngleD);
+            }
+
+            @Override
+            public float getRadius() {
+                return radius;
+            }
+
+            @Override
+            public float getLength() {
+                return length;
+            }
+        };
     }
 }

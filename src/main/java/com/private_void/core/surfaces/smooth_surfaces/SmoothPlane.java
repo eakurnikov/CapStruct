@@ -6,13 +6,14 @@ import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
+import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.core.surfaces.Plane;
 
 import java.util.Iterator;
 
 import static com.private_void.utils.Constants.PI;
 
-public class SmoothPlane extends SmoothSurface implements Plane{
+public class SmoothPlane extends SmoothSurface implements CapillarSystem {
     private float size;
     protected Detector detector;
 
@@ -65,6 +66,11 @@ public class SmoothPlane extends SmoothSurface implements Plane{
     }
 
     @Override
+    public Detector getDetector() {
+        return detector;
+    }
+
+    @Override
     protected Vector3D getNormal(final Point3D point) {
         return new Vector3D(0.0f, 1.0f, 0.0f);
     }
@@ -98,9 +104,5 @@ public class SmoothPlane extends SmoothSurface implements Plane{
                 x <= front.getX() + size &&
                 z >= front.getZ() - size / 2 &&
                 z <= front.getZ() + size / 2;
-    }
-
-    public Detector getDetector() {
-        return detector;
     }
 }

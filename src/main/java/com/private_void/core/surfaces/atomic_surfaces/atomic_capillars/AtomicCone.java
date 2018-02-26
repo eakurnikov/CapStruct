@@ -4,15 +4,23 @@ import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.AtomFactory;
 import com.private_void.core.particles.ChargedParticle;
+import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarFactory;
+import com.private_void.utils.Utils;
 
 import java.util.ArrayList;
 
 public class AtomicCone extends AtomicCapillar {
+    private float divergentAngleR;
 
     public AtomicCone(final AtomFactory atomFactory, final Point3D frontCoordinate, float period, float chargeNumber,
-                      float radius) {
+                      float radius, float length, float coneCoefficient) throws IllegalArgumentException {
         super(atomFactory, frontCoordinate, period, chargeNumber, radius);
+        if (coneCoefficient >= 1 || coneCoefficient <= 0) {
+            throw new IllegalArgumentException();
+        }
+        this.length = length;
+        this.divergentAngleR = Utils.getConeDivergentAngle(radius, length, coneCoefficient);
     }
 
     @Override
@@ -50,7 +58,24 @@ public class AtomicCone extends AtomicCapillar {
         return false;
     }
 
-    public static CapillarFactory getFactory(final AtomFactory atomFactory, float period, float chargeNumber, float radius) {
-        return (final Point3D coordinate) -> new AtomicCone(atomFactory, coordinate, period, chargeNumber, radius);
+    public static CapillarFactory getFactory(final AtomFactory atomFactory, float period, float chargeNumber,
+                                             float radius, float length, float coneCoefficient) {
+        return new CapillarFactory() {
+
+            @Override
+            public Capillar getNewCapillar(Point3D coordinate) {
+                return new AtomicCone(atomFactory, coordinate, period, chargeNumber, radius, length, coneCoefficient);
+            }
+
+            @Override
+            public float getRadius() {
+                return radius;
+            }
+
+            @Override
+            public float getLength() {
+                return length;
+            }
+        };
     }
 }

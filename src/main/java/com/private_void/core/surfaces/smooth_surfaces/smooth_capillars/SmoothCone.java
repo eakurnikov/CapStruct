@@ -3,6 +3,7 @@ package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.NeutralParticle;
+import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarFactory;
 import com.private_void.utils.Utils;
 
@@ -10,7 +11,6 @@ import static com.private_void.utils.Constants.*;
 import static com.private_void.utils.Generator.generator;
 
 public class SmoothCone extends SmoothCapillar {
-    private float length;
     private float divergentAngleR;
 
     public SmoothCone(final Point3D frontCoordinate, float radius, int divergentAngleD, float coneCoefficient,
@@ -22,7 +22,7 @@ public class SmoothCone extends SmoothCapillar {
             throw new IllegalArgumentException();
         }
         this.divergentAngleR = Utils.convertDegreesToRadians(divergentAngleD);
-        this.length = (float) (radius * (1 / Math.tan(divergentAngleR)) * coneCoefficient);
+        this.length = Utils.getConeLength(radius, divergentAngleR, coneCoefficient);
     }
 
     public SmoothCone(final Point3D frontCoordinate, float radius, float length, float coneCoefficient, float roughnessSize,
@@ -33,7 +33,7 @@ public class SmoothCone extends SmoothCapillar {
             throw new IllegalArgumentException();
         }
         this.length = length;
-        this.divergentAngleR = (float) Math.atan((radius / length) * coneCoefficient);
+        this.divergentAngleR = Utils.getConeDivergentAngle(radius, length, coneCoefficient);
     }
 
     @Override
@@ -135,10 +135,25 @@ public class SmoothCone extends SmoothCapillar {
         return point.getX() <= front.getX() + length;
     }
 
-    public static CapillarFactory getFactory(float radius, int divergentAngleD, float coneCoefficient, float roughnessSize,
+    public static CapillarFactory getFactory(float radius, float length, float coneCoefficient, float roughnessSize,
                                              float roughnessAngleD, float reflectivity, float criticalAngleD) {
-        return (final Point3D coordinate) ->
-                new SmoothCone(coordinate, radius, divergentAngleD, coneCoefficient, roughnessSize, roughnessAngleD,
+        return new CapillarFactory() {
+
+            @Override
+            public Capillar getNewCapillar(Point3D coordinate) {
+                return new SmoothCone(coordinate, radius, length, coneCoefficient, roughnessSize, roughnessAngleD,
                         reflectivity, criticalAngleD);
+            }
+
+            @Override
+            public float getRadius() {
+                return radius;
+            }
+
+            @Override
+            public float getLength() {
+                return length;
+            }
+        };
     }
 }

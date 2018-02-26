@@ -10,8 +10,7 @@ import static com.private_void.utils.Constants.ITERATIONS_MAX;
 import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
-public class SingleSmoothCylinder extends SingleSmoothCapillar{
-    private float length;
+public class SingleSmoothCylinder extends SingleSmoothCapillar {
 
     public SingleSmoothCylinder(final Point3D frontCoordinate, float radius, float length, float roughnessSize,
                           float roughnessAngleD, float reflectivity, float criticalAngleD) {
