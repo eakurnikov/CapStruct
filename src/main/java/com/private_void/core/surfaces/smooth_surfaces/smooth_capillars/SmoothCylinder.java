@@ -30,10 +30,17 @@ public class SmoothCylinder extends SmoothCapillar {
 
     @Override
     protected Point3D getHitPoint(final NeutralParticle p) {
+        if (p.getSpeed().getY() == 0.0f && p.getSpeed().getZ() == 0.0f) {
+            return new Point3D(front.getX() + length, p.getCoordinate().getY(), p.getCoordinate().getZ());
+        }
+
+        float yStep = p.getSpeed().getY() == 0.0f ? 0.0f : p.getSpeed().getY() / Math.abs(p.getSpeed().getY());
+        float zStep = p.getSpeed().getZ() == 0.0f ? 0.0f : p.getSpeed().getZ() / Math.abs(p.getSpeed().getZ());
+
         float[] solution = {
                 p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),
-                p.getCoordinate().getY() + (p.getSpeed().getY() / Math.abs(p.getSpeed().getY())) * radius,
-                p.getCoordinate().getZ() + (p.getSpeed().getZ() / Math.abs(p.getSpeed().getZ())) * radius
+                p.getCoordinate().getY() + radius * yStep,
+                p.getCoordinate().getZ() + radius * zStep
         };
         float[] delta = {1.0f, 1.0f, 1.0f};
         float[] F  = new float[3];
@@ -117,7 +124,7 @@ public class SmoothCylinder extends SmoothCapillar {
 
     @Override
     protected boolean isPointInside(final Point3D point) {
-        return point.getX() <= front.getX() + length;
+        return point.getX() < front.getX() + length;
     }
 
     public static CapillarFactory getFactory(float radius, float length, float roughnessSize, float roughnessAngleR,

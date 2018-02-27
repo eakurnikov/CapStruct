@@ -133,7 +133,7 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
         float angle = getPointsAngle(point);
         return angle >= 0 && angle <= curvAngleR;
 
-        //return point.getX() <= front.getX() + length;
+        //return point.getX() < front.getX() + length;
     }
 
     @Override

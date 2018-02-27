@@ -129,6 +129,8 @@ public class SmoothTorus extends SmoothCapillar {
     protected boolean isPointInside(final Point3D point) {
         float angle = getPointsAngle(point);
         return angle >= 0 && angle <= curvAngleR;
+
+        //return point.getX() < front.getX() + length;
     }
 
     private float getPointsAngle(final Point3D point) {

@@ -161,7 +161,7 @@ public class MainController {
 
     public void startBtnClick(ActionEvent actionEvent) {
         Flux flux = createFlux();
-        CapillarSystem system = createPlate(); //createCapillar();
+        CapillarSystem system = createCapillar(); //createPlate();
         Detector detector = system.getDetector();
 
         system.interact(flux);
@@ -199,7 +199,7 @@ public class MainController {
 
             return new ParallelFlux(
                     neutralParticleFactory,
-                    uniformDistributionFactory,
+                    gaussDistributionFactory,
                     new Point3D(x, y, z),
                     new Vector3D(axisX, axisY, axisZ),
                     layersAmount,
@@ -241,8 +241,8 @@ public class MainController {
         float capillarRougnessAngleD = Float.parseFloat(cylRoughAngle.getText());
         float capillarRougnessAngleR = Utils.convertDegreesToRadians(capillarRougnessAngleD);
         float capillarReflectivity = Float.parseFloat(cylReflect.getText());
-        float capillarSlideAngleD = Float.parseFloat(cylSlideAngle.getText());
-        float capillarSlideAngleR = Utils.convertDegreesToRadians(capillarSlideAngleD);
+        float capillarCriticalAngleD = Float.parseFloat(cylSlideAngle.getText());
+        float capillarCriticalAngleR = Utils.convertDegreesToRadians(capillarCriticalAngleD);
 
         float plateCenterX = Float.parseFloat(cylX.getText());
         float plateCenterY = Float.parseFloat(cylY.getText());
@@ -259,7 +259,7 @@ public class MainController {
                         capillarRoughnessSize,
                         capillarRougnessAngleR,
                         capillarReflectivity,
-                        capillarSlideAngleR);
+                        capillarCriticalAngleR);
 
         CoordinateFactory uniformDistributionFactory =
                 generator().getVolumeUniformDistributionFactory(

@@ -56,8 +56,8 @@ public class SmoothCone extends SmoothCapillar {
     protected Point3D getHitPoint(final NeutralParticle p) {
         float[] solution = {
                 p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),
-                p.getCoordinate().getY() + (p.getSpeed().getY() / Math.abs(p.getSpeed().getY())) * radius,
-                p.getCoordinate().getZ() + (p.getSpeed().getZ() / Math.abs(p.getSpeed().getZ())) * radius
+                p.getCoordinate().getY() + radius * (p.getSpeed().getY() / Math.abs(p.getSpeed().getY())),
+                p.getCoordinate().getZ() + radius * (p.getSpeed().getZ() / Math.abs(p.getSpeed().getZ()))
         };
         float[] delta = {1.0f, 1.0f, 1.0f};
         float[] F  = new float[3];
@@ -133,7 +133,7 @@ public class SmoothCone extends SmoothCapillar {
 
     @Override
     protected boolean isPointInside(final Point3D point) {
-        return point.getX() <= front.getX() + length;
+        return point.getX() < front.getX() + length;
     }
 
     public static CapillarFactory getFactory(float radius, float length, float coneCoefficient, float roughnessSize,
