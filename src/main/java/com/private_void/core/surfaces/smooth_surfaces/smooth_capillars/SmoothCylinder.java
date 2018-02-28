@@ -20,7 +20,7 @@ public class SmoothCylinder extends SmoothCapillar {
 
     @Override
     protected Vector3D getNormal(final Point3D point) {
-        return new Vector3D(0.0f, -2 * point.getY(), -2 * point.getZ());
+        return new Vector3D(0.0f, -2 * (point.getY() - front.getY()), -2 * (point.getZ() - front.getZ()));
     }
 
     @Override

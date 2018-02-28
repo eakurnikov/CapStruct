@@ -21,7 +21,7 @@ public class FlatPlate extends Plate {
     protected void createCapillars() {
         List<Capillar> newCapillars = new ArrayList<>();
         float frontSquare = getFrontSquare();
-        float capillarsAmount = capillarsDensity * frontSquare;
+        int capillarsAmount = (int) (capillarsDensity * frontSquare);
 
         for (int i = 0; i < capillarsAmount; i++) {
             Point3D coordinate = coordinateFactory.getCoordinate();

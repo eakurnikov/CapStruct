@@ -161,7 +161,8 @@ public class MainController {
 
     public void startBtnClick(ActionEvent actionEvent) {
         Flux flux = createFlux();
-        CapillarSystem system = createCapillar(); //createPlate();
+        CapillarSystem system = createPlate();
+//        CapillarSystem system = createCapillar();
         Detector detector = system.getDetector();
 
         system.interact(flux);
@@ -199,7 +200,7 @@ public class MainController {
 
             return new ParallelFlux(
                     neutralParticleFactory,
-                    gaussDistributionFactory,
+                    uniformDistributionFactory,
                     new Point3D(x, y, z),
                     new Vector3D(axisX, axisY, axisZ),
                     layersAmount,
@@ -248,9 +249,9 @@ public class MainController {
         float plateCenterY = Float.parseFloat(cylY.getText());
         float plateCenterZ = Float.parseFloat(cylZ.getText());
 
-        float plateLength = capillarRadius * 5.0f;
-        float plateHeight = capillarRadius * 5.0f;
-        float plateCapillarsDensity = 2.0f / (plateLength * plateHeight);
+        float plateLength = capillarRadius * 10.0f;
+        float plateHeight = capillarRadius * 10.0f;
+        float plateCapillarsDensity = 10.0f / (plateLength * plateHeight);
 
         CapillarFactory smoothCylinderFactory =
                 SmoothCylinder.getFactory(

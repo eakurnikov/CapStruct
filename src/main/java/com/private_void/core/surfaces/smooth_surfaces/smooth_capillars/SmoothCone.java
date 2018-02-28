@@ -39,12 +39,14 @@ public class SmoothCone extends SmoothCapillar {
 
     @Override
     protected Vector3D getNormal(final Point3D point) {
-        return new Vector3D(
-                -1.0f,
-                (float) (-point.getY() * (1.0f / Math.tan(divergentAngleR))
-                        / (Math.sqrt(point.getY() * point.getY() + point.getZ() * point.getZ()))),
-                (float) (-point.getZ() * (1.0f / Math.tan(divergentAngleR))
-                        / (Math.sqrt(point.getY() * point.getY() + point.getZ() * point.getZ()))));
+        return new Vector3D(-1.0f,
+                (float) (-(point.getY() - front.getY()) * (1.0f / Math.tan(divergentAngleR))
+                        / (Math.sqrt((point.getY() - front.getY()) * (point.getY() - front.getY())
+                        + (point.getZ() - front.getZ()) * (point.getZ() - front.getZ())))),
+
+                (float) (-(point.getZ() - front.getZ()) * (1.0f / Math.tan(divergentAngleR))
+                        / (Math.sqrt((point.getY() - front.getY()) * (point.getY() - front.getY())
+                        + (point.getZ() - front.getZ()) * (point.getZ() - front.getZ())))));
     }
 
     @Override
@@ -100,7 +102,7 @@ public class SmoothCone extends SmoothCapillar {
                 W[2][1] = 0.0f;
                 W[2][2] = -1.0f / p.getSpeed().getZ();
 
-                //Некорректно работает, возможно, с уравнением что-то не так
+                //Возможно, с уравнением что-то не так
                 F[0] = (float) ((solution[0] - front.getX())
                         + Math.sqrt((solution[1] - front.getY()) * (solution[1] - front.getY())
                         + (solution[2] - front.getZ()) * (solution[2] - front.getZ()))

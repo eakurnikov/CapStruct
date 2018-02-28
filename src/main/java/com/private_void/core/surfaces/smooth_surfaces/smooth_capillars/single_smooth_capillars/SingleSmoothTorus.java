@@ -25,9 +25,9 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
 
     @Override
     protected Vector3D getNormal(final Point3D point) {
-        float x = point.getX();
-        float y = point.getY();
-        float z = point.getZ();
+        float x = point.getX() - front.getX();
+        float y = point.getY() - front.getY();
+        float z = point.getZ() - front.getZ();
 
         return new Vector3D(
                 (-2 * (x * x + y * y + (z + curvRadius) * (z + curvRadius) + curvRadius * curvRadius - radius * radius)

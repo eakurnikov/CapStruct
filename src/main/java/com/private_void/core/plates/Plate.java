@@ -39,12 +39,16 @@ public abstract class Plate implements CapillarSystem {
     public void interact(Flux flux) {
         long start = System.nanoTime();
 
+        boolean isAbsorbed;
         for (Particle particle : flux.getParticles()) {
+            isAbsorbed = true;
             for (Capillar capillar : capillars) {
                 if (capillar.willParticleGetInside(particle)) {
                     capillar.interact(particle);
+                    isAbsorbed = false;
                 }
             }
+            particle.setAbsorbed(isAbsorbed);
         }
 
         long finish = System.nanoTime();
