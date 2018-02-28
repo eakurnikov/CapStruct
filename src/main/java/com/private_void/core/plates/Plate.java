@@ -37,6 +37,8 @@ public abstract class Plate implements CapillarSystem {
 
     @Override
     public void interact(Flux flux) {
+        long start = System.nanoTime();
+
         for (Particle particle : flux.getParticles()) {
             for (Capillar capillar : capillars) {
                 if (capillar.willParticleGetInside(particle)) {
@@ -44,6 +46,9 @@ public abstract class Plate implements CapillarSystem {
                 }
             }
         }
+
+        long finish = System.nanoTime();
+        System.out.println("time = " + (finish - start) / 1_000_000 + " ms");
     }
 
     @Override

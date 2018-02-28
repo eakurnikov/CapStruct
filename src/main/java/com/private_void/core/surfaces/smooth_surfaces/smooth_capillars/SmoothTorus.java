@@ -72,16 +72,24 @@ public class SmoothTorus extends SmoothCapillar {
                     }
                 }
 
-                W[0][0] = 2 * (solution[0] * solution[0] + solution[1] * solution[1] + (solution[2] + curvRadius) * (solution[2] + curvRadius)
-                        + curvRadius * curvRadius - (radius - dr) * (radius - dr)) * 2 * solution[0]
-                        - 8 * curvRadius * curvRadius * solution[0];
+                W[0][0] = 2 * ((solution[0] - front.getX()) * (solution[0] - front.getX())
+                        + (solution[1] - front.getY()) * (solution[1] - front.getY())
+                        + (solution[2] - front.getZ() + curvRadius) * (solution[2] - front.getZ() + curvRadius)
+                        + curvRadius * curvRadius - (radius - dr) * (radius - dr)) * 2 * (solution[0] - front.getX())
 
-                W[0][1] = 2 * (solution[0] * solution[0] + solution[1] * solution[1] + (solution[2] + curvRadius) * (solution[2] + curvRadius)
-                        + curvRadius * curvRadius - (radius - dr) * (radius - dr)) * 2 * solution[1];
+                        - 8 * curvRadius * curvRadius * (solution[0] - front.getX());
 
-                W[0][2] = 2 * (solution[0] * solution[0] + solution[1] * solution[1] + (solution[2] + curvRadius) * (solution[2] + curvRadius)
-                        + curvRadius * curvRadius - (radius - dr) * (radius - dr)) * 2 * (solution[2] + curvRadius)
-                        - 8 * curvRadius * curvRadius * (solution[2] + curvRadius);
+                W[0][1] = 2 * ((solution[0] - front.getX()) * (solution[0] - front.getX())
+                        + (solution[1] - front.getY()) * (solution[1] - front.getY())
+                        + (solution[2] - front.getZ() + curvRadius) * (solution[2] - front.getZ() + curvRadius)
+                        + curvRadius * curvRadius - (radius - dr) * (radius - dr)) * 2 * (solution[1] - front.getY());
+
+                W[0][2] = 2 * ((solution[0] - front.getX()) * (solution[0] - front.getX())
+                        + (solution[1] - front.getY()) * (solution[1] - front.getY())
+                        + (solution[2] - front.getZ() + curvRadius) * (solution[2] - front.getZ() + curvRadius)
+                        + curvRadius * curvRadius - (radius - dr) * (radius - dr)) * 2 * (solution[2] - front.getZ() + curvRadius)
+
+                        - 8 * curvRadius * curvRadius * (solution[2] - front.getZ() + curvRadius);
 
                 W[1][0] =  1.0f / p.getSpeed().getX();
                 W[1][1] = -1.0f / p.getSpeed().getY();
@@ -91,11 +99,18 @@ public class SmoothTorus extends SmoothCapillar {
                 W[2][1] =  1.0f / p.getSpeed().getY();
                 W[2][2] = -1.0f / p.getSpeed().getZ();
 
-                F[0] = (solution[0] * solution[0] + solution[1] * solution[1] + (solution[2] + curvRadius) * (solution[2] + curvRadius)
+                F[0] = ((solution[0] - front.getX()) * (solution[0] - front.getX())
+                        + (solution[1] - front.getY()) * (solution[1] - front.getY())
+                        + (solution[2] - front.getZ() + curvRadius) * (solution[2] - front.getZ() + curvRadius)
                         + curvRadius * curvRadius - (radius - dr) * (radius - dr))
-                            * (solution[0] * solution[0] + solution[1] * solution[1] + (solution[2] + curvRadius) * (solution[2] + curvRadius)
+
+                        * ((solution[0] - front.getX()) * (solution[0] - front.getX())
+                        + (solution[1] - front.getY()) * (solution[1] - front.getY())
+                        + (solution[2] - front.getZ() + curvRadius) * (solution[2] - front.getZ() + curvRadius)
                         + curvRadius * curvRadius - (radius - dr) * (radius - dr))
-                        - 4 * curvRadius * curvRadius * (solution[0] * solution[0] + (solution[2] + curvRadius) * (solution[2] + curvRadius));
+
+                        - 4 * curvRadius * curvRadius * ((solution[0] - front.getX()) * (solution[0] - front.getX())
+                        + (solution[2] - front.getZ() + curvRadius) * (solution[2] - front.getZ() + curvRadius));
 
                 F[1] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX()
                         - (solution[1] - p.getCoordinate().getY()) / p.getSpeed().getY();

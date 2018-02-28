@@ -86,11 +86,13 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
 
                 W[0][0] = 1.0f;
 
-                W[0][1] = (float) (solution[1] * (1.0f / Math.tan(divergentAngleR))
-                        / (Math.sqrt(solution[1] * solution[1] + solution[2] * solution[2])));
+                W[0][1] = (float) (2 * (solution[1] - front.getY()) * (1.0f / Math.tan(divergentAngleR))
+                        / Math.sqrt((solution[1] - front.getY()) * (solution[1] - front.getY())
+                                  + (solution[2] - front.getZ()) * (solution[2] - front.getZ())));
 
-                W[0][2] = (float) (solution[2] * (1.0f / Math.tan(divergentAngleR))
-                        / (Math.sqrt(solution[1] * solution[1] + solution[2] * solution[2])));
+                W[0][2] = (float) (2 * (solution[2] - front.getZ()) * (1.0f / Math.tan(divergentAngleR))
+                        / Math.sqrt((solution[1] - front.getY()) * (solution[1] - front.getY())
+                                  + (solution[2] - front.getZ()) * (solution[2] - front.getZ())));
 
                 W[1][0] = 1.0f / p.getSpeed().getX();
                 W[1][1] = -1.0f / p.getSpeed().getY();
@@ -100,7 +102,10 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
                 W[2][1] = 0.0f;
                 W[2][2] = -1.0f / p.getSpeed().getZ();
 
-                F[0] = (float) (solution[1] + Math.sqrt(solution[1] * solution[1] + solution[2] * solution[2])
+                //Некорректно работает, возможно, с уравнением что-то не так
+                F[0] = (float) ((solution[0] - front.getX())
+                            + Math.sqrt((solution[1] - front.getY()) * (solution[1] - front.getY())
+                            + (solution[2] - front.getZ()) * (solution[2] - front.getZ()))
                         * (1.0f / Math.tan(divergentAngleR)) - (radius - dr) * (1.0f / Math.tan(divergentAngleR)));
 
                 F[1] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX()

@@ -76,8 +76,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         }
 
         long finish = System.nanoTime();
-
-        System.out.println("time = " + (finish - start) / 1_000_000);
+        System.out.println("time = " + (finish - start) / 1_000_000 + " ms");
     }
 
     public void interactParallel(Flux flux) {
@@ -148,8 +147,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         }
 
         long finish = System.nanoTime();
-
-        System.out.println("time = " + (finish - start) / 1_000_000);
+        System.out.println("time = " + (finish - start) / 1_000_000 + " ms");
     }
 
     public void interactStream(Flux flux) {
@@ -191,8 +189,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         });
 
         long finish = System.nanoTime();
-
-        System.out.println("time = " + (finish - start) / 1_000_000);
+        System.out.println("time = " + (finish - start) / 1_000_000 + " ms");
     }
 
     public void interactFork(Flux flux) {
@@ -266,7 +263,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         pool.invoke(interaction);
 
         long finish = System.nanoTime();
-        System.out.println("time = " + (finish - start) / 1_000_000);
+        System.out.println("time = " + (finish - start) / 1_000_000 + " ms");
     }
 
     @Override

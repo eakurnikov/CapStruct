@@ -31,17 +31,17 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
 
     @Override
     protected Point3D getHitPoint(final NeutralParticle p) {
-        if (p.getSpeed().getY() == 0.0f && p.getSpeed().getZ() == 0.0f) {
-            return new Point3D(front.getX() + length, p.getCoordinate().getY(), p.getCoordinate().getZ());
-        }
-
-        float yStep = p.getSpeed().getY() == 0.0f ? 0.0f : p.getSpeed().getY() / Math.abs(p.getSpeed().getY());
-        float zStep = p.getSpeed().getZ() == 0.0f ? 0.0f : p.getSpeed().getZ() / Math.abs(p.getSpeed().getZ());
+//        if (p.getSpeed().getY() == 0.0f && p.getSpeed().getZ() == 0.0f) {
+//            return new Point3D(front.getX() + length, p.getCoordinate().getY(), p.getCoordinate().getZ());
+//        }
+//
+//        float yStep = p.getSpeed().getY() == 0.0f ? 0.0f : p.getSpeed().getY() / Math.abs(p.getSpeed().getY());
+//        float zStep = p.getSpeed().getZ() == 0.0f ? 0.0f : p.getSpeed().getZ() / Math.abs(p.getSpeed().getZ());
 
         float[] solution = {
                 p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),
-                p.getCoordinate().getY() + radius * yStep,
-                p.getCoordinate().getZ() + radius * zStep};
+                p.getCoordinate().getY() + radius * (p.getSpeed().getY() / Math.abs(p.getSpeed().getY())),
+                p.getCoordinate().getZ() + radius * (p.getSpeed().getZ() / Math.abs(p.getSpeed().getZ()))};
 
         float[] delta = {1.0f, 1.0f, 1.0f};
         float[] F  = new float[3];
@@ -67,8 +67,8 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
                 }
 
                 W[0][0] = 0.0f;
-                W[0][1] = 2.0f * solution[1];
-                W[0][2] = 2.0f * solution[2];
+                W[0][1] = 2.0f * (solution[1] - front.getY());
+                W[0][2] = 2.0f * (solution[2] - front.getZ());
 
                 W[1][0] = 1.0f / p.getSpeed().getX();
                 W[1][1] = -1.0f / p.getSpeed().getY();
@@ -78,7 +78,9 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
                 W[2][1] = 0.0f;
                 W[2][2] = -1.0f / p.getSpeed().getZ();
 
-                F[0] = solution[1] * solution[1] + solution[2] * solution[2] - (radius - dr) * (radius - dr);
+                F[0] = (solution[1] - front.getY()) * (solution[1] - front.getY())
+                        + (solution[2] - front.getZ()) * (solution[2] - front.getZ())
+                        - (radius - dr) * (radius - dr);
 
                 F[1] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX()
                         - (solution[1] - p.getCoordinate().getY()) / p.getSpeed().getY();
