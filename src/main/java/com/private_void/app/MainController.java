@@ -161,8 +161,8 @@ public class MainController {
 
     public void startBtnClick(ActionEvent actionEvent) {
         Flux flux = createFlux();
-        CapillarSystem system = createPlate();
-//        CapillarSystem system = createCapillar();
+//        CapillarSystem system = createPlate();
+        CapillarSystem system = createCapillar();
         Detector detector = system.getDetector();
 
         system.interact(flux);

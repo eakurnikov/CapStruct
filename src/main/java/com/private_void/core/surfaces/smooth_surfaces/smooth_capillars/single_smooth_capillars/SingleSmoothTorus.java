@@ -47,11 +47,16 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
 
     @Override
     protected Point3D getHitPoint(final NeutralParticle p) {
+        if (p.getSpeed().getX() <= 0.0f) {
+            p.setAbsorbed(true);
+            return p.getCoordinate();
+        }
+
         float[] solution = {
                 p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
                 p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
-                p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()
-        };
+                p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()};
+
         float[] delta = {1.0f, 1.0f, 1.0f};
         float[] F  = new float[3];
         float[][] W = new float[3][3];
@@ -94,14 +99,6 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
 
                         - 8 * curvRadius * curvRadius * (solution[2] - front.getZ() + curvRadius);
 
-                W[1][0] =  1.0f / p.getSpeed().getX();
-                W[1][1] = -1.0f / p.getSpeed().getY();
-                W[1][2] =  0.0f;
-
-                W[2][0] =  0.0f;
-                W[2][1] =  1.0f / p.getSpeed().getY();
-                W[2][2] = -1.0f / p.getSpeed().getZ();
-
                 F[0] = ((solution[0] - front.getX()) * (solution[0] - front.getX())
                         + (solution[1] - front.getY()) * (solution[1] - front.getY())
                         + (solution[2] - front.getZ() + curvRadius) * (solution[2] - front.getZ() + curvRadius)
@@ -115,11 +112,35 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
                         - 4 * curvRadius * curvRadius * ((solution[0] - front.getX()) * (solution[0] - front.getX())
                         + (solution[2] - front.getZ() + curvRadius) * (solution[2] - front.getZ() + curvRadius));
 
-                F[1] = (solution[0] - p.getCoordinate().getX())
-                        / p.getSpeed().getX() - (solution[1] - p.getCoordinate().getY()) / p.getSpeed().getY();
+                if (p.getSpeed().getY() == 0.0f) {
+                    W[1][0] = 0.0f;
+                    W[1][1] = 1.0f;
+                    W[1][2] = 0.0f;
 
-                F[2] = (solution[1] - p.getCoordinate().getY())
-                        / p.getSpeed().getY() - (solution[2] - p.getCoordinate().getZ()) / p.getSpeed().getZ();
+                    F[1] = solution[1] - p.getCoordinate().getY();
+                } else {
+                    W[1][0] = 1.0f / p.getSpeed().getX();
+                    W[1][1] = -1.0f / p.getSpeed().getY();
+                    W[1][2] = 0.0f;
+
+                    F[1] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX()
+                            - (solution[1] - p.getCoordinate().getY()) / p.getSpeed().getY();
+                }
+
+                if (p.getSpeed().getZ() == 0.0f) {
+                    W[2][0] = 0.0f;
+                    W[2][1] = 0.0f;
+                    W[2][2] = 1.0f;
+
+                    F[2] = solution[2] - p.getCoordinate().getZ();
+                } else {
+                    W[2][0] = 0.0f;
+                    W[2][1] = 1.0f / p.getSpeed().getY();
+                    W[2][2] = -1.0f / p.getSpeed().getZ();
+
+                    F[2] = (solution[1] - p.getCoordinate().getY()) / p.getSpeed().getY()
+                            - (solution[2] - p.getCoordinate().getZ()) / p.getSpeed().getZ();
+                }
 
                 delta = Utils.matrixMultiplication(Utils.inverseMatrix(W), F);
 
@@ -134,7 +155,7 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
         }
 
         Point3D newCoordinate = new Point3D(solution[0], solution[1], solution[2]);
-        if (newCoordinate.isNear(p.getCoordinate()) && !p.isRecursiveIterationsLimitReached()) {
+        if ((newCoordinate.isNear(p.getCoordinate()) || newCoordinate.getX() <= p.getCoordinate().getX()) && !p.isRecursiveIterationsLimitReached()) {
             p.recursiveIteration();
             return getHitPoint(p);
         } else {

@@ -43,7 +43,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                 if (willParticleGetInside(p)) {
                     newCoordinate = getHitPoint(p);
 
-                    while (isPointInside(newCoordinate)) {
+                    while (!p.isAbsorbed() && isPointInside(newCoordinate)) {
                         axis = new Vector3D(1.0f, 0.0f, 0.0f)
                                 .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
                         normal = getNormal(newCoordinate)
@@ -213,7 +213,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                     if (willParticleGetInside(particle)) {
                         Point3D newCoordinate = getHitPoint(particle);
 
-                        while (isPointInside(newCoordinate)) {
+                        while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
                             axis = new Vector3D(1.0f, 0.0f, 0.0f)
                                     .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
                             normal = getNormal(newCoordinate)

@@ -26,7 +26,7 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
             NeutralParticle p = (NeutralParticle) particle;
             Point3D newCoordinate = getHitPoint(p);
 
-            while (isPointInside(newCoordinate)) {
+            while (!p.isAbsorbed() && isPointInside(newCoordinate)) {
                 axis = new Vector3D(1.0f, 0.0f, 0.0f)
                         .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
                 normal = getNormal(newCoordinate)

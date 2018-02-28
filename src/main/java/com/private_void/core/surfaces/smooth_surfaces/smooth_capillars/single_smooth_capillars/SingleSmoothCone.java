@@ -58,11 +58,16 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
 
     @Override
     protected Point3D getHitPoint(final NeutralParticle p) {
+        if (p.getSpeed().getX() <= 0.0f) {
+            p.setAbsorbed(true);
+            return p.getCoordinate();
+        }
+
         float[] solution = {
                 p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),
-                p.getCoordinate().getY() + radius * (p.getSpeed().getY() / Math.abs(p.getSpeed().getY())),
-                p.getCoordinate().getZ() + radius * (p.getSpeed().getZ() / Math.abs(p.getSpeed().getZ()))
-        };
+                p.getCoordinate().getY() + radius * Math.signum(p.getSpeed().getY()),
+                p.getCoordinate().getZ() + radius * Math.signum(p.getSpeed().getZ())};
+
         float[] delta = {1.0f, 1.0f, 1.0f};
         float[] F  = new float[3];
         float[][] W = new float[3][3];
@@ -86,35 +91,51 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
                     }
                 }
 
+                //Возможно, с уравнением что-то не так
                 W[0][0] = 1.0f;
 
                 W[0][1] = (float) (2 * (solution[1] - front.getY()) * (1.0f / Math.tan(divergentAngleR))
                         / Math.sqrt((solution[1] - front.getY()) * (solution[1] - front.getY())
-                                  + (solution[2] - front.getZ()) * (solution[2] - front.getZ())));
+                        + (solution[2] - front.getZ()) * (solution[2] - front.getZ())));
 
                 W[0][2] = (float) (2 * (solution[2] - front.getZ()) * (1.0f / Math.tan(divergentAngleR))
                         / Math.sqrt((solution[1] - front.getY()) * (solution[1] - front.getY())
-                                  + (solution[2] - front.getZ()) * (solution[2] - front.getZ())));
+                        + (solution[2] - front.getZ()) * (solution[2] - front.getZ())));
 
-                W[1][0] = 1.0f / p.getSpeed().getX();
-                W[1][1] = -1.0f / p.getSpeed().getY();
-                W[1][2] = 0.0f;
-
-                W[2][0] = 1.0f / p.getSpeed().getX();
-                W[2][1] = 0.0f;
-                W[2][2] = -1.0f / p.getSpeed().getZ();
-
-                //Возможно, с уравнением что-то не так
                 F[0] = (float) ((solution[0] - front.getX())
-                            + Math.sqrt((solution[1] - front.getY()) * (solution[1] - front.getY())
-                            + (solution[2] - front.getZ()) * (solution[2] - front.getZ()))
+                        + Math.sqrt((solution[1] - front.getY()) * (solution[1] - front.getY())
+                        + (solution[2] - front.getZ()) * (solution[2] - front.getZ()))
                         * (1.0f / Math.tan(divergentAngleR)) - (radius - dr) * (1.0f / Math.tan(divergentAngleR)));
 
-                F[1] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX()
-                        - (solution[1] - p.getCoordinate().getY()) / p.getSpeed().getY();
+                if (p.getSpeed().getY() == 0.0f) {
+                    W[1][0] = 0.0f;
+                    W[1][1] = 1.0f;
+                    W[1][2] = 0.0f;
 
-                F[2] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX()
-                        - (solution[2] - p.getCoordinate().getZ()) / p.getSpeed().getZ();
+                    F[1] = solution[1] - p.getCoordinate().getY();
+                } else {
+                    W[1][0] = 1.0f / p.getSpeed().getX();
+                    W[1][1] = -1.0f / p.getSpeed().getY();
+                    W[1][2] = 0.0f;
+
+                    F[1] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX()
+                            - (solution[1] - p.getCoordinate().getY()) / p.getSpeed().getY();
+                }
+
+                if (p.getSpeed().getZ() == 0.0f) {
+                    W[2][0] = 0.0f;
+                    W[2][1] = 0.0f;
+                    W[2][2] = 1.0f;
+
+                    F[2] = solution[2] - p.getCoordinate().getZ();
+                } else {
+                    W[2][0] = 1.0f / p.getSpeed().getX();
+                    W[2][1] = 0.0f;
+                    W[2][2] = -1.0f / p.getSpeed().getZ();
+
+                    F[2] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX()
+                            - (solution[2] - p.getCoordinate().getZ()) / p.getSpeed().getZ();
+                }
 
                 delta = Utils.matrixMultiplication(Utils.inverseMatrix(W), F);
 
