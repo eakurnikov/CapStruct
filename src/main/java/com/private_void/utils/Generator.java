@@ -81,11 +81,5 @@ public class Generator {
                 uniformFloat(ymin, ymax),
                 uniformFloat(zmin, zmax)
         );
-
-//        return () -> new Point3D(
-//                xmin == xmax ? xmin : uniformFloat(xmin, xmax),
-//                ymin == ymax ? ymin : uniformFloat(ymin, ymax),
-//                zmin == zmax ? zmin : uniformFloat(zmin, zmax)
-//        );
     }
 }

@@ -9,30 +9,31 @@ import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarFactory;
 import com.private_void.core.surfaces.CapillarSystem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Plate implements CapillarSystem {
+    protected static final int CAPILLARS_PER_DOMAIN_AMOUNT = 4;
+
     protected CapillarFactory capillarFactory;
-    protected CoordinateFactory coordinateFactory;
     protected Point3D center;
-    protected float length;
+    protected float sideLength;
     protected float width;
-    protected float height;
+    protected float capillarsAmount;
     protected float capillarsDensity;
     protected float capillarRadius;
     protected List<Capillar> capillars;
     protected Detector detector;
 
-    public Plate(final CapillarFactory capillarFactory, final CoordinateFactory coordinateFactory,
-                 final Point3D center, float length, float height, float capillarsDensity) {
+    public Plate(final CapillarFactory capillarFactory, final Point3D center, int capillarsAmount,
+                 float capillarsDensity) {
         this.capillarFactory = capillarFactory;
-        this.coordinateFactory = coordinateFactory;
         this.center = center;
-        this.length = length;
         this.width = capillarFactory.getLength();
-        this.height = height;
+        this.capillarsAmount = capillarsAmount;
         this.capillarsDensity = capillarsDensity;
         this.capillarRadius = capillarFactory.getRadius();
+        this.capillars = new ArrayList<>();
     }
 
     @Override
@@ -48,7 +49,7 @@ public abstract class Plate implements CapillarSystem {
                     isAbsorbed = false;
                 }
             }
-            particle.setAbsorbed(isAbsorbed);
+            particle.setAbsorbed(!isAbsorbed);
         }
 
         long finish = System.nanoTime();
@@ -62,7 +63,7 @@ public abstract class Plate implements CapillarSystem {
 
     protected abstract Point3D getDetectorsCoordinate();
 
-    protected abstract void createCapillars();
+    protected abstract void createCapillars() throws IllegalArgumentException;
 
-    protected abstract float getFrontSquare();
+    protected abstract boolean isCapillarCoordinateValid(final Point3D[] coordinates, Point3D coordinate);
 }

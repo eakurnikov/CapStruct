@@ -7,8 +7,8 @@ import com.private_void.core.surfaces.CapillarFactory;
 public class CurvedPlate extends Plate {
 
     public CurvedPlate(final CapillarFactory capillarFactory, final CoordinateFactory coordinateFactory,
-                       final Point3D center, float length, float height, float capillarsDensity) {
-        super(capillarFactory, coordinateFactory, center, length, height, capillarsDensity);
+                       final Point3D center, int capillarsAmount, float capillarsDensity) {
+        super(capillarFactory, center, capillarsAmount, capillarsDensity);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class CurvedPlate extends Plate {
     }
 
     @Override
-    protected float getFrontSquare() {
-        return 0;
+    protected boolean isCapillarCoordinateValid(Point3D[] coordinates, Point3D coordinate) {
+        return false;
     }
 }

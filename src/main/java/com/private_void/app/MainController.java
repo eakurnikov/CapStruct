@@ -161,8 +161,8 @@ public class MainController {
 
     public void startBtnClick(ActionEvent actionEvent) {
         Flux flux = createFlux();
-//        CapillarSystem system = createPlate();
-        CapillarSystem system = createCapillar();
+        CapillarSystem system = createPlate();
+//        CapillarSystem system = createCapillar();
         Detector detector = system.getDetector();
 
         system.interact(flux);
@@ -194,9 +194,16 @@ public class MainController {
             CoordinateFactory gaussDistributionFactory =
                     generator().getGaussDistributionFactory(0.0f, 1.0f);
 
-            CoordinateFactory uniformDistributionFactory = generator().getXPlanarUniformDistributionFactory(x,
-                    y - 50.0f, y + 50.0f,
-                    z - 50.0f, z + 50.0f);
+            CoordinateFactory uniformDistributionFactory =
+                    generator().getXPlanarUniformDistributionFactory(x,
+                            y - 250.0f, y + 250.0f,
+                            z - 250.0f, z + 250.0f);
+
+//            CoordinateFactory uniformDistributionFactory =
+//                    generator().getVolumeUniformDistributionFactory(
+//                            plateCenterX, plateCenterX,
+//                            plateCenterY - plateHeight / 2.0f, plateCenterY + plateHeight / 2.0f,
+//                            plateCenterZ - plateLength / 2.0f, plateCenterZ + plateLength / 2.0f);
 
             return new ParallelFlux(
                     neutralParticleFactory,
@@ -249,9 +256,8 @@ public class MainController {
         float plateCenterY = Float.parseFloat(cylY.getText());
         float plateCenterZ = Float.parseFloat(cylZ.getText());
 
-        float plateLength = capillarRadius * 10.0f;
-        float plateHeight = capillarRadius * 10.0f;
-        float plateCapillarsDensity = 10.0f / (plateLength * plateHeight);
+        int capillarsAmount = 364;
+        float plateCapillarsDensity = 0.0025f; //for radius < 10
 
         CapillarFactory smoothCylinderFactory =
                 SmoothCylinder.getFactory(
@@ -262,18 +268,10 @@ public class MainController {
                         capillarReflectivity,
                         capillarCriticalAngleR);
 
-        CoordinateFactory uniformDistributionFactory =
-                generator().getVolumeUniformDistributionFactory(
-                        plateCenterX, plateCenterX,
-                        plateCenterY - plateHeight / 2.0f, plateCenterY + plateHeight / 2.0f,
-                        plateCenterZ - plateLength / 2.0f, plateCenterZ + plateLength / 2.0f);
-
         return new FlatPlate(
                 smoothCylinderFactory,
-                uniformDistributionFactory,
                 new Point3D(plateCenterX, plateCenterY, plateCenterZ),
-                plateLength,
-                plateHeight,
+                capillarsAmount,
                 plateCapillarsDensity);
     }
 
@@ -286,9 +284,9 @@ public class MainController {
 
             float radius = Float.parseFloat(cylRadius.getText());
             float length = Float.parseFloat(cylLength.getText());
-            float rougnessSize = Float.parseFloat(cylRoughSize.getText());
-            float rougnessAngleD = Float.parseFloat(cylRoughAngle.getText());
-            float rougnessAngleR = Utils.convertDegreesToRadians(rougnessAngleD);
+            float roughnessSize = Float.parseFloat(cylRoughSize.getText());
+            float roughnessAngleD = Float.parseFloat(cylRoughAngle.getText());
+            float roughnessAngleR = Utils.convertDegreesToRadians(roughnessAngleD);
             float reflectivity = Float.parseFloat(cylReflect.getText());
             float criticalAngleD = Float.parseFloat(cylSlideAngle.getText());
             float criticalAngleR = Utils.convertDegreesToRadians(criticalAngleD);
@@ -297,8 +295,8 @@ public class MainController {
                     new Point3D(frontX, frontY, frontZ),
                     radius,
                     length,
-                    rougnessSize,
-                    rougnessAngleR,
+                    roughnessSize,
+                    roughnessAngleR,
                     reflectivity,
                     criticalAngleR);
         }
@@ -423,7 +421,7 @@ public class MainController {
         //TODO прикрутить зум по сколлу колесика мыши
         //TODO как-то разукрашивать точки в зависимости от их интенсивности. Тогда детектор как счетчик интенсивности со своими ячейками ваще не нужен, нужна будет тупо его плоскость
         chart.getData().addAll(series);
-        setChartScale(detector.getUpperBound(), detector.getLowerBound());
+        //setChartScale(detector.getUpperBound(), detector.getLowerBound());
 
         intensityOn.setText(String.valueOf(detector.getDetectedIntensity()));
         intensityAbsorbed.setText(String.valueOf(detector.getAbsorbedIntensity()));
