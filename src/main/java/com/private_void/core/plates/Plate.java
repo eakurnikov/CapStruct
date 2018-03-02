@@ -19,7 +19,7 @@ public abstract class Plate implements CapillarSystem {
     protected Point3D center;
     protected float sideLength;
     protected float width;
-    protected float capillarsAmount;
+    protected int capillarsAmount;
     protected float capillarsDensity;
     protected float capillarRadius;
     protected List<Capillar> capillars;
@@ -40,20 +40,24 @@ public abstract class Plate implements CapillarSystem {
     public void interact(Flux flux) {
         long start = System.nanoTime();
 
-        boolean isAbsorbed;
+        boolean isOut;
+
         for (Particle particle : flux.getParticles()) {
-            isAbsorbed = true;
+            isOut = true;
+
             for (Capillar capillar : capillars) {
                 if (capillar.willParticleGetInside(particle)) {
                     capillar.interact(particle);
-                    isAbsorbed = false;
+                    isOut = false;
+                    break;
                 }
             }
-            particle.setAbsorbed(!isAbsorbed);
+
+            particle.setOut(isOut);
         }
 
         long finish = System.nanoTime();
-        System.out.println("time = " + (finish - start) / 1_000_000 + " ms");
+        System.out.println("Particles-capillars interaction time = " + (finish - start) / 1_000_000 + " ms");
     }
 
     @Override

@@ -8,12 +8,14 @@ public abstract class Particle {
     protected Vector3D speed;
     protected float trace;
     protected boolean absorbed;
+    protected boolean out;
 
     protected Particle(final Point3D coordinate, final Vector3D speed) {
         this.coordinate = coordinate;
         this.speed = speed;
         this.trace = 0.0f;
         this.absorbed = false;
+        this.out = false;
     }
 
     public Point3D getCoordinate() {
@@ -77,5 +79,13 @@ public abstract class Particle {
 
     public void setAbsorbed(boolean absorbed) {
         this.absorbed = absorbed;
+    }
+
+    public boolean isOut() {
+        return out;
+    }
+
+    public void setOut(boolean out) {
+        this.out = out;
     }
 }

@@ -19,13 +19,14 @@ import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_sm
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothTorus;
 import com.private_void.utils.Utils;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 
 import static com.private_void.utils.Constants.CONE_COEFFICIENT;
 import static com.private_void.utils.Generator.generator;
@@ -107,19 +108,22 @@ public class MainController {
     public ScatterChart chart;
 
     @FXML
-    public Label intensityOn;
-    public Label intensityAbsorbed;
-    public Label intensityOutOfCap;
-    public Label intensityOutOfDet;
+    public Label detectedAmount;
+    public Label absorbedAmount;
+    public Label outOfCapillarsAmount;
+    public Label outOfDetectorAmount;
     public Label successLabel;
 
     public NumberAxis yAxis;
     public NumberAxis xAxis;
 
+    public ContextMenu menu;
+    public MenuItem clearChartItem;
+
     @FXML
     private void initialize() {
         pFluxAxisX.setText("1.0");
-        pFluxAxisY.setText("-0.1");
+        pFluxAxisY.setText("-0.0");
 
         pFluxParticlesAmount.setText("1000");
         pFluxLayersAmount.setText("10");
@@ -131,7 +135,7 @@ public class MainController {
         dFluxAngle.setText("20");
         dFluxMinIntensity.setText("0.5");
 
-        cylRadius.setText("20");
+        cylRadius.setText("7");
         cylLength.setText("1000");
         cylRoughSize.setText("0.1");
         cylRoughAngle.setText("5");
@@ -157,9 +161,30 @@ public class MainController {
         planePeriod.setText("1");
         planeChargeNum.setText("1");
         planeSize.setText("50");
+
+        clearChartItem = new MenuItem("Clear all");
+        clearChartItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                chart.getData().clear();
+            }
+        });
+
+        menu = new ContextMenu(clearChartItem);
+
+        chart.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getButton().equals(MouseButton.SECONDARY)) {
+                    menu.show(chart.getScene().getWindow(), event.getScreenX(), event.getScreenY());
+                }
+            }
+        });
     }
 
     public void startBtnClick(ActionEvent actionEvent) {
+        successLabel.setVisible(false);
+
         Flux flux = createFlux();
         CapillarSystem system = createPlate();
 //        CapillarSystem system = createCapillar();
@@ -423,10 +448,10 @@ public class MainController {
         chart.getData().addAll(series);
         //setChartScale(detector.getUpperBound(), detector.getLowerBound());
 
-        intensityOn.setText(String.valueOf(detector.getDetectedIntensity()));
-        intensityAbsorbed.setText(String.valueOf(detector.getAbsorbedIntensity()));
-        intensityOutOfCap.setText(String.valueOf(detector.getOutOfCapillarIntensity()));
-        intensityOutOfDet.setText(String.valueOf(detector.getOutOfDetectorIntensity()));
+        detectedAmount.setText(String.valueOf(detector.getDetectedAmount()));
+        absorbedAmount.setText(String.valueOf(detector.getAbsorbedAmount()));
+        outOfCapillarsAmount.setText(String.valueOf(detector.getOutOfCapillarsAmount()));
+        outOfDetectorAmount.setText(String.valueOf(detector.getOutOfDetectorAmount()));
 
         successLabel.setVisible(true);
     }

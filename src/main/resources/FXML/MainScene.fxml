@@ -240,14 +240,14 @@
              </ScatterChart>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
-                   <Label id="i_on" fx:id="intensityOnLabel" layoutX="60.0" layoutY="42.0" text="Total intensity on detector: " />
-                   <Label id="i_on_param" fx:id="intensityOn" layoutX="214.0" layoutY="42.0" text="0" />
-                   <Label id="i_abs" fx:id="intensityAbsorbedLabel" layoutX="60.0" layoutY="67.0" text="Total intensity absorbed: " />
-                   <Label id="i_abs_param" fx:id="intensityAbsorbed" layoutX="214.0" layoutY="67.0" text="0" />
-                   <Label id="i_out_cap" fx:id="intensityOutOfCapLabel" layoutX="344.0" layoutY="42.0" text="Total intensity out of capillar: " />
-                   <Label id="i_out_cap_param" fx:id="intensityOutOfCap" layoutX="523.0" layoutY="42.0" text="0" />
-                   <Label id="i_out" fx:id="intensityOutOfDetLabel" layoutX="344.0" layoutY="67.0" text="Total intensity out of detector: " />
-                   <Label id="i_out_param" fx:id="intensityOutOfDet" layoutX="523.0" layoutY="67.0" text="0" />
+                   <Label id="i_on" fx:id="detectedAmountLabel" layoutX="60.0" layoutY="42.0" text="Total particles on detector: " />
+                   <Label id="i_on_param" fx:id="detectedAmount" layoutX="214.0" layoutY="42.0" text="0" />
+                   <Label id="i_abs" fx:id="absorbedAmountLabel" layoutX="60.0" layoutY="67.0" text="Total particles absorbed: " />
+                   <Label id="i_abs_param" fx:id="absorbedAmount" layoutX="214.0" layoutY="67.0" text="0" />
+                   <Label id="i_out_cap" fx:id="outOfCapillarsLabel" layoutX="344.0" layoutY="42.0" text="Total particles out of capillars: " />
+                   <Label id="i_out_cap_param" fx:id="outOfCapillarsAmount" layoutX="523.0" layoutY="42.0" text="0" />
+                   <Label id="i_out" fx:id="outOfDetectorAmountLabel" layoutX="344.0" layoutY="67.0" text="Total particles out of detector: " />
+                   <Label id="i_out_param" fx:id="outOfDetectorAmount" layoutX="523.0" layoutY="67.0" text="0" />
                    <Label id="success" fx:id="successLabel" layoutX="246.0" layoutY="2.0" text="SUCCESSFULLY" textAlignment="CENTER" visible="false">
                      <font>
                         <Font size="16.0" />

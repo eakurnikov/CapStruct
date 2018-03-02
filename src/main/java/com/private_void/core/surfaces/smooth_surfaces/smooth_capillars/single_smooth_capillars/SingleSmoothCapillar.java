@@ -34,11 +34,10 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         NeutralParticle p;
         Point3D newCoordinate;
         float angleWithSurface;
-        Iterator<? extends Particle> iterator = flux.getParticles().iterator();
 
-        while (iterator.hasNext()) {
+        for (Particle particle : flux.getParticles()) {
             try {
-                p = (NeutralParticle) iterator.next();
+                p = (NeutralParticle) particle;
 
                 if (willParticleGetInside(p)) {
                     newCoordinate = getHitPoint(p);
@@ -59,16 +58,11 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                             newCoordinate = getHitPoint(p);
                         } else {
                             p.setAbsorbed(true);
-                            detector.increaseAbsorbedParticlesAmount();
-                            detector.increaseAbsorbedIntensity(p.getIntensity());
-                            //iterator.remove();
                             break;
                         }
                     }
                 } else {
-                    detector.increaseOutOfCapillarParticlesAmount();
-                    detector.increaseOutOfCapillarIntensity(p.getIntensity());
-                    iterator.remove();
+                    p.setOut(true);
                 }
             } catch (ClassCastException e) {
                 e.printStackTrace();
@@ -89,14 +83,12 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
             private Point3D newCoordinate;
             private float angleWithSurface;
 
-
             public Interaction(NeutralParticle particle) {
                 this.particle = particle;
             }
 
             @Override
             public void run() {
-                //count.set(count.get() + 1);
                 if (willParticleGetInside(particle)) {
                     newCoordinate = getHitPoint(particle);
 
@@ -116,21 +108,14 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                             newCoordinate = getHitPoint(particle);
                         } else {
                             particle.setAbsorbed(true);
-                            detector.increaseAbsorbedParticlesAmount();
-                            detector.increaseAbsorbedIntensity(particle.getIntensity());
-                            //iterator.remove();
                             break;
                         }
                     }
                 } else {
-                    detector.increaseOutOfCapillarParticlesAmount();
-                    detector.increaseOutOfCapillarIntensity(particle.getIntensity());
-                    //iterator.remove();
-                    particle.setAbsorbed(true);
+                    particle.setOut(true);
                 }
 
                 Thread.yield();
-                //return particle;
             }
         }
 
@@ -174,17 +159,11 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                         newCoordinate = getHitPoint(particle);
                     } else {
                         particle.setAbsorbed(true);
-                        detector.increaseAbsorbedParticlesAmount();
-                        detector.increaseAbsorbedIntensity(particle.getIntensity());
-                        //iterator.remove();
                         break;
                     }
                 }
             } else {
-                detector.increaseOutOfCapillarParticlesAmount();
-                detector.increaseOutOfCapillarIntensity(particle.getIntensity());
-                //iterator.remove();
-                particle.setAbsorbed(true);
+                particle.setOut(true);
             }
         });
 
@@ -229,17 +208,11 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                                 newCoordinate = getHitPoint(particle);
                             } else {
                                 particle.setAbsorbed(true);
-                                detector.increaseAbsorbedParticlesAmount();
-                                detector.increaseAbsorbedIntensity(particle.getIntensity());
-                                //iterator.remove();
                                 break;
                             }
                         }
                     } else {
-                        detector.increaseOutOfCapillarParticlesAmount();
-                        detector.increaseOutOfCapillarIntensity(particle.getIntensity());
-                        //iterator.remove();
-                        particle.setAbsorbed(true);
+                        particle.setOut(true);
                     }
                 }
             }

@@ -21,6 +21,8 @@ public class FlatPlate extends Plate {
 
     @Override
     protected void createCapillars() throws IllegalArgumentException {
+        long start = System.nanoTime();
+
         float domainsAmount = capillarsAmount / CAPILLARS_PER_DOMAIN_AMOUNT;
         int domainsAmountPerLine = (int) Math.sqrt(domainsAmount);
 
@@ -41,46 +43,49 @@ public class FlatPlate extends Plate {
         CoordinateFactory coordinateFactory;
 
 // WITHOUT DOMAINS ----------------------------------------------------
-//        coordinateFactory = generator().getXPlanarUniformDistributionFactory(initialX,
-//                center.getY() - sideLength / 2 + capillarRadius,
-//                center.getY() + sideLength / 2 - capillarRadius,
-//
-//                center.getZ() - sideLength / 2 + capillarRadius + domainSideLength,
-//                center.getZ() + sideLength / 2 - capillarRadius + domainSideLength);
-//
-//        for (int i = 0; i < capillarsAmount; i++) {
-//            capillarsCenters = new Point3D[(int) capillarsAmount];
-//
-//            do {
-//                coordinate = coordinateFactory.getCoordinate();
-//            } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
-//
-//            capillarsCenters[i] = coordinate;
-//            capillars.add(capillarFactory.getNewCapillar(coordinate));
-//
+        coordinateFactory = generator().getXPlanarUniformDistributionFactory(initialX,
+                center.getY() - sideLength / 2 + capillarRadius,
+                center.getY() + sideLength / 2 - capillarRadius,
+
+                center.getZ() - sideLength / 2 + capillarRadius + domainSideLength,
+                center.getZ() + sideLength / 2 - capillarRadius + domainSideLength);
+
+        for (int i = 0; i < capillarsAmount; i++) {
+            capillarsCenters = new Point3D[capillarsAmount];
+
+            do {
+                coordinate = coordinateFactory.getCoordinate();
+            } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
+
+            capillarsCenters[i] = coordinate;
+            capillars.add(capillarFactory.getNewCapillar(coordinate));
+        }
 // ---------------------------------------------------------------------
 
-        for (int y = 0; y < domainsAmountPerLine; y++) {
-            for (int z = 0; z < domainsAmountPerLine; z++) {
-                capillarsCenters = new Point3D[CAPILLARS_PER_DOMAIN_AMOUNT];
+//        for (int y = 0; y < domainsAmountPerLine; y++) {
+//            for (int z = 0; z < domainsAmountPerLine; z++) {
+//                capillarsCenters = new Point3D[CAPILLARS_PER_DOMAIN_AMOUNT];
+//
+//                coordinateFactory = generator().getXPlanarUniformDistributionFactory(initialX,
+//                        initialY + capillarRadius + domainSideLength *  y,
+//                        initialY - capillarRadius + domainSideLength * (y + 1),
+//
+//                        initialZ + capillarRadius + domainSideLength *  z,
+//                        initialZ - capillarRadius + domainSideLength * (z + 1));
+//
+//                for (int i = 0; i < CAPILLARS_PER_DOMAIN_AMOUNT; i++) {
+//                    do {
+//                        coordinate = coordinateFactory.getCoordinate();
+//                    } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
+//
+//                    capillarsCenters[i] = coordinate;
+//                    capillars.add(capillarFactory.getNewCapillar(capillarsCenters[i]));
+//                }
+//            }
+//        }
 
-                coordinateFactory = generator().getXPlanarUniformDistributionFactory(initialX,
-                        initialY + capillarRadius + domainSideLength *  y,
-                        initialY - capillarRadius + domainSideLength * (y + 1),
-
-                        initialZ + capillarRadius + domainSideLength *  z,
-                        initialZ - capillarRadius + domainSideLength * (z + 1));
-
-                for (int i = 0; i < CAPILLARS_PER_DOMAIN_AMOUNT; i++) {
-                    do {
-                        coordinate = coordinateFactory.getCoordinate();
-                    } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
-
-                    capillarsCenters[i] = coordinate;
-                    capillars.add(capillarFactory.getNewCapillar(capillarsCenters[i]));
-                }
-            }
-        }
+        long finish = System.nanoTime();
+        System.out.println("Creating capillars time = " + (finish - start) / 1_000_000 + " ms");
     }
 
     @Override

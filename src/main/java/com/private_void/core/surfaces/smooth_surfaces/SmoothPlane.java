@@ -47,15 +47,10 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
 
                     } else {
                         p.setAbsorbed(true);
-                        detector.increaseAbsorbedParticlesAmount();
-                        detector.increaseAbsorbedIntensity(p.getIntensity());
-                        iterator.remove();
                         break;
                     }
                 } else {
-                    detector.increaseOutOfCapillarParticlesAmount();
-                    detector.increaseOutOfCapillarIntensity(p.getIntensity());
-                    iterator.remove();
+                    p.setOut(true);
                 }
             } catch (ClassCastException e) {
                 e.printStackTrace();
