@@ -88,4 +88,8 @@ public final class Utils {
     public static float getTorusLength(float curvRadius, float curvAngleR) {
         return curvRadius * (float) Math.sin(curvAngleR);
     }
+
+    public static float getTorusCurvRadius(float length, float curvAngleR) {
+        return length / (float) Math.sin(curvAngleR);
+    }
 }

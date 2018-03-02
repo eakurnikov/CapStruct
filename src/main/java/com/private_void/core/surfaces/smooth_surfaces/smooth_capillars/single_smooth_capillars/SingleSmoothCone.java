@@ -14,7 +14,7 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
     private float divergentAngleR;
 
     public SingleSmoothCone(final Point3D frontCoordinate, float radius, int divergentAngleR, float coneCoefficient,
-                      float roughnessSize, float roughnessAngleR, float reflectivity, float criticalAngleR)
+                            float roughnessSize, float roughnessAngleR, float reflectivity, float criticalAngleR)
             throws IllegalArgumentException {
 
         super(frontCoordinate, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);

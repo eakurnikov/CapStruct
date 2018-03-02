@@ -21,6 +21,13 @@ public class SmoothTorus extends SmoothCapillar {
         this.curvAngleR = curvAngleR;
         this.length = Utils.getTorusLength(curvRadius, curvAngleR);
     }
+    public SmoothTorus(float length, final Point3D frontCoordinate, float radius, float curvAngleR,
+                       float roughnessSize, float roughnessAngleR, float reflectivity, float criticalAngleR) {
+        super(frontCoordinate, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        this.curvRadius = Utils.getTorusCurvRadius(length, curvAngleR);
+        this.curvAngleR = curvAngleR;
+        this.length = length;
+    }
 
     @Override
     protected Vector3D getNormal(final Point3D point) {
@@ -164,10 +171,7 @@ public class SmoothTorus extends SmoothCapillar {
 
     @Override
     protected boolean isPointInside(final Point3D point) {
-        float angle = getPointsAngle(point);
-        return angle >= 0 && angle <= curvAngleR;
-
-        //return point.getX() < front.getX() + length;
+        return point.getX() < front.getX() + length;
     }
 
     private float getPointsAngle(final Point3D point) {
@@ -196,6 +200,28 @@ public class SmoothTorus extends SmoothCapillar {
             @Override
             public float getLength() {
                 return Utils.getTorusLength(curvRadius, curvAngleR);
+            }
+        };
+    }
+
+    public static CapillarFactory getFactoryWithLength(float radius, float length, float curvAngleR, float roughnessSize,
+                                             float roughnessAngleR, float reflectivity, float criticalAngleR) {
+        return new CapillarFactory() {
+
+            @Override
+            public Capillar getNewCapillar(Point3D coordinate) {
+                return new SmoothTorus(length, coordinate, radius, curvAngleR, roughnessSize, roughnessAngleR,
+                        reflectivity, criticalAngleR);
+            }
+
+            @Override
+            public float getRadius() {
+                return radius;
+            }
+
+            @Override
+            public float getLength() {
+                return length;
             }
         };
     }
