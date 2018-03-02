@@ -37,6 +37,8 @@ public class Detector {
     }
 
     public void detect(Flux flux) {
+        long start = System.nanoTime();
+
         init();
 
         List<Particle> detectedParticles = new ArrayList<>();
@@ -64,6 +66,9 @@ public class Detector {
 
         computeScatter(detectedParticles);
         flux.setParticles(detectedParticles);
+
+        long finish = System.nanoTime();
+        System.out.println("Detecting particles time = " + (finish - start) / 1_000_000 + " ms");
     }
 
     protected Point3D getCoordinateOnDetector(Particle p) {

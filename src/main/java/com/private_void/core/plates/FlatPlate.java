@@ -85,6 +85,7 @@ public class FlatPlate extends Plate {
 //        }
 
         long finish = System.nanoTime();
+        System.out.println();
         System.out.println("Creating capillars time = " + (finish - start) / 1_000_000 + " ms");
     }
 
