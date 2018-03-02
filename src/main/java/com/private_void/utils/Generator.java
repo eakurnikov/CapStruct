@@ -46,7 +46,7 @@ public class Generator {
         return new Point3D(0.0f, mean + y * dev, mean + z * dev);
     }
 
-    public CoordinateFactory getGaussDistributionFactory(float mean, float dev) {
+    public CoordinateFactory getGaussDistribution(float mean, float dev) {
         return () -> {
             float u, v, s;
             float y, z;
@@ -64,7 +64,25 @@ public class Generator {
         };
     }
 
-    public CoordinateFactory getXPlanarUniformDistributionFactory(float x,
+    public CoordinateFactory getXPlanarCircleUniformDistribution(Point3D center, float radius) {
+        return () -> {
+            float x = center.getX();
+            float y = center.getY();
+            float z = center.getZ();
+
+            float newY;
+            float newZ;
+
+            do {
+                newY = uniformFloat(y - radius, y + radius);
+                newZ = uniformFloat(z - radius, z + radius);
+            } while (newY * newY + newZ * newZ > radius * radius);
+
+            return new Point3D(x, newY, newZ);
+        };
+    }
+
+    public CoordinateFactory getXPlanarUniformDistribution(float x,
                                                                   float ymin, float ymax,
                                                                   float zmin, float zmax) {
         return () -> new Point3D(x,
@@ -73,7 +91,7 @@ public class Generator {
         );
     }
 
-    public CoordinateFactory getVolumeUniformDistributionFactory(float xmin, float xmax,
+    public CoordinateFactory getVolumeUniformDistribution(float xmin, float xmax,
                                                                  float ymin, float ymax,
                                                                  float zmin, float zmax) {
         return () -> new Point3D(

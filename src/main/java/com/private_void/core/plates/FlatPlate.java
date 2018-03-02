@@ -43,7 +43,7 @@ public class FlatPlate extends Plate {
         CoordinateFactory coordinateFactory;
 
 // WITHOUT DOMAINS ----------------------------------------------------
-        coordinateFactory = generator().getXPlanarUniformDistributionFactory(initialX,
+        coordinateFactory = generator().getXPlanarUniformDistribution(initialX,
                 center.getY() - sideLength / 2 + capillarRadius,
                 center.getY() + sideLength / 2 - capillarRadius,
 
@@ -66,7 +66,7 @@ public class FlatPlate extends Plate {
 //            for (int z = 0; z < domainsAmountPerLine; z++) {
 //                capillarsCenters = new Point3D[CAPILLARS_PER_DOMAIN_AMOUNT];
 //
-//                coordinateFactory = generator().getXPlanarUniformDistributionFactory(initialX,
+//                coordinateFactory = generator().getXPlanarUniformDistribution(initialX,
 //                        initialY + capillarRadius + domainSideLength *  y,
 //                        initialY - capillarRadius + domainSideLength * (y + 1),
 //

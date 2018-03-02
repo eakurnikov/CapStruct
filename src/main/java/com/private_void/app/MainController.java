@@ -216,23 +216,20 @@ public class MainController {
             float layerDistance = Float.parseFloat(pFluxLayersDist.getText());
             float minIntensity = Float.parseFloat(pFluxMinIntensity.getText());
 
-            CoordinateFactory gaussDistributionFactory =
-                    generator().getGaussDistributionFactory(0.0f, 1.0f);
+            CoordinateFactory gaussDistribution =
+                    generator().getGaussDistribution(0.0f, 1.0f);
 
-            CoordinateFactory uniformDistributionFactory =
-                    generator().getXPlanarUniformDistributionFactory(x,
+            CoordinateFactory uniformDistribution =
+                    generator().getXPlanarUniformDistribution(x,
                             y - 250.0f, y + 250.0f,
                             z - 250.0f, z + 250.0f);
 
-//            CoordinateFactory uniformDistributionFactory =
-//                    generator().getVolumeUniformDistributionFactory(
-//                            plateCenterX, plateCenterX,
-//                            plateCenterY - plateHeight / 2.0f, plateCenterY + plateHeight / 2.0f,
-//                            plateCenterZ - plateLength / 2.0f, plateCenterZ + plateLength / 2.0f);
+            CoordinateFactory circleUniformDistribution =
+                    generator().getXPlanarCircleUniformDistribution(new Point3D(x, y, z), 150.0f);
 
             return new ParallelFlux(
                     neutralParticleFactory,
-                    uniformDistributionFactory,
+                    circleUniformDistribution,
                     new Point3D(x, y, z),
                     new Vector3D(axisX, axisY, axisZ),
                     layersAmount,
@@ -241,8 +238,8 @@ public class MainController {
                     minIntensity);
         }
         else {
-            CoordinateFactory gaussDistributionFactory =
-                    generator().getGaussDistributionFactory(
+            CoordinateFactory gaussDistribution =
+                    generator().getGaussDistribution(
                             0.0f,
                             Utils.convertDegreesToRadians(Float.parseFloat(dFluxAngle.getText())));
 
@@ -259,7 +256,7 @@ public class MainController {
 
             return new DivergentFlux(
                     neutralParticleFactory,
-                    gaussDistributionFactory,
+                    gaussDistribution,
                     new Point3D(x, y, z),
                     new Vector3D(axisX, axisY, axisZ),
                     totalParticlesAmount,
