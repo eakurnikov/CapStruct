@@ -6,8 +6,8 @@ import com.private_void.core.surfaces.CapillarFactory;
 
 public class CurvedPlate extends Plate {
 
-    public CurvedPlate(final CapillarFactory capillarFactory, final CoordinateFactory coordinateFactory,
-                       final Point3D center, int capillarsAmount, float capillarsDensity) {
+    public CurvedPlate(final CapillarFactory capillarFactory, final Point3D center, int capillarsAmount,
+                       float capillarsDensity) {
         super(capillarFactory, center, capillarsAmount, capillarsDensity);
     }
 

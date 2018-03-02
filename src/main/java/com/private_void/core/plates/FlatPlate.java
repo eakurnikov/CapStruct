@@ -23,45 +23,67 @@ public class FlatPlate extends Plate {
     protected void createCapillars() throws IllegalArgumentException {
         long start = System.nanoTime();
 
-        float domainsAmount = capillarsAmount / CAPILLARS_PER_DOMAIN_AMOUNT;
-        int domainsAmountPerLine = (int) Math.sqrt(domainsAmount);
+        float frontSquare = capillarsAmount / capillarsDensity;
+        float minFrontSquare = capillarsAmount * (2 * capillarRadius) * (2 * capillarRadius);
 
-        float domainSquare = CAPILLARS_PER_DOMAIN_AMOUNT / capillarsDensity;
-        if (domainSquare < 4 * capillarRadius * capillarRadius * CAPILLARS_PER_DOMAIN_AMOUNT) {
+        if (frontSquare < minFrontSquare) {
             throw new IllegalArgumentException();
         }
-        float domainSideLength = (float) Math.sqrt(domainSquare);
 
-        sideLength = domainsAmountPerLine * domainSideLength;
+        if (frontSquare < 1.5 * minFrontSquare) {
+            // можно сеткой
+            throw new IllegalArgumentException();
+        } else {
+            sideLength = (float) Math.sqrt(frontSquare);
 
-        float initialX = center.getX();
-        float initialY = center.getY() - sideLength / 2;
-        float initialZ = center.getZ() - sideLength / 2;
+            CoordinateFactory coordinateFactory = generator().getXPlanarUniformDistribution(center.getX(),
+                    center.getY() - sideLength / 2 + capillarRadius,
+                    center.getY() + sideLength / 2 - capillarRadius,
 
-        Point3D coordinate;
-        Point3D[] capillarsCenters;
-        CoordinateFactory coordinateFactory;
+                    center.getZ() - sideLength / 2 + capillarRadius,
+                    center.getZ() + sideLength / 2 - capillarRadius);
 
-// WITHOUT DOMAINS ----------------------------------------------------
-        coordinateFactory = generator().getXPlanarUniformDistribution(initialX,
-                center.getY() - sideLength / 2 + capillarRadius,
-                center.getY() + sideLength / 2 - capillarRadius,
+            Point3D[] capillarsCenters = new Point3D[capillarsAmount];
+            Point3D coordinate;
 
-                center.getZ() - sideLength / 2 + capillarRadius + domainSideLength,
-                center.getZ() + sideLength / 2 - capillarRadius + domainSideLength);
+            for (int i = 0; i < capillarsAmount; i++) {
+                do {
+                    coordinate = coordinateFactory.getCoordinate();
+                } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
 
-        for (int i = 0; i < capillarsAmount; i++) {
-            capillarsCenters = new Point3D[capillarsAmount];
-
-            do {
-                coordinate = coordinateFactory.getCoordinate();
-            } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
-
-            capillarsCenters[i] = coordinate;
-            capillars.add(capillarFactory.getNewCapillar(coordinate));
+                capillarsCenters[i] = coordinate;
+                capillars.add(capillarFactory.getNewCapillar(coordinate));
+            }
         }
-// ---------------------------------------------------------------------
 
+        long finish = System.nanoTime();
+        System.out.println();
+        System.out.println("Creating capillars time = " + (finish - start) / 1_000_000 + " ms");
+    }
+
+//    @Override
+//    protected void createCapillars() throws IllegalArgumentException {
+//        long start = System.nanoTime();
+//
+//        float domainsAmount = capillarsAmount / CAPILLARS_PER_DOMAIN_AMOUNT;
+//        int domainsAmountPerLine = (int) Math.sqrt(domainsAmount);
+//
+//        float domainSquare = CAPILLARS_PER_DOMAIN_AMOUNT / capillarsDensity;
+//        if (domainSquare < 4 * capillarRadius * capillarRadius * CAPILLARS_PER_DOMAIN_AMOUNT) {
+//            throw new IllegalArgumentException();
+//        }
+//        float domainSideLength = (float) Math.sqrt(domainSquare);
+//
+//        sideLength = domainsAmountPerLine * domainSideLength;
+//
+//        float initialX = center.getX();
+//        float initialY = center.getY() - sideLength / 2;
+//        float initialZ = center.getZ() - sideLength / 2;
+//
+//        Point3D coordinate;
+//        Point3D[] capillarsCenters;
+//        CoordinateFactory coordinateFactory;
+//
 //        for (int y = 0; y < domainsAmountPerLine; y++) {
 //            for (int z = 0; z < domainsAmountPerLine; z++) {
 //                capillarsCenters = new Point3D[CAPILLARS_PER_DOMAIN_AMOUNT];
@@ -83,11 +105,11 @@ public class FlatPlate extends Plate {
 //                }
 //            }
 //        }
-
-        long finish = System.nanoTime();
-        System.out.println();
-        System.out.println("Creating capillars time = " + (finish - start) / 1_000_000 + " ms");
-    }
+//
+//        long finish = System.nanoTime();
+//        System.out.println();
+//        System.out.println("Creating capillars time = " + (finish - start) / 1_000_000 + " ms");
+//    }
 
     @Override
     protected Point3D getDetectorsCoordinate() {

@@ -278,8 +278,9 @@ public class MainController {
         float plateCenterY = Float.parseFloat(cylY.getText());
         float plateCenterZ = Float.parseFloat(cylZ.getText());
 
-        int capillarsAmount = 364;
-        float plateCapillarsDensity = 0.0025f; //for radius < 10
+        int capillarsAmount = 320;
+        float plateCapillarsDensity = 0.0034f; //for radius < 10
+//        float plateCapillarsDensity = capillarsAmount / (360.0f * 360.0f);
 
         CapillarFactory smoothCylinderFactory =
                 SmoothCylinder.getFactory(
