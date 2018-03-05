@@ -71,9 +71,11 @@ public class SmoothCone extends SmoothCapillar {
         float[][] W = new float[3][3];
 
         float E = 0.05f;
-        float dr = generator().uniformFloat(0.0f, roughnessSize);
-
         int iterationsAmount = 0;
+
+        float dr = generator().uniformFloat(0.0f, roughnessSize);
+        float r = radius - dr;
+        float x, y, z;
 
         while (Utils.getMax(delta) > E) {
             try {
@@ -89,21 +91,16 @@ public class SmoothCone extends SmoothCapillar {
                     }
                 }
 
+                x = solution[0] - front.getX();
+                y = solution[1] - front.getY();
+                z = solution[2] - front.getZ();
+
                 //Возможно, с уравнением что-то не так
                 W[0][0] = 1.0f;
+                W[0][1] = (float) (2 * y * (1.0f / Math.tan(divergentAngleR)) / Math.sqrt(y * y + z * z));
+                W[0][2] = (float) (2 * z * (1.0f / Math.tan(divergentAngleR)) / Math.sqrt(y * y + z * z));
 
-                W[0][1] = (float) (2 * (solution[1] - front.getY()) * (1.0f / Math.tan(divergentAngleR))
-                        / Math.sqrt((solution[1] - front.getY()) * (solution[1] - front.getY())
-                        + (solution[2] - front.getZ()) * (solution[2] - front.getZ())));
-
-                W[0][2] = (float) (2 * (solution[2] - front.getZ()) * (1.0f / Math.tan(divergentAngleR))
-                        / Math.sqrt((solution[1] - front.getY()) * (solution[1] - front.getY())
-                        + (solution[2] - front.getZ()) * (solution[2] - front.getZ())));
-
-                F[0] = (float) ((solution[0] - front.getX())
-                        + Math.sqrt((solution[1] - front.getY()) * (solution[1] - front.getY())
-                        + (solution[2] - front.getZ()) * (solution[2] - front.getZ()))
-                        * (1.0f / Math.tan(divergentAngleR)) - (radius - dr) * (1.0f / Math.tan(divergentAngleR)));
+                F[0] = (float) (x + Math.sqrt(y * y + z * z) * (1.0f / Math.tan(divergentAngleR)) - r * (1.0f / Math.tan(divergentAngleR)));
 
                 if (p.getSpeed().getY() == 0.0f) {
                     W[1][0] = 0.0f;

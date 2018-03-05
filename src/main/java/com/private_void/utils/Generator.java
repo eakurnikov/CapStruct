@@ -30,22 +30,6 @@ public class Generator {
         return minValue + (maxValue - minValue) * rand.nextFloat();
     }
 
-    public Point3D gauss(float mean, float dev) {
-        float u, v, s;
-        float y, z;
-
-        do {
-            u = rand.nextFloat() * 2 - 1;
-            v = rand.nextFloat() * 2 - 1;
-            s = u * u + v * v;
-        } while (s >= 1 || s == 0);
-
-        y = v * (float) Math.sqrt(-2.0f * Math.log(s) / s);
-        z = u * (float) Math.sqrt(-2.0f * Math.log(s) / s);
-
-        return new Point3D(0.0f, mean + y * dev, mean + z * dev);
-    }
-
     public CoordinateFactory getGaussDistribution(float mean, float dev) {
         return () -> {
             float u, v, s;
@@ -64,40 +48,77 @@ public class Generator {
         };
     }
 
-    public CoordinateFactory getXPlanarCircleUniformDistribution(Point3D center, float radius) {
+    public CoordinateFactory getGaussDistribution(final Point3D center, float mean, float dev) {
         return () -> {
-            float x = center.getX();
-            float y = center.getY();
-            float z = center.getZ();
-
-            float newY;
-            float newZ;
+            float u, v, s;
+            float y, z;
 
             do {
-                newY = uniformFloat(y - radius, y + radius);
-                newZ = uniformFloat(z - radius, z + radius);
-            } while (newY * newY + newZ * newZ > radius * radius);
+                u = rand.nextFloat() * 2 - 1;
+                v = rand.nextFloat() * 2 - 1;
+                s = u * u + v * v;
+            } while (s >= 1 || s == 0);
 
-            return new Point3D(x, newY, newZ);
+            y = v * (float) Math.sqrt(-2.0f * Math.log(s) / s);
+            z = u * (float) Math.sqrt(-2.0f * Math.log(s) / s);
+
+            return new Point3D(center.getX(), center.getY() + mean + y * dev, center.getZ() + mean + z * dev);
         };
     }
 
-    public CoordinateFactory getXPlanarUniformDistribution(float x,
-                                                                  float ymin, float ymax,
-                                                                  float zmin, float zmax) {
-        return () -> new Point3D(x,
-                uniformFloat(ymin, ymax),
-                uniformFloat(zmin, zmax)
-        );
+    public CoordinateFactory getXPlanarCircleUniformDistribution(float radius) {
+        return () -> {
+            float y;
+            float z;
+
+            do {
+                y = uniformFloat(-radius, radius);
+                z = uniformFloat(-radius, radius);
+            } while (y * y + z * z > radius * radius);
+
+            return new Point3D(0.0f, y, z);
+        };
     }
 
-    public CoordinateFactory getVolumeUniformDistribution(float xmin, float xmax,
-                                                                 float ymin, float ymax,
-                                                                 float zmin, float zmax) {
+    public CoordinateFactory getXPlanarCircleUniformDistribution(final Point3D center, float radius) {
+        return () -> {
+            float y;
+            float z;
+
+            do {
+                y = uniformFloat(-radius, radius);
+                z = uniformFloat(-radius, radius);
+            } while (y * y + z * z > radius * radius);
+
+            return new Point3D(center.getX(), center.getY() + y, center.getZ() + z);
+        };
+    }
+
+    public CoordinateFactory getXPlanarUniformDistribution(float yRange, float zRange) {
         return () -> new Point3D(
-                uniformFloat(xmin, xmax),
-                uniformFloat(ymin, ymax),
-                uniformFloat(zmin, zmax)
-        );
+                0.0f,
+                uniformFloat(-yRange, yRange),
+                uniformFloat(-zRange, zRange));
+    }
+
+    public CoordinateFactory getXPlanarUniformDistribution(final Point3D center, float yRange, float zRange) {
+        return () -> new Point3D(
+                center.getX(),
+                uniformFloat(center.getY() - yRange, center.getY() + yRange),
+                uniformFloat(center.getZ() - zRange, center.getZ() + zRange));
+    }
+
+    public CoordinateFactory getVolumeUniformDistribution(float xRange, float yRange, float zRange) {
+        return () -> new Point3D(
+                uniformFloat(-xRange, xRange),
+                uniformFloat(-yRange, yRange),
+                uniformFloat(-zRange, zRange));
+    }
+
+    public CoordinateFactory getVolumeUniformDistribution(final Point3D center, float xRange, float yRange, float zRange) {
+        return () -> new Point3D(
+                uniformFloat(center.getX() - xRange, center.getX() + xRange),
+                uniformFloat(center.getY() - yRange, center.getY() + yRange),
+                uniformFloat(center.getZ() - zRange, center.getZ() + zRange));
     }
 }

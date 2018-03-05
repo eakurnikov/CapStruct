@@ -189,8 +189,8 @@ public class MainController {
         successLabel.setVisible(false);
 
         Flux flux = createFlux();
-        CapillarSystem system = createPlate();
-//        CapillarSystem system = createCapillar();
+//        CapillarSystem system = createPlate();
+        CapillarSystem system = createCapillar();
         Detector detector = system.getDetector();
 
         system.interact(flux);
@@ -221,12 +221,9 @@ public class MainController {
 
             CoordinateFactory gaussDistribution = generator().getGaussDistribution(0.0f, 1.0f);
 
-            CoordinateFactory uniformDistribution = generator().getXPlanarUniformDistribution(x,
-                    y - 250.0f, y + 250.0f,
-                    z - 250.0f, z + 250.0f);
+            CoordinateFactory uniformDistribution = generator().getXPlanarUniformDistribution(250.0f, 250.0f);
 
-            CoordinateFactory circleUniformDistribution = generator().getXPlanarCircleUniformDistribution(
-                    new Point3D(x, y, z), 150.0f);
+            CoordinateFactory circleUniformDistribution = generator().getXPlanarCircleUniformDistribution(150.0f);
 
             return new ParallelFlux(
                     neutralParticleFactory,
@@ -320,7 +317,7 @@ public class MainController {
 
             CapillarFactory smoothTorusFactory = SmoothTorus.getFactoryWithLength(
                     capillarSmallRadius,
-                    500.0f,
+                    1000.0f,
                     capillarCurvAngleR,
                     capillarRoughnessSize,
                     capillarRoughnessAngleR,
@@ -485,7 +482,7 @@ public class MainController {
         //TODO прикрутить зум по сколлу колесика мыши
         //TODO как-то разукрашивать точки в зависимости от их интенсивности. Тогда детектор как счетчик интенсивности со своими ячейками ваще не нужен, нужна будет тупо его плоскость
         chart.getData().addAll(series);
-        //setChartScale(detector.getUpperBound(), detector.getLowerBound());
+        setChartScale(detector.getUpperBound(), detector.getLowerBound());
 
         detectedAmount.setText(String.valueOf(detector.getDetectedAmount()));
         absorbedAmount.setText(String.valueOf(detector.getAbsorbedAmount()));

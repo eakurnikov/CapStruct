@@ -46,9 +46,11 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
         float[][] W = new float[3][3];
 
         float E = 0.05f;
-        float dr = generator().uniformFloat(0.0f, roughnessSize);
-
         int iterationsAmount = 0;
+
+        float dr = generator().uniformFloat(0.0f, roughnessSize);
+        float r = radius - dr;
+        float y, z;
 
         while (Utils.getMax(delta) > E) {
             try {
@@ -64,13 +66,14 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
                     }
                 }
 
-                W[0][0] = 0.0f;
-                W[0][1] = 2.0f * (solution[1] - front.getY());
-                W[0][2] = 2.0f * (solution[2] - front.getZ());
+                y = solution[1] - front.getY();
+                z = solution[2] - front.getZ();
 
-                F[0] = (solution[1] - front.getY()) * (solution[1] - front.getY())
-                        + (solution[2] - front.getZ()) * (solution[2] - front.getZ())
-                        - (radius - dr) * (radius - dr);
+                W[0][0] = 0.0f;
+                W[0][1] = 2.0f * y;
+                W[0][2] = 2.0f * z;
+
+                F[0] = y * y + z * z - r * r;
 
                 if (p.getSpeed().getY() == 0.0f) {
                     W[1][0] = 0.0f;

@@ -36,12 +36,9 @@ public class FlatPlate extends Plate {
         } else {
             sideLength = (float) Math.sqrt(frontSquare);
 
-            CoordinateFactory coordinateFactory = generator().getXPlanarUniformDistribution(center.getX(),
-                    center.getY() - sideLength / 2 + capillarRadius,
-                    center.getY() + sideLength / 2 - capillarRadius,
-
-                    center.getZ() - sideLength / 2 + capillarRadius,
-                    center.getZ() + sideLength / 2 - capillarRadius);
+            CoordinateFactory coordinateFactory = generator().getXPlanarUniformDistribution(center,
+                    sideLength / 2 - capillarRadius,
+                    sideLength / 2 - capillarRadius);
 
             Point3D[] capillarsCenters = new Point3D[capillarsAmount];
             Point3D coordinate;
