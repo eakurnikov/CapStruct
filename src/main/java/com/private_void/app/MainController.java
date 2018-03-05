@@ -189,8 +189,8 @@ public class MainController {
         successLabel.setVisible(false);
 
         Flux flux = createFlux();
-//        CapillarSystem system = createPlate();
-        CapillarSystem system = createCapillar();
+        CapillarSystem system = createPlate();
+//        CapillarSystem system = createCapillar();
         Detector detector = system.getDetector();
 
         system.interact(flux);
@@ -315,18 +315,26 @@ public class MainController {
             float plateCapillarsDensity = 0.0034f; //for radius = 7
 //          float plateCapillarsDensity = 0.0025f; //for radius < 10 for domains
 
-            CapillarFactory smoothTorusFactory = SmoothTorus.getFactoryWithLength(
+            CapillarFactory smoothTorusFactoryWithRadius = SmoothTorus.getFactory(
                     capillarSmallRadius,
                     1000.0f,
                     capillarCurvAngleR,
                     capillarRoughnessSize,
                     capillarRoughnessAngleR,
                     capillarReflectivity,
-                    capillarCriticalAngleR
-                    );
+                    capillarCriticalAngleR);
+
+            CapillarFactory smoothTorusFactoryWithLength = SmoothTorus.getFactoryWithLength(
+                    capillarSmallRadius,
+                    1000.0f,
+                    capillarCurvAngleR,
+                    capillarRoughnessSize,
+                    capillarRoughnessAngleR,
+                    capillarReflectivity,
+                    capillarCriticalAngleR);
 
             return new TorusPlate(
-                    smoothTorusFactory,
+                    smoothTorusFactoryWithRadius,
                     new Point3D(plateCenterX, plateCenterY, plateCenterZ),
                     capillarsAmount,
                     plateCapillarsDensity, 5);

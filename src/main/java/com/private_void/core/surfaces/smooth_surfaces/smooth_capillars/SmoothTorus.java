@@ -145,7 +145,7 @@ public class SmoothTorus extends SmoothCapillar {
         }
 
         Point3D newCoordinate = new Point3D(solution[0], solution[1], solution[2]);
-        if (newCoordinate.isNear(p.getCoordinate()) && !p.isRecursiveIterationsLimitReached()) {
+        if ((newCoordinate.isNear(p.getCoordinate()) || newCoordinate.getX() <= p.getCoordinate().getX()) && !p.isRecursiveIterationsLimitReached()) {
             p.recursiveIteration();
             return getHitPoint(p);
         } else {
@@ -164,7 +164,7 @@ public class SmoothTorus extends SmoothCapillar {
         float y = point.getY();
         float z = point.getZ();
 
-        return (float) Math.asin(x / Math.sqrt(x * x + y * y + (z + curvRadius) * (z + curvRadius)));
+        return (float) Math.asin(x / Math.sqrt(x * x + y * y + (z - curvRadius) * (z - curvRadius)));
     }
 
     public static CapillarFactory getFactory(float radius, float curvRadius, float curvAngleR, float roughnessSize,

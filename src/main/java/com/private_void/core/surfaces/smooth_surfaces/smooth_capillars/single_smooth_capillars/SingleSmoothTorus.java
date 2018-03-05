@@ -53,10 +53,9 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
             return p.getCoordinate();
         }
 
-        float[] solution = {
-                p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
-                p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
-                p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()};
+        float[] solution = {p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
+                            p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
+                            p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()};
 
         float[] delta = {1.0f, 1.0f, 1.0f};
         float[] F  = new float[3];
@@ -172,6 +171,6 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
         float y = point.getY();
         float z = point.getZ();
 
-        return (float) Math.asin(x / Math.sqrt(x * x + y * y + (z + curvRadius) * (z + curvRadius)));
+        return (float) Math.asin(x / Math.sqrt(x * x + y * y + (z - curvRadius) * (z - curvRadius)));
     }
 }
