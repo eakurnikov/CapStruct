@@ -3,40 +3,45 @@ package com.private_void.core.plates;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.CoordinateFactory;
 import com.private_void.core.geometry.Point3D;
-import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.private_void.utils.Generator.generator;
 
 public class FlatPlate extends Plate {
-    public FlatPlate(final CapillarFactory capillarFactory, final Point3D center, int capillarsAmount,
-                     float capillarsDensity) {
-        super(capillarFactory, center, capillarsAmount, capillarsDensity);
+    private float sideLength;
+
+    public FlatPlate(final CapillarFactory capillarFactory, final Point3D center, float capillarsDensity,
+                     float sideLength) {
+        super(capillarFactory, center, capillarsDensity);
+        this.sideLength = sideLength;
         createCapillars();
         this.detector = new Detector(getDetectorsCoordinate(), sideLength * 1.0f);
     }
 
     @Override
-    protected void createCapillars() throws IllegalArgumentException {
+    protected void createCapillars() {
         long start = System.nanoTime();
 
-        float frontSquare = capillarsAmount / capillarsDensity;
-        float minFrontSquare = capillarsAmount * (2 * capillarRadius) * (2 * capillarRadius);
+        float frontSquare = sideLength * sideLength;
+        float minCapillarSquare = (2.0f * capillarRadius) * (2.0f * capillarRadius);
+        float maxCapillarDensity = 1.0f / minCapillarSquare;
 
-        if (frontSquare < minFrontSquare) {
-            throw new IllegalArgumentException();
-        }
+        if (capillarsDensity > maxCapillarDensity) {
+            System.out.println("Capillars density is too big, it has been automatically set to " + maxCapillarDensity);
+            capillarsAmount = (int) (frontSquare / minCapillarSquare);
+            // заполняю сеткой впритирку
+            capillars = null;
 
-        if (frontSquare < 1.5 * minFrontSquare) {
-            // можно сеткой
-            throw new IllegalArgumentException();
+        } else if (capillarsDensity > 0.67f * maxCapillarDensity) {
+            System.out.println("Capillars density is very big, so it has been automatically set to " + maxCapillarDensity);
+            /*capillarsAmount = ...
+            заполняю сеткой с каким-то шагом*/
+            capillars = null;
+
         } else {
-            sideLength = (float) Math.sqrt(frontSquare);
+            capillarsAmount = (int) (capillarsDensity * frontSquare);
 
-            CoordinateFactory coordinateFactory = generator().getXPlanarUniformDistribution(center,
+            CoordinateFactory coordinateFactory = generator().getXFlatUniformDistribution(center,
                     sideLength / 2 - capillarRadius,
                     sideLength / 2 - capillarRadius);
 
@@ -49,7 +54,7 @@ public class FlatPlate extends Plate {
                 } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
 
                 capillarsCenters[i] = coordinate;
-                capillars.add(capillarFactory.getNewCapillar(coordinate));
+                capillars.put(capillarFactory.getNewCapillar(coordinate), null);
             }
         }
 
@@ -85,7 +90,7 @@ public class FlatPlate extends Plate {
 //            for (int z = 0; z < domainsAmountPerLine; z++) {
 //                capillarsCenters = new Point3D[CAPILLARS_PER_DOMAIN_AMOUNT];
 //
-//                coordinateFactory = generator().getXPlanarUniformDistribution(initialX,
+//                coordinateFactory = generator().getXFlatUniformDistribution(initialX,
 //                        initialY + capillarRadius + domainSideLength *  y,
 //                        initialY - capillarRadius + domainSideLength * (y + 1),
 //

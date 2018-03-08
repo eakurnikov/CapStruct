@@ -25,7 +25,7 @@ public class DivergentFlux extends Flux {
     protected void createParticles() {
         List<Particle> newParticles = new ArrayList<>();
         for (int i = 0; i < particlesAmount; i++) {
-            Vector3D axis = new Vector3D(new Point3D(-(fluxAxis.getY() + fluxAxis.getZ()) / fluxAxis.getX(), 1.0f, 1.0f))
+            Vector3D axis = new Vector3D(-(fluxAxis.getY() + fluxAxis.getZ()) / fluxAxis.getX(), 1.0f, 1.0f)
                     .turnAroundVector(generator().uniformFloat(0.0f, 2.0f * PI), fluxAxis);
             newParticles.add(particleFactory.getNewParticle(fluxCoordinate,
                     fluxAxis.getNewByTurningAroundVector(coordinateFactory.getCoordinate().getY(), axis)));

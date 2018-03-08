@@ -9,6 +9,7 @@ import com.private_void.core.geometry.CoordinateFactory;
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.*;
+import com.private_void.core.plates.CurvedPlate;
 import com.private_void.core.plates.FlatPlate;
 import com.private_void.core.plates.Plate;
 import com.private_void.core.plates.TorusPlate;
@@ -221,9 +222,9 @@ public class MainController {
 
             CoordinateFactory gaussDistribution = generator().getGaussDistribution(0.0f, 1.0f);
 
-            CoordinateFactory uniformDistribution = generator().getXPlanarUniformDistribution(250.0f, 250.0f);
+            CoordinateFactory uniformDistribution = generator().getXFlatUniformDistribution(250.0f, 250.0f);
 
-            CoordinateFactory circleUniformDistribution = generator().getXPlanarCircleUniformDistribution(150.0f);
+            CoordinateFactory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(150.0f);
 
             return new ParallelFlux(
                     neutralParticleFactory,
@@ -276,9 +277,11 @@ public class MainController {
             float capillarCriticalAngleD = Float.parseFloat(cylSlideAngle.getText());
             float capillarCriticalAngleR = Utils.convertDegreesToRadians(capillarCriticalAngleD);
 
-            int capillarsAmount = 320;
             float plateCapillarsDensity = 0.0034f; //for radius = 7
 //          float plateCapillarsDensity = 0.0025f; //for radius < 10 for domains
+
+//          int capillarsAmount = 320;
+            float plateSideLength = 300.0f;
 
             CapillarFactory smoothCylinderFactory = SmoothCylinder.getFactory(
                     capillarRadius,
@@ -288,11 +291,19 @@ public class MainController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
-            return new FlatPlate(
+            return new CurvedPlate(
                     smoothCylinderFactory,
                     new Point3D(plateCenterX, plateCenterY, plateCenterZ),
-                    capillarsAmount,
-                    plateCapillarsDensity);
+                    plateCapillarsDensity,
+                    Utils.convertDegreesToRadians(5.0f),
+                    1000.0f
+            );
+
+//            return new FlatPlate(
+//                    smoothCylinderFactory,
+//                    new Point3D(plateCenterX, plateCenterY, plateCenterZ),
+//                    plateCapillarsDensity,
+//                    plateSideLength);
         }
 
         if (torusTab.isSelected()) {
@@ -311,9 +322,13 @@ public class MainController {
             float capillarCriticalAngleD = Float.parseFloat(torSlideAngle.getText());
             float capillarCriticalAngleR = Utils.convertDegreesToRadians(capillarCriticalAngleD);
 
-            int capillarsAmount = 320;
             float plateCapillarsDensity = 0.0034f; //for radius = 7
 //          float plateCapillarsDensity = 0.0025f; //for radius < 10 for domains
+
+            float plateSideLength = 300.0f;
+
+//          int capillarsAmount = 320;
+            float plateMaxAngleR = 5.0f;
 
             CapillarFactory smoothTorusFactoryWithRadius = SmoothTorus.getFactory(
                     capillarSmallRadius,
@@ -336,8 +351,9 @@ public class MainController {
             return new TorusPlate(
                     smoothTorusFactoryWithRadius,
                     new Point3D(plateCenterX, plateCenterY, plateCenterZ),
-                    capillarsAmount,
-                    plateCapillarsDensity, 5);
+                    plateCapillarsDensity,
+                    plateSideLength,
+                    plateMaxAngleR);
         }
 
         return null;

@@ -15,14 +15,6 @@ public class Vector3D extends Point3D {
         normalize();
     }
 
-    public Vector3D(final Point3D point3D) {
-        super(point3D);
-        rotationMatrixXYZ = new float[3][3];
-        rotationMatrixX = new float[3][3];
-        rotationMatrixY = new float[3][3];
-        normalize();
-    }
-
     private void normalize() {
         float norm = (float) Math.sqrt(x * x + y * y + z * z);
         try {

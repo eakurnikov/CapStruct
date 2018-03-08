@@ -2,6 +2,8 @@ package com.private_void.utils;
 
 import com.private_void.core.geometry.CoordinateFactory;
 import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.SphericalCoordinateFactory;
+import com.private_void.core.geometry.SphericalPoint;
 
 import java.util.Random;
 
@@ -62,11 +64,11 @@ public class Generator {
             y = v * (float) Math.sqrt(-2.0f * Math.log(s) / s);
             z = u * (float) Math.sqrt(-2.0f * Math.log(s) / s);
 
-            return new Point3D(center.getX(), center.getY() + mean + y * dev, center.getZ() + mean + z * dev);
+            return new Point3D(0.0f, mean + y * dev, mean + z * dev).shift(center);
         };
     }
 
-    public CoordinateFactory getXPlanarCircleUniformDistribution(float radius) {
+    public CoordinateFactory getXFlatCircleUniformDistribution(float radius) {
         return () -> {
             float y;
             float z;
@@ -80,7 +82,7 @@ public class Generator {
         };
     }
 
-    public CoordinateFactory getXPlanarCircleUniformDistribution(final Point3D center, float radius) {
+    public CoordinateFactory getXFlatCircleUniformDistribution(final Point3D center, float radius) {
         return () -> {
             float y;
             float z;
@@ -90,22 +92,63 @@ public class Generator {
                 z = uniformFloat(-radius, radius);
             } while (y * y + z * z > radius * radius);
 
-            return new Point3D(center.getX(), center.getY() + y, center.getZ() + z);
+            return new Point3D(0.0f, y, z).shift(center);
         };
     }
 
-    public CoordinateFactory getXPlanarUniformDistribution(float yRange, float zRange) {
+    public CoordinateFactory getXFlatUniformDistribution(float yRange, float zRange) {
         return () -> new Point3D(
                 0.0f,
                 uniformFloat(-yRange, yRange),
                 uniformFloat(-zRange, zRange));
     }
 
-    public CoordinateFactory getXPlanarUniformDistribution(final Point3D center, float yRange, float zRange) {
+    public CoordinateFactory getXFlatUniformDistribution(final Point3D center, float yRange, float zRange) {
         return () -> new Point3D(
-                center.getX(),
-                uniformFloat(center.getY() - yRange, center.getY() + yRange),
-                uniformFloat(center.getZ() - zRange, center.getZ() + zRange));
+                0.0f,
+                uniformFloat(-yRange, yRange),
+                uniformFloat(-zRange, zRange))
+                .shift(center);
+    }
+
+    public CoordinateFactory getSphericalUniformDistribution(float radius, float thetaRange, float phiRange) {
+        return () -> new SphericalPoint(radius,
+                uniformFloat(-thetaRange, thetaRange),
+                uniformFloat(-phiRange, phiRange))
+                .convertToCartesian();
+    }
+
+    public CoordinateFactory getSphericalUniformDistribution(final Point3D center,
+                                                             float radius, float thetaRange, float phiRange) {
+        return () -> new SphericalPoint(radius,
+                uniformFloat(-thetaRange, thetaRange),
+                uniformFloat(-phiRange, phiRange))
+                .convertToCartesian()
+                .shift(center);
+    }
+
+    public CoordinateFactory getSphericalUniformDistribution(final Point3D center, final SphericalPoint config,
+                                                             float radius, float thetaRange, float phiRange) {
+        return () -> new SphericalPoint(radius,
+                uniformFloat(-thetaRange, thetaRange),
+                uniformFloat(-phiRange, phiRange))
+                .shift(config)
+                .convertToCartesian()
+                .shift(center);
+    }
+
+    public SphericalCoordinateFactory getSphericalUniformDistribution1(float radius, float thetaRange, float phiRange) {
+        return () -> new SphericalPoint(radius,
+                uniformFloat(-thetaRange, thetaRange),
+                uniformFloat(-phiRange, phiRange));
+    }
+
+    public SphericalCoordinateFactory getSphericalUniformDistribution(final SphericalPoint config,
+                                                                      float radius, float thetaRange, float phiRange) {
+        return () -> new SphericalPoint(radius,
+                uniformFloat(-thetaRange, thetaRange),
+                uniformFloat(-phiRange, phiRange))
+                .shift(config);
     }
 
     public CoordinateFactory getVolumeUniformDistribution(float xRange, float yRange, float zRange) {
@@ -115,10 +158,12 @@ public class Generator {
                 uniformFloat(-zRange, zRange));
     }
 
-    public CoordinateFactory getVolumeUniformDistribution(final Point3D center, float xRange, float yRange, float zRange) {
+    public CoordinateFactory getVolumeUniformDistribution(final Point3D center,
+                                                          float xRange, float yRange, float zRange) {
         return () -> new Point3D(
-                uniformFloat(center.getX() - xRange, center.getX() + xRange),
-                uniformFloat(center.getY() - yRange, center.getY() + yRange),
-                uniformFloat(center.getZ() - zRange, center.getZ() + zRange));
+                uniformFloat(-xRange, xRange),
+                uniformFloat(-yRange, yRange),
+                uniformFloat(-zRange, zRange))
+                .shift(center);
     }
 }
