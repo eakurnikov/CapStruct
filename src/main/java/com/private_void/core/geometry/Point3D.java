@@ -21,8 +21,8 @@ public class Point3D {
 
     public SphericalPoint convertToSperical() {
         float radius = (float) Math.sqrt(x * x + y * y + z * z);
-        float theta = (float) Math.atan(Math.sqrt(x * x + y * y) / z);
-        float phi = (float) Math.atan(y / x);
+        float theta = (float) Math.atan(Math.sqrt(x * x + z * z) / y);
+        float phi = (float) Math.atan(z / x);
 
         return new SphericalPoint(radius, theta, phi);
     }

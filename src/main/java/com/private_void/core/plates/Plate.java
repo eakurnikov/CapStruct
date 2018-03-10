@@ -42,7 +42,6 @@ public abstract class Plate implements CapillarSystem {
         boolean isOut;
 
         for (Particle particle : flux.getParticles()) {
-            Vector3D speed = particle.getSpeed();
             isOut = true;
 
 //            for (Capillar capillar : capillars.keySet()) {
@@ -54,27 +53,24 @@ public abstract class Plate implements CapillarSystem {
 //            }
 
             for (Capillar capillar : capillars.keySet()) {
-                float angleOY = capillars.get(capillar).getPhi();
-                float angleOZ = capillars.get(capillar).getTheta();
-
-                Vector3D transformedSpeed = particle.getSpeed()
-                        .getNewByTurningAroundVector(-angleOY, new Vector3D(0.0f, 1.0f, 0.0f))
-                        .getNewByTurningAroundVector(-angleOZ, new Vector3D(0.0f, 0.0f, 1.0f));
-                particle.setSpeed(transformedSpeed);
+                float theta = capillars.get(capillar).getTheta();
+                float phi = capillars.get(capillar).getPhi();
+                particle.getSpeed()
+                        .turnAroundVector(-theta, new Vector3D(0.0f, 0.0f, 1.0f))
+                        .turnAroundVector(-phi, new Vector3D(0.0f, 1.0f, 0.0f));
 
                 if (capillar.willParticleGetInside(particle)) {
                     capillar.interact(particle);
 
-                    Vector3D finalSpeed = particle.getSpeed()
-                            .getNewByTurningAroundVector(angleOY, new Vector3D(0.0f, 1.0f, 0.0f))
-                            .getNewByTurningAroundVector(angleOZ, new Vector3D(0.0f, 0.0f, 1.0f));
-                    particle.setSpeed(finalSpeed);
+                    particle.getSpeed()
+                            .turnAroundVector(theta, new Vector3D(0.0f, 0.0f, 1.0f))
+                            .turnAroundVector(phi, new Vector3D(0.0f, 1.0f, 0.0f));
+
                     isOut = false;
                     break;
                 }
             }
 
-            particle.setSpeed(speed);
             particle.setOut(isOut);
         }
 
