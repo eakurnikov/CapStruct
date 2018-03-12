@@ -23,7 +23,7 @@ public abstract class Plate implements CapillarSystem {
     protected int capillarsAmount;
     protected float capillarsDensity;
     protected float capillarRadius;
-    protected Map<Capillar, SphericalPoint> capillars;
+    protected List<Capillar> capillars;
     protected Detector detector;
 
     public Plate(final CapillarFactory capillarFactory, final Point3D center, float capillarsDensity) {
@@ -32,7 +32,7 @@ public abstract class Plate implements CapillarSystem {
         this.width = capillarFactory.getLength();
         this.capillarsDensity = capillarsDensity;
         this.capillarRadius = capillarFactory.getRadius();
-        this.capillars = new HashMap<>();
+        this.capillars = new ArrayList<>();
     }
 
     @Override
@@ -44,7 +44,7 @@ public abstract class Plate implements CapillarSystem {
         for (Particle particle : flux.getParticles()) {
             isOut = true;
 
-//            for (Capillar capillar : capillars.keySet()) {
+//            for (Capillar capillar : capillars) {
 //                if (capillar.willParticleGetInside(particle)) {
 //                    capillar.interact(particle);
 //                    isOut = false;
@@ -52,9 +52,9 @@ public abstract class Plate implements CapillarSystem {
 //                }
 //            }
 
-            for (Capillar capillar : capillars.keySet()) {
-                float theta = capillars.get(capillar).getTheta();
-                float phi = capillars.get(capillar).getPhi();
+            for (Capillar capillar : capillars) {
+                float theta = capillar.getPosition().getTheta();
+                float phi = capillar.getPosition().getPhi();
                 particle.getSpeed()
                         .turnAroundVector(-theta, new Vector3D(0.0f, 0.0f, 1.0f))
                         .turnAroundVector(-phi, new Vector3D(0.0f, 1.0f, 0.0f));

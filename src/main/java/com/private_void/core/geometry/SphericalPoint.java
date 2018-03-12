@@ -13,8 +13,8 @@ public class SphericalPoint {
 
     public Point3D convertToCartesian() {
         float x = (float) (radius * Math.sin(theta) * Math.cos(phi));
-        float z = (float) (radius * Math.sin(theta) * Math.sin(phi));
         float y = (float) (radius * Math.cos(theta));
+        float z = (float) (radius * Math.sin(theta) * Math.sin(phi));
 
         return new Point3D(x, y, z);
     }

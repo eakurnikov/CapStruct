@@ -21,12 +21,12 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
     private float chargePlanarDensity;
     protected Detector detector;
 
-    public AtomicPlane(final AtomFactory atomFactory, final Point3D frontCoordinate, float period, float chargeNumber,
+    public AtomicPlane(final AtomFactory atomFactory, final Point3D front, float period, float chargeNumber,
                        float size) {
-        super(atomFactory, frontCoordinate, period, chargeNumber);
+        super(atomFactory, front, period, chargeNumber);
         this.size = size;
         this.chargePlanarDensity = 1 / (period * period);
-        this.detector = new Detector(new Point3D(frontCoordinate.getX() + size, frontCoordinate.getY(), frontCoordinate.getZ()), size);
+        this.detector = new Detector(new Point3D(front.getX() + size, front.getY(), front.getZ()), size);
         createAtoms();
     }
 

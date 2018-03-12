@@ -66,13 +66,13 @@ public class CurvedPlate extends Plate {
                 } while (false/*!isCapillarCoordinateValid(capillarsCenters, coordinate)*/);
 
                 capillarsCenters[i] = coordinate;
-                capillars.put(capillarFactory.getNewCapillar(
+                capillars.add(capillarFactory.getNewCapillar(
                         coordinate
                                 .shift(new SphericalPoint(0.0f, PI / 2, PI)) // тета отсчитывается от оси игрек, фи от оси икс, поворачиваю так, чтобы координаты попадали на мою пластину
                                 .convertToCartesian()
                                 .shift(curvRadius, 0.0f, 0.0f)
-                                .shift(center)),
-                        coordinate);
+                                .shift(center),
+                        coordinate));
             }
         }
 

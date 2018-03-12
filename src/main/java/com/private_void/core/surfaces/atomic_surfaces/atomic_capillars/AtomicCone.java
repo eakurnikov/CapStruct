@@ -1,6 +1,7 @@
 package com.private_void.core.surfaces.atomic_surfaces.atomic_capillars;
 
 import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.SphericalPoint;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.AtomFactory;
 import com.private_void.core.particles.ChargedParticle;
@@ -13,12 +14,24 @@ import java.util.ArrayList;
 public class AtomicCone extends AtomicCapillar {
     private float divergentAngleR;
 
-    public AtomicCone(final AtomFactory atomFactory, final Point3D frontCoordinate, float period, float chargeNumber,
+    public AtomicCone(final AtomFactory atomFactory, final Point3D front, float period, float chargeNumber,
                       float radius, float length, float coneCoefficient) throws IllegalArgumentException {
-        super(atomFactory, frontCoordinate, period, chargeNumber, radius);
+        super(atomFactory, front, period, chargeNumber, radius);
         if (coneCoefficient >= 1 || coneCoefficient <= 0) {
             throw new IllegalArgumentException();
         }
+        this.length = length;
+        this.divergentAngleR = Utils.getConeDivergentAngle(radius, length, coneCoefficient);
+    }
+
+    public AtomicCone(final AtomFactory atomFactory, final Point3D front, final SphericalPoint position,
+                      float period, float chargeNumber, float radius, float length, float coneCoefficient)
+            throws IllegalArgumentException {
+        super(atomFactory, front, period, chargeNumber, radius);
+        if (coneCoefficient >= 1 || coneCoefficient <= 0) {
+            throw new IllegalArgumentException();
+        }
+        this.position = position;
         this.length = length;
         this.divergentAngleR = Utils.getConeDivergentAngle(radius, length, coneCoefficient);
     }
@@ -63,8 +76,9 @@ public class AtomicCone extends AtomicCapillar {
         return new CapillarFactory() {
 
             @Override
-            public Capillar getNewCapillar(Point3D coordinate) {
-                return new AtomicCone(atomFactory, coordinate, period, chargeNumber, radius, length, coneCoefficient);
+            public Capillar getNewCapillar(final Point3D coordinate, final SphericalPoint position) {
+                return new AtomicCone(atomFactory, coordinate, position, period, chargeNumber, radius, length,
+                        coneCoefficient);
             }
 
             @Override

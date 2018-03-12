@@ -10,9 +10,9 @@ public abstract class SmoothSurface extends Surface {
     protected float reflectivity;
     protected float criticalAngleR;
 
-    protected SmoothSurface(final Point3D frontCoordinate, float roughnessSize, float roughnessAngleR,
-                            float reflectivity, float criticalAngleR) {
-        super(frontCoordinate);
+    protected SmoothSurface(final Point3D front, float roughnessSize, float roughnessAngleR, float reflectivity,
+                            float criticalAngleR) {
+        super(front);
         this.roughnessSize = roughnessSize;
         this.roughnessAngleR = roughnessAngleR;
         this.reflectivity = reflectivity;

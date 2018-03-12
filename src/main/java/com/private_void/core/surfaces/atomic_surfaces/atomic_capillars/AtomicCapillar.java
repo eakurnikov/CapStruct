@@ -1,18 +1,27 @@
 package com.private_void.core.surfaces.atomic_surfaces.atomic_capillars;
 
 import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.SphericalPoint;
 import com.private_void.core.particles.AtomFactory;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.atomic_surfaces.AtomicSurface;
 
 public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
+    protected SphericalPoint position;
     protected float length;
     protected float radius;
 
-    public AtomicCapillar(final AtomFactory atomFactory, final Point3D frontCoordinate, float period, float chargeNumber,
+    public AtomicCapillar(final AtomFactory atomFactory, final Point3D front, float period, float chargeNumber,
                           float radius) {
-        super(atomFactory, frontCoordinate, period, chargeNumber);
+        super(atomFactory, front, period, chargeNumber);
+        this.radius = radius;
+    }
+
+    public AtomicCapillar(final AtomFactory atomFactory, final Point3D front, final SphericalPoint position,
+                          float period, float chargeNumber, float radius) {
+        super(atomFactory, front, period, chargeNumber);
+        this.position = position;
         this.radius = radius;
     }
 
@@ -37,6 +46,11 @@ public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
         float newZ = (Vz / Vx) * (x0 - x) + z;
 
         return newY * newY + newZ * newZ < radius * radius;
+    }
+
+    @Override
+    public SphericalPoint getPosition() {
+        return position;
     }
 
     protected abstract boolean isPointInside(Point3D point);

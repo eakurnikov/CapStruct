@@ -296,7 +296,7 @@ public class MainController {
                     new Point3D(plateCenterX, plateCenterY, plateCenterZ),
                     plateCapillarsDensity,
                     Utils.convertDegreesToRadians(1.0f),
-                    10000.0f
+                    20000.0f
             );
 
 //            return new FlatPlate(

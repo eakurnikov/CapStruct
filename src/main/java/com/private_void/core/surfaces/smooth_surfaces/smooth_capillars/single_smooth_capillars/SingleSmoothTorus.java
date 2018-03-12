@@ -15,9 +15,9 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
     private float curvRadius;
     private float curvAngleR;
 
-    public SingleSmoothTorus(final Point3D frontCoordinate, float radius, float curvRadius, float curvAngleR,
-                       float roughnessSize, float roughnessAngleR, float reflectivity, float criticalAngleR) {
-        super(frontCoordinate, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+    public SingleSmoothTorus(final Point3D front, float radius, float curvRadius, float curvAngleR, float roughnessSize,
+                             float roughnessAngleR, float reflectivity, float criticalAngleR) {
+        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.curvRadius = curvRadius;
         this.curvAngleR = curvAngleR;
         this.length = Utils.getTorusLength(curvRadius, curvAngleR);

@@ -16,12 +16,12 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
     private float size;
     protected Detector detector;
 
-    public SmoothPlane(final Point3D frontCoordinate, float size, float roughnessSize, float roughnessAngleR,
-                       float reflectivity, float criticalAngleR) {
-        super(frontCoordinate, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+    public SmoothPlane(final Point3D front, float size, float roughnessSize, float roughnessAngleR, float reflectivity,
+                       float criticalAngleR) {
+        super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.size = size;
         this.detector = new Detector(
-                new Point3D(frontCoordinate.getX() + size, frontCoordinate.getY(), frontCoordinate.getZ()),
+                new Point3D(front.getX() + size, front.getY(), front.getZ()),
                 size);
     }
 

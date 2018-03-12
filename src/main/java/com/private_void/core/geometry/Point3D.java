@@ -19,10 +19,10 @@ public class Point3D {
                 (z - point3D.getZ()) * (z - point3D.getZ()) < POINT_AMBIT * POINT_AMBIT;
     }
 
-    public SphericalPoint convertToSperical() {
+    public SphericalPoint convertToSpherical() {
         float radius = (float) Math.sqrt(x * x + y * y + z * z);
-        float theta = (float) Math.atan(Math.sqrt(x * x + z * z) / y);
-        float phi = (float) Math.atan(z / x);
+        float theta = (float) Math.atan2(Math.sqrt(x * x + z * z), y);
+        float phi = (float) Math.atan2(z, x);
 
         return new SphericalPoint(radius, theta, phi);
     }

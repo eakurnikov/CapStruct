@@ -1,6 +1,7 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
 import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.SphericalPoint;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.surfaces.Capillar;
@@ -14,16 +15,36 @@ public class SmoothTorus extends SmoothCapillar {
     private float curvRadius;
     private float curvAngleR;
 
-    public SmoothTorus(final Point3D frontCoordinate, float radius, float curvRadius, float curvAngleR,
-                       float roughnessSize, float roughnessAngleR, float reflectivity, float criticalAngleR) {
-        super(frontCoordinate, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+    public SmoothTorus(final Point3D front, float radius, float curvRadius, float curvAngleR, float roughnessSize,
+                       float roughnessAngleR, float reflectivity, float criticalAngleR) {
+        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.curvRadius = curvRadius;
         this.curvAngleR = curvAngleR;
         this.length = Utils.getTorusLength(curvRadius, curvAngleR);
     }
-    public SmoothTorus(float length, final Point3D frontCoordinate, float radius, float curvAngleR,
+
+    public SmoothTorus(float length, final Point3D front, float radius, float curvAngleR, float roughnessSize,
+                       float roughnessAngleR, float reflectivity, float criticalAngleR) {
+        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        this.curvRadius = Utils.getTorusCurvRadius(length, curvAngleR);
+        this.curvAngleR = curvAngleR;
+        this.length = length;
+    }
+
+    public SmoothTorus(final Point3D front, final SphericalPoint position, float radius, float curvRadius,
+                       float curvAngleR, float roughnessSize, float roughnessAngleR, float reflectivity,
+                       float criticalAngleR) {
+        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        this.position = position;
+        this.curvRadius = curvRadius;
+        this.curvAngleR = curvAngleR;
+        this.length = Utils.getTorusLength(curvRadius, curvAngleR);
+    }
+
+    public SmoothTorus(float length, final Point3D front, final SphericalPoint position, float radius, float curvAngleR,
                        float roughnessSize, float roughnessAngleR, float reflectivity, float criticalAngleR) {
-        super(frontCoordinate, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        this.position = position;
         this.curvRadius = Utils.getTorusCurvRadius(length, curvAngleR);
         this.curvAngleR = curvAngleR;
         this.length = length;
@@ -172,8 +193,8 @@ public class SmoothTorus extends SmoothCapillar {
         return new CapillarFactory() {
 
             @Override
-            public Capillar getNewCapillar(Point3D coordinate) {
-                return new SmoothTorus(coordinate, radius, curvRadius, curvAngleR, roughnessSize, roughnessAngleR,
+            public Capillar getNewCapillar(final Point3D coordinate, final SphericalPoint position) {
+                return new SmoothTorus(coordinate, position, radius, curvRadius, curvAngleR, roughnessSize, roughnessAngleR,
                         reflectivity, criticalAngleR);
             }
 
@@ -194,8 +215,8 @@ public class SmoothTorus extends SmoothCapillar {
         return new CapillarFactory() {
 
             @Override
-            public Capillar getNewCapillar(Point3D coordinate) {
-                return new SmoothTorus(length, coordinate, radius, curvAngleR, roughnessSize, roughnessAngleR,
+            public Capillar getNewCapillar(final Point3D coordinate, final SphericalPoint position) {
+                return new SmoothTorus(length, coordinate, position, radius, curvAngleR, roughnessSize, roughnessAngleR,
                         reflectivity, criticalAngleR);
             }
 

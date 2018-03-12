@@ -1,6 +1,7 @@
 package com.private_void.core.surfaces.atomic_surfaces.atomic_capillars;
 
 import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.SphericalPoint;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.AtomFactory;
 import com.private_void.core.particles.ChargedParticle;
@@ -14,9 +15,18 @@ public class AtomicTorus extends AtomicCapillar {
     private float curvRadius;
     private float curvAngleR;
 
-    public AtomicTorus(final AtomFactory atomFactory, final Point3D frontCoordinate, float period, float chargeNumber,
+    public AtomicTorus(final AtomFactory atomFactory, final Point3D front, float period, float chargeNumber,
                        float radius, float curvRadius, float curvAngleR) {
-        super(atomFactory, frontCoordinate, period, chargeNumber, radius);
+        super(atomFactory, front, period, chargeNumber, radius);
+        this.curvRadius = curvRadius;
+        this.curvAngleR = curvAngleR;
+        this.length = Utils.getTorusLength(curvRadius, curvAngleR);
+    }
+
+    public AtomicTorus(final AtomFactory atomFactory, final Point3D front, final SphericalPoint position, float period,
+                       float chargeNumber, float radius, float curvRadius, float curvAngleR) {
+        super(atomFactory, front, period, chargeNumber, radius);
+        this.position = position;
         this.curvRadius = curvRadius;
         this.curvAngleR = curvAngleR;
         this.length = Utils.getTorusLength(curvRadius, curvAngleR);
@@ -62,8 +72,9 @@ public class AtomicTorus extends AtomicCapillar {
         return new CapillarFactory() {
 
             @Override
-            public Capillar getNewCapillar(Point3D coordinate) {
-                return new AtomicTorus(atomFactory, coordinate, period, chargeNumber, radius, curvRadius, curvAngleR);
+            public Capillar getNewCapillar(final Point3D coordinate, final SphericalPoint position) {
+                return new AtomicTorus(atomFactory, coordinate, position, period, chargeNumber, radius, curvRadius,
+                        curvAngleR);
             }
 
             @Override

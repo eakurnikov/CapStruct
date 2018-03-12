@@ -1,6 +1,7 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
 import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.SphericalPoint;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.surfaces.Capillar;
@@ -12,10 +13,17 @@ import static com.private_void.utils.Generator.generator;
 
 public class SmoothCylinder extends SmoothCapillar {
 
-    public SmoothCylinder(final Point3D frontCoordinate, float radius, float length, float roughnessSize,
-                          float roughnessAngleR, float reflectivity, float criticalAngleR) {
-        super(frontCoordinate, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+    public SmoothCylinder(final Point3D front, float radius, float length, float roughnessSize, float roughnessAngleR,
+                          float reflectivity, float criticalAngleR) {
+        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.length = length;
+    }
+
+    public SmoothCylinder(final Point3D front, final SphericalPoint position, float radius, float length,
+                          float roughnessSize, float roughnessAngleR, float reflectivity, float criticalAngleR) {
+        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        this.length = length;
+        this.position = position;
     }
 
     @Override
@@ -137,8 +145,9 @@ public class SmoothCylinder extends SmoothCapillar {
         return new CapillarFactory() {
 
             @Override
-            public Capillar getNewCapillar(Point3D coordinate) {
-                return new SmoothCylinder(coordinate, radius, length, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+            public Capillar getNewCapillar(final Point3D coordinate, final SphericalPoint position) {
+                return new SmoothCylinder(coordinate, position, radius, length, roughnessSize, roughnessAngleR,
+                        reflectivity, criticalAngleR);
             }
 
             @Override

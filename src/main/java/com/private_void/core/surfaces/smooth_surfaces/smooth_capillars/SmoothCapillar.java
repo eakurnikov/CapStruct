@@ -1,6 +1,7 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
 import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.SphericalPoint;
 import com.private_void.core.geometry.Vector3D;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
@@ -11,12 +12,20 @@ import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
 public abstract  class SmoothCapillar extends SmoothSurface implements Capillar {
+    protected SphericalPoint position;
     protected float length;
     protected float radius;
 
-    protected SmoothCapillar(final Point3D frontCoordinate, float radius, float roughnessSize, float roughnessAngleR,
+    protected SmoothCapillar(final Point3D front, float radius, float roughnessSize, float roughnessAngleR,
                              float reflectivity, float criticalAngleR) {
-        super(frontCoordinate, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        this.radius = radius;
+    }
+
+    protected SmoothCapillar(final Point3D front, final SphericalPoint position, float radius,
+                             float roughnessSize, float roughnessAngleR, float reflectivity, float criticalAngleR) {
+        super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        this.position = position;
         this.radius = radius;
     }
 
@@ -67,6 +76,11 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
 
         return (newY - front.getY()) * (newY - front.getY()) + (newZ - front.getZ()) * (newZ - front.getZ())
                 < radius * radius;
+    }
+
+    @Override
+    public SphericalPoint getPosition() {
+        return position;
     }
 
     protected abstract boolean isPointInside(Point3D point);

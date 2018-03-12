@@ -54,7 +54,7 @@ public class FlatPlate extends Plate {
                 } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
 
                 capillarsCenters[i] = coordinate;
-                capillars.put(capillarFactory.getNewCapillar(coordinate), null);
+                capillars.add(capillarFactory.getNewCapillar(coordinate, null));
             }
         }
 
