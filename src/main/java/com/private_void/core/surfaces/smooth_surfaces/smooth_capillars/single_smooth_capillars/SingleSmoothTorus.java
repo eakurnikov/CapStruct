@@ -1,9 +1,8 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars;
 
 import com.private_void.core.detectors.Detector;
-import com.private_void.core.detectors.RotatedDetector;
-import com.private_void.core.geometry.Point3D;
-import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.geometry.CartesianPoint;
+import com.private_void.core.geometry.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.utils.Utils;
 
@@ -15,7 +14,7 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
     private float curvRadius;
     private float curvAngleR;
 
-    public SingleSmoothTorus(final Point3D front, float radius, float curvRadius, float curvAngleR, float roughnessSize,
+    public SingleSmoothTorus(final CartesianPoint front, float radius, float curvRadius, float curvAngleR, float roughnessSize,
                              float roughnessAngleR, float reflectivity, float criticalAngleR) {
         super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.curvRadius = curvRadius;
@@ -26,12 +25,12 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
     }
 
     @Override
-    protected Vector3D getNormal(final Point3D point) {
+    protected Vector getNormal(final CartesianPoint point) {
         float x = point.getX() - front.getX();
         float y = point.getY() - front.getY();
         float z = point.getZ() - front.getZ() - curvRadius; // + curvRadius сместит влево
 
-        return new Vector3D(
+        return new Vector(
                 (-2 * (x * x + y * y + z * z + curvRadius * curvRadius - radius * radius) * 2 * x
                         + 8 * curvRadius * curvRadius * x),
 
@@ -42,12 +41,12 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
     }
 
     @Override
-    protected Vector3D getAxis(final Point3D point) {
+    protected Vector getAxis(final CartesianPoint point) {
         return normal.getNewByTurningAroundOX(PI / 2).turnAroundOY(getPointsAngle(point));
     }
 
     @Override
-    protected Point3D getHitPoint(final NeutralParticle p) {
+    protected CartesianPoint getHitPoint(final NeutralParticle p) {
         if (p.getSpeed().getX() <= 0.0f) {
             p.setAbsorbed(true);
             return p.getCoordinate();
@@ -140,7 +139,7 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
             }
         }
 
-        Point3D newCoordinate = new Point3D(solution[0], solution[1], solution[2]);
+        CartesianPoint newCoordinate = new CartesianPoint(solution[0], solution[1], solution[2]);
         if ((newCoordinate.isNear(p.getCoordinate()) || newCoordinate.getX() <= p.getCoordinate().getX()) && !p.isRecursiveIterationsLimitReached()) {
             p.recursiveIteration();
             return getHitPoint(p);
@@ -151,7 +150,7 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
     }
 
     @Override
-    protected boolean isPointInside(final Point3D point) {
+    protected boolean isPointInside(final CartesianPoint point) {
 //        float angle = getPointsAngle(point);
 //        return angle >= 0 && angle <= curvAngleR;
 
@@ -159,14 +158,14 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
     }
 
     @Override
-    protected Point3D getDetectorsCoordinate() {
-        return new Point3D(
+    protected CartesianPoint getDetectorsCoordinate() {
+        return new CartesianPoint(
                 (float) (front.getX() + curvRadius * Math.sin(curvAngleR)),
                 front.getY(),
                 (float) (front.getZ() + curvRadius * (1 - Math.cos(curvAngleR))));
     }
 
-    private float getPointsAngle(final Point3D point) {
+    private float getPointsAngle(final CartesianPoint point) {
         float x = point.getX();
         float y = point.getY();
         float z = point.getZ();

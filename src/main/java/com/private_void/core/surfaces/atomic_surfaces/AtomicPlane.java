@@ -2,8 +2,8 @@ package com.private_void.core.surfaces.atomic_surfaces;
 
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.fluxes.Flux;
-import com.private_void.core.geometry.Point3D;
-import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.geometry.CartesianPoint;
+import com.private_void.core.geometry.Vector;
 import com.private_void.core.particles.AtomFactory;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.particles.Particle;
@@ -21,19 +21,19 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
     private float chargePlanarDensity;
     protected Detector detector;
 
-    public AtomicPlane(final AtomFactory atomFactory, final Point3D front, float period, float chargeNumber,
+    public AtomicPlane(final AtomFactory atomFactory, final CartesianPoint front, float period, float chargeNumber,
                        float size) {
         super(atomFactory, front, period, chargeNumber);
         this.size = size;
         this.chargePlanarDensity = 1 / (period * period);
-        this.detector = new Detector(new Point3D(front.getX() + size, front.getY(), front.getZ()), size);
+        this.detector = new Detector(new CartesianPoint(front.getX() + size, front.getY(), front.getZ()), size);
         createAtoms();
     }
 
     @Override
     public void interact(Flux flux) {
         ChargedParticle p;
-        Point3D newCoordinate;
+        CartesianPoint newCoordinate;
         float angleWithSurface;
         Iterator<? extends Particle> iterator = flux.getParticles().iterator();
 
@@ -64,13 +64,13 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
     }
 
     @Override
-    protected Vector3D getNormal(final Point3D point) {
-        return new Vector3D(0.0f, 1.0f, 0.0f);
+    protected Vector getNormal(final CartesianPoint point) {
+        return new Vector(0.0f, 1.0f, 0.0f);
     }
 
     @Override
-    protected Vector3D getAxis(final Point3D point) {
-        return new Vector3D(0.0f, 0.0f, 1.0f);
+    protected Vector getAxis(final CartesianPoint point) {
+        return new Vector(0.0f, 0.0f, 1.0f);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
 
         while (x <= front.getX() + size) {
             while (z <= front.getZ() + size / 2) {
-                atoms.add(atomFactory.getNewAtom(new Point3D(x, y, z), chargeNumber));
+                atoms.add(atomFactory.getNewAtom(new CartesianPoint(x, y, z), chargeNumber));
                 z += period;
             }
             x += period;
@@ -109,7 +109,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
     }
 
     @Override
-    protected Vector3D getNewSpeed(final ChargedParticle particle) {
+    protected Vector getNewSpeed(final ChargedParticle particle) {
         float y = particle.getCoordinate().getY() - front.getY();
         float C2 = 3.0f;
         float timeInterval = 1.0f;
@@ -118,12 +118,12 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
                 * chargePlanarDensity * (float) (1.0f - y / Math.sqrt((y / shieldingDistance) * (y / shieldingDistance) + C2));
         float dVy = (Fy / particle.getMass()) * timeInterval;
 
-        return new Vector3D(particle.getSpeed().getX(), particle.getSpeed().getY() + 0.009f, particle.getSpeed().getZ());
-//        return new Vector3D(particle.getSpeed().getX(), particle.getSpeed().getY() + dVy, particle.getSpeed().getZ());
+        return new Vector(particle.getSpeed().getX(), particle.getSpeed().getY() + 0.009f, particle.getSpeed().getZ());
+//        return new Vector(particle.getSpeed().getX(), particle.getSpeed().getY() + dVy, particle.getSpeed().getZ());
     }
 
     @Override
-    protected Point3D getNewCoordinate(final ChargedParticle p) {
+    protected CartesianPoint getNewCoordinate(final ChargedParticle p) {
         float x = p.getCoordinate().getX();
         float y = p.getCoordinate().getY();
         float z = p.getCoordinate().getZ();
@@ -132,7 +132,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
         float Vy = p.getSpeed().getY();
         float Vz = p.getSpeed().getZ();
 
-        return new Point3D(x + Vx, y + Vy, z + Vz);
+        return new CartesianPoint(x + Vx, y + Vy, z + Vz);
     }
 
 //    @Override

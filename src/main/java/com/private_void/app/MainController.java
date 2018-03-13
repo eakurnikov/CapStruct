@@ -5,9 +5,9 @@ import com.private_void.core.detectors.RotatedDetector;
 import com.private_void.core.fluxes.DivergentFlux;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.fluxes.ParallelFlux;
+import com.private_void.core.geometry.CartesianPoint;
 import com.private_void.core.geometry.CoordinateFactory;
-import com.private_void.core.geometry.Point3D;
-import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.geometry.Vector;
 import com.private_void.core.particles.*;
 import com.private_void.core.plates.CurvedPlate;
 import com.private_void.core.plates.FlatPlate;
@@ -23,7 +23,6 @@ import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_sm
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothTorus;
 import com.private_void.utils.Utils;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
@@ -167,21 +166,11 @@ public class MainController {
         planeSize.setText("50");
 
         clearChartItem = new MenuItem("Clear all");
-        clearChartItem.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                chart.getData().clear();
-            }
-        });
-
+        clearChartItem.setOnAction((ActionEvent) -> chart.getData().clear());
         menu = new ContextMenu(clearChartItem);
-
-        chart.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getButton().equals(MouseButton.SECONDARY)) {
-                    menu.show(chart.getScene().getWindow(), event.getScreenX(), event.getScreenY());
-                }
+        chart.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.SECONDARY)) {
+                menu.show(chart.getScene().getWindow(), event.getScreenX(), event.getScreenY());
             }
         });
     }
@@ -229,8 +218,8 @@ public class MainController {
             return new ParallelFlux(
                     neutralParticleFactory,
                     circleUniformDistribution,
-                    new Point3D(x, y, z),
-                    new Vector3D(axisX, axisY, axisZ),
+                    new CartesianPoint(x, y, z),
+                    new Vector(axisX, axisY, axisZ),
                     layersAmount,
                     particlesPerLayerAmount,
                     layerDistance,
@@ -254,8 +243,8 @@ public class MainController {
             return new DivergentFlux(
                     neutralParticleFactory,
                     gaussDistribution,
-                    new Point3D(x, y, z),
-                    new Vector3D(axisX, axisY, axisZ),
+                    new CartesianPoint(x, y, z),
+                    new Vector(axisX, axisY, axisZ),
                     totalParticlesAmount,
                     minIntensity);
         }
@@ -293,15 +282,14 @@ public class MainController {
 
             return new CurvedPlate(
                     smoothCylinderFactory,
-                    new Point3D(plateCenterX, plateCenterY, plateCenterZ),
+                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
                     plateCapillarsDensity,
                     Utils.convertDegreesToRadians(1.0f),
-                    20000.0f
-            );
+                    20000.0f);
 
 //            return new FlatPlate(
 //                    smoothCylinderFactory,
-//                    new Point3D(plateCenterX, plateCenterY, plateCenterZ),
+//                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
 //                    plateCapillarsDensity,
 //                    plateSideLength);
         }
@@ -350,7 +338,7 @@ public class MainController {
 
             return new TorusPlate(
                     smoothTorusFactoryWithRadius,
-                    new Point3D(plateCenterX, plateCenterY, plateCenterZ),
+                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
                     plateCapillarsDensity,
                     plateSideLength,
                     plateMaxAngleR);
@@ -376,7 +364,7 @@ public class MainController {
             float criticalAngleR = Utils.convertDegreesToRadians(criticalAngleD);
 
             return new SingleSmoothCylinder(
-                    new Point3D(frontX, frontY, frontZ),
+                    new CartesianPoint(frontX, frontY, frontZ),
                     radius,
                     length,
                     roughnessSize,
@@ -402,7 +390,7 @@ public class MainController {
             float criticalAngleR = Utils.convertDegreesToRadians(criticalAngleD);
 
             return new SingleSmoothTorus(
-                    new Point3D(frontX, frontY, frontZ),
+                    new CartesianPoint(frontX, frontY, frontZ),
                     smallRadius,
                     bigRadius,
                     curvAngleR,
@@ -429,7 +417,7 @@ public class MainController {
 
             try {
                 return new SingleSmoothCone(
-                        new Point3D(frontX, frontY, frontZ),
+                        new CartesianPoint(frontX, frontY, frontZ),
                         radius,
                         length,
                         coneCoefficient,
@@ -442,7 +430,7 @@ public class MainController {
                 e.printStackTrace();
 
                 return new SingleSmoothCone(
-                        new Point3D(frontX, frontY, frontZ),
+                        new CartesianPoint(frontX, frontY, frontZ),
                         radius,
                         length,
                         CONE_COEFFICIENT,
@@ -460,7 +448,7 @@ public class MainController {
 //            float size = Float.parseFloat(planeSize.getText());
 //
 //            return new SmoothPlane(
-//                    new Point3D(frontX, frontY, frontZ),
+//                    new CartesianPoint(frontX, frontY, frontZ),
 //                    size,
 //                    0.2f,
 //                    5f,
@@ -479,7 +467,7 @@ public class MainController {
 //            float chargeNumber = Float.parseFloat(planeChargeNum.getText());
 //            return new AtomicPlane(
 //                    atomFactory,
-//                    new Point3D(frontX, frontY, frontZ),
+//                    new CartesianPoint(frontX, frontY, frontZ),
 //                    period,
 //                    chargeNumber,
 //                    size);
@@ -494,7 +482,7 @@ public class MainController {
         if (detector instanceof RotatedDetector) {
             float angle = -((RotatedDetector) detector).getAngle();
             for (Particle p : flux.getParticles()) {
-                Point3D rotatedCoordinate = p.getProjection(angle);
+                CartesianPoint rotatedCoordinate = p.getProjection(angle);
                 series.getData().add(new XYChart.Data(detector.getCenter().getZ() + rotatedCoordinate.getZ(), rotatedCoordinate.getY()));
             }
         } else {

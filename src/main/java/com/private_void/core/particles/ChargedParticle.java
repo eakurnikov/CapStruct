@@ -1,14 +1,14 @@
 package com.private_void.core.particles;
 
-import com.private_void.core.geometry.Point3D;
-import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.geometry.CartesianPoint;
+import com.private_void.core.geometry.Vector;
 
 public class ChargedParticle extends Particle {
     private float chargeNumber;
     private float mass;
     private float energy;
 
-    private ChargedParticle(final Point3D coordinate, final Vector3D speed, float chargeNumber, float mass, float energy) {
+    private ChargedParticle(final CartesianPoint coordinate, final Vector speed, float chargeNumber, float mass, float energy) {
         super(coordinate, speed);
         this.chargeNumber = chargeNumber;
         this.mass = mass;
@@ -16,7 +16,7 @@ public class ChargedParticle extends Particle {
     }
 
     public static ParticleFactory getFactory(float chargeNumber, float mass, float energy) {
-        return (final Point3D coordinate, final Vector3D speed) ->
+        return (final CartesianPoint coordinate, final Vector speed) ->
                 new ChargedParticle(coordinate, speed, chargeNumber, mass, energy);
     }
 

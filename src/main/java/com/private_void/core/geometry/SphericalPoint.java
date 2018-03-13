@@ -1,6 +1,7 @@
 package com.private_void.core.geometry;
 
-public class SphericalPoint {
+//todo ограничения на углы нужно навесить, проверку делать при изменении
+public class SphericalPoint implements Point3D {
     private float radius;
     private float theta;
     private float phi;
@@ -11,12 +12,12 @@ public class SphericalPoint {
         this.phi = phi;
     }
 
-    public Point3D convertToCartesian() {
+    public CartesianPoint convertToCartesian() {
         float x = (float) (radius * Math.sin(theta) * Math.cos(phi));
         float y = (float) (radius * Math.cos(theta));
         float z = (float) (radius * Math.sin(theta) * Math.sin(phi));
 
-        return new Point3D(x, y, z);
+        return new CartesianPoint(x, y, z);
     }
 
     public SphericalPoint shift(float radius, float theta, float phi) {
@@ -57,5 +58,20 @@ public class SphericalPoint {
 
     public void setPhi(float phi) {
         this.phi = phi;
+    }
+
+    @Override
+    public float getQ1() {
+        return radius;
+    }
+
+    @Override
+    public float getQ2() {
+        return theta;
+    }
+
+    @Override
+    public float getQ3() {
+        return phi;
     }
 }

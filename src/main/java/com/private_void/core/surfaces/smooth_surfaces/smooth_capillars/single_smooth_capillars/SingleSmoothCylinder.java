@@ -1,8 +1,8 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars;
 
 import com.private_void.core.detectors.Detector;
-import com.private_void.core.geometry.Point3D;
-import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.geometry.CartesianPoint;
+import com.private_void.core.geometry.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.utils.Utils;
 
@@ -12,7 +12,7 @@ import static com.private_void.utils.Generator.generator;
 
 public class SingleSmoothCylinder extends SingleSmoothCapillar {
 
-    public SingleSmoothCylinder(final Point3D front, float radius, float length, float roughnessSize,
+    public SingleSmoothCylinder(final CartesianPoint front, float radius, float length, float roughnessSize,
                                 float roughnessAngleR, float reflectivity, float criticalAngleR) {
         super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.length = length;
@@ -20,17 +20,17 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
     }
 
     @Override
-    protected Vector3D getNormal(final Point3D point) {
-        return new Vector3D(0.0f, -2 * (point.getY() - front.getY()), -2 * (point.getZ() - front.getZ()));
+    protected Vector getNormal(final CartesianPoint point) {
+        return new Vector(0.0f, -2 * (point.getY() - front.getY()), -2 * (point.getZ() - front.getZ()));
     }
 
     @Override
-    protected Vector3D getAxis(final Point3D point) {
+    protected Vector getAxis(final CartesianPoint point) {
         return normal.getNewByTurningAroundOX(PI / 2);
     }
 
     @Override
-    protected Point3D getHitPoint(final NeutralParticle p) {
+    protected CartesianPoint getHitPoint(final NeutralParticle p) {
         if (p.getSpeed().getX() <= 0.0f) {
             p.setAbsorbed(true);
             return p.getCoordinate();
@@ -118,7 +118,7 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
             }
         }
 
-//        Point3D newCoordinate = new Point3D(solution[0], solution[1], solution[2]);
+//        CartesianPoint newCoordinate = new CartesianPoint(solution[0], solution[1], solution[2]);
 //        if (newCoordinate.isNear(p.getCoordinate())) {
 //            if (p.isRecursiveIterationsLimitReached()) {
 //                p.setAbsorbed(true);
@@ -132,7 +132,7 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
 //            return newCoordinate;
 //        }
 
-        Point3D newCoordinate = new Point3D(solution[0], solution[1], solution[2]);
+        CartesianPoint newCoordinate = new CartesianPoint(solution[0], solution[1], solution[2]);
         if (newCoordinate.isNear(p.getCoordinate()) && !p.isRecursiveIterationsLimitReached()) {
             p.recursiveIteration();
             return getHitPoint(p);
@@ -143,12 +143,12 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
     }
 
     @Override
-    protected boolean isPointInside(final Point3D point) {
+    protected boolean isPointInside(final CartesianPoint point) {
         return point.getX() < front.getX() + length;
     }
 
     @Override
-    protected Point3D getDetectorsCoordinate() {
-        return new Point3D(front.getX() + length, front.getY(), front.getZ());
+    protected CartesianPoint getDetectorsCoordinate() {
+        return new CartesianPoint(front.getX() + length, front.getY(), front.getZ());
     }
 }

@@ -1,8 +1,8 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars;
 
 import com.private_void.core.detectors.Detector;
-import com.private_void.core.geometry.Point3D;
-import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.geometry.CartesianPoint;
+import com.private_void.core.geometry.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.utils.Utils;
 
@@ -13,7 +13,7 @@ import static com.private_void.utils.Generator.generator;
 public class SingleSmoothCone extends SingleSmoothCapillar {
     private float divergentAngleR;
 
-    public SingleSmoothCone(final Point3D front, float radius, int divergentAngleR, float coneCoefficient,
+    public SingleSmoothCone(final CartesianPoint front, float radius, int divergentAngleR, float coneCoefficient,
                             float roughnessSize, float roughnessAngleR, float reflectivity, float criticalAngleR)
             throws IllegalArgumentException {
 
@@ -26,7 +26,7 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
         this.detector = new Detector(getDetectorsCoordinate(), 2 * radius);
     }
 
-    public SingleSmoothCone(final Point3D front, float radius, float length, float coneCoefficient,
+    public SingleSmoothCone(final CartesianPoint front, float radius, float length, float coneCoefficient,
                             float roughnessSize, float roughnessAngleR, float reflectivity, float criticalAngleR)
             throws IllegalArgumentException {
 
@@ -40,8 +40,8 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
     }
 
     @Override
-    protected Vector3D getNormal(final Point3D point) {
-        return new Vector3D(-1.0f,
+    protected Vector getNormal(final CartesianPoint point) {
+        return new Vector(-1.0f,
                 (float) (-(point.getY() - front.getY()) * (1.0f / Math.tan(divergentAngleR))
                         / (Math.sqrt((point.getY() - front.getY()) * (point.getY() - front.getY())
                         + (point.getZ() - front.getZ()) * (point.getZ() - front.getZ())))),
@@ -52,12 +52,12 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
     }
 
     @Override
-    protected Vector3D getAxis(final Point3D point) {
+    protected Vector getAxis(final CartesianPoint point) {
         return normal.getNewByTurningAroundOX(PI / 2);
     }
 
     @Override
-    protected Point3D getHitPoint(final NeutralParticle p) {
+    protected CartesianPoint getHitPoint(final NeutralParticle p) {
         if (p.getSpeed().getX() <= 0.0f) {
             p.setAbsorbed(true);
             return p.getCoordinate();
@@ -148,7 +148,7 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
             }
         }
 
-        Point3D newCoordinate = new Point3D(solution[0], solution[1], solution[2]);
+        CartesianPoint newCoordinate = new CartesianPoint(solution[0], solution[1], solution[2]);
         if (newCoordinate.isNear(p.getCoordinate()) && !p.isRecursiveIterationsLimitReached()) {
             p.recursiveIteration();
             return getHitPoint(p);
@@ -159,12 +159,12 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
     }
 
     @Override
-    protected boolean isPointInside(final Point3D point) {
+    protected boolean isPointInside(final CartesianPoint point) {
         return point.getX() < front.getX() + length;
     }
 
     @Override
-    protected Point3D getDetectorsCoordinate() {
-        return new Point3D(front.getX() + length, front.getY(), front.getZ());
+    protected CartesianPoint getDetectorsCoordinate() {
+        return new CartesianPoint(front.getX() + length, front.getY(), front.getZ());
     }
 }

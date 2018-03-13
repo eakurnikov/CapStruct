@@ -1,9 +1,10 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
-import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.CartesianPoint;
 import com.private_void.core.geometry.SphericalPoint;
-import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.geometry.Vector;
 import com.private_void.core.particles.NeutralParticle;
+import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarFactory;
 import com.private_void.utils.Utils;
@@ -13,13 +14,13 @@ import static com.private_void.utils.Generator.generator;
 
 public class SmoothCylinder extends SmoothCapillar {
 
-    public SmoothCylinder(final Point3D front, float radius, float length, float roughnessSize, float roughnessAngleR,
+    public SmoothCylinder(final CartesianPoint front, float radius, float length, float roughnessSize, float roughnessAngleR,
                           float reflectivity, float criticalAngleR) {
         super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.length = length;
     }
 
-    public SmoothCylinder(final Point3D front, final SphericalPoint position, float radius, float length,
+    public SmoothCylinder(final CartesianPoint front, final SphericalPoint position, float radius, float length,
                           float roughnessSize, float roughnessAngleR, float reflectivity, float criticalAngleR) {
         super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.length = length;
@@ -27,17 +28,17 @@ public class SmoothCylinder extends SmoothCapillar {
     }
 
     @Override
-    protected Vector3D getNormal(final Point3D point) {
-        return new Vector3D(0.0f, -2 * (point.getY() - front.getY()), -2 * (point.getZ() - front.getZ()));
+    protected Vector getNormal(final CartesianPoint point) {
+        return new Vector(0.0f, -2 * (point.getY() - front.getY()), -2 * (point.getZ() - front.getZ()));
     }
 
     @Override
-    protected Vector3D getAxis(final Point3D point) {
+    protected Vector getAxis(final CartesianPoint point) {
         return normal.getNewByTurningAroundOX(PI / 2);
     }
 
     @Override
-    protected Point3D getHitPoint(final NeutralParticle p) {
+    protected CartesianPoint getHitPoint(final NeutralParticle p) {
         if (p.getSpeed().getX() <= 0.0f) {
             p.setAbsorbed(true);
             return p.getCoordinate();
@@ -125,7 +126,7 @@ public class SmoothCylinder extends SmoothCapillar {
             }
         }
 
-        Point3D newCoordinate = new Point3D(solution[0], solution[1], solution[2]);
+        CartesianPoint newCoordinate = new CartesianPoint(solution[0], solution[1], solution[2]);
         if (newCoordinate.isNear(p.getCoordinate()) && !p.isRecursiveIterationsLimitReached()) {
             p.recursiveIteration();
             return getHitPoint(p);
@@ -136,8 +137,29 @@ public class SmoothCylinder extends SmoothCapillar {
     }
 
     @Override
-    protected boolean isPointInside(final Point3D point) {
+    protected boolean isPointInside(final CartesianPoint point) {
         return point.getX() < front.getX() + length;
+    }
+
+    @Override
+    protected void transformToReferenceFrame(Particle particle, ReferenceFrame frame) {
+        if (position == null) {
+            return;
+        }
+
+        float directionCoefficient = -1.0f;
+        if (frame.equals(ReferenceFrame.GLOBAL)) {
+            directionCoefficient = 1.0f;
+        }
+
+        particle.getCoordinate()
+                .shift(0.0f,
+                        (float) Math.sin(-directionCoefficient * position.getTheta()),
+                        (float) Math.sin(-directionCoefficient * position.getPhi()));
+
+        particle.getSpeed()
+                .turnAroundVector(directionCoefficient * position.getTheta(), new Vector(0.0f, 0.0f, 1.0f))
+                .turnAroundVector(directionCoefficient * position.getPhi(), new Vector(0.0f, 1.0f, 0.0f));
     }
 
     public static CapillarFactory getFactory(float radius, float length, float roughnessSize, float roughnessAngleR,
@@ -145,7 +167,7 @@ public class SmoothCylinder extends SmoothCapillar {
         return new CapillarFactory() {
 
             @Override
-            public Capillar getNewCapillar(final Point3D coordinate, final SphericalPoint position) {
+            public Capillar getNewCapillar(final CartesianPoint coordinate, final SphericalPoint position) {
                 return new SmoothCylinder(coordinate, position, radius, length, roughnessSize, roughnessAngleR,
                         reflectivity, criticalAngleR);
             }

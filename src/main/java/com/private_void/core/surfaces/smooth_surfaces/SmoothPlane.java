@@ -2,8 +2,8 @@ package com.private_void.core.surfaces.smooth_surfaces;
 
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.fluxes.Flux;
-import com.private_void.core.geometry.Point3D;
-import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.geometry.CartesianPoint;
+import com.private_void.core.geometry.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.CapillarSystem;
@@ -16,19 +16,19 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
     private float size;
     protected Detector detector;
 
-    public SmoothPlane(final Point3D front, float size, float roughnessSize, float roughnessAngleR, float reflectivity,
+    public SmoothPlane(final CartesianPoint front, float size, float roughnessSize, float roughnessAngleR, float reflectivity,
                        float criticalAngleR) {
         super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.size = size;
         this.detector = new Detector(
-                new Point3D(front.getX() + size, front.getY(), front.getZ()),
+                new CartesianPoint(front.getX() + size, front.getY(), front.getZ()),
                 size);
     }
 
     @Override
     public void interact(Flux flux) {
         NeutralParticle p;
-        Point3D hitPoint;
+        CartesianPoint hitPoint;
         float angleWithSurface;
         Iterator<? extends Particle> iterator = flux.getParticles().iterator();
 
@@ -65,17 +65,17 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
     }
 
     @Override
-    protected Vector3D getNormal(final Point3D point) {
-        return new Vector3D(0.0f, 1.0f, 0.0f);
+    protected Vector getNormal(final CartesianPoint point) {
+        return new Vector(0.0f, 1.0f, 0.0f);
     }
 
     @Override
-    protected Vector3D getAxis(final Point3D point) {
-        return new Vector3D(0.0f, 0.0f, 1.0f);
+    protected Vector getAxis(final CartesianPoint point) {
+        return new Vector(0.0f, 0.0f, 1.0f);
     }
 
     @Override
-    protected Point3D getHitPoint(final NeutralParticle p) {
+    protected CartesianPoint getHitPoint(final NeutralParticle p) {
         float x = p.getCoordinate().getX();
         float y = p.getCoordinate().getY();
         float z = p.getCoordinate().getZ();
@@ -84,13 +84,13 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
         float Vy = p.getSpeed().getY();
         float Vz = p.getSpeed().getZ();
 
-        return new Point3D(
+        return new CartesianPoint(
                 (Vx / Vy) * (front.getY() - y) + x,
                 front.getY(),
                 (Vz / Vy) * (front.getY() - y) + z);
     }
 
-    private boolean doesPointBelongToPlane(final Point3D point) {
+    private boolean doesPointBelongToPlane(final CartesianPoint point) {
         float x = point.getX();
         float z = point.getZ();
 

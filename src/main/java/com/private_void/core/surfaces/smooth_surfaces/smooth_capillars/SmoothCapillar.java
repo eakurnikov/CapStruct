@@ -1,8 +1,8 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
-import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.CartesianPoint;
 import com.private_void.core.geometry.SphericalPoint;
-import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.geometry.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
@@ -16,13 +16,13 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
     protected float length;
     protected float radius;
 
-    protected SmoothCapillar(final Point3D front, float radius, float roughnessSize, float roughnessAngleR,
+    protected SmoothCapillar(final CartesianPoint front, float radius, float roughnessSize, float roughnessAngleR,
                              float reflectivity, float criticalAngleR) {
         super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.radius = radius;
     }
 
-    protected SmoothCapillar(final Point3D front, final SphericalPoint position, float radius,
+    protected SmoothCapillar(final CartesianPoint front, final SphericalPoint position, float radius,
                              float roughnessSize, float roughnessAngleR, float reflectivity, float criticalAngleR) {
         super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.position = position;
@@ -31,12 +31,14 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
 
     @Override
     public void interact(Particle particle) {
+        transformToReferenceFrame(particle, ReferenceFrame.INNER);
+
         try {
             NeutralParticle p = (NeutralParticle) particle;
-            Point3D newCoordinate = getHitPoint(p);
+            CartesianPoint newCoordinate = getHitPoint(p);
 
             while (!p.isAbsorbed() && isPointInside(newCoordinate)) {
-                axis = new Vector3D(1.0f, 0.0f, 0.0f)
+                axis = new Vector(1.0f, 0.0f, 0.0f)
                         .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
                 normal = getNormal(newCoordinate)
                         .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
@@ -57,6 +59,8 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
         } catch (ClassCastException e) {
             e.printStackTrace();
         }
+
+        transformToReferenceFrame(particle, ReferenceFrame.GLOBAL);
     }
 
     @Override
@@ -74,8 +78,15 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
         float newY = (Vy / Vx) * (x0 - x) + y;
         float newZ = (Vz / Vx) * (x0 - x) + z;
 
-        return (newY - front.getY()) * (newY - front.getY()) + (newZ - front.getZ()) * (newZ - front.getZ())
-                < radius * radius;
+        // Решение только для параллельного пучка. Если частицы падают под углом, то нужно все таки переходить в локальную систему отсчета
+        float R;
+        if (position != null) {
+            R = radius * (float) Math.cos(position.getTheta()) * (float) Math.cos(position.getPhi());
+        } else {
+            R = radius;
+        }
+
+        return (newY - front.getY()) * (newY - front.getY()) + (newZ - front.getZ()) * (newZ - front.getZ()) < R * R;
     }
 
     @Override
@@ -83,5 +94,11 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
         return position;
     }
 
-    protected abstract boolean isPointInside(Point3D point);
+    protected abstract boolean isPointInside(CartesianPoint point);
+
+    protected abstract void transformToReferenceFrame(Particle particle, ReferenceFrame frame);
+
+    protected enum ReferenceFrame {
+        INNER, GLOBAL
+    }
 }

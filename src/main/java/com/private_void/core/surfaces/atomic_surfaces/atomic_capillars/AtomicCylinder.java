@@ -1,8 +1,8 @@
 package com.private_void.core.surfaces.atomic_surfaces.atomic_capillars;
 
-import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.CartesianPoint;
 import com.private_void.core.geometry.SphericalPoint;
-import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.geometry.Vector;
 import com.private_void.core.particles.AtomFactory;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.surfaces.Capillar;
@@ -13,13 +13,13 @@ import java.util.ArrayList;
 public class AtomicCylinder extends AtomicCapillar {
     private float length;
 
-    public AtomicCylinder(final AtomFactory atomFactory, final Point3D front, float period, float chargeNumber,
+    public AtomicCylinder(final AtomFactory atomFactory, final CartesianPoint front, float period, float chargeNumber,
                           float radius, float length) {
         super(atomFactory, front, period, chargeNumber, radius);
         this.length = length;
     }
 
-    public AtomicCylinder(final AtomFactory atomFactory, final Point3D front, final SphericalPoint position,
+    public AtomicCylinder(final AtomFactory atomFactory, final CartesianPoint front, final SphericalPoint position,
                           float period, float chargeNumber, float radius, float length) {
         super(atomFactory, front, period, chargeNumber, radius);
         this.position = position;
@@ -27,12 +27,12 @@ public class AtomicCylinder extends AtomicCapillar {
     }
 
     @Override
-    protected Vector3D getNormal(final Point3D point) {
+    protected Vector getNormal(final CartesianPoint point) {
         return null;
     }
 
     @Override
-    protected Vector3D getAxis(final Point3D point) {
+    protected Vector getAxis(final CartesianPoint point) {
         return null;
     }
 
@@ -56,17 +56,17 @@ public class AtomicCylinder extends AtomicCapillar {
     }
 
     @Override
-    protected Vector3D getNewSpeed(final ChargedParticle particle) {
+    protected Vector getNewSpeed(final ChargedParticle particle) {
         return null;
     }
 
     @Override
-    protected Point3D getNewCoordinate(final ChargedParticle p) {
+    protected CartesianPoint getNewCoordinate(final ChargedParticle p) {
         return null;
     }
 
     @Override
-    protected boolean isPointInside(Point3D point) {
+    protected boolean isPointInside(CartesianPoint point) {
         return false;
     }
 
@@ -75,7 +75,7 @@ public class AtomicCylinder extends AtomicCapillar {
         return new CapillarFactory() {
 
             @Override
-            public Capillar getNewCapillar(final Point3D coordinate, final SphericalPoint position) {
+            public Capillar getNewCapillar(final CartesianPoint coordinate, final SphericalPoint position) {
                 return new AtomicCylinder(atomFactory, coordinate, position, period, chargeNumber, radius, length);
             }
 

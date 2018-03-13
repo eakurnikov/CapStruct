@@ -1,7 +1,7 @@
 package com.private_void.core.fluxes;
 
-import com.private_void.core.geometry.Point3D;
-import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.geometry.CartesianPoint;
+import com.private_void.core.geometry.Vector;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.particles.ParticleFactory;
 import com.private_void.core.geometry.CoordinateFactory;
@@ -11,14 +11,14 @@ import java.util.List;
 public abstract class Flux {
     protected ParticleFactory particleFactory;
     protected CoordinateFactory coordinateFactory;
-    protected Point3D fluxCoordinate;
-    protected Vector3D fluxAxis;
+    protected CartesianPoint fluxCoordinate;
+    protected Vector fluxAxis;
     protected int particlesAmount;
     protected float minIntensity;
     protected List<? extends Particle> particles;
 
     protected Flux(final ParticleFactory particleFactory, final CoordinateFactory coordinateFactory,
-                   final Point3D fluxCoordinate, final Vector3D fluxAxis,
+                   final CartesianPoint fluxCoordinate, final Vector fluxAxis,
                    int particlesAmount, float minIntensity) {
         this.particleFactory = particleFactory;
         this.coordinateFactory = coordinateFactory;

@@ -2,12 +2,12 @@ package com.private_void.core.geometry;
 
 // TODO: Положительным углам при этом соответствует вращение вектора против часовой стрелки в правой системе координат, и по часовой стрелке в левой системе координат, если смотреть против направления соответствующей оси
 
-public class Vector3D extends Point3D {
+public class Vector extends CartesianPoint {
     private float[][] rotationMatrixXYZ;
     private float[][] rotationMatrixX;
     private float[][] rotationMatrixY;
 
-    public Vector3D(float x, float y, float z) {
+    public Vector(float x, float y, float z) {
         super(x, y, z);
         rotationMatrixXYZ = new float[3][3];
         rotationMatrixX = new float[3][3];
@@ -26,7 +26,7 @@ public class Vector3D extends Point3D {
         }
     }
 
-    public Vector3D inverse() {
+    public Vector inverse() {
         super.setX(-x);
         super.setY(-y);
         super.setZ(-z);
@@ -34,7 +34,7 @@ public class Vector3D extends Point3D {
         return this;
     }
 
-    public Vector3D turnAroundOX(float angle) {
+    public Vector turnAroundOX(float angle) {
         float[] temp = {0.0f, 0.0f, 0.0f};
         setRotationMatrixX(angle);
 
@@ -50,7 +50,7 @@ public class Vector3D extends Point3D {
         return this;
     }
 
-    public Vector3D turnAroundOY(float angle) {
+    public Vector turnAroundOY(float angle) {
         float[] temp = {0.0f, 0.0f, 0.0f};
         setRotationMatrixY(angle);
 
@@ -66,7 +66,7 @@ public class Vector3D extends Point3D {
         return this;
     }
 
-    public Vector3D turnAroundVector(float angle, final Vector3D axis) {
+    public Vector turnAroundVector(float angle, final Vector axis) {
         float[] temp = {0.0f, 0.0f, 0.0f};
         setRotationMatrixXYZ(angle, axis);
 
@@ -82,7 +82,7 @@ public class Vector3D extends Point3D {
         return this;
     }
 
-    public Vector3D getNewByTurningAroundOX(float angle) {
+    public Vector getNewByTurningAroundOX(float angle) {
         float[] temp = {0.0f, 0.0f, 0.0f};
         setRotationMatrixX(angle);
 
@@ -90,12 +90,12 @@ public class Vector3D extends Point3D {
             temp[i] = rotationMatrixX[0][i] * x + rotationMatrixX[1][i] * y + rotationMatrixX[2][i] * z;
         }
 
-        Vector3D result = new Vector3D(temp[0], temp[1], temp[2]);
+        Vector result = new Vector(temp[0], temp[1], temp[2]);
         result.normalize();
         return result;
     }
 
-    public Vector3D getNewByTurningAroundVector(float angle, final Vector3D axis) {
+    public Vector getNewByTurningAroundVector(float angle, final Vector axis) {
         float[] temp = {0.0f, 0.0f, 0.0f};
         setRotationMatrixXYZ(angle, axis);
 
@@ -103,14 +103,14 @@ public class Vector3D extends Point3D {
             temp[i] = rotationMatrixXYZ[0][i] * x + rotationMatrixXYZ[1][i] * y + rotationMatrixXYZ[2][i] * z;
         }
 
-        Vector3D result = new Vector3D(temp[0], temp[1], temp[2]);
+        Vector result = new Vector(temp[0], temp[1], temp[2]);
         result.normalize();
         return result;
     }
 
-    public float getAngle(final Vector3D vector3D) {
-        return (float) (Math.acos((x * vector3D.getX() + y * vector3D.getY() + z * vector3D.getZ()) /
-                       (Math.sqrt(x * x + y * y + z * z) * Math.sqrt(vector3D.getX() * vector3D.getX() + vector3D.getY() * vector3D.getY() + vector3D.getZ() * vector3D.getZ()))));
+    public float getAngle(final Vector vector) {
+        return (float) (Math.acos((x * vector.getX() + y * vector.getY() + z * vector.getZ()) /
+                       (Math.sqrt(x * x + y * y + z * z) * Math.sqrt(vector.getX() * vector.getX() + vector.getY() * vector.getY() + vector.getZ() * vector.getZ()))));
     }
 
     private void setRotationMatrixX(float angle) {
@@ -141,7 +141,7 @@ public class Vector3D extends Point3D {
         rotationMatrixY[2][2] = (float) Math.cos(angle);
     }
 
-    private void setRotationMatrixXYZ(float angle, final Vector3D axis) {
+    private void setRotationMatrixXYZ(float angle, final Vector axis) {
         rotationMatrixXYZ[0][0] = (float) (Math.cos(angle) + (1.0f - Math.cos(angle)) * axis.getX() * axis.getX());
         rotationMatrixXYZ[1][0] = (float) ((1.0f - Math.cos(angle)) * axis.getY() * axis.getX() - Math.sin(angle) * axis.getZ());
         rotationMatrixXYZ[2][0] = (float) ((1.0f - Math.cos(angle)) * axis.getZ() * axis.getX() + Math.sin(angle) * axis.getY());

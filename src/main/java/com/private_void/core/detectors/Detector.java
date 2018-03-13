@@ -1,14 +1,14 @@
 package com.private_void.core.detectors;
 
 import com.private_void.core.fluxes.Flux;
-import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.CartesianPoint;
 import com.private_void.core.particles.Particle;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Detector {
-    protected Point3D center;
+    protected CartesianPoint center;
     protected float width;
     protected double upperBound;
     protected double lowerBound;
@@ -20,7 +20,7 @@ public class Detector {
 
     private float L;
 
-    public Detector(final Point3D center, float width) {
+    public Detector(final CartesianPoint center, float width) {
         this.center = center;
         this.L = center.getX();
         this.width = width;
@@ -71,7 +71,7 @@ public class Detector {
         System.out.println("Detecting particles time = " + (finish - start) / 1_000_000 + " ms");
     }
 
-    protected Point3D getCoordinateOnDetector(Particle p) {
+    protected CartesianPoint getCoordinateOnDetector(Particle p) {
         float x = p.getCoordinate().getX();
         float y = p.getCoordinate().getY();
         float z = p.getCoordinate().getZ();
@@ -80,7 +80,7 @@ public class Detector {
         float Vy = p.getSpeed().getY();
         float Vz = p.getSpeed().getZ();
 
-        return new Point3D(L, (Vy / Vx) * (L - x) + y, (Vz / Vx) * (L - x) + z);
+        return new CartesianPoint(L, (Vy / Vx) * (L - x) + y, (Vz / Vx) * (L - x) + z);
     }
 
     protected boolean isParticleWithinBorders(Particle p) {
@@ -113,7 +113,7 @@ public class Detector {
 //        }
     }
 
-    public Point3D getCenter() {
+    public CartesianPoint getCenter() {
         return center;
     }
 

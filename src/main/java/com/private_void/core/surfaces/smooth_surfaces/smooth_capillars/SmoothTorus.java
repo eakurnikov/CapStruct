@@ -1,9 +1,10 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
-import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.CartesianPoint;
 import com.private_void.core.geometry.SphericalPoint;
-import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.geometry.Vector;
 import com.private_void.core.particles.NeutralParticle;
+import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarFactory;
 import com.private_void.utils.Utils;
@@ -15,7 +16,7 @@ public class SmoothTorus extends SmoothCapillar {
     private float curvRadius;
     private float curvAngleR;
 
-    public SmoothTorus(final Point3D front, float radius, float curvRadius, float curvAngleR, float roughnessSize,
+    public SmoothTorus(final CartesianPoint front, float radius, float curvRadius, float curvAngleR, float roughnessSize,
                        float roughnessAngleR, float reflectivity, float criticalAngleR) {
         super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.curvRadius = curvRadius;
@@ -23,7 +24,7 @@ public class SmoothTorus extends SmoothCapillar {
         this.length = Utils.getTorusLength(curvRadius, curvAngleR);
     }
 
-    public SmoothTorus(float length, final Point3D front, float radius, float curvAngleR, float roughnessSize,
+    public SmoothTorus(float length, final CartesianPoint front, float radius, float curvAngleR, float roughnessSize,
                        float roughnessAngleR, float reflectivity, float criticalAngleR) {
         super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.curvRadius = Utils.getTorusCurvRadius(length, curvAngleR);
@@ -31,7 +32,7 @@ public class SmoothTorus extends SmoothCapillar {
         this.length = length;
     }
 
-    public SmoothTorus(final Point3D front, final SphericalPoint position, float radius, float curvRadius,
+    public SmoothTorus(final CartesianPoint front, final SphericalPoint position, float radius, float curvRadius,
                        float curvAngleR, float roughnessSize, float roughnessAngleR, float reflectivity,
                        float criticalAngleR) {
         super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
@@ -41,7 +42,7 @@ public class SmoothTorus extends SmoothCapillar {
         this.length = Utils.getTorusLength(curvRadius, curvAngleR);
     }
 
-    public SmoothTorus(float length, final Point3D front, final SphericalPoint position, float radius, float curvAngleR,
+    public SmoothTorus(float length, final CartesianPoint front, final SphericalPoint position, float radius, float curvAngleR,
                        float roughnessSize, float roughnessAngleR, float reflectivity, float criticalAngleR) {
         super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.position = position;
@@ -51,12 +52,12 @@ public class SmoothTorus extends SmoothCapillar {
     }
 
     @Override
-    protected Vector3D getNormal(final Point3D point) {
+    protected Vector getNormal(final CartesianPoint point) {
         float x = point.getX() - front.getX();
         float y = point.getY() - front.getY();
         float z = point.getZ() - front.getZ() - curvRadius; // + curvRadius сместит влево
 
-        return new Vector3D(
+        return new Vector(
                 (-2 * (x * x + y * y + z * z + curvRadius * curvRadius - radius * radius) * 2 * x
                         + 8 * curvRadius * curvRadius * x),
 
@@ -67,12 +68,12 @@ public class SmoothTorus extends SmoothCapillar {
     }
 
     @Override
-    protected Vector3D getAxis(final Point3D point) {
+    protected Vector getAxis(final CartesianPoint point) {
         return normal.getNewByTurningAroundOX(PI / 2).turnAroundOY(getPointsAngle(point));
     }
 
     @Override
-    protected Point3D getHitPoint(final NeutralParticle p) {
+    protected CartesianPoint getHitPoint(final NeutralParticle p) {
         if (p.getSpeed().getX() <= 0.0f) {
             p.setAbsorbed(true);
             return p.getCoordinate();
@@ -165,7 +166,7 @@ public class SmoothTorus extends SmoothCapillar {
             }
         }
 
-        Point3D newCoordinate = new Point3D(solution[0], solution[1], solution[2]);
+        CartesianPoint newCoordinate = new CartesianPoint(solution[0], solution[1], solution[2]);
         if ((newCoordinate.isNear(p.getCoordinate()) || newCoordinate.getX() <= p.getCoordinate().getX()) && !p.isRecursiveIterationsLimitReached()) {
             p.recursiveIteration();
             return getHitPoint(p);
@@ -176,11 +177,16 @@ public class SmoothTorus extends SmoothCapillar {
     }
 
     @Override
-    protected boolean isPointInside(final Point3D point) {
+    protected boolean isPointInside(final CartesianPoint point) {
         return point.getX() < front.getX() + length;
     }
 
-    private float getPointsAngle(final Point3D point) {
+    @Override
+    protected void transformToReferenceFrame(Particle particle, ReferenceFrame frame) {
+        // todo
+    }
+
+    private float getPointsAngle(final CartesianPoint point) {
         float x = point.getX();
         float y = point.getY();
         float z = point.getZ();
@@ -193,7 +199,7 @@ public class SmoothTorus extends SmoothCapillar {
         return new CapillarFactory() {
 
             @Override
-            public Capillar getNewCapillar(final Point3D coordinate, final SphericalPoint position) {
+            public Capillar getNewCapillar(final CartesianPoint coordinate, final SphericalPoint position) {
                 return new SmoothTorus(coordinate, position, radius, curvRadius, curvAngleR, roughnessSize, roughnessAngleR,
                         reflectivity, criticalAngleR);
             }
@@ -215,7 +221,7 @@ public class SmoothTorus extends SmoothCapillar {
         return new CapillarFactory() {
 
             @Override
-            public Capillar getNewCapillar(final Point3D coordinate, final SphericalPoint position) {
+            public Capillar getNewCapillar(final CartesianPoint coordinate, final SphericalPoint position) {
                 return new SmoothTorus(length, coordinate, position, radius, curvAngleR, roughnessSize, roughnessAngleR,
                         reflectivity, criticalAngleR);
             }

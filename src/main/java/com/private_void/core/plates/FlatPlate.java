@@ -1,6 +1,7 @@
 package com.private_void.core.plates;
 
 import com.private_void.core.detectors.Detector;
+import com.private_void.core.geometry.CartesianPoint;
 import com.private_void.core.geometry.CoordinateFactory;
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.surfaces.CapillarFactory;
@@ -10,7 +11,7 @@ import static com.private_void.utils.Generator.generator;
 public class FlatPlate extends Plate {
     private float sideLength;
 
-    public FlatPlate(final CapillarFactory capillarFactory, final Point3D center, float capillarsDensity,
+    public FlatPlate(final CapillarFactory capillarFactory, final CartesianPoint center, float capillarsDensity,
                      float sideLength) {
         super(capillarFactory, center, capillarsDensity);
         this.sideLength = sideLength;
@@ -29,12 +30,12 @@ public class FlatPlate extends Plate {
         if (capillarsDensity > maxCapillarDensity) {
             System.out.println("Capillars density is too big, it has been automatically set to " + maxCapillarDensity);
             capillarsAmount = (int) (frontSquare / minCapillarSquare);
-            // заполняю сеткой впритирку
+            // todo заполняю сеткой впритирку
             capillars = null;
 
         } else if (capillarsDensity > 0.67f * maxCapillarDensity) {
             System.out.println("Capillars density is very big, so it has been automatically set to " + maxCapillarDensity);
-            /*capillarsAmount = ...
+            /*todo capillarsAmount = ...
             заполняю сеткой с каким-то шагом*/
             capillars = null;
 
@@ -45,8 +46,8 @@ public class FlatPlate extends Plate {
                     sideLength / 2 - capillarRadius,
                     sideLength / 2 - capillarRadius);
 
-            Point3D[] capillarsCenters = new Point3D[capillarsAmount];
-            Point3D coordinate;
+            CartesianPoint[] capillarsCenters = new CartesianPoint[capillarsAmount];
+            CartesianPoint coordinate;
 
             for (int i = 0; i < capillarsAmount; i++) {
                 do {
@@ -82,13 +83,13 @@ public class FlatPlate extends Plate {
 //        float initialY = center.getY() - sideLength / 2;
 //        float initialZ = center.getZ() - sideLength / 2;
 //
-//        Point3D coordinate;
-//        Point3D[] capillarsCenters;
+//        CartesianPoint coordinate;
+//        CartesianPoint[] capillarsCenters;
 //        CoordinateFactory coordinateFactory;
 //
 //        for (int y = 0; y < domainsAmountPerLine; y++) {
 //            for (int z = 0; z < domainsAmountPerLine; z++) {
-//                capillarsCenters = new Point3D[CAPILLARS_PER_DOMAIN_AMOUNT];
+//                capillarsCenters = new CartesianPoint[CAPILLARS_PER_DOMAIN_AMOUNT];
 //
 //                coordinateFactory = generator().getXFlatUniformDistribution(initialX,
 //                        initialY + capillarRadius + domainSideLength *  y,
@@ -114,17 +115,17 @@ public class FlatPlate extends Plate {
 //    }
 
     @Override
-    protected Point3D getDetectorsCoordinate() {
-        return new Point3D(center.getX() + width, center.getY(), center.getZ());
+    protected CartesianPoint getDetectorsCoordinate() {
+        return new CartesianPoint(center.getX() + width, center.getY(), center.getZ());
     }
 
     @Override
     protected boolean isCapillarCoordinateValid(Point3D[] coordinates, Point3D coordinate) {
         int i = 0;
         while (coordinates[i] != null && i < coordinates.length) {
-            if ((coordinate.getY() - coordinates[i].getY()) * (coordinate.getY() - coordinates[i].getY())
-                    + (coordinate.getZ() - coordinates[i].getZ()) * (coordinate.getZ() - coordinates[i].getZ())
-                    < 4 * capillarRadius * capillarRadius) {
+            if ((coordinate.getQ2() - coordinates[i].getQ2()) * (coordinate.getQ2() - coordinates[i].getQ2())
+                    + (coordinate.getQ3() - coordinates[i].getQ3()) * (coordinate.getQ3() - coordinates[i].getQ3())
+                    < 4.0f * capillarRadius * capillarRadius) {
                 return false;
             }
             i++;

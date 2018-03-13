@@ -1,6 +1,6 @@
 package com.private_void.core.surfaces.atomic_surfaces.atomic_capillars;
 
-import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.CartesianPoint;
 import com.private_void.core.geometry.SphericalPoint;
 import com.private_void.core.particles.AtomFactory;
 import com.private_void.core.particles.Particle;
@@ -12,13 +12,13 @@ public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
     protected float length;
     protected float radius;
 
-    public AtomicCapillar(final AtomFactory atomFactory, final Point3D front, float period, float chargeNumber,
+    public AtomicCapillar(final AtomFactory atomFactory, final CartesianPoint front, float period, float chargeNumber,
                           float radius) {
         super(atomFactory, front, period, chargeNumber);
         this.radius = radius;
     }
 
-    public AtomicCapillar(final AtomFactory atomFactory, final Point3D front, final SphericalPoint position,
+    public AtomicCapillar(final AtomFactory atomFactory, final CartesianPoint front, final SphericalPoint position,
                           float period, float chargeNumber, float radius) {
         super(atomFactory, front, period, chargeNumber);
         this.position = position;
@@ -53,5 +53,5 @@ public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
         return position;
     }
 
-    protected abstract boolean isPointInside(Point3D point);
+    protected abstract boolean isPointInside(CartesianPoint point);
 }

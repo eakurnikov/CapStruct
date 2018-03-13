@@ -2,14 +2,13 @@ package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_s
 
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.fluxes.Flux;
-import com.private_void.core.geometry.Point3D;
-import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.geometry.CartesianPoint;
+import com.private_void.core.geometry.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.core.surfaces.smooth_surfaces.SmoothSurface;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -21,8 +20,8 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
     protected float radius;
     protected Detector detector;
 
-    protected SingleSmoothCapillar(final Point3D front, float radius, float roughnessSize, float roughnessAngleR,
-                             float reflectivity, float criticalAngleR) {
+    protected SingleSmoothCapillar(final CartesianPoint front, float radius, float roughnessSize, float roughnessAngleR,
+                                   float reflectivity, float criticalAngleR) {
         super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.radius = radius;
     }
@@ -32,7 +31,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         long start = System.nanoTime();
 
         NeutralParticle p;
-        Point3D newCoordinate;
+        CartesianPoint newCoordinate;
         float angleWithSurface;
 
         for (Particle particle : flux.getParticles()) {
@@ -43,7 +42,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                     newCoordinate = getHitPoint(p);
 
                     while (!p.isAbsorbed() && isPointInside(newCoordinate)) {
-                        axis = new Vector3D(1.0f, 0.0f, 0.0f)
+                        axis = new Vector(1.0f, 0.0f, 0.0f)
                                 .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
                         normal = getNormal(newCoordinate)
                                 .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
@@ -80,7 +79,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
 
         class Interaction implements Runnable {
             private NeutralParticle particle;
-            private Point3D newCoordinate;
+            private CartesianPoint newCoordinate;
             private float angleWithSurface;
 
             public Interaction(NeutralParticle particle) {
@@ -93,7 +92,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                     newCoordinate = getHitPoint(particle);
 
                     while (isPointInside(newCoordinate)) {
-                        axis = new Vector3D(1.0f, 0.0f, 0.0f)
+                        axis = new Vector(1.0f, 0.0f, 0.0f)
                                 .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
                         normal = getNormal(newCoordinate)
                                 .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
@@ -141,10 +140,10 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         flux.getParticles().forEach(p -> {
             NeutralParticle particle = (NeutralParticle) p;
             if (willParticleGetInside(particle)) {
-                Point3D newCoordinate = getHitPoint(particle);
+                CartesianPoint newCoordinate = getHitPoint(particle);
 
                 while (isPointInside(newCoordinate)) {
-                    axis = new Vector3D(1.0f, 0.0f, 0.0f)
+                    axis = new Vector(1.0f, 0.0f, 0.0f)
                             .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
                     normal = getNormal(newCoordinate)
                             .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
@@ -190,10 +189,10 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                     NeutralParticle particle = (NeutralParticle) particles.get(i);
 
                     if (willParticleGetInside(particle)) {
-                        Point3D newCoordinate = getHitPoint(particle);
+                        CartesianPoint newCoordinate = getHitPoint(particle);
 
                         while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
-                            axis = new Vector3D(1.0f, 0.0f, 0.0f)
+                            axis = new Vector(1.0f, 0.0f, 0.0f)
                                     .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
                             normal = getNormal(newCoordinate)
                                     .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
@@ -262,7 +261,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                 < radius * radius;
     }
 
-    protected abstract boolean isPointInside(Point3D point);
+    protected abstract boolean isPointInside(CartesianPoint point);
 
-    protected abstract Point3D getDetectorsCoordinate();
+    protected abstract CartesianPoint getDetectorsCoordinate();
 }

@@ -1,7 +1,7 @@
 package com.private_void.utils;
 
+import com.private_void.core.geometry.CartesianPoint;
 import com.private_void.core.geometry.CoordinateFactory;
-import com.private_void.core.geometry.Point3D;
 import com.private_void.core.geometry.SphericalCoordinateFactory;
 import com.private_void.core.geometry.SphericalPoint;
 
@@ -46,11 +46,11 @@ public class Generator {
             y = v * (float) Math.sqrt(-2.0f * Math.log(s) / s);
             z = u * (float) Math.sqrt(-2.0f * Math.log(s) / s);
 
-            return new Point3D(0.0f, mean + y * dev, mean + z * dev);
+            return new CartesianPoint(0.0f, mean + y * dev, mean + z * dev);
         };
     }
 
-    public CoordinateFactory getGaussDistribution(final Point3D center, float mean, float dev) {
+    public CoordinateFactory getGaussDistribution(final CartesianPoint center, float mean, float dev) {
         return () -> {
             float u, v, s;
             float y, z;
@@ -64,7 +64,7 @@ public class Generator {
             y = v * (float) Math.sqrt(-2.0f * Math.log(s) / s);
             z = u * (float) Math.sqrt(-2.0f * Math.log(s) / s);
 
-            return new Point3D(0.0f, mean + y * dev, mean + z * dev).shift(center);
+            return new CartesianPoint(0.0f, mean + y * dev, mean + z * dev).shift(center);
         };
     }
 
@@ -78,11 +78,11 @@ public class Generator {
                 z = uniformFloat(-radius, radius);
             } while (y * y + z * z > radius * radius);
 
-            return new Point3D(0.0f, y, z);
+            return new CartesianPoint(0.0f, y, z);
         };
     }
 
-    public CoordinateFactory getXFlatCircleUniformDistribution(final Point3D center, float radius) {
+    public CoordinateFactory getXFlatCircleUniformDistribution(final CartesianPoint center, float radius) {
         return () -> {
             float y;
             float z;
@@ -92,52 +92,26 @@ public class Generator {
                 z = uniformFloat(-radius, radius);
             } while (y * y + z * z > radius * radius);
 
-            return new Point3D(0.0f, y, z).shift(center);
+            return new CartesianPoint(0.0f, y, z).shift(center);
         };
     }
 
     public CoordinateFactory getXFlatUniformDistribution(float yRange, float zRange) {
-        return () -> new Point3D(
+        return () -> new CartesianPoint(
                 0.0f,
                 uniformFloat(-yRange, yRange),
                 uniformFloat(-zRange, zRange));
     }
 
-    public CoordinateFactory getXFlatUniformDistribution(final Point3D center, float yRange, float zRange) {
-        return () -> new Point3D(
+    public CoordinateFactory getXFlatUniformDistribution(final CartesianPoint center, float yRange, float zRange) {
+        return () -> new CartesianPoint(
                 0.0f,
                 uniformFloat(-yRange, yRange),
                 uniformFloat(-zRange, zRange))
                 .shift(center);
     }
 
-    public CoordinateFactory getSphericalUniformDistribution(float radius, float thetaRange, float phiRange) {
-        return () -> new SphericalPoint(radius,
-                uniformFloat(-thetaRange, thetaRange),
-                uniformFloat(-phiRange, phiRange))
-                .convertToCartesian();
-    }
-
-    public CoordinateFactory getSphericalUniformDistribution(final Point3D center,
-                                                             float radius, float thetaRange, float phiRange) {
-        return () -> new SphericalPoint(radius,
-                uniformFloat(-thetaRange, thetaRange),
-                uniformFloat(-phiRange, phiRange))
-                .convertToCartesian()
-                .shift(center);
-    }
-
-    public CoordinateFactory getSphericalUniformDistribution(final Point3D center, final SphericalPoint config,
-                                                             float radius, float thetaRange, float phiRange) {
-        return () -> new SphericalPoint(radius,
-                uniformFloat(-thetaRange, thetaRange),
-                uniformFloat(-phiRange, phiRange))
-                .shift(config)
-                .convertToCartesian()
-                .shift(center);
-    }
-
-    public SphericalCoordinateFactory getSphericalUniformDistribution1(float radius, float thetaRange, float phiRange) {
+    public SphericalCoordinateFactory getSphericalUniformDistribution(float radius, float thetaRange, float phiRange) {
         return () -> new SphericalPoint(radius,
                 uniformFloat(-thetaRange, thetaRange),
                 uniformFloat(-phiRange, phiRange));
@@ -152,15 +126,15 @@ public class Generator {
     }
 
     public CoordinateFactory getVolumeUniformDistribution(float xRange, float yRange, float zRange) {
-        return () -> new Point3D(
+        return () -> new CartesianPoint(
                 uniformFloat(-xRange, xRange),
                 uniformFloat(-yRange, yRange),
                 uniformFloat(-zRange, zRange));
     }
 
-    public CoordinateFactory getVolumeUniformDistribution(final Point3D center,
+    public CoordinateFactory getVolumeUniformDistribution(final CartesianPoint center,
                                                           float xRange, float yRange, float zRange) {
-        return () -> new Point3D(
+        return () -> new CartesianPoint(
                 uniformFloat(-xRange, xRange),
                 uniformFloat(-yRange, yRange),
                 uniformFloat(-zRange, zRange))

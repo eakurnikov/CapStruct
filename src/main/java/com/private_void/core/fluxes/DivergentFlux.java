@@ -1,7 +1,7 @@
 package com.private_void.core.fluxes;
 
-import com.private_void.core.geometry.Point3D;
-import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.geometry.CartesianPoint;
+import com.private_void.core.geometry.Vector;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.particles.ParticleFactory;
 import com.private_void.core.geometry.CoordinateFactory;
@@ -15,7 +15,7 @@ import static com.private_void.utils.Generator.generator;
 public class DivergentFlux extends Flux {
 
     public DivergentFlux(final ParticleFactory particleFactory, final CoordinateFactory coordinateFactory,
-                         final Point3D fluxCoordinate, final Vector3D fluxAxis,
+                         final CartesianPoint fluxCoordinate, final Vector fluxAxis,
                          int particlesAmount, float minIntensity) {
         super(particleFactory, coordinateFactory, fluxCoordinate, fluxAxis, particlesAmount, minIntensity);
         createParticles();
@@ -25,7 +25,7 @@ public class DivergentFlux extends Flux {
     protected void createParticles() {
         List<Particle> newParticles = new ArrayList<>();
         for (int i = 0; i < particlesAmount; i++) {
-            Vector3D axis = new Vector3D(-(fluxAxis.getY() + fluxAxis.getZ()) / fluxAxis.getX(), 1.0f, 1.0f)
+            Vector axis = new Vector(-(fluxAxis.getY() + fluxAxis.getZ()) / fluxAxis.getX(), 1.0f, 1.0f)
                     .turnAroundVector(generator().uniformFloat(0.0f, 2.0f * PI), fluxAxis);
             newParticles.add(particleFactory.getNewParticle(fluxCoordinate,
                     fluxAxis.getNewByTurningAroundVector(coordinateFactory.getCoordinate().getY(), axis)));

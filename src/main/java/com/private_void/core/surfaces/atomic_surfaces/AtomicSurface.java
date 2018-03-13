@@ -1,7 +1,7 @@
 package com.private_void.core.surfaces.atomic_surfaces;
 
-import com.private_void.core.geometry.Point3D;
-import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.geometry.CartesianPoint;
+import com.private_void.core.geometry.Vector;
 import com.private_void.core.particles.Atom;
 import com.private_void.core.particles.AtomFactory;
 import com.private_void.core.particles.ChargedParticle;
@@ -19,7 +19,7 @@ public abstract class AtomicSurface extends Surface {
     protected AtomFactory atomFactory;
     protected List<Atom> atoms;
 
-    public AtomicSurface(final AtomFactory atomFactory, final Point3D front, float period, float chargeNumber) {
+    public AtomicSurface(final AtomFactory atomFactory, final CartesianPoint front, float period, float chargeNumber) {
         super(front);
         this.atomFactory = atomFactory;
         this.period = period;
@@ -36,9 +36,9 @@ public abstract class AtomicSurface extends Surface {
 
     protected abstract float getCriticalAngle(final ChargedParticle particle);
 
-    protected abstract Vector3D getNewSpeed(final ChargedParticle particle);
+    protected abstract Vector getNewSpeed(final ChargedParticle particle);
 
-    protected abstract Point3D getNewCoordinate(final ChargedParticle p);
+    protected abstract CartesianPoint getNewCoordinate(final ChargedParticle p);
 
     //protected abstract float getPotential(final ChargedParticle particle);
 }

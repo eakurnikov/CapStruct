@@ -1,16 +1,16 @@
 package com.private_void.core.particles;
 
-import com.private_void.core.geometry.Point3D;
-import com.private_void.core.geometry.Vector3D;
+import com.private_void.core.geometry.CartesianPoint;
+import com.private_void.core.geometry.Vector;
 
 public abstract class Particle {
-    protected Point3D coordinate;
-    protected Vector3D speed;
+    protected CartesianPoint coordinate;
+    protected Vector speed;
     protected float trace;
     protected boolean absorbed;
     protected boolean out;
 
-    protected Particle(final Point3D coordinate, final Vector3D speed) {
+    protected Particle(final CartesianPoint coordinate, final Vector speed) {
         this.coordinate = coordinate;
         this.speed = speed;
         this.trace = 0.0f;
@@ -18,17 +18,17 @@ public abstract class Particle {
         this.out = false;
     }
 
-    public Point3D getCoordinate() {
+    public CartesianPoint getCoordinate() {
         return coordinate;
     }
 
-    public void setCoordinate(final Point3D newCoordinate) {
+    public void setCoordinate(final CartesianPoint newCoordinate) {
         increaseTrace(newCoordinate);
         this.coordinate = newCoordinate;
     }
 
     // Возвращает проекцию координаты на плоскость, расположенную под углом angle к абсолютной
-    public Point3D getProjection(float angle) {
+    public CartesianPoint getProjection(float angle) {
         float[][] rotationMatrixY = new float[3][3];
 
         rotationMatrixY[0][0] = (float) Math.cos(angle);
@@ -48,14 +48,14 @@ public abstract class Particle {
             temp[i] = rotationMatrixY[0][i] * coordinate.getX() + rotationMatrixY[1][i] * coordinate.getY() + rotationMatrixY[2][i] * coordinate.getZ();
         }
 
-        return new Point3D(temp[0], temp[1], temp[2]);
+        return new CartesianPoint(temp[0], temp[1], temp[2]);
     }
 
-    public Vector3D getSpeed() {
+    public Vector getSpeed() {
         return speed;
     }
 
-    public void setSpeed(final Vector3D speed) {
+    public void setSpeed(final Vector speed) {
         this.speed = speed;
     }
 
@@ -67,10 +67,10 @@ public abstract class Particle {
         this.trace = trace;
     }
 
-    public void increaseTrace(final Point3D point3D) {
-        trace = (float) Math.sqrt((point3D.getX() - coordinate.getX()) * (point3D.getX() - coordinate.getX())
-                + (point3D.getY() - coordinate.getY()) * (point3D.getY() - coordinate.getY())
-                + (point3D.getZ() - coordinate.getZ()) * (point3D.getZ() - coordinate.getZ()));
+    public void increaseTrace(final CartesianPoint point) {
+        trace = (float) Math.sqrt((point.getX() - coordinate.getX()) * (point.getX() - coordinate.getX())
+                + (point.getY() - coordinate.getY()) * (point.getY() - coordinate.getY())
+                + (point.getZ() - coordinate.getZ()) * (point.getZ() - coordinate.getZ()));
     }
 
     public boolean isAbsorbed() {
