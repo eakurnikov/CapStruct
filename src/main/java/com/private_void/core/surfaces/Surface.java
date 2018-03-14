@@ -14,6 +14,10 @@ public abstract class Surface {
         this.axis = new Vector(1.0f, 0.0f, 0.0f);
     }
 
+    public CartesianPoint getFront() {
+        return front;
+    }
+
     protected abstract Vector getNormal(final CartesianPoint point);
 
     protected abstract Vector getAxis(final CartesianPoint point);

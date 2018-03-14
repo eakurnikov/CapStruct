@@ -43,6 +43,26 @@ public class CartesianPoint implements Point3D {
         return this;
     }
 
+    public CartesianPoint getNewByShift(float x, float y, float z) {
+        CartesianPoint newPoint = new CartesianPoint(this.x, this.y, this.z);
+
+        newPoint.x += x;
+        newPoint.y += y;
+        newPoint.z += z;
+
+        return newPoint;
+    }
+
+    public CartesianPoint getNewByShift(final CartesianPoint point) {
+        CartesianPoint newPoint = new CartesianPoint(point.x, point.y, point.z);
+
+        newPoint.x += point.getX();
+        newPoint.y += point.getY();
+        newPoint.z += point.getZ();
+
+        return newPoint;
+    }
+
     public float getX() {
         return x;
     }

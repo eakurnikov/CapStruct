@@ -61,6 +61,10 @@ public abstract class Plate implements CapillarSystem {
         return detector;
     }
 
+    public List<Capillar> getCapillars() {
+        return capillars;
+    }
+
     protected abstract CartesianPoint getDetectorsCoordinate();
 
     protected abstract void createCapillars();

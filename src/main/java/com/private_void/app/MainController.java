@@ -285,7 +285,7 @@ public class MainController {
                     new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
                     plateCapillarsDensity,
                     Utils.convertDegreesToRadians(1.0f),
-                    20000.0f);
+                    50_000.0f);
 
 //            return new FlatPlate(
 //                    smoothCylinderFactory,

@@ -45,7 +45,7 @@ public class Detector {
 
         for (Particle particle : flux.getParticles()) {
 
-            if (!particle.isOut()) {
+            if (true /*!particle.isOut()*/) {
 
                 if (!particle.isAbsorbed()) {
                     particle.setCoordinate(getCoordinateOnDetector(particle));

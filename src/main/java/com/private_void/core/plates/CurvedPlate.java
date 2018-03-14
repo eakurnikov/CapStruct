@@ -55,16 +55,17 @@ public class CurvedPlate extends Plate {
             for (int i = 0; i < capillarsAmount; i++) {
                 do {
                     coordinate = coordinateFactory.getCoordinate();
-                } while (false/*!isCapillarCoordinateValid(capillarsCenters, coordinate)*/);
+                } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
 
                 capillarsCenters[i] = coordinate;
-                capillars.add(capillarFactory.getNewCapillar(
-                        coordinate
-                                .convertToCartesian()
-                                .shift(curvRadius, 0.0f, 0.0f)
-                                .shift(center),
-                        coordinate
-                                .shift(new SphericalPoint(0.0f, -PI / 2, -PI))));
+
+                CartesianPoint front = coordinate.convertToCartesian()
+                        .shift(curvRadius, 0.0f, 0.0f)
+                        .shift(center);
+
+                SphericalPoint position = coordinate.shift(0.0f, -PI / 2, -PI);
+
+                capillars.add(capillarFactory.getNewCapillar(front, position));
             }
         }
 
@@ -75,7 +76,7 @@ public class CurvedPlate extends Plate {
 
     @Override
     protected CartesianPoint getDetectorsCoordinate() {
-        return center.shift(curvRadius, 0.0f, 0.0f);
+        return center.getNewByShift(curvRadius, 0.0f, 0.0f);
     }
 
     @Override

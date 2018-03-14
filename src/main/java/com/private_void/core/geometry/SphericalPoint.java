@@ -36,6 +36,26 @@ public class SphericalPoint implements Point3D {
         return this;
     }
 
+    public SphericalPoint getNewByShift(float radius, float theta, float phi) {
+        SphericalPoint newPoint = new SphericalPoint(this.radius, this.theta, this.phi);
+
+        newPoint.radius += radius;
+        newPoint.theta += theta;
+        newPoint.phi += phi;
+
+        return newPoint;
+    }
+
+    public SphericalPoint getNewByShift(final SphericalPoint point) {
+        SphericalPoint newPoint = new SphericalPoint(point.radius, point.theta, point.phi);
+
+        newPoint.radius += point.getRadius();
+        newPoint.theta += point.getTheta();
+        newPoint.phi += point.getPhi();
+
+        return newPoint;
+    }
+
     public float getRadius() {
         return radius;
     }
