@@ -8,27 +8,27 @@ import static com.private_void.utils.Generator.generator;
 import static com.private_void.utils.Constants.PI;
 
 public class CurvedPlate extends Plate {
-    private float maxAngleR;
-    private float curvRadius;
+    private double maxAngleR;
+    private double curvRadius;
 
-    public CurvedPlate(final CapillarFactory capillarFactory, final CartesianPoint center, float capillarsDensity,
-                       float maxAngleR, float curvRadius) {
+    public CurvedPlate(final CapillarFactory capillarFactory, final CartesianPoint center, double capillarsDensity,
+                       double maxAngleR, double curvRadius) {
         super(capillarFactory, center, capillarsDensity);
         this.maxAngleR = maxAngleR;
         this.curvRadius = curvRadius;
         createCapillars();
-        this.detector = new Detector(getDetectorsCoordinate(),curvRadius * (float) Math.sin(maxAngleR));
+        this.detector = new Detector(getDetectorsCoordinate(),20.0 * curvRadius *  Math.sin(maxAngleR));
     }
 
     @Override
     protected void createCapillars() {
         long start = System.nanoTime();
-        float frontSquare = 2.0f * PI * curvRadius * curvRadius * (1 - (float) Math.cos(maxAngleR));
+        double frontSquare = 2.0 * PI * curvRadius * curvRadius * (1.0 -  Math.cos(maxAngleR));
 
-        float coef = 4 / PI; //площадь круга увеличит до площади описанного вокруг него квадрата. Т.к. у меня все таки сегменты, это тоже приближение
-        float minCapillarSquare = coef * 2.0f * PI * curvRadius * curvRadius
-                * (1 - (float) Math.cos(Math.asin(capillarRadius / curvRadius)));
-        float maxCapillarDensity = 1.0f / minCapillarSquare;
+        double coef = 4 / PI; //площадь круга увеличит до площади описанного вокруг него квадрата. Т.к. у меня все таки сегменты, это тоже приближение
+        double minCapillarSquare = coef * 2.0 * PI * curvRadius * curvRadius
+                * (1.0 - Math.cos(Math.asin(capillarRadius / curvRadius)));
+        double maxCapillarDensity = 1.0 / minCapillarSquare;
 
         if (capillarsDensity > maxCapillarDensity) {
             System.out.println("Capillars density is too big, it has been automatically set to " + maxCapillarDensity);
@@ -36,7 +36,7 @@ public class CurvedPlate extends Plate {
             // todo заполняю сеткой впритирку
             capillars = null;
 
-        } else if (capillarsDensity > 0.67f * maxCapillarDensity) {
+        } else if (capillarsDensity > 0.67 * maxCapillarDensity) {
             System.out.println("Capillars density is very big, so it has been automatically set to " + maxCapillarDensity);
             /*todo capillarsAmount = ...
             заполняю сеткой с каким-то шагом*/
@@ -46,8 +46,8 @@ public class CurvedPlate extends Plate {
             capillarsAmount = (int) (capillarsDensity * frontSquare);
 
             SphericalCoordinateFactory coordinateFactory = generator().getSphericalUniformDistribution(
-                    new SphericalPoint(0.0f, PI / 2, PI),// тета отсчитывается от оси игрек, фи от оси икс, поворачиваю так, чтобы координаты попадали на мою пластину
-                    curvRadius, maxAngleR / 2, maxAngleR / 2);
+                    new SphericalPoint(0.0, PI / 2.0, PI),// тета отсчитывается от оси игрек, фи от оси икс, поворачиваю так, чтобы координаты попадали на мою пластину
+                    curvRadius, maxAngleR / 2.0, maxAngleR / 2.0);
 
             SphericalPoint[] capillarsCenters = new SphericalPoint[capillarsAmount];
             SphericalPoint coordinate;
@@ -60,10 +60,10 @@ public class CurvedPlate extends Plate {
                 capillarsCenters[i] = coordinate;
 
                 CartesianPoint front = coordinate.convertToCartesian()
-                        .shift(curvRadius, 0.0f, 0.0f)
+                        .shift(curvRadius, 0.0, 0.0)
                         .shift(center);
 
-                SphericalPoint position = coordinate.shift(0.0f, -PI / 2, -PI);
+                SphericalPoint position = coordinate.shift(0.0, -PI / 2.0, -PI);
 
                 capillars.add(capillarFactory.getNewCapillar(front, position));
             }
@@ -76,12 +76,12 @@ public class CurvedPlate extends Plate {
 
     @Override
     protected CartesianPoint getDetectorsCoordinate() {
-        return center.getNewByShift(curvRadius, 0.0f, 0.0f);
+        return center.getNewByShift(curvRadius, 0.0, 0.0);
     }
 
     @Override
     protected boolean isCapillarCoordinateValid(Point3D[] coordinates, Point3D coordinate) {
-        float radius = 2.0f * (float) Math.asin(capillarRadius / curvRadius);
+        double radius = 2.0 * Math.asin(capillarRadius / curvRadius);
         int i = 0;
         while (coordinates[i] != null && i < coordinates.length) {
             if ((coordinate.getQ2() - coordinates[i].getQ2()) * (coordinate.getQ2() - coordinates[i].getQ2())

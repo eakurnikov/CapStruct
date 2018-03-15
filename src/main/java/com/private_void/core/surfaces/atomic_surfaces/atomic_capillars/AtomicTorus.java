@@ -12,19 +12,19 @@ import com.private_void.utils.Utils;
 import java.util.ArrayList;
 
 public class AtomicTorus extends AtomicCapillar {
-    private float curvRadius;
-    private float curvAngleR;
+    private double curvRadius;
+    private double curvAngleR;
 
-    public AtomicTorus(final AtomFactory atomFactory, final CartesianPoint front, float period, float chargeNumber,
-                       float radius, float curvRadius, float curvAngleR) {
+    public AtomicTorus(final AtomFactory atomFactory, final CartesianPoint front, double period, double chargeNumber,
+                       double radius, double curvRadius, double curvAngleR) {
         super(atomFactory, front, period, chargeNumber, radius);
         this.curvRadius = curvRadius;
         this.curvAngleR = curvAngleR;
         this.length = Utils.getTorusLength(curvRadius, curvAngleR);
     }
 
-    public AtomicTorus(final AtomFactory atomFactory, final CartesianPoint front, final SphericalPoint position, float period,
-                       float chargeNumber, float radius, float curvRadius, float curvAngleR) {
+    public AtomicTorus(final AtomFactory atomFactory, final CartesianPoint front, final SphericalPoint position, double period,
+                       double chargeNumber, double radius, double curvRadius, double curvAngleR) {
         super(atomFactory, front, period, chargeNumber, radius);
         this.position = position;
         this.curvRadius = curvRadius;
@@ -48,7 +48,7 @@ public class AtomicTorus extends AtomicCapillar {
     }
 
     @Override
-    protected float getCriticalAngle(final ChargedParticle particle) {
+    protected double getCriticalAngle(final ChargedParticle particle) {
         return 0;
     }
 
@@ -67,8 +67,8 @@ public class AtomicTorus extends AtomicCapillar {
         return false;
     }
 
-    public static CapillarFactory getFactory(final AtomFactory atomFactory, float period, float chargeNumber,
-                                             float radius, float curvRadius, float curvAngleR) {
+    public static CapillarFactory getFactory(final AtomFactory atomFactory, double period, double chargeNumber,
+                                             double radius, double curvRadius, double curvAngleR) {
         return new CapillarFactory() {
 
             @Override
@@ -78,12 +78,12 @@ public class AtomicTorus extends AtomicCapillar {
             }
 
             @Override
-            public float getRadius() {
+            public double getRadius() {
                 return radius;
             }
 
             @Override
-            public float getLength() {
+            public double getLength() {
                 return Utils.getTorusLength(curvRadius, curvAngleR);
             }
         };

@@ -11,61 +11,61 @@ import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
 public class SingleSmoothTorus extends SingleSmoothCapillar {
-    private float curvRadius;
-    private float curvAngleR;
+    private double curvRadius;
+    private double curvAngleR;
 
-    public SingleSmoothTorus(final CartesianPoint front, float radius, float curvRadius, float curvAngleR, float roughnessSize,
-                             float roughnessAngleR, float reflectivity, float criticalAngleR) {
+    public SingleSmoothTorus(final CartesianPoint front, double radius, double curvRadius, double curvAngleR, double roughnessSize,
+                             double roughnessAngleR, double reflectivity, double criticalAngleR) {
         super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.curvRadius = curvRadius;
         this.curvAngleR = curvAngleR;
         this.length = Utils.getTorusLength(curvRadius, curvAngleR);
-//        this.detector = new RotatedDetector(getDetectorsCoordinate(), 2 * radius, curvAngleR);
-        this.detector = new Detector(getDetectorsCoordinate(), 2 * radius);
+//        this.detector = new RotatedDetector(getDetectorsCoordinate(), 2.0 * radius, curvAngleR);
+        this.detector = new Detector(getDetectorsCoordinate(), 2.0 * radius);
     }
 
     @Override
     protected Vector getNormal(final CartesianPoint point) {
-        float x = point.getX() - front.getX();
-        float y = point.getY() - front.getY();
-        float z = point.getZ() - front.getZ() - curvRadius; // + curvRadius сместит влево
+        double x = point.getX() - front.getX();
+        double y = point.getY() - front.getY();
+        double z = point.getZ() - front.getZ() - curvRadius; // + curvRadius сместит влево
 
         return new Vector(
-                (-2 * (x * x + y * y + z * z + curvRadius * curvRadius - radius * radius) * 2 * x
-                        + 8 * curvRadius * curvRadius * x),
+                (-2.0 * (x * x + y * y + z * z + curvRadius * curvRadius - radius * radius) * 2.0 * x
+                        + 8.0 * curvRadius * curvRadius * x),
 
-                (-2 * (x * x + y * y + z * z + curvRadius * curvRadius - radius * radius) * 2 * y),
+                (-2.0 * (x * x + y * y + z * z + curvRadius * curvRadius - radius * radius) * 2.0 * y),
 
-                (-2 * (x * x + y * y + z * z + curvRadius * curvRadius - radius * radius) * 2 * z
-                        + 8 * curvRadius * curvRadius * z));
+                (-2.0 * (x * x + y * y + z * z + curvRadius * curvRadius - radius * radius) * 2.0 * z
+                        + 8.0 * curvRadius * curvRadius * z));
     }
 
     @Override
     protected Vector getAxis(final CartesianPoint point) {
-        return normal.getNewByTurningAroundOX(PI / 2).turnAroundOY(getPointsAngle(point));
+        return normal.getNewByTurningAroundOX(PI / 2.0).turnAroundOY(getPointsAngle(point));
     }
 
     @Override
     protected CartesianPoint getHitPoint(final NeutralParticle p) {
-        if (p.getSpeed().getX() <= 0.0f) {
+        if (p.getSpeed().getX() <= 0.0) {
             p.setAbsorbed(true);
             return p.getCoordinate();
         }
 
-        float[] solution = {p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
+        double[] solution = {p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
                             p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
                             p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()};
 
-        float[] delta = {1.0f, 1.0f, 1.0f};
-        float[] F  = new float[3];
-        float[][] W = new float[3][3];
+        double[] delta = {1.0, 1.0, 1.0};
+        double[] F  = new double[3];
+        double[][] W = new double[3][3];
 
-        float E = 0.05f;
+        double E = 0.05;
         int iterationsAmount = 0;
 
-        float dr = generator().uniformFloat(0.0f, roughnessSize);
-        float r = radius - dr;
-        float x, y ,z;
+        double dr = generator().uniformDouble(0.0, roughnessSize);
+        double r = radius - dr;
+        double x, y ,z;
 
         while (Utils.getMax(delta) > E) {
             try {
@@ -85,43 +85,43 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
                 y = solution[1] - front.getY();
                 z = solution[2] - front.getZ() - curvRadius;
 
-                W[0][0] = 2 * (x * x + y * y + z * z + curvRadius * curvRadius - r * r) * 2 * x
-                        - 8 * curvRadius * curvRadius * x;
+                W[0][0] = 2.0 * (x * x + y * y + z * z + curvRadius * curvRadius - r * r) * 2.0 * x
+                        - 8.0 * curvRadius * curvRadius * x;
 
-                W[0][1] = 2 * (x * x + y * y + z * z + curvRadius * curvRadius - r * r) * 2 * y;
+                W[0][1] = 2.0 * (x * x + y * y + z * z + curvRadius * curvRadius - r * r) * 2.0 * y;
 
-                W[0][2] = 2 * (x * x + y * y + z * z + curvRadius * curvRadius - r * r) * 2 * z
-                        - 8 * curvRadius * curvRadius * z;
+                W[0][2] = 2.0 * (x * x + y * y + z * z + curvRadius * curvRadius - r * r) * 2.0 * z
+                        - 8.0 * curvRadius * curvRadius * z;
 
                 F[0] = (x * x + y * y + z * z + curvRadius * curvRadius - r * r) *
                        (x * x + y * y + z * z + curvRadius * curvRadius - r * r)
-                        - 4 * curvRadius * curvRadius * (x * x + z * z);
+                        - 4.0 * curvRadius * curvRadius * (x * x + z * z);
 
-                if (p.getSpeed().getY() == 0.0f) {
-                    W[1][0] = 0.0f;
-                    W[1][1] = 1.0f;
-                    W[1][2] = 0.0f;
+                if (p.getSpeed().getY() == 0.0) {
+                    W[1][0] = 0.0;
+                    W[1][1] = 1.0;
+                    W[1][2] = 0.0;
 
                     F[1] = solution[1] - p.getCoordinate().getY();
                 } else {
-                    W[1][0] = 1.0f / p.getSpeed().getX();
-                    W[1][1] = -1.0f / p.getSpeed().getY();
-                    W[1][2] = 0.0f;
+                    W[1][0] = 1.0 / p.getSpeed().getX();
+                    W[1][1] = -1.0 / p.getSpeed().getY();
+                    W[1][2] = 0.0;
 
                     F[1] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX()
                             - (solution[1] - p.getCoordinate().getY()) / p.getSpeed().getY();
                 }
 
-                if (p.getSpeed().getZ() == 0.0f) {
-                    W[2][0] = 0.0f;
-                    W[2][1] = 0.0f;
-                    W[2][2] = 1.0f;
+                if (p.getSpeed().getZ() == 0.0) {
+                    W[2][0] = 0.0;
+                    W[2][1] = 0.0;
+                    W[2][2] = 1.0;
 
                     F[2] = solution[2] - p.getCoordinate().getZ();
                 } else {
-                    W[2][0] = 0.0f;
-                    W[2][1] = 1.0f / p.getSpeed().getY();
-                    W[2][2] = -1.0f / p.getSpeed().getZ();
+                    W[2][0] = 0.0;
+                    W[2][1] = 1.0 / p.getSpeed().getY();
+                    W[2][2] = -1.0 / p.getSpeed().getZ();
 
                     F[2] = (solution[1] - p.getCoordinate().getY()) / p.getSpeed().getY()
                             - (solution[2] - p.getCoordinate().getZ()) / p.getSpeed().getZ();
@@ -151,7 +151,7 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
 
     @Override
     protected boolean isPointInside(final CartesianPoint point) {
-//        float angle = getPointsAngle(point);
+//        double angle = getPointsAngle(point);
 //        return angle >= 0 && angle <= curvAngleR;
 
         return point.getX() < front.getX() + length;
@@ -160,16 +160,16 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
     @Override
     protected CartesianPoint getDetectorsCoordinate() {
         return new CartesianPoint(
-                (float) (front.getX() + curvRadius * Math.sin(curvAngleR)),
+                front.getX() + curvRadius * Math.sin(curvAngleR),
                 front.getY(),
-                (float) (front.getZ() + curvRadius * (1 - Math.cos(curvAngleR))));
+                front.getZ() + curvRadius * (1 - Math.cos(curvAngleR)));
     }
 
-    private float getPointsAngle(final CartesianPoint point) {
-        float x = point.getX();
-        float y = point.getY();
-        float z = point.getZ();
+    private double getPointsAngle(final CartesianPoint point) {
+        double x = point.getX();
+        double y = point.getY();
+        double z = point.getZ();
 
-        return (float) Math.asin(x / Math.sqrt(x * x + y * y + (z - curvRadius) * (z - curvRadius)));
+        return Math.asin(x / Math.sqrt(x * x + y * y + (z - curvRadius) * (z - curvRadius)));
     }
 }

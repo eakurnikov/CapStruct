@@ -13,32 +13,32 @@ import java.util.List;
 import static com.private_void.utils.Constants.BOHR_RADIUS;
 
 public abstract class AtomicSurface extends Surface {
-    protected float period;
-    protected float chargeNumber;
-    protected float shieldingDistance;
+    protected double period;
+    protected double chargeNumber;
+    protected double shieldingDistance;
     protected AtomFactory atomFactory;
     protected List<Atom> atoms;
 
-    public AtomicSurface(final AtomFactory atomFactory, final CartesianPoint front, float period, float chargeNumber) {
+    public AtomicSurface(final AtomFactory atomFactory, final CartesianPoint front, double period, double chargeNumber) {
         super(front);
         this.atomFactory = atomFactory;
         this.period = period;
         this.chargeNumber = chargeNumber;
-        this.shieldingDistance = 1.0f;
+        this.shieldingDistance = 1.0;
         this.atoms = new ArrayList<>();
     }
 
-    protected void setShieldingDistance(float particleChargeNumber) {
-        this.shieldingDistance = 0.885f * BOHR_RADIUS * (float) (Math.pow(Math.sqrt(particleChargeNumber) + Math.sqrt(chargeNumber),  2/3));
+    protected void setShieldingDistance(double particleChargeNumber) {
+        this.shieldingDistance = 0.885 * BOHR_RADIUS * Math.pow(Math.sqrt(particleChargeNumber) + Math.sqrt(chargeNumber),  2.0 / 3.0);
     }
 
     protected abstract void createAtoms();
 
-    protected abstract float getCriticalAngle(final ChargedParticle particle);
+    protected abstract double getCriticalAngle(final ChargedParticle particle);
 
     protected abstract Vector getNewSpeed(final ChargedParticle particle);
 
     protected abstract CartesianPoint getNewCoordinate(final ChargedParticle p);
 
-    //protected abstract float getPotential(final ChargedParticle particle);
+    //protected abstract double getPotential(final ChargedParticle particle);
 }

@@ -14,12 +14,12 @@ public abstract class Flux {
     protected CartesianPoint fluxCoordinate;
     protected Vector fluxAxis;
     protected int particlesAmount;
-    protected float minIntensity;
+    protected double minIntensity;
     protected List<? extends Particle> particles;
 
     protected Flux(final ParticleFactory particleFactory, final CoordinateFactory coordinateFactory,
                    final CartesianPoint fluxCoordinate, final Vector fluxAxis,
-                   int particlesAmount, float minIntensity) {
+                   int particlesAmount, double minIntensity) {
         this.particleFactory = particleFactory;
         this.coordinateFactory = coordinateFactory;
         this.fluxCoordinate = fluxCoordinate;
@@ -38,11 +38,11 @@ public abstract class Flux {
         particles = newParticles;
     }
 
-    public float getMinIntensity() {
+    public double getMinIntensity() {
         return minIntensity;
     }
 
-    public void setMinIntensity(float minIntensity) {
+    public void setMinIntensity(double minIntensity) {
         this.minIntensity = minIntensity;
     }
 }

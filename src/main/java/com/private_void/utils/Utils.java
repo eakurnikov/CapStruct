@@ -6,12 +6,12 @@ public final class Utils {
 
     private Utils() {}
 
-    public static boolean compareToZero(float value) {
+    public static boolean compareToZero(double value) {
         return Math.abs(value) < ZERO;
     }
 
-    public static float[] matrixMultiplication(final float[][] A, final float[] B) {
-        float[] C = new float[3];
+    public static double[] matrixMultiplication(final double[][] A, final double[] B) {
+        double[] C = new double[3];
         for (int i = 0; i < 3; i++) {
             C[i] = 0;
             for (int k = 0; k < 3; k++) {
@@ -21,12 +21,12 @@ public final class Utils {
         return C;
     }
 
-    public static float[][] inverseMatrix(final float[][] A) {
-        float[][] B = new float[3][3];
+    public static double[][] inverseMatrix(final double[][] A) {
+        double[][] B = new double[3][3];
         try {
-            float detA = A[0][0] * det(A, 0, 0)
-                       + A[0][1] * det(A, 0, 1)
-                       + A[0][2] * det(A, 0, 2);
+            double detA = A[0][0] * det(A, 0, 0)
+                        + A[0][1] * det(A, 0, 1)
+                        + A[0][2] * det(A, 0, 2);
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
                     B[j][i] = det(A, i, j) / detA;
@@ -43,7 +43,7 @@ public final class Utils {
         return B;
     }
 
-    public static float det(final float[][] A, int i, int j) {
+    public static double det(final double[][] A, int i, int j) {
         i += 1;
         if (i == 3)
             i -= 3;
@@ -63,8 +63,8 @@ public final class Utils {
         return A[i][j] * A[a][ b] - A[i][b] * A[a][j];
     }
 
-    public static float getMax(final float[] A) {
-        float max = Math.abs(A[0]);
+    public static double getMax(final double[] A) {
+        double max = Math.abs(A[0]);
         for (int i = 1; i < 3; i++) {
             if (Math.abs(A[i]) > max) {
                 max = Math.abs(A[i]);
@@ -73,23 +73,19 @@ public final class Utils {
         return max;
     }
 
-    public static float convertDegreesToRadians(final float angleDegrees) {
-        return (float) Math.PI * angleDegrees / 180;
+    public static double getConeLength(double radius, double divergentAngleR, double coneCoefficient) {
+        return radius * (1 / Math.tan(divergentAngleR)) * coneCoefficient;
     }
 
-    public static float getConeLength(float radius, float divergentAngleR, float coneCoefficient) {
-        return radius * (1 / (float) Math.tan(divergentAngleR)) * coneCoefficient;
+    public static double getConeDivergentAngle(double radius, double length, double coneCoefficient) {
+        return Math.atan((radius / length) * coneCoefficient);
     }
 
-    public static float getConeDivergentAngle(float radius, float length, float coneCoefficient) {
-        return (float) Math.atan((radius / length) * coneCoefficient);
+    public static double getTorusLength(double curvRadius, double curvAngleR) {
+        return curvRadius * Math.sin(curvAngleR);
     }
 
-    public static float getTorusLength(float curvRadius, float curvAngleR) {
-        return curvRadius * (float) Math.sin(curvAngleR);
-    }
-
-    public static float getTorusCurvRadius(float length, float curvAngleR) {
-        return length / (float) Math.sin(curvAngleR);
+    public static double getTorusCurvRadius(double length, double curvAngleR) {
+        return length / Math.sin(curvAngleR);
     }
 }

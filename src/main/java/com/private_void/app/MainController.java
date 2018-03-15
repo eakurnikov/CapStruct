@@ -140,8 +140,8 @@ public class MainController {
 
         cylRadius.setText("7");
         cylLength.setText("1000");
-        cylRoughSize.setText("0.1");
-        cylRoughAngle.setText("5");
+        cylRoughSize.setText("0");
+        cylRoughAngle.setText("0");
         cylReflect.setText("1");
         cylSlideAngle.setText("90");
 
@@ -193,27 +193,27 @@ public class MainController {
     }
 
     private Flux createFlux() {
-        ParticleFactory neutralParticleFactory = NeutralParticle.getFactory(1.0f);
+        ParticleFactory neutralParticleFactory = NeutralParticle.getFactory(1.0);
 
         if (pFluxTab.isSelected()) {
-            float x = Float.parseFloat(pFluxX.getText());
-            float y = Float.parseFloat(pFluxY.getText());
-            float z = Float.parseFloat(pFluxZ.getText());
+            double x = Double.parseDouble(pFluxX.getText());
+            double y = Double.parseDouble(pFluxY.getText());
+            double z = Double.parseDouble(pFluxZ.getText());
 
-            float axisX = Float.parseFloat(pFluxAxisX.getText());
-            float axisY = Float.parseFloat(pFluxAxisY.getText());
-            float axisZ = Float.parseFloat(pFluxAxisZ.getText());
+            double axisX = Double.parseDouble(pFluxAxisX.getText());
+            double axisY = Double.parseDouble(pFluxAxisY.getText());
+            double axisZ = Double.parseDouble(pFluxAxisZ.getText());
 
             int layersAmount = Integer.parseInt(pFluxLayersAmount.getText());
             int particlesPerLayerAmount = Integer.parseInt(pFluxParticlesAmount.getText());
-            float layerDistance = Float.parseFloat(pFluxLayersDist.getText());
-            float minIntensity = Float.parseFloat(pFluxMinIntensity.getText());
+            double layerDistance = Double.parseDouble(pFluxLayersDist.getText());
+            double minIntensity = Double.parseDouble(pFluxMinIntensity.getText());
 
-            CoordinateFactory gaussDistribution = generator().getGaussDistribution(0.0f, 1.0f);
+            CoordinateFactory gaussDistribution = generator().getGaussDistribution(0.0, 1.0);
 
-            CoordinateFactory uniformDistribution = generator().getXFlatUniformDistribution(250.0f, 250.0f);
+            CoordinateFactory uniformDistribution = generator().getXFlatUniformDistribution(250.0, 250.0);
 
-            CoordinateFactory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(150.0f);
+            CoordinateFactory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(150.0);
 
             return new ParallelFlux(
                     neutralParticleFactory,
@@ -226,19 +226,19 @@ public class MainController {
                     minIntensity);
         }
         else {
-            CoordinateFactory gaussDistribution = generator().getGaussDistribution(0.0f,
-                    Utils.convertDegreesToRadians(Float.parseFloat(dFluxAngle.getText())));
+            CoordinateFactory gaussDistribution = generator().getGaussDistribution(0.0,
+                    Math.toRadians(Double.parseDouble(dFluxAngle.getText())));
 
-            float x = Float.parseFloat(dFluxX.getText());
-            float y = Float.parseFloat(dFluxY.getText());
-            float z = Float.parseFloat(dFluxZ.getText());
+            double x = Double.parseDouble(dFluxX.getText());
+            double y = Double.parseDouble(dFluxY.getText());
+            double z = Double.parseDouble(dFluxZ.getText());
 
-            float axisX = Float.parseFloat(dFluxAxisX.getText());
-            float axisY = Float.parseFloat(dFluxAxisY.getText());
-            float axisZ = Float.parseFloat(dFluxAxisZ.getText());
+            double axisX = Double.parseDouble(dFluxAxisX.getText());
+            double axisY = Double.parseDouble(dFluxAxisY.getText());
+            double axisZ = Double.parseDouble(dFluxAxisZ.getText());
 
             int totalParticlesAmount = Integer.parseInt(dFluxParticlesAmount.getText());
-            float minIntensity = Float.parseFloat(dFluxMinIntensity.getText());
+            double minIntensity = Double.parseDouble(dFluxMinIntensity.getText());
 
             return new DivergentFlux(
                     neutralParticleFactory,
@@ -253,24 +253,24 @@ public class MainController {
     private Plate createPlate() {
 
         if (cylTab.isSelected()) {
-            float plateCenterX = Float.parseFloat(cylX.getText());
-            float plateCenterY = Float.parseFloat(cylY.getText());
-            float plateCenterZ = Float.parseFloat(cylZ.getText());
+            double plateCenterX = Double.parseDouble(cylX.getText());
+            double plateCenterY = Double.parseDouble(cylY.getText());
+            double plateCenterZ = Double.parseDouble(cylZ.getText());
 
-            float capillarRadius = Float.parseFloat(cylRadius.getText());
-            float capillarLength = Float.parseFloat(cylLength.getText());
-            float capillarRoughnessSize = Float.parseFloat(cylRoughSize.getText());
-            float capillarRougnessAngleD = Float.parseFloat(cylRoughAngle.getText());
-            float capillarRougnessAngleR = Utils.convertDegreesToRadians(capillarRougnessAngleD);
-            float capillarReflectivity = Float.parseFloat(cylReflect.getText());
-            float capillarCriticalAngleD = Float.parseFloat(cylSlideAngle.getText());
-            float capillarCriticalAngleR = Utils.convertDegreesToRadians(capillarCriticalAngleD);
+            double capillarRadius = Double.parseDouble(cylRadius.getText());
+            double capillarLength = Double.parseDouble(cylLength.getText());
+            double capillarRoughnessSize = Double.parseDouble(cylRoughSize.getText());
+            double capillarRougnessAngleD = Double.parseDouble(cylRoughAngle.getText());
+            double capillarRougnessAngleR = Math.toRadians(capillarRougnessAngleD);
+            double capillarReflectivity = Double.parseDouble(cylReflect.getText());
+            double capillarCriticalAngleD = Double.parseDouble(cylSlideAngle.getText());
+            double capillarCriticalAngleR = Math.toRadians(capillarCriticalAngleD);
 
-            float plateCapillarsDensity = 0.0034f; //for radius = 7
-//          float plateCapillarsDensity = 0.0025f; //for radius < 10 for domains
+            double plateCapillarsDensity = 0.0034; //for radius = 7
+//          double plateCapillarsDensity = 0.0025d; //for radius < 10 for domains
 
 //          int capillarsAmount = 320;
-            float plateSideLength = 300.0f;
+            double plateSideLength = 300.0;
 
             CapillarFactory smoothCylinderFactory = SmoothCylinder.getFactory(
                     capillarRadius,
@@ -280,47 +280,47 @@ public class MainController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
-            return new CurvedPlate(
-                    smoothCylinderFactory,
-                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
-                    plateCapillarsDensity,
-                    Utils.convertDegreesToRadians(1.0f),
-                    50_000.0f);
-
-//            return new FlatPlate(
+//            return new CurvedPlate(
 //                    smoothCylinderFactory,
 //                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
 //                    plateCapillarsDensity,
-//                    plateSideLength);
+//                    Math.toRadians(1.0),
+//                    50_000.0);
+
+            return new FlatPlate(
+                    smoothCylinderFactory,
+                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
+                    plateCapillarsDensity,
+                    plateSideLength);
         }
 
         if (torusTab.isSelected()) {
-            float plateCenterX = Float.parseFloat(torX.getText());
-            float plateCenterY = Float.parseFloat(torY.getText());
-            float plateCenterZ = Float.parseFloat(torZ.getText());
+            double plateCenterX = Double.parseDouble(torX.getText());
+            double plateCenterY = Double.parseDouble(torY.getText());
+            double plateCenterZ = Double.parseDouble(torZ.getText());
 
-            float capillarSmallRadius = Float.parseFloat(torRadius.getText());
-            float capillarBigRadius = Float.parseFloat(torBigRadius.getText());
-            float capillarCurvAngleD = Float.parseFloat(torAngle.getText());
-            float capillarCurvAngleR = Utils.convertDegreesToRadians(capillarCurvAngleD);
-            float capillarRoughnessSize = Float.parseFloat(torRoughSize.getText());
-            float capillarRoughnessAngleD = Float.parseFloat(torRoughAngle.getText());
-            float capillarRoughnessAngleR = Utils.convertDegreesToRadians(capillarRoughnessAngleD);
-            float capillarReflectivity = Float.parseFloat(torReflect.getText());
-            float capillarCriticalAngleD = Float.parseFloat(torSlideAngle.getText());
-            float capillarCriticalAngleR = Utils.convertDegreesToRadians(capillarCriticalAngleD);
+            double capillarSmallRadius = Double.parseDouble(torRadius.getText());
+            double capillarBigRadius = Double.parseDouble(torBigRadius.getText());
+            double capillarCurvAngleD = Double.parseDouble(torAngle.getText());
+            double capillarCurvAngleR = Math.toRadians(capillarCurvAngleD);
+            double capillarRoughnessSize = Double.parseDouble(torRoughSize.getText());
+            double capillarRoughnessAngleD = Double.parseDouble(torRoughAngle.getText());
+            double capillarRoughnessAngleR = Math.toRadians(capillarRoughnessAngleD);
+            double capillarReflectivity = Double.parseDouble(torReflect.getText());
+            double capillarCriticalAngleD = Double.parseDouble(torSlideAngle.getText());
+            double capillarCriticalAngleR = Math.toRadians(capillarCriticalAngleD);
 
-            float plateCapillarsDensity = 0.0034f; //for radius = 7
-//          float plateCapillarsDensity = 0.0025f; //for radius < 10 for domains
+            double plateCapillarsDensity = 0.0034; //for radius = 7
+//          double plateCapillarsDensity = 0.0025; //for radius < 10 for domains
 
-            float plateSideLength = 300.0f;
+            double plateSideLength = 300.0;
 
 //          int capillarsAmount = 320;
-            float plateMaxAngleR = 5.0f;
+            double plateMaxAngleR = 5.0;
 
             CapillarFactory smoothTorusFactoryWithRadius = SmoothTorus.getFactory(
                     capillarSmallRadius,
-                    1000.0f,
+                    1000.0,
                     capillarCurvAngleR,
                     capillarRoughnessSize,
                     capillarRoughnessAngleR,
@@ -329,7 +329,7 @@ public class MainController {
 
             CapillarFactory smoothTorusFactoryWithLength = SmoothTorus.getFactoryWithLength(
                     capillarSmallRadius,
-                    1000.0f,
+                    1000.0,
                     capillarCurvAngleR,
                     capillarRoughnessSize,
                     capillarRoughnessAngleR,
@@ -350,18 +350,18 @@ public class MainController {
     private SingleSmoothCapillar createCapillar() {
 
         if (cylTab.isSelected()) {
-            float frontX = Float.parseFloat(cylX.getText());
-            float frontY = Float.parseFloat(cylY.getText());
-            float frontZ = Float.parseFloat(cylZ.getText());
+            double frontX = Double.parseDouble(cylX.getText());
+            double frontY = Double.parseDouble(cylY.getText());
+            double frontZ = Double.parseDouble(cylZ.getText());
 
-            float radius = Float.parseFloat(cylRadius.getText());
-            float length = Float.parseFloat(cylLength.getText());
-            float roughnessSize = Float.parseFloat(cylRoughSize.getText());
-            float roughnessAngleD = Float.parseFloat(cylRoughAngle.getText());
-            float roughnessAngleR = Utils.convertDegreesToRadians(roughnessAngleD);
-            float reflectivity = Float.parseFloat(cylReflect.getText());
-            float criticalAngleD = Float.parseFloat(cylSlideAngle.getText());
-            float criticalAngleR = Utils.convertDegreesToRadians(criticalAngleD);
+            double radius = Double.parseDouble(cylRadius.getText());
+            double length = Double.parseDouble(cylLength.getText());
+            double roughnessSize = Double.parseDouble(cylRoughSize.getText());
+            double roughnessAngleD = Double.parseDouble(cylRoughAngle.getText());
+            double roughnessAngleR = Math.toRadians(roughnessAngleD);
+            double reflectivity = Double.parseDouble(cylReflect.getText());
+            double criticalAngleD = Double.parseDouble(cylSlideAngle.getText());
+            double criticalAngleR = Math.toRadians(criticalAngleD);
 
             return new SingleSmoothCylinder(
                     new CartesianPoint(frontX, frontY, frontZ),
@@ -374,20 +374,20 @@ public class MainController {
         }
 
         if (torusTab.isSelected()) {
-            float frontX = Float.parseFloat(torX.getText());
-            float frontY = Float.parseFloat(torY.getText());
-            float frontZ = Float.parseFloat(torZ.getText());
+            double frontX = Double.parseDouble(torX.getText());
+            double frontY = Double.parseDouble(torY.getText());
+            double frontZ = Double.parseDouble(torZ.getText());
 
-            float smallRadius = Float.parseFloat(torRadius.getText());
-            float bigRadius = Float.parseFloat(torBigRadius.getText());
-            float curvAngleD = Float.parseFloat(torAngle.getText());
-            float curvAngleR = Utils.convertDegreesToRadians(curvAngleD);
-            float roughnessSize = Float.parseFloat(torRoughSize.getText());
-            float roughnessAngleD = Float.parseFloat(torRoughAngle.getText());
-            float roughnessAngleR = Utils.convertDegreesToRadians(roughnessAngleD);
-            float reflectivity = Float.parseFloat(torReflect.getText());
-            float criticalAngleD = Float.parseFloat(torSlideAngle.getText());
-            float criticalAngleR = Utils.convertDegreesToRadians(criticalAngleD);
+            double smallRadius = Double.parseDouble(torRadius.getText());
+            double bigRadius = Double.parseDouble(torBigRadius.getText());
+            double curvAngleD = Double.parseDouble(torAngle.getText());
+            double curvAngleR = Math.toRadians(curvAngleD);
+            double roughnessSize = Double.parseDouble(torRoughSize.getText());
+            double roughnessAngleD = Double.parseDouble(torRoughAngle.getText());
+            double roughnessAngleR = Math.toRadians(roughnessAngleD);
+            double reflectivity = Double.parseDouble(torReflect.getText());
+            double criticalAngleD = Double.parseDouble(torSlideAngle.getText());
+            double criticalAngleR = Math.toRadians(criticalAngleD);
 
             return new SingleSmoothTorus(
                     new CartesianPoint(frontX, frontY, frontZ),
@@ -401,19 +401,19 @@ public class MainController {
         }
 
         if (coneTab.isSelected()) {
-            float frontX = Float.parseFloat(coneX.getText());
-            float frontY = Float.parseFloat(coneY.getText());
-            float frontZ = Float.parseFloat(coneZ.getText());
+            double frontX = Double.parseDouble(coneX.getText());
+            double frontY = Double.parseDouble(coneY.getText());
+            double frontZ = Double.parseDouble(coneZ.getText());
 
-            float radius = Float.parseFloat(this.coneRadius.getText());
-            float length = Float.parseFloat(coneAngle.getText()); //now the second constructor is used (with length)
-            float coneCoefficient = Float.parseFloat(this.coneCoefficient.getText());
-            float roughnessSize = Float.parseFloat(coneRoughSize.getText());
-            float roughnessAngleD = Float.parseFloat(coneRoughAngle.getText());
-            float roughnessAngleR = Utils.convertDegreesToRadians(roughnessAngleD);
-            float reflectivity = Float.parseFloat(coneReflect.getText());
-            float criticalAngleD = Float.parseFloat(coneSlideAngle.getText());
-            float criticalAngleR = Utils.convertDegreesToRadians(criticalAngleD);
+            double radius = Double.parseDouble(this.coneRadius.getText());
+            double length = Double.parseDouble(coneAngle.getText()); //now the second constructor is used (with length)
+            double coneCoefficient = Double.parseDouble(this.coneCoefficient.getText());
+            double roughnessSize = Double.parseDouble(coneRoughSize.getText());
+            double roughnessAngleD = Double.parseDouble(coneRoughAngle.getText());
+            double roughnessAngleR = Math.toRadians(roughnessAngleD);
+            double reflectivity = Double.parseDouble(coneReflect.getText());
+            double criticalAngleD = Double.parseDouble(coneSlideAngle.getText());
+            double criticalAngleR = Math.toRadians(criticalAngleD);
 
             try {
                 return new SingleSmoothCone(
@@ -442,29 +442,29 @@ public class MainController {
         }
 
 //        if (planeTab.isSelected()) {
-//            float frontX = Float.parseFloat(planeX.getText());
-//            float frontY = Float.parseFloat(planeY.getText());
-//            float frontZ = Float.parseFloat(planeZ.getText());
-//            float size = Float.parseFloat(planeSize.getText());
+//            double frontX = Double.parseDouble(planeX.getText());
+//            double frontY = Double.parseDouble(planeY.getText());
+//            double frontZ = Double.parseDouble(planeZ.getText());
+//            double size = Double.parseDouble(planeSize.getText());
 //
 //            return new SmoothPlane(
 //                    new CartesianPoint(frontX, frontY, frontZ),
 //                    size,
-//                    0.2f,
-//                    5f,
-//                    1f,
-//                    90f);
+//                    0.2,
+//                    5,
+//                    1,
+//                    90);
 //        }
 
 //        if (planeTab.isSelected()) {
 //            AtomFactory atomFactory = Atom.getFactory();
-//            float frontX = Float.parseFloat(planeX.getText());
-//            float frontY = Float.parseFloat(planeY.getText());
-//            float frontZ = Float.parseFloat(planeZ.getText());
-//            float size = Float.parseFloat(planeSize.getText());
+//            double frontX = Double.parseDouble(planeX.getText());
+//            double frontY = Double.parseDouble(planeY.getText());
+//            double frontZ = Double.parseDouble(planeZ.getText());
+//            double size = Double.parseDouble(planeSize.getText());
 //
-//            float period = Float.parseFloat(planePeriod.getText());
-//            float chargeNumber = Float.parseFloat(planeChargeNum.getText());
+//            double period = Double.parseDouble(planePeriod.getText());
+//            double chargeNumber = Double.parseDouble(planeChargeNum.getText());
 //            return new AtomicPlane(
 //                    atomFactory,
 //                    new CartesianPoint(frontX, frontY, frontZ),
@@ -480,7 +480,7 @@ public class MainController {
         XYChart.Series series = new XYChart.Series();
         series.setName("Particles");
         if (detector instanceof RotatedDetector) {
-            float angle = -((RotatedDetector) detector).getAngle();
+            double angle = -((RotatedDetector) detector).getAngle();
             for (Particle p : flux.getParticles()) {
                 CartesianPoint rotatedCoordinate = p.getProjection(angle);
                 series.getData().add(new XYChart.Data(detector.getCenter().getZ() + rotatedCoordinate.getZ(), rotatedCoordinate.getY()));
@@ -508,10 +508,10 @@ public class MainController {
         xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
 
-        xAxis.setUpperBound(1.2f * upperBound);
-        yAxis.setUpperBound(1.2f * upperBound);
+        xAxis.setUpperBound(1.2 * upperBound);
+        yAxis.setUpperBound(1.2 * upperBound);
 
-        xAxis.setLowerBound(1.2f * lowerBound);
-        yAxis.setLowerBound(1.2f * lowerBound);
+        xAxis.setLowerBound(1.2 * lowerBound);
+        yAxis.setLowerBound(1.2 * lowerBound);
     }
 }

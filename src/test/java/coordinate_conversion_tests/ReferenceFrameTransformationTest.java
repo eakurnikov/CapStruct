@@ -17,51 +17,51 @@ public class ReferenceFrameTransformationTest {
 
     @Test
     public void toInnerAndBack() {
-        Particle particleExample = NeutralParticle.getFactory(1.0f)
+        Particle particleExample = NeutralParticle.getFactory(1.0)
                 .getNewParticle(
-                        new CartesianPoint(0.0f, -123.0f, 20.0f),
-                        new Vector(0.94f, -0.1f, -0.5f));
+                        new CartesianPoint(0.0, -123.0, 20.0),
+                        new Vector(0.94, -0.1, -0.5));
 
-        Particle particle = NeutralParticle.getFactory(1.0f)
+        Particle particle = NeutralParticle.getFactory(1.0)
                 .getNewParticle(
-                        new CartesianPoint(0.0f, -123.0f, 20.0f),
-                        new Vector(0.94f, -0.1f, -0.5f));
+                        new CartesianPoint(0.0, -123.0, 20.0),
+                        new Vector(0.94, -0.1, -0.5));
 
         Capillar capillar = SmoothCylinder.getFactory(
-                        10.0f,
-                        100.0f,
-                        0.0f,
-                        0.0f,
-                        1.0f,
-                        90.0f)
+                        10.0,
+                        100.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        90.0)
                 .getNewCapillar(
-                        new CartesianPoint(0.0f, 0.0f, 0.0f),
-                        new SphericalPoint(500.0f, (float) Math.toRadians(1.0f), (float) Math.toRadians(1.0f)));
+                        new CartesianPoint(0.0, 0.0, 0.0),
+                        new SphericalPoint(500.0, Math.toRadians(1.0), Math.toRadians(1.0)));
 
         // To inner reference frame
-        float directionCoefficient = -1.0f;
+        double directionCoefficient = -1.0;
 
         particle.getCoordinate()
-                .shift(0.0f,
-                        (float) Math.sin(-directionCoefficient * capillar.getPosition().getTheta()),
-                        (float) Math.sin(-directionCoefficient * capillar.getPosition().getPhi()));
+                .shift(0.0,
+                        Math.sin(-directionCoefficient * capillar.getPosition().getTheta()),
+                        Math.sin(-directionCoefficient * capillar.getPosition().getPhi()));
 
         particle.getSpeed()
-                .turnAroundVector(directionCoefficient * capillar.getPosition().getTheta(), new Vector(0.0f, 0.0f, 1.0f))
-                .turnAroundVector(directionCoefficient * capillar.getPosition().getPhi(), new Vector(0.0f, 1.0f, 0.0f));
+                .turnAroundVector(directionCoefficient * capillar.getPosition().getTheta(), new Vector(0.0, 0.0, 1.0))
+                .turnAroundVector(directionCoefficient * capillar.getPosition().getPhi(), new Vector(0.0, 1.0, 0.0));
         //---
 
         // To global reference frame
-        directionCoefficient = 1.0f;
+        directionCoefficient = 1.0;
 
         particle.getCoordinate()
-                .shift(0.0f,
-                        (float) Math.sin(-directionCoefficient * capillar.getPosition().getTheta()),
-                        (float) Math.sin(-directionCoefficient * capillar.getPosition().getPhi()));
+                .shift(0.0,
+                        Math.sin(-directionCoefficient * capillar.getPosition().getTheta()),
+                        Math.sin(-directionCoefficient * capillar.getPosition().getPhi()));
 
         particle.getSpeed()
-                .turnAroundVector(directionCoefficient * capillar.getPosition().getTheta(), new Vector(0.0f, 0.0f, 1.0f))
-                .turnAroundVector(directionCoefficient * capillar.getPosition().getPhi(), new Vector(0.0f, 1.0f, 0.0f));
+                .turnAroundVector(directionCoefficient * capillar.getPosition().getTheta(), new Vector(0.0, 0.0, 1.0))
+                .turnAroundVector(directionCoefficient * capillar.getPosition().getPhi(), new Vector(0.0, 1.0, 0.0));
         //---
 
         assertTrue(Utils.compareToZero(particleExample.getCoordinate().getX() - particle.getCoordinate().getX()));

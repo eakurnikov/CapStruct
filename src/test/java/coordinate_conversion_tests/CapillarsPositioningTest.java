@@ -28,19 +28,19 @@ public class CapillarsPositioningTest {
     public void sphericalPositioningTest() {
 
         CapillarFactory smoothCylinderFactory = SmoothCylinder.getFactory(
-                7.0f,
-                500.0f,
-                0.0f,
-                0.0f,
-                1.0f,
-                90.0f);
+                7.0,
+                500.0,
+                0.0,
+                0.0,
+                1.0,
+                90.0);
 
         CurvedPlate curvedPlate = new CurvedPlate(
                 smoothCylinderFactory,
-                new CartesianPoint(0.0f, 0.0f, 0.0f),
-                0.0034f,
-                Utils.convertDegreesToRadians(3.65f),
-                2000.0f);
+                new CartesianPoint(0.0, 0.0, 0.0),
+                0.0034,
+                Math.toRadians(3.65),
+                2000.0);
 
         List<Capillar> capillars = curvedPlate.getCapillars();
 
@@ -52,13 +52,13 @@ public class CapillarsPositioningTest {
                     c.getX() * c.getX() +
                             c.getY() * c.getY() +
                             c.getZ() * c.getZ() -
-                            2000.0f * 2000.0f));
+                            2000.0 * 2000.0));
 
             assertTrue(Utils.compareToZero(
-                    (cylinder.getFront().getX() - 2000.0f) * (cylinder.getFront().getX() - 2000.0f) +
+                    (cylinder.getFront().getX() - 2000.0) * (cylinder.getFront().getX() - 2000.0) +
                             cylinder.getFront().getY() * cylinder.getFront().getY() +
                             cylinder.getFront().getZ() * cylinder.getFront().getZ() -
-                            2000.0f * 2000.0f));
+                            2000.0 * 2000.0));
         }
     }
 }

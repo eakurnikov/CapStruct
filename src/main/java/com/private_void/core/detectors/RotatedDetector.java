@@ -5,26 +5,26 @@ import com.private_void.core.geometry.Vector;
 import com.private_void.core.particles.Particle;
 
 public class RotatedDetector extends Detector {
-    private float angleR;
+    private double angleR;
     private Vector normal;
 
-    public RotatedDetector(final CartesianPoint centerCoordinate, float width, float angleR) {
+    public RotatedDetector(final CartesianPoint centerCoordinate, double width, double angleR) {
         super(centerCoordinate, width);
         this.angleR = angleR;
-        this.normal = new Vector(1.0f, 0.0f, 0.0f).turnAroundOY(angleR);
+        this.normal = new Vector(1.0, 0.0, 0.0).turnAroundOY(angleR);
     }
 
     @Override
     protected CartesianPoint getCoordinateOnDetector(Particle p) {
-        float x = p.getCoordinate().getX();
-        float y = p.getCoordinate().getY();
-        float z = p.getCoordinate().getZ();
+        double x = p.getCoordinate().getX();
+        double y = p.getCoordinate().getY();
+        double z = p.getCoordinate().getZ();
 
-        float Vx = p.getSpeed().getX();
-        float Vy = p.getSpeed().getY();
-        float Vz = p.getSpeed().getZ();
+        double Vx = p.getSpeed().getX();
+        double Vy = p.getSpeed().getY();
+        double Vz = p.getSpeed().getZ();
 
-        float temp = (normal.getX() * (center.getX() - x)
+        double temp = (normal.getX() * (center.getX() - x)
                     + normal.getY() * (center.getY() - y)
                     + normal.getZ() * (center.getZ() - z))
                 / (normal.getX() * Vx + normal.getY() * Vy + normal.getZ() * Vz);
@@ -37,10 +37,10 @@ public class RotatedDetector extends Detector {
         CartesianPoint rotatedCoordinate = p.getProjection(-angleR);
         return rotatedCoordinate.getY() * rotatedCoordinate.getY() +
                (center.getZ() + rotatedCoordinate.getZ()) * (center.getZ() + rotatedCoordinate.getZ())
-                <= (width / 2) * (width / 2);
+                <= (width / 2.0) * (width / 2.0);
     }
 
-    public float getAngle() {
+    public double getAngle() {
         return angleR;
     }
 }

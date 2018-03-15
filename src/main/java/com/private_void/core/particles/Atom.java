@@ -4,9 +4,9 @@ import com.private_void.core.geometry.CartesianPoint;
 
 public class Atom {
     private CartesianPoint coordinate;
-    private float charge;
+    private double charge;
 
-    private Atom(final CartesianPoint coordinate, float charge) {
+    private Atom(final CartesianPoint coordinate, double charge) {
         this.coordinate = coordinate;
         this.charge = charge;
     }

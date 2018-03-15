@@ -28,116 +28,116 @@ public class Generator {
         return rand.nextInt(bound);
     }
 
-    public float uniformFloat(float minValue, float maxValue) {
-        return minValue + (maxValue - minValue) * rand.nextFloat();
+    public double uniformDouble(double minValue, double maxValue) {
+        return minValue + (maxValue - minValue) * rand.nextDouble();
     }
 
-    public CoordinateFactory getGaussDistribution(float mean, float dev) {
+    public CoordinateFactory getGaussDistribution(double mean, double dev) {
         return () -> {
-            float u, v, s;
-            float y, z;
+            double u, v, s;
+            double y, z;
 
             do {
-                u = rand.nextFloat() * 2 - 1;
-                v = rand.nextFloat() * 2 - 1;
+                u = rand.nextDouble() * 2.0 - 1.0;
+                v = rand.nextDouble() * 2.0 - 1.0;
                 s = u * u + v * v;
-            } while (s >= 1 || s == 0);
+            } while (s >= 1 || s == 0.0);
 
-            y = v * (float) Math.sqrt(-2.0f * Math.log(s) / s);
-            z = u * (float) Math.sqrt(-2.0f * Math.log(s) / s);
+            y = v * Math.sqrt(-2.0 * Math.log(s) / s);
+            z = u * Math.sqrt(-2.0 * Math.log(s) / s);
 
-            return new CartesianPoint(0.0f, mean + y * dev, mean + z * dev);
+            return new CartesianPoint(0.0, mean + y * dev, mean + z * dev);
         };
     }
 
-    public CoordinateFactory getGaussDistribution(final CartesianPoint center, float mean, float dev) {
+    public CoordinateFactory getGaussDistribution(final CartesianPoint center, double mean, double dev) {
         return () -> {
-            float u, v, s;
-            float y, z;
+            double u, v, s;
+            double y, z;
 
             do {
-                u = rand.nextFloat() * 2 - 1;
-                v = rand.nextFloat() * 2 - 1;
+                u = rand.nextDouble() * 2.0 - 1.0;
+                v = rand.nextDouble() * 2.0 - 1.0;
                 s = u * u + v * v;
-            } while (s >= 1 || s == 0);
+            } while (s >= 1.0 || s == 0.0);
 
-            y = v * (float) Math.sqrt(-2.0f * Math.log(s) / s);
-            z = u * (float) Math.sqrt(-2.0f * Math.log(s) / s);
+            y = v * Math.sqrt(-2.0 * Math.log(s) / s);
+            z = u * Math.sqrt(-2.0 * Math.log(s) / s);
 
-            return new CartesianPoint(0.0f, mean + y * dev, mean + z * dev).shift(center);
+            return new CartesianPoint(0.0, mean + y * dev, mean + z * dev).shift(center);
         };
     }
 
-    public CoordinateFactory getXFlatCircleUniformDistribution(float radius) {
+    public CoordinateFactory getXFlatCircleUniformDistribution(double radius) {
         return () -> {
-            float y;
-            float z;
+            double y;
+            double z;
 
             do {
-                y = uniformFloat(-radius, radius);
-                z = uniformFloat(-radius, radius);
+                y = uniformDouble(-radius, radius);
+                z = uniformDouble(-radius, radius);
             } while (y * y + z * z > radius * radius);
 
-            return new CartesianPoint(0.0f, y, z);
+            return new CartesianPoint(0.0, y, z);
         };
     }
 
-    public CoordinateFactory getXFlatCircleUniformDistribution(final CartesianPoint center, float radius) {
+    public CoordinateFactory getXFlatCircleUniformDistribution(final CartesianPoint center, double radius) {
         return () -> {
-            float y;
-            float z;
+            double y;
+            double z;
 
             do {
-                y = uniformFloat(-radius, radius);
-                z = uniformFloat(-radius, radius);
+                y = uniformDouble(-radius, radius);
+                z = uniformDouble(-radius, radius);
             } while (y * y + z * z > radius * radius);
 
-            return new CartesianPoint(0.0f, y, z).shift(center);
+            return new CartesianPoint(0.0, y, z).shift(center);
         };
     }
 
-    public CoordinateFactory getXFlatUniformDistribution(float yRange, float zRange) {
+    public CoordinateFactory getXFlatUniformDistribution(double yRange, double zRange) {
         return () -> new CartesianPoint(
-                0.0f,
-                uniformFloat(-yRange, yRange),
-                uniformFloat(-zRange, zRange));
+                0.0,
+                uniformDouble(-yRange, yRange),
+                uniformDouble(-zRange, zRange));
     }
 
-    public CoordinateFactory getXFlatUniformDistribution(final CartesianPoint center, float yRange, float zRange) {
+    public CoordinateFactory getXFlatUniformDistribution(final CartesianPoint center, double yRange, double zRange) {
         return () -> new CartesianPoint(
-                0.0f,
-                uniformFloat(-yRange, yRange),
-                uniformFloat(-zRange, zRange))
+                0.0,
+                uniformDouble(-yRange, yRange),
+                uniformDouble(-zRange, zRange))
                 .shift(center);
     }
 
-    public SphericalCoordinateFactory getSphericalUniformDistribution(float radius, float thetaRange, float phiRange) {
+    public SphericalCoordinateFactory getSphericalUniformDistribution(double radius, double thetaRange, double phiRange) {
         return () -> new SphericalPoint(radius,
-                uniformFloat(-thetaRange, thetaRange),
-                uniformFloat(-phiRange, phiRange));
+                uniformDouble(-thetaRange, thetaRange),
+                uniformDouble(-phiRange, phiRange));
     }
 
     public SphericalCoordinateFactory getSphericalUniformDistribution(final SphericalPoint config,
-                                                                      float radius, float thetaRange, float phiRange) {
+                                                                      double radius, double thetaRange, double phiRange) {
         return () -> new SphericalPoint(radius,
-                uniformFloat(-thetaRange, thetaRange),
-                uniformFloat(-phiRange, phiRange))
+                uniformDouble(-thetaRange, thetaRange),
+                uniformDouble(-phiRange, phiRange))
                 .shift(config);
     }
 
-    public CoordinateFactory getVolumeUniformDistribution(float xRange, float yRange, float zRange) {
+    public CoordinateFactory getVolumeUniformDistribution(double xRange, double yRange, double zRange) {
         return () -> new CartesianPoint(
-                uniformFloat(-xRange, xRange),
-                uniformFloat(-yRange, yRange),
-                uniformFloat(-zRange, zRange));
+                uniformDouble(-xRange, xRange),
+                uniformDouble(-yRange, yRange),
+                uniformDouble(-zRange, zRange));
     }
 
     public CoordinateFactory getVolumeUniformDistribution(final CartesianPoint center,
-                                                          float xRange, float yRange, float zRange) {
+                                                          double xRange, double yRange, double zRange) {
         return () -> new CartesianPoint(
-                uniformFloat(-xRange, xRange),
-                uniformFloat(-yRange, yRange),
-                uniformFloat(-zRange, zRange))
+                uniformDouble(-xRange, xRange),
+                uniformDouble(-yRange, yRange),
+                uniformDouble(-zRange, zRange))
                 .shift(center);
     }
 }

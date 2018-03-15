@@ -2,25 +2,25 @@ package com.private_void.core.geometry;
 
 //todo ограничения на углы нужно навесить, проверку делать при изменении
 public class SphericalPoint implements Point3D {
-    private float radius;
-    private float theta;
-    private float phi;
+    private double radius;
+    private double theta;
+    private double phi;
 
-    public SphericalPoint(float radius, float theta, float phi) {
+    public SphericalPoint(double radius, double theta, double phi) {
         this.radius = radius;
         this.theta = theta;
         this.phi = phi;
     }
 
     public CartesianPoint convertToCartesian() {
-        float x = (float) (radius * Math.sin(theta) * Math.cos(phi));
-        float y = (float) (radius * Math.cos(theta));
-        float z = (float) (radius * Math.sin(theta) * Math.sin(phi));
+        double x = radius * Math.sin(theta) * Math.cos(phi);
+        double y = radius * Math.cos(theta);
+        double z = radius * Math.sin(theta) * Math.sin(phi);
 
         return new CartesianPoint(x, y, z);
     }
 
-    public SphericalPoint shift(float radius, float theta, float phi) {
+    public SphericalPoint shift(double radius, double theta, double phi) {
         this.radius += radius;
         this.theta += theta;
         this.phi += phi;
@@ -36,7 +36,7 @@ public class SphericalPoint implements Point3D {
         return this;
     }
 
-    public SphericalPoint getNewByShift(float radius, float theta, float phi) {
+    public SphericalPoint getNewByShift(double radius, double theta, double phi) {
         SphericalPoint newPoint = new SphericalPoint(this.radius, this.theta, this.phi);
 
         newPoint.radius += radius;
@@ -56,42 +56,42 @@ public class SphericalPoint implements Point3D {
         return newPoint;
     }
 
-    public float getRadius() {
+    public double getRadius() {
         return radius;
     }
 
-    public void setRadius(float radius) {
+    public void setRadius(double radius) {
         this.radius = radius;
     }
 
-    public float getTheta() {
+    public double getTheta() {
         return theta;
     }
 
-    public void setTheta(float theta) {
+    public void setTheta(double theta) {
         this.theta = theta;
     }
 
-    public float getPhi() {
+    public double getPhi() {
         return phi;
     }
 
-    public void setPhi(float phi) {
+    public void setPhi(double phi) {
         this.phi = phi;
     }
 
     @Override
-    public float getQ1() {
+    public double getQ1() {
         return radius;
     }
 
     @Override
-    public float getQ2() {
+    public double getQ2() {
         return theta;
     }
 
     @Override
-    public float getQ3() {
+    public double getQ3() {
         return phi;
     }
 }

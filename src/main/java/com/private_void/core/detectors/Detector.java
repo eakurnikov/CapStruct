@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Detector {
     protected CartesianPoint center;
-    protected float width;
+    protected double width;
     protected double upperBound;
     protected double lowerBound;
 
@@ -18,9 +18,9 @@ public class Detector {
     protected int outOfCapillarsAmount;
     protected int outOfDetectorAmount;
 
-    private float L;
+    private double L;
 
-    public Detector(final CartesianPoint center, float width) {
+    public Detector(final CartesianPoint center, double width) {
         this.center = center;
         this.L = center.getX();
         this.width = width;
@@ -45,7 +45,7 @@ public class Detector {
 
         for (Particle particle : flux.getParticles()) {
 
-            if (true /*!particle.isOut()*/) {
+            if (!particle.isOut()) {
 
                 if (!particle.isAbsorbed()) {
                     particle.setCoordinate(getCoordinateOnDetector(particle));
@@ -72,13 +72,13 @@ public class Detector {
     }
 
     protected CartesianPoint getCoordinateOnDetector(Particle p) {
-        float x = p.getCoordinate().getX();
-        float y = p.getCoordinate().getY();
-        float z = p.getCoordinate().getZ();
+        double x = p.getCoordinate().getX();
+        double y = p.getCoordinate().getY();
+        double z = p.getCoordinate().getZ();
 
-        float Vx = p.getSpeed().getX();
-        float Vy = p.getSpeed().getY();
-        float Vz = p.getSpeed().getZ();
+        double Vx = p.getSpeed().getX();
+        double Vy = p.getSpeed().getY();
+        double Vz = p.getSpeed().getZ();
 
         return new CartesianPoint(L, (Vy / Vx) * (L - x) + y, (Vz / Vx) * (L - x) + z);
     }
@@ -143,31 +143,31 @@ public class Detector {
     }
 }
 
-//    protected float detectedIntensity;
-//    protected float absorbedIntensity;
-//    protected float outOfCapillarIntensity;
-//    protected float outOfDetectorIntensity;
+//    protected double detectedIntensity;
+//    protected double absorbedIntensity;
+//    protected double outOfCapillarIntensity;
+//    protected double outOfDetectorIntensity;
 //
-//    public float getDetectedIntensity() {
+//    public double getDetectedIntensity() {
 //        return detectedIntensity;
 //    }
 //
-//    public float getAbsorbedIntensity() {
+//    public double getAbsorbedIntensity() {
 //        return absorbedIntensity;
 //    }
 //
-//    public float getOutOfCapillarIntensity() {
+//    public double getOutOfCapillarIntensity() {
 //        return outOfCapillarIntensity;
 //    }
 //
-//    public float getOutOfDetectorIntensity() {
+//    public double getOutOfDetectorIntensity() {
 //        return outOfDetectorIntensity;
 //    }
 //
-//    public void increaseOutOfCapillarIntensity(float intensity) {
+//    public void increaseOutOfCapillarIntensity(double intensity) {
 //        outOfCapillarIntensity += intensity;
 //    }
 //
-//    public void increaseAbsorbedIntensity(float intensity) {
+//    public void increaseAbsorbedIntensity(double intensity) {
 //        absorbedIntensity += intensity;
 //    }

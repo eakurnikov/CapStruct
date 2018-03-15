@@ -6,20 +6,20 @@ import com.private_void.core.geometry.Vector;
 import static com.private_void.utils.Constants.RECURSIVE_ITERATIONS_MAX;
 
 public class NeutralParticle extends Particle {
-    private float intensity;
+    private double intensity;
     private int recursiveIterationCount;
 
-    private NeutralParticle(final CartesianPoint coordinate, final Vector speed, float intensity) {
+    private NeutralParticle(final CartesianPoint coordinate, final Vector speed, double intensity) {
         super(coordinate, speed);
         this.intensity = intensity;
         this.recursiveIterationCount = 1;
     }
 
-    public float getIntensity() {
+    public double getIntensity() {
         return intensity;
     }
 
-    public void decreaseIntensity(float reflectivity) {
+    public void decreaseIntensity(double reflectivity) {
         intensity *= reflectivity;
     }
 
@@ -39,7 +39,7 @@ public class NeutralParticle extends Particle {
         recursiveIterationCount = 1;
     }
 
-    public static ParticleFactory getFactory(float intensity) {
+    public static ParticleFactory getFactory(double intensity) {
         return (final CartesianPoint coordinate, final Vector speed) -> new NeutralParticle(coordinate, speed, intensity);
     }
 }

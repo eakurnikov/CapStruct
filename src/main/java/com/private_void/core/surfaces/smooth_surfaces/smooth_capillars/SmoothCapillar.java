@@ -13,17 +13,17 @@ import static com.private_void.utils.Generator.generator;
 
 public abstract  class SmoothCapillar extends SmoothSurface implements Capillar {
     protected SphericalPoint position;
-    protected float length;
-    protected float radius;
+    protected double length;
+    protected double radius;
 
-    protected SmoothCapillar(final CartesianPoint front, float radius, float roughnessSize, float roughnessAngleR,
-                             float reflectivity, float criticalAngleR) {
+    protected SmoothCapillar(final CartesianPoint front, double radius, double roughnessSize, double roughnessAngleR,
+                             double reflectivity, double criticalAngleR) {
         super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.radius = radius;
     }
 
-    protected SmoothCapillar(final CartesianPoint front, final SphericalPoint position, float radius,
-                             float roughnessSize, float roughnessAngleR, float reflectivity, float criticalAngleR) {
+    protected SmoothCapillar(final CartesianPoint front, final SphericalPoint position, double radius,
+                             double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
         super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.position = position;
         this.radius = radius;
@@ -38,18 +38,18 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
             CartesianPoint newCoordinate = getHitPoint(p);
 
             while (!p.isAbsorbed() && isPointInside(newCoordinate)) {
-                axis = new Vector(1.0f, 0.0f, 0.0f)
-                        .turnAroundOY(generator().uniformFloat(0.0f, 2.0f * PI));
+                axis = new Vector(1.0, 0.0, 0.0)
+                        .turnAroundOY(generator().uniformDouble(0.0, 2.0 * PI));
                 normal = getNormal(newCoordinate)
-                        .turnAroundVector(generator().uniformFloat(0.0f, roughnessAngleR), axis);
+                        .turnAroundVector(generator().uniformDouble(0.0, roughnessAngleR), axis);
                 axis = getAxis(newCoordinate);
 
-                float angleWithSurface = p.getSpeed().getAngle(normal) - PI / 2;
+                double angleWithSurface = p.getSpeed().getAngle(normal) - PI / 2.0;
                 p.decreaseIntensity(reflectivity);
 
                 if (angleWithSurface <= criticalAngleR) {
                     p.setCoordinate(newCoordinate);
-                    p.setSpeed(p.getSpeed().getNewByTurningAroundVector(2 * Math.abs(angleWithSurface), axis));
+                    p.setSpeed(p.getSpeed().getNewByTurningAroundVector(2.0 * Math.abs(angleWithSurface), axis));
                     newCoordinate = getHitPoint(p);
                 } else {
                     p.setAbsorbed(true);
@@ -65,23 +65,23 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
 
     @Override
     public boolean willParticleGetInside(final Particle p) {
-        float x0 = front.getX();
+        double x0 = front.getX();
 
-        float x = p.getCoordinate().getX();
-        float y = p.getCoordinate().getY();
-        float z = p.getCoordinate().getZ();
+        double x = p.getCoordinate().getX();
+        double y = p.getCoordinate().getY();
+        double z = p.getCoordinate().getZ();
 
-        float Vx = p.getSpeed().getX();
-        float Vy = p.getSpeed().getY();
-        float Vz = p.getSpeed().getZ();
+        double Vx = p.getSpeed().getX();
+        double Vy = p.getSpeed().getY();
+        double Vz = p.getSpeed().getZ();
 
-        float newY = (Vy / Vx) * (x0 - x) + y;
-        float newZ = (Vz / Vx) * (x0 - x) + z;
+        double newY = (Vy / Vx) * (x0 - x) + y;
+        double newZ = (Vz / Vx) * (x0 - x) + z;
 
         // Решение только для параллельного пучка. Если частицы падают под углом, то нужно все таки переходить в локальную систему отсчета
-        float R;
+        double R;
         if (position != null) {
-            R = radius * (float) Math.cos(position.getTheta()) * (float) Math.cos(position.getPhi());
+            R = radius * Math.cos(position.getTheta()) * Math.cos(position.getPhi());
         } else {
             R = radius;
         }

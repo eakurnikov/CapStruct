@@ -16,14 +16,14 @@ public abstract class Plate implements CapillarSystem {
     protected static final int CAPILLARS_PER_DOMAIN_AMOUNT = 4;
     protected CapillarFactory capillarFactory;
     protected CartesianPoint center;
-    protected float width;
+    protected double width;
     protected int capillarsAmount;
-    protected float capillarsDensity;
-    protected float capillarRadius;
+    protected double capillarsDensity;
+    protected double capillarRadius;
     protected List<Capillar> capillars;
     protected Detector detector;
 
-    public Plate(final CapillarFactory capillarFactory, final CartesianPoint center, float capillarsDensity) {
+    public Plate(final CapillarFactory capillarFactory, final CartesianPoint center, double capillarsDensity) {
         this.capillarFactory = capillarFactory;
         this.center = center;
         this.width = capillarFactory.getLength();

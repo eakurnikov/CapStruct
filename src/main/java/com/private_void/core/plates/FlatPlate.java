@@ -9,23 +9,23 @@ import com.private_void.core.surfaces.CapillarFactory;
 import static com.private_void.utils.Generator.generator;
 
 public class FlatPlate extends Plate {
-    private float sideLength;
+    private double sideLength;
 
-    public FlatPlate(final CapillarFactory capillarFactory, final CartesianPoint center, float capillarsDensity,
-                     float sideLength) {
+    public FlatPlate(final CapillarFactory capillarFactory, final CartesianPoint center, double capillarsDensity,
+                     double sideLength) {
         super(capillarFactory, center, capillarsDensity);
         this.sideLength = sideLength;
         createCapillars();
-        this.detector = new Detector(getDetectorsCoordinate(), sideLength * 1.0f);
+        this.detector = new Detector(getDetectorsCoordinate(), sideLength * 1.0);
     }
 
     @Override
     protected void createCapillars() {
         long start = System.nanoTime();
 
-        float frontSquare = sideLength * sideLength;
-        float minCapillarSquare = (2.0f * capillarRadius) * (2.0f * capillarRadius);
-        float maxCapillarDensity = 1.0f / minCapillarSquare;
+        double frontSquare = sideLength * sideLength;
+        double minCapillarSquare = (2.0 * capillarRadius) * (2.0 * capillarRadius);
+        double maxCapillarDensity = 1.0 / minCapillarSquare;
 
         if (capillarsDensity > maxCapillarDensity) {
             System.out.println("Capillars density is too big, it has been automatically set to " + maxCapillarDensity);
@@ -33,7 +33,7 @@ public class FlatPlate extends Plate {
             // todo заполняю сеткой впритирку
             capillars = null;
 
-        } else if (capillarsDensity > 0.67f * maxCapillarDensity) {
+        } else if (capillarsDensity > 0.67 * maxCapillarDensity) {
             System.out.println("Capillars density is very big, so it has been automatically set to " + maxCapillarDensity);
             /*todo capillarsAmount = ...
             заполняю сеткой с каким-то шагом*/
@@ -68,20 +68,20 @@ public class FlatPlate extends Plate {
 //    protected void createCapillars() throws IllegalArgumentException {
 //        long start = System.nanoTime();
 //
-//        float domainsAmount = capillarsAmount / CAPILLARS_PER_DOMAIN_AMOUNT;
+//        double domainsAmount = capillarsAmount / CAPILLARS_PER_DOMAIN_AMOUNT;
 //        int domainsAmountPerLine = (int) Math.sqrt(domainsAmount);
 //
-//        float domainSquare = CAPILLARS_PER_DOMAIN_AMOUNT / capillarsDensity;
+//        double domainSquare = CAPILLARS_PER_DOMAIN_AMOUNT / capillarsDensity;
 //        if (domainSquare < 4 * capillarRadius * capillarRadius * CAPILLARS_PER_DOMAIN_AMOUNT) {
 //            throw new IllegalArgumentException();
 //        }
-//        float domainSideLength = (float) Math.sqrt(domainSquare);
+//        double domainSideLength = Math.sqrt(domainSquare);
 //
 //        sideLength = domainsAmountPerLine * domainSideLength;
 //
-//        float initialX = center.getX();
-//        float initialY = center.getY() - sideLength / 2;
-//        float initialZ = center.getZ() - sideLength / 2;
+//        double initialX = center.getX();
+//        double initialY = center.getY() - sideLength / 2;
+//        double initialZ = center.getZ() - sideLength / 2;
 //
 //        CartesianPoint coordinate;
 //        CartesianPoint[] capillarsCenters;
@@ -125,7 +125,7 @@ public class FlatPlate extends Plate {
         while (coordinates[i] != null && i < coordinates.length) {
             if ((coordinate.getQ2() - coordinates[i].getQ2()) * (coordinate.getQ2() - coordinates[i].getQ2())
                     + (coordinate.getQ3() - coordinates[i].getQ3()) * (coordinate.getQ3() - coordinates[i].getQ3())
-                    < 4.0f * capillarRadius * capillarRadius) {
+                    < 4.0 * capillarRadius * capillarRadius) {
                 return false;
             }
             i++;

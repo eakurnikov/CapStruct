@@ -4,31 +4,31 @@ import com.private_void.core.geometry.CartesianPoint;
 import com.private_void.core.geometry.Vector;
 
 public class ChargedParticle extends Particle {
-    private float chargeNumber;
-    private float mass;
-    private float energy;
+    private double chargeNumber;
+    private double mass;
+    private double energy;
 
-    private ChargedParticle(final CartesianPoint coordinate, final Vector speed, float chargeNumber, float mass, float energy) {
+    private ChargedParticle(final CartesianPoint coordinate, final Vector speed, double chargeNumber, double mass, double energy) {
         super(coordinate, speed);
         this.chargeNumber = chargeNumber;
         this.mass = mass;
         this.energy = energy;
     }
 
-    public static ParticleFactory getFactory(float chargeNumber, float mass, float energy) {
+    public static ParticleFactory getFactory(double chargeNumber, double mass, double energy) {
         return (final CartesianPoint coordinate, final Vector speed) ->
                 new ChargedParticle(coordinate, speed, chargeNumber, mass, energy);
     }
 
-    public float getChargeNumber() {
+    public double getChargeNumber() {
         return chargeNumber;
     }
 
-    public float getMass() {
+    public double getMass() {
         return mass;
     }
 
-    public float getEnergy() {
+    public double getEnergy() {
         return energy;
     }
 }

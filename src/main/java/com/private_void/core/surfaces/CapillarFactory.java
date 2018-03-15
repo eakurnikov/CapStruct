@@ -7,7 +7,7 @@ public interface CapillarFactory {
 
     Capillar getNewCapillar(final CartesianPoint coordinate, final SphericalPoint position);
 
-    float getRadius();
+    double getRadius();
 
-    float getLength();
+    double getLength();
 }

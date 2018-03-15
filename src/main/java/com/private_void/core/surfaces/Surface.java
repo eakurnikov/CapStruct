@@ -10,8 +10,8 @@ public abstract class Surface {
 
     protected Surface(final CartesianPoint front) {
         this.front = front;
-        this.normal = new Vector(0.0f, 1.0f, 0.0f);
-        this.axis = new Vector(1.0f, 0.0f, 0.0f);
+        this.normal = new Vector(0.0, 1.0, 0.0);
+        this.axis = new Vector(1.0, 0.0, 0.0);
     }
 
     public CartesianPoint getFront() {

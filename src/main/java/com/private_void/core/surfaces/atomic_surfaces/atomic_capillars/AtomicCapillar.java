@@ -9,17 +9,17 @@ import com.private_void.core.surfaces.atomic_surfaces.AtomicSurface;
 
 public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
     protected SphericalPoint position;
-    protected float length;
-    protected float radius;
+    protected double length;
+    protected double radius;
 
-    public AtomicCapillar(final AtomFactory atomFactory, final CartesianPoint front, float period, float chargeNumber,
-                          float radius) {
+    public AtomicCapillar(final AtomFactory atomFactory, final CartesianPoint front, double period, double chargeNumber,
+                          double radius) {
         super(atomFactory, front, period, chargeNumber);
         this.radius = radius;
     }
 
     public AtomicCapillar(final AtomFactory atomFactory, final CartesianPoint front, final SphericalPoint position,
-                          float period, float chargeNumber, float radius) {
+                          double period, double chargeNumber, double radius) {
         super(atomFactory, front, period, chargeNumber);
         this.position = position;
         this.radius = radius;
@@ -32,18 +32,18 @@ public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
 
     @Override
     public boolean willParticleGetInside(final Particle p) {
-        float x0 = front.getX();
+        double x0 = front.getX();
 
-        float x = p.getCoordinate().getX();
-        float y = p.getCoordinate().getY();
-        float z = p.getCoordinate().getZ();
+        double x = p.getCoordinate().getX();
+        double y = p.getCoordinate().getY();
+        double z = p.getCoordinate().getZ();
 
-        float Vx = p.getSpeed().getX();
-        float Vy = p.getSpeed().getY();
-        float Vz = p.getSpeed().getZ();
+        double Vx = p.getSpeed().getX();
+        double Vy = p.getSpeed().getY();
+        double Vz = p.getSpeed().getZ();
 
-        float newY = (Vy / Vx) * (x0 - x) + y;
-        float newZ = (Vz / Vx) * (x0 - x) + z;
+        double newY = (Vy / Vx) * (x0 - x) + y;
+        double newZ = (Vz / Vx) * (x0 - x) + z;
 
         return newY * newY + newZ * newZ < radius * radius;
     }

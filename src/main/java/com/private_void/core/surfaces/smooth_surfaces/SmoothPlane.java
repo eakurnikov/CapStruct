@@ -13,11 +13,11 @@ import java.util.Iterator;
 import static com.private_void.utils.Constants.PI;
 
 public class SmoothPlane extends SmoothSurface implements CapillarSystem {
-    private float size;
+    private double size;
     protected Detector detector;
 
-    public SmoothPlane(final CartesianPoint front, float size, float roughnessSize, float roughnessAngleR, float reflectivity,
-                       float criticalAngleR) {
+    public SmoothPlane(final CartesianPoint front, double size, double roughnessSize, double roughnessAngleR, double reflectivity,
+                       double criticalAngleR) {
         super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.size = size;
         this.detector = new Detector(
@@ -29,7 +29,7 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
     public void interact(Flux flux) {
         NeutralParticle p;
         CartesianPoint hitPoint;
-        float angleWithSurface;
+        double angleWithSurface;
         Iterator<? extends Particle> iterator = flux.getParticles().iterator();
 
         while (iterator.hasNext()) {
@@ -38,12 +38,12 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
                 hitPoint = getHitPoint(p);
 
                 if (true /*doesPointBelongToPlane(hitPoint)*/) {
-                    angleWithSurface = p.getSpeed().getAngle(normal) - PI / 2;
+                    angleWithSurface = p.getSpeed().getAngle(normal) - PI / 2.0;
                     p.decreaseIntensity(reflectivity);
 
                     if (angleWithSurface <= criticalAngleR && p.getIntensity() >= flux.getMinIntensity()) {
                         p.setCoordinate(hitPoint);
-                        p.setSpeed(p.getSpeed().getNewByTurningAroundVector(2 * Math.abs(angleWithSurface), getAxis(hitPoint)));
+                        p.setSpeed(p.getSpeed().getNewByTurningAroundVector(2.0 * Math.abs(angleWithSurface), getAxis(hitPoint)));
 
                     } else {
                         p.setAbsorbed(true);
@@ -66,23 +66,23 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
 
     @Override
     protected Vector getNormal(final CartesianPoint point) {
-        return new Vector(0.0f, 1.0f, 0.0f);
+        return new Vector(0.0, 1.0, 0.0);
     }
 
     @Override
     protected Vector getAxis(final CartesianPoint point) {
-        return new Vector(0.0f, 0.0f, 1.0f);
+        return new Vector(0.0, 0.0, 1.0);
     }
 
     @Override
     protected CartesianPoint getHitPoint(final NeutralParticle p) {
-        float x = p.getCoordinate().getX();
-        float y = p.getCoordinate().getY();
-        float z = p.getCoordinate().getZ();
+        double x = p.getCoordinate().getX();
+        double y = p.getCoordinate().getY();
+        double z = p.getCoordinate().getZ();
 
-        float Vx = p.getSpeed().getX();
-        float Vy = p.getSpeed().getY();
-        float Vz = p.getSpeed().getZ();
+        double Vx = p.getSpeed().getX();
+        double Vy = p.getSpeed().getY();
+        double Vz = p.getSpeed().getZ();
 
         return new CartesianPoint(
                 (Vx / Vy) * (front.getY() - y) + x,
@@ -91,12 +91,12 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
     }
 
     private boolean doesPointBelongToPlane(final CartesianPoint point) {
-        float x = point.getX();
-        float z = point.getZ();
+        double x = point.getX();
+        double z = point.getZ();
 
         return  x >= front.getX() &&
                 x <= front.getX() + size &&
-                z >= front.getZ() - size / 2 &&
-                z <= front.getZ() + size / 2;
+                z >= front.getZ() - size / 2.0 &&
+                z <= front.getZ() + size / 2.0;
     }
 }

@@ -17,12 +17,12 @@ import static com.private_void.utils.Constants.ELECTRON_CHARGE;
 import static com.private_void.utils.Constants.PI;
 
 public class AtomicPlane extends AtomicSurface implements CapillarSystem {
-    private float size;
-    private float chargePlanarDensity;
+    private double size;
+    private double chargePlanarDensity;
     protected Detector detector;
 
-    public AtomicPlane(final AtomFactory atomFactory, final CartesianPoint front, float period, float chargeNumber,
-                       float size) {
+    public AtomicPlane(final AtomFactory atomFactory, final CartesianPoint front, double period, double chargeNumber,
+                       double size) {
         super(atomFactory, front, period, chargeNumber);
         this.size = size;
         this.chargePlanarDensity = 1 / (period * period);
@@ -34,7 +34,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
     public void interact(Flux flux) {
         ChargedParticle p;
         CartesianPoint newCoordinate;
-        float angleWithSurface;
+        double angleWithSurface;
         Iterator<? extends Particle> iterator = flux.getParticles().iterator();
 
         setShieldingDistance(((ChargedParticle) flux.getParticles().get(0)).getChargeNumber());
@@ -42,7 +42,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
         while (iterator.hasNext()) {
             try {
                 p = (ChargedParticle) iterator.next();
-                angleWithSurface = p.getSpeed().getAngle(getNormal(p.getCoordinate())) - PI / 2;
+                angleWithSurface = p.getSpeed().getAngle(getNormal(p.getCoordinate())) - PI / 2.0;
 
                 if (angleWithSurface <= getCriticalAngle(p)) {
                     newCoordinate = p.getCoordinate();
@@ -65,24 +65,24 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
 
     @Override
     protected Vector getNormal(final CartesianPoint point) {
-        return new Vector(0.0f, 1.0f, 0.0f);
+        return new Vector(0.0, 1.0, 0.0);
     }
 
     @Override
     protected Vector getAxis(final CartesianPoint point) {
-        return new Vector(0.0f, 0.0f, 1.0f);
+        return new Vector(0.0, 0.0, 1.0);
     }
 
     @Override
     protected void createAtoms() {
         atoms = new ArrayList<>();
 
-        float x = front.getX();
-        float y = front.getY();
-        float z = front.getZ() - size / 2;
+        double x = front.getX();
+        double y = front.getY();
+        double z = front.getZ() - size / 2.0;
 
         while (x <= front.getX() + size) {
-            while (z <= front.getZ() + size / 2) {
+            while (z <= front.getZ() + size / 2.0) {
                 atoms.add(atomFactory.getNewAtom(new CartesianPoint(x, y, z), chargeNumber));
                 z += period;
             }
@@ -92,7 +92,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
     }
 
     @Override
-    protected float getCriticalAngle(final ChargedParticle particle) {
+    protected double getCriticalAngle(final ChargedParticle particle) {
         // CriticalAngle = ( (2PI N d` Z1 Z2 e^2 a) / E ) ^ (1/2)
         // Nd` - среднее число атомов на единицу площади
         // d` - расстояние между соседними плоскостями
@@ -103,46 +103,46 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
         // a - расстояние экранировки (0.885  * а боровский ((Z1)^(1/2) + (Z2)^(1/2)) ^ -(2/3)), а боровский = 0.529 ангстрем
         // E - энергия налетающей частицы (10 КэВ - 1 МэВ)
 
-        return Utils.convertDegreesToRadians(45);
-//        return (float) Math.sqrt((2 * PI * particle.getChargeNumber() * chargeNumber *
+        return Math.toRadians(45);
+//        return Math.sqrt((2 * PI * particle.getChargeNumber() * chargeNumber *
 //                (ELECTRON_CHARGE * ELECTRON_CHARGE) * shieldingDistance * chargePlanarDensity) / particle.getEnergy());
     }
 
     @Override
     protected Vector getNewSpeed(final ChargedParticle particle) {
-        float y = particle.getCoordinate().getY() - front.getY();
-        float C2 = 3.0f;
-        float timeInterval = 1.0f;
+        double y = particle.getCoordinate().getY() - front.getY();
+        double C2 = 3.0;
+        double timeInterval = 1.0;
 
-        float Fy = 2.0f * PI *  particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE)
-                * chargePlanarDensity * (float) (1.0f - y / Math.sqrt((y / shieldingDistance) * (y / shieldingDistance) + C2));
-        float dVy = (Fy / particle.getMass()) * timeInterval;
+        double Fy = 2.0 * PI *  particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE)
+                * chargePlanarDensity * (1.0 - y / Math.sqrt((y / shieldingDistance) * (y / shieldingDistance) + C2));
+        double dVy = (Fy / particle.getMass()) * timeInterval;
 
-        return new Vector(particle.getSpeed().getX(), particle.getSpeed().getY() + 0.009f, particle.getSpeed().getZ());
+        return new Vector(particle.getSpeed().getX(), particle.getSpeed().getY() + 0.009, particle.getSpeed().getZ());
 //        return new Vector(particle.getSpeed().getX(), particle.getSpeed().getY() + dVy, particle.getSpeed().getZ());
     }
 
     @Override
     protected CartesianPoint getNewCoordinate(final ChargedParticle p) {
-        float x = p.getCoordinate().getX();
-        float y = p.getCoordinate().getY();
-        float z = p.getCoordinate().getZ();
+        double x = p.getCoordinate().getX();
+        double y = p.getCoordinate().getY();
+        double z = p.getCoordinate().getZ();
 
-        float Vx = p.getSpeed().getX();
-        float Vy = p.getSpeed().getY();
-        float Vz = p.getSpeed().getZ();
+        double Vx = p.getSpeed().getX();
+        double Vy = p.getSpeed().getY();
+        double Vz = p.getSpeed().getZ();
 
         return new CartesianPoint(x + Vx, y + Vy, z + Vz);
     }
 
 //    @Override
-//    protected float getPotential(final ChargedParticle particle) {
-//        float y = (particle.getCoordinate().getY() - front.getY()) / shieldingDistance;
-//        float C2 = 3.0f;
+//    protected double getPotential(final ChargedParticle particle) {
+//        double y = (particle.getCoordinate().getY() - front.getY()) / shieldingDistance;
+//        double C2 = 3.0;
 //
-//        return 2.0f * PI * particle.getChargeNumber() * chargeNumber *
+//        return 2.0 * PI * particle.getChargeNumber() * chargeNumber *
 //                (ELECTRON_CHARGE * ELECTRON_CHARGE) * shieldingDistance * chargePlanarDensity *
-//                ((float) Math.sqrt(y * y + C2) - y);
+//                Math.sqrt(y * y + C2) - y);
 //    }
 
     public Detector getDetector() {

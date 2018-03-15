@@ -3,11 +3,11 @@ package com.private_void.core.geometry;
 import static com.private_void.utils.Constants.POINT_AMBIT;
 
 public class CartesianPoint implements Point3D {
-    protected float x = 0.0f;
-    protected float y = 0.0f;
-    protected float z = 0.0f;
+    protected double x = 0.0;
+    protected double y = 0.0;
+    protected double z = 0.0;
 
-    public CartesianPoint(float x, float y, float z) {
+    public CartesianPoint(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -20,14 +20,14 @@ public class CartesianPoint implements Point3D {
     }
 
     public SphericalPoint convertToSpherical() {
-        float radius = (float) Math.sqrt(x * x + y * y + z * z);
-        float theta = (float) Math.atan2(Math.sqrt(x * x + z * z), y);
-        float phi = (float) Math.atan2(z, x);
+        double radius = Math.sqrt(x * x + y * y + z * z);
+        double theta =  Math.atan2(Math.sqrt(x * x + z * z), y);
+        double phi = Math.atan2(z, x);
 
         return new SphericalPoint(radius, theta, phi);
     }
 
-    public CartesianPoint shift(float x, float y, float z) {
+    public CartesianPoint shift(double x, double y, double z) {
         this.x += x;
         this.y += y;
         this.z += z;
@@ -43,7 +43,7 @@ public class CartesianPoint implements Point3D {
         return this;
     }
 
-    public CartesianPoint getNewByShift(float x, float y, float z) {
+    public CartesianPoint getNewByShift(double x, double y, double z) {
         CartesianPoint newPoint = new CartesianPoint(this.x, this.y, this.z);
 
         newPoint.x += x;
@@ -63,42 +63,42 @@ public class CartesianPoint implements Point3D {
         return newPoint;
     }
 
-    public float getX() {
+    public double getX() {
         return x;
     }
 
-    public void setX(float x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public float getY() {
+    public double getY() {
         return y;
     }
 
-    public void setY(float y) {
+    public void setY(double y) {
         this.y = y;
     }
 
-    public float getZ() {
+    public double getZ() {
         return z;
     }
 
-    public void setZ(float z) {
+    public void setZ(double z) {
         this.z = z;
     }
 
     @Override
-    public float getQ1() {
+    public double getQ1() {
         return x;
     }
 
     @Override
-    public float getQ2() {
+    public double getQ2() {
         return y;
     }
 
     @Override
-    public float getQ3() {
+    public double getQ3() {
         return z;
     }
 }

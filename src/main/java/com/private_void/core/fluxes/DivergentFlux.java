@@ -16,7 +16,7 @@ public class DivergentFlux extends Flux {
 
     public DivergentFlux(final ParticleFactory particleFactory, final CoordinateFactory coordinateFactory,
                          final CartesianPoint fluxCoordinate, final Vector fluxAxis,
-                         int particlesAmount, float minIntensity) {
+                         int particlesAmount, double minIntensity) {
         super(particleFactory, coordinateFactory, fluxCoordinate, fluxAxis, particlesAmount, minIntensity);
         createParticles();
     }
@@ -25,8 +25,8 @@ public class DivergentFlux extends Flux {
     protected void createParticles() {
         List<Particle> newParticles = new ArrayList<>();
         for (int i = 0; i < particlesAmount; i++) {
-            Vector axis = new Vector(-(fluxAxis.getY() + fluxAxis.getZ()) / fluxAxis.getX(), 1.0f, 1.0f)
-                    .turnAroundVector(generator().uniformFloat(0.0f, 2.0f * PI), fluxAxis);
+            Vector axis = new Vector(-(fluxAxis.getY() + fluxAxis.getZ()) / fluxAxis.getX(), 1.0, 1.0)
+                    .turnAroundVector(generator().uniformDouble(0.0, 2.0 * PI), fluxAxis);
             newParticles.add(particleFactory.getNewParticle(fluxCoordinate,
                     fluxAxis.getNewByTurningAroundVector(coordinateFactory.getCoordinate().getY(), axis)));
         }

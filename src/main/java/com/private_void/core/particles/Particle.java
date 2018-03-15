@@ -6,14 +6,14 @@ import com.private_void.core.geometry.Vector;
 public abstract class Particle {
     protected CartesianPoint coordinate;
     protected Vector speed;
-    protected float trace;
+    protected double trace;
     protected boolean absorbed;
     protected boolean out;
 
     protected Particle(final CartesianPoint coordinate, final Vector speed) {
         this.coordinate = coordinate;
         this.speed = speed;
-        this.trace = 0.0f;
+        this.trace = 0.0;
         this.absorbed = false;
         this.out = false;
     }
@@ -28,22 +28,22 @@ public abstract class Particle {
     }
 
     // Возвращает проекцию координаты на плоскость, расположенную под углом angle к абсолютной
-    public CartesianPoint getProjection(float angle) {
-        float[][] rotationMatrixY = new float[3][3];
+    public CartesianPoint getProjection(double angle) {
+        double[][] rotationMatrixY = new double[3][3];
 
-        rotationMatrixY[0][0] = (float) Math.cos(angle);
-        rotationMatrixY[1][0] = 0.0f;
-        rotationMatrixY[2][0] = (float) Math.sin(angle);
+        rotationMatrixY[0][0] = Math.cos(angle);
+        rotationMatrixY[1][0] = 0.0;
+        rotationMatrixY[2][0] = Math.sin(angle);
 
-        rotationMatrixY[0][1] = 0.0f;
-        rotationMatrixY[1][1] = 1.0f;
-        rotationMatrixY[2][1] = 0.0f;
+        rotationMatrixY[0][1] = 0.0;
+        rotationMatrixY[1][1] = 1.0;
+        rotationMatrixY[2][1] = 0.0;
 
-        rotationMatrixY[0][2] = (float) -Math.sin(angle);
-        rotationMatrixY[1][2] = 0.0f;
-        rotationMatrixY[2][2] = (float) Math.cos(angle);
+        rotationMatrixY[0][2] = -Math.sin(angle);
+        rotationMatrixY[1][2] = 0.0;
+        rotationMatrixY[2][2] = Math.cos(angle);
 
-        float[] temp = {0.0f, 0.0f, 0.0f};
+        double[] temp = {0.0, 0.0, 0.0};
         for (int i = 0; i < 3; i++) {
             temp[i] = rotationMatrixY[0][i] * coordinate.getX() + rotationMatrixY[1][i] * coordinate.getY() + rotationMatrixY[2][i] * coordinate.getZ();
         }
@@ -59,16 +59,16 @@ public abstract class Particle {
         this.speed = speed;
     }
 
-    public float getTrace() {
+    public double getTrace() {
         return trace;
     }
 
-    public void setTrace(float trace) {
+    public void setTrace(double trace) {
         this.trace = trace;
     }
 
     public void increaseTrace(final CartesianPoint point) {
-        trace = (float) Math.sqrt((point.getX() - coordinate.getX()) * (point.getX() - coordinate.getX())
+        trace = Math.sqrt((point.getX() - coordinate.getX()) * (point.getX() - coordinate.getX())
                 + (point.getY() - coordinate.getY()) * (point.getY() - coordinate.getY())
                 + (point.getZ() - coordinate.getZ()) * (point.getZ() - coordinate.getZ()));
     }

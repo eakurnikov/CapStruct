@@ -11,11 +11,11 @@ import java.util.List;
 
 public class ParallelFlux extends Flux {
     private int layersAmount;
-    private float layerDistance;
+    private double layerDistance;
 
     public ParallelFlux(final ParticleFactory particleFactory, final CoordinateFactory coordinateFactory,
-                        final CartesianPoint fluxCoordinate, final Vector fluxAxis,
-                        int layersAmount, int particlesAmount, float layerDistance, float minIntensity) {
+                        final CartesianPoint fluxCoordinate, final Vector fluxAxis, int layersAmount,
+                        int particlesAmount, double layerDistance, double minIntensity) {
 
         super(particleFactory, coordinateFactory, fluxCoordinate, fluxAxis, particlesAmount, minIntensity);
         this.layersAmount = layersAmount;

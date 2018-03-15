@@ -12,10 +12,10 @@ import com.private_void.utils.Utils;
 import java.util.ArrayList;
 
 public class AtomicCone extends AtomicCapillar {
-    private float divergentAngleR;
+    private double divergentAngleR;
 
-    public AtomicCone(final AtomFactory atomFactory, final CartesianPoint front, float period, float chargeNumber,
-                      float radius, float length, float coneCoefficient) throws IllegalArgumentException {
+    public AtomicCone(final AtomFactory atomFactory, final CartesianPoint front, double period, double chargeNumber,
+                      double radius, double length, double coneCoefficient) throws IllegalArgumentException {
         super(atomFactory, front, period, chargeNumber, radius);
         if (coneCoefficient >= 1 || coneCoefficient <= 0) {
             throw new IllegalArgumentException();
@@ -25,7 +25,7 @@ public class AtomicCone extends AtomicCapillar {
     }
 
     public AtomicCone(final AtomFactory atomFactory, final CartesianPoint front, final SphericalPoint position,
-                      float period, float chargeNumber, float radius, float length, float coneCoefficient)
+                      double period, double chargeNumber, double radius, double length, double coneCoefficient)
             throws IllegalArgumentException {
         super(atomFactory, front, period, chargeNumber, radius);
         if (coneCoefficient >= 1 || coneCoefficient <= 0) {
@@ -52,7 +52,7 @@ public class AtomicCone extends AtomicCapillar {
     }
 
     @Override
-    protected float getCriticalAngle(final ChargedParticle particle) {
+    protected double getCriticalAngle(final ChargedParticle particle) {
         return 0;
     }
 
@@ -71,8 +71,8 @@ public class AtomicCone extends AtomicCapillar {
         return false;
     }
 
-    public static CapillarFactory getFactory(final AtomFactory atomFactory, float period, float chargeNumber,
-                                             float radius, float length, float coneCoefficient) {
+    public static CapillarFactory getFactory(final AtomFactory atomFactory, double period, double chargeNumber,
+                                             double radius, double length, double coneCoefficient) {
         return new CapillarFactory() {
 
             @Override
@@ -82,12 +82,12 @@ public class AtomicCone extends AtomicCapillar {
             }
 
             @Override
-            public float getRadius() {
+            public double getRadius() {
                 return radius;
             }
 
             @Override
-            public float getLength() {
+            public double getLength() {
                 return length;
             }
         };

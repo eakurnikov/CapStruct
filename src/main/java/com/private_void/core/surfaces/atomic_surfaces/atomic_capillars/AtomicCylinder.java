@@ -11,16 +11,16 @@ import com.private_void.core.surfaces.CapillarFactory;
 import java.util.ArrayList;
 
 public class AtomicCylinder extends AtomicCapillar {
-    private float length;
+    private double length;
 
-    public AtomicCylinder(final AtomFactory atomFactory, final CartesianPoint front, float period, float chargeNumber,
-                          float radius, float length) {
+    public AtomicCylinder(final AtomFactory atomFactory, final CartesianPoint front, double period, double chargeNumber,
+                          double radius, double length) {
         super(atomFactory, front, period, chargeNumber, radius);
         this.length = length;
     }
 
     public AtomicCylinder(final AtomFactory atomFactory, final CartesianPoint front, final SphericalPoint position,
-                          float period, float chargeNumber, float radius, float length) {
+                          double period, double chargeNumber, double radius, double length) {
         super(atomFactory, front, period, chargeNumber, radius);
         this.position = position;
         this.length = length;
@@ -40,18 +40,17 @@ public class AtomicCylinder extends AtomicCapillar {
     protected void createAtoms() {
         atoms = new ArrayList<>();
 
-        float x = front.getX();
-        //float y = front.getY();
-        //float z = front.getZ() - size / 2;
+        double x = front.getX();
+        //double y = front.getY();
+        //double z = front.getZ() - size / 2;
 
         while (x <= front.getX() + length) {
-
             x += period;
         }
     }
 
     @Override
-    protected float getCriticalAngle(final ChargedParticle particle) {
+    protected double getCriticalAngle(final ChargedParticle particle) {
         return 0;
     }
 
@@ -70,8 +69,8 @@ public class AtomicCylinder extends AtomicCapillar {
         return false;
     }
 
-    public static CapillarFactory getFactory(final AtomFactory atomFactory, float period, float chargeNumber,
-                                             float radius, float length) {
+    public static CapillarFactory getFactory(final AtomFactory atomFactory, double period, double chargeNumber,
+                                             double radius, double length) {
         return new CapillarFactory() {
 
             @Override
@@ -80,12 +79,12 @@ public class AtomicCylinder extends AtomicCapillar {
             }
 
             @Override
-            public float getRadius() {
+            public double getRadius() {
                 return radius;
             }
 
             @Override
-            public float getLength() {
+            public double getLength() {
                 return length;
             }
         };
