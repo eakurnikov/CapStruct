@@ -21,7 +21,6 @@ import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_sm
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCylinder;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothTorus;
-import com.private_void.utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.NumberAxis;
@@ -280,18 +279,18 @@ public class MainController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
-//            return new CurvedPlate(
-//                    smoothCylinderFactory,
-//                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
-//                    plateCapillarsDensity,
-//                    Math.toRadians(1.0),
-//                    50_000.0);
-
-            return new FlatPlate(
+            return new CurvedPlate(
                     smoothCylinderFactory,
                     new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
                     plateCapillarsDensity,
-                    plateSideLength);
+                    Math.toRadians(1.0),
+                    50_000.0);
+
+//            return new FlatPlate(
+//                    smoothCylinderFactory,
+//                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
+//                    plateCapillarsDensity,
+//                    plateSideLength);
         }
 
         if (torusTab.isSelected()) {

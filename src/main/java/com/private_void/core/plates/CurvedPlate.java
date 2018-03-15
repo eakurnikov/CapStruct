@@ -63,7 +63,7 @@ public class CurvedPlate extends Plate {
                         .shift(curvRadius, 0.0, 0.0)
                         .shift(center);
 
-                SphericalPoint position = coordinate.shift(0.0, -PI / 2.0, -PI);
+                SphericalPoint position = coordinate.getNewByShift(0.0, -PI / 2.0, -PI);
 
                 capillars.add(capillarFactory.getNewCapillar(front, position));
             }
@@ -79,14 +79,49 @@ public class CurvedPlate extends Plate {
         return center.getNewByShift(curvRadius, 0.0, 0.0);
     }
 
+//    @Override
+//    protected boolean isCapillarCoordinateValid(Point3D[] coordinates, Point3D coordinate) {
+//        double radius = 2.0 * Math.asin(capillarRadius / curvRadius);
+//        int i = 0;
+//        while (coordinates[i] != null && i < coordinates.length) {
+//            if ((coordinate.getQ2() - coordinates[i].getQ2()) * (coordinate.getQ2() - coordinates[i].getQ2())
+//                    + (coordinate.getQ3() - coordinates[i].getQ3()) * (coordinate.getQ3() - coordinates[i].getQ3())
+//                    < radius * radius) {
+//                return false;
+//            }
+//            i++;
+//        }
+//        return true;
+//    }
+
     @Override
     protected boolean isCapillarCoordinateValid(Point3D[] coordinates, Point3D coordinate) {
-        double radius = 2.0 * Math.asin(capillarRadius / curvRadius);
+//        ////////////
+//        CartesianPoint[] capillarsCenters = new CartesianPoint[capillarsAmount];
+//        CartesianPoint coordinate;
+//        SphericalPoint sper;
+//
+//        for (int i = 0; i < capillarsAmount; i++) {
+//            do {
+//                sper = coordinateFactory.getCoordinate();
+//                coordinate = sper.convertToCartesian();
+//            } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
+//
+//            capillarsCenters[i] = coordinate;
+//
+//            CartesianPoint front = coordinate.getNewByShift(curvRadius, 0.0, 0.0).shift(center);
+//
+//            SphericalPoint position = sper.getNewByShift(0.0, -PI / 2.0, -PI);
+//
+//            capillars.add(capillarFactory.getNewCapillar(front, position));
+//        /////////
+
         int i = 0;
         while (coordinates[i] != null && i < coordinates.length) {
-            if ((coordinate.getQ2() - coordinates[i].getQ2()) * (coordinate.getQ2() - coordinates[i].getQ2())
+            if (      (coordinate.getQ1() - coordinates[i].getQ1()) * (coordinate.getQ1() - coordinates[i].getQ1())
+                    + (coordinate.getQ2() - coordinates[i].getQ2()) * (coordinate.getQ2() - coordinates[i].getQ2())
                     + (coordinate.getQ3() - coordinates[i].getQ3()) * (coordinate.getQ3() - coordinates[i].getQ3())
-                    < radius * radius) {
+                    < 4.0 * capillarRadius * capillarRadius) {
                 return false;
             }
             i++;

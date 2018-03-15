@@ -38,9 +38,11 @@ public abstract class Plate implements CapillarSystem {
 
         boolean isOut;
 
+        int i = 0;
         for (Particle particle : flux.getParticles()) {
             isOut = true;
 
+            i++;
             for (Capillar capillar : capillars) {
                 if (capillar.willParticleGetInside(particle)) {
                     capillar.interact(particle);

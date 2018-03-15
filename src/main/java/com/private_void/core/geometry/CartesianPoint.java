@@ -3,9 +3,9 @@ package com.private_void.core.geometry;
 import static com.private_void.utils.Constants.POINT_AMBIT;
 
 public class CartesianPoint implements Point3D {
-    protected double x = 0.0;
-    protected double y = 0.0;
-    protected double z = 0.0;
+    protected double x;
+    protected double y;
+    protected double z;
 
     public CartesianPoint(double x, double y, double z) {
         this.x = x;

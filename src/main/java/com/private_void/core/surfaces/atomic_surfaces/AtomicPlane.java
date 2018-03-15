@@ -8,7 +8,6 @@ import com.private_void.core.particles.AtomFactory;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.CapillarSystem;
-import com.private_void.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
