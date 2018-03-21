@@ -80,8 +80,8 @@ public class SmoothTorus extends SmoothCapillar {
         }
 
         double[] solution = {p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
-                            p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
-                            p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()};
+                             p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
+                             p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()};
 
         double[] delta = {1.0, 1.0, 1.0};
         double[] F  = new double[3];
@@ -171,6 +171,9 @@ public class SmoothTorus extends SmoothCapillar {
             p.recursiveIteration();
             return getHitPoint(p);
         } else {
+            if (p.isRecursiveIterationsLimitReached()) {
+                p.setAbsorbed(true);
+            }
             p.stopRecursiveIterations();
             return newCoordinate;
         }

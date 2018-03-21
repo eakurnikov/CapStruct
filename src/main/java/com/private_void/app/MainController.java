@@ -266,6 +266,7 @@ public class MainController {
             double capillarCriticalAngleR = Math.toRadians(capillarCriticalAngleD);
 
             double plateCapillarsDensity = 0.0034; //for radius = 7
+//            double plateCapillarsDensity = 0.0003; //for radius = 20, count apr 20
 //          double plateCapillarsDensity = 0.0025d; //for radius < 10 for domains
 
 //          int capillarsAmount = 320;
@@ -279,18 +280,18 @@ public class MainController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
-            return new CurvedPlate(
-                    smoothCylinderFactory,
-                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
-                    plateCapillarsDensity,
-                    Math.toRadians(1.0),
-                    50_000.0);
-
-//            return new FlatPlate(
+//            return new CurvedPlate(
 //                    smoothCylinderFactory,
 //                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
 //                    plateCapillarsDensity,
-//                    plateSideLength);
+//                    Math.toRadians(1.0),
+//                    50_000.0);
+
+            return new FlatPlate(
+                    smoothCylinderFactory,
+                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
+                    plateCapillarsDensity,
+                    plateSideLength);
         }
 
         if (torusTab.isSelected()) {
