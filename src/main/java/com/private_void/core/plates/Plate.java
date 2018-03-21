@@ -34,6 +34,7 @@ public abstract class Plate implements CapillarSystem {
 
     @Override
     public void interact(Flux flux) {
+        System.out.println("Particles-capillars interaction start ...");
         long start = System.nanoTime();
 
         boolean isOut;
@@ -44,7 +45,7 @@ public abstract class Plate implements CapillarSystem {
         for (Particle particle : flux.getParticles()) {
             isOut = true;
 
-            if (particlesCounter % 1_000 == 0.0) System.out.println("    ..." + particlesCounter + " of " + particlesAmount + " paricles processed");
+            if (particlesCounter % (particlesAmount / 10) == 0.0) System.out.println("    ... " + (particlesCounter * 100 / particlesAmount) + "% paricles processed");
             particlesCounter++;
 
             int capillarsCounter = 0;
@@ -63,7 +64,8 @@ public abstract class Plate implements CapillarSystem {
         }
 
         long finish = System.nanoTime();
-        System.out.println("Particles-capillars interaction time = " + (finish - start) / 1_000_000 + " ms");
+        System.out.println("Particles-capillars interaction finish. Total time = " + (finish - start) / 1_000_000 + " ms");
+        System.out.println();
     }
 
     @Override

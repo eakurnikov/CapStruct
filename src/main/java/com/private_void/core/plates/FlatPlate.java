@@ -21,6 +21,7 @@ public class FlatPlate extends Plate {
 
     @Override
     protected void createCapillars() {
+        System.out.println("Creating capillars start ...");
         long start = System.nanoTime();
 
         double frontSquare = sideLength * sideLength;
@@ -56,12 +57,14 @@ public class FlatPlate extends Plate {
 
                 capillarsCenters[i] = coordinate;
                 capillars.add(capillarFactory.getNewCapillar(coordinate, null));
+
+                if (i % (capillarsAmount / 10) == 0.0) System.out.println("    ... " + (i * 100 / capillarsAmount) + "% capillars created");
             }
         }
 
         long finish = System.nanoTime();
+        System.out.println("Creating capillars fifnish. Total time = = " + (finish - start) / 1_000_000 + " ms");
         System.out.println();
-        System.out.println("Creating capillars time = " + (finish - start) / 1_000_000 + " ms");
     }
 
 //    @Override

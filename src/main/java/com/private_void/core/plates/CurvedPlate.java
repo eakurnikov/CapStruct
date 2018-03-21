@@ -17,17 +17,19 @@ public class CurvedPlate extends Plate {
         this.maxAngleR = maxAngleR;
         this.curvRadius = curvRadius;
         createCapillars();
-        this.detector = new Detector(getDetectorsCoordinate(),20.0 * curvRadius *  Math.sin(maxAngleR));
+        this.detector = new Detector(getDetectorsCoordinate(), curvRadius *  Math.sin(maxAngleR));
     }
 
     @Override
     protected void createCapillars() {
+        System.out.println("Creating capillars start ...");
         long start = System.nanoTime();
+
         double frontSquare = 2.0 * PI * curvRadius * curvRadius * (1.0 -  Math.cos(maxAngleR));
 
-        double coef = 4 / PI; //площадь круга увеличит до площади описанного вокруг него квадрата. Т.к. у меня все таки сегменты, это тоже приближение
-        double minCapillarSquare = coef * 2.0 * PI * curvRadius * curvRadius
-                * (1.0 - Math.cos(Math.asin(capillarRadius / curvRadius)));
+//        double coef = 4 / PI; //площадь круга увеличит до площади описанного вокруг него квадрата.
+
+        double minCapillarSquare = 2.0 * PI * curvRadius * curvRadius * (1.0 - Math.cos(Math.asin(capillarRadius / curvRadius)));
         double maxCapillarDensity = 1.0 / minCapillarSquare;
 
         if (capillarsDensity > maxCapillarDensity) {
@@ -47,7 +49,7 @@ public class CurvedPlate extends Plate {
 
             SphericalCoordinateFactory coordinateFactory = generator().getSphericalUniformDistribution(
                     new SphericalPoint(0.0, PI / 2.0, PI),// тета отсчитывается от оси игрек, фи от оси икс, поворачиваю так, чтобы координаты попадали на мою пластину
-                    curvRadius, maxAngleR / 2.0, maxAngleR / 2.0);
+                    curvRadius, maxAngleR, maxAngleR);
 
             SphericalPoint[] capillarsCenters = new SphericalPoint[capillarsAmount];
             SphericalPoint coordinate;
@@ -55,7 +57,7 @@ public class CurvedPlate extends Plate {
             for (int i = 0; i < capillarsAmount; i++) {
                 do {
                     coordinate = coordinateFactory.getCoordinate();
-                } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
+                } while (false/*!isCapillarCoordinateValid(capillarsCenters, coordinate)*/);
 
                 capillarsCenters[i] = coordinate;
 
@@ -66,12 +68,14 @@ public class CurvedPlate extends Plate {
                 SphericalPoint position = coordinate.getNewByShift(0.0, -PI / 2.0, -PI);
 
                 capillars.add(capillarFactory.getNewCapillar(front, position));
+
+                if (i % (capillarsAmount / 10) == 0.0) System.out.println("    ... " + (i * 100 / capillarsAmount) + "% capillars created");
             }
         }
 
         long finish = System.nanoTime();
+        System.out.println("Creating capillars finish. Total time = " + (finish - start) / 1_000_000 + " ms");
         System.out.println();
-        System.out.println("Creating capillars time = " + (finish - start) / 1_000_000 + " ms");
     }
 
     @Override
@@ -79,53 +83,53 @@ public class CurvedPlate extends Plate {
         return center.getNewByShift(curvRadius, 0.0, 0.0);
     }
 
-//    @Override
-//    protected boolean isCapillarCoordinateValid(Point3D[] coordinates, Point3D coordinate) {
-//        double radius = 2.0 * Math.asin(capillarRadius / curvRadius);
-//        int i = 0;
-//        while (coordinates[i] != null && i < coordinates.length) {
-//            if ((coordinate.getQ2() - coordinates[i].getQ2()) * (coordinate.getQ2() - coordinates[i].getQ2())
-//                    + (coordinate.getQ3() - coordinates[i].getQ3()) * (coordinate.getQ3() - coordinates[i].getQ3())
-//                    < radius * radius) {
-//                return false;
-//            }
-//            i++;
-//        }
-//        return true;
-//    }
-
-    @Override
+    @Override //TODO сделать наконец этот метод
     protected boolean isCapillarCoordinateValid(Point3D[] coordinates, Point3D coordinate) {
-//        ////////////
-//        CartesianPoint[] capillarsCenters = new CartesianPoint[capillarsAmount];
-//        CartesianPoint coordinate;
-//        SphericalPoint sper;
-//
-//        for (int i = 0; i < capillarsAmount; i++) {
-//            do {
-//                sper = coordinateFactory.getCoordinate();
-//                coordinate = sper.convertToCartesian();
-//            } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
-//
-//            capillarsCenters[i] = coordinate;
-//
-//            CartesianPoint front = coordinate.getNewByShift(curvRadius, 0.0, 0.0).shift(center);
-//
-//            SphericalPoint position = sper.getNewByShift(0.0, -PI / 2.0, -PI);
-//
-//            capillars.add(capillarFactory.getNewCapillar(front, position));
-//        /////////
-
+        double radius = 2.0 * Math.asin(capillarRadius / curvRadius);
         int i = 0;
         while (coordinates[i] != null && i < coordinates.length) {
-            if (      (coordinate.getQ1() - coordinates[i].getQ1()) * (coordinate.getQ1() - coordinates[i].getQ1())
-                    + (coordinate.getQ2() - coordinates[i].getQ2()) * (coordinate.getQ2() - coordinates[i].getQ2())
+            if (      (coordinate.getQ2() - coordinates[i].getQ2()) * (coordinate.getQ2() - coordinates[i].getQ2())
                     + (coordinate.getQ3() - coordinates[i].getQ3()) * (coordinate.getQ3() - coordinates[i].getQ3())
-                    < 4.0 * capillarRadius * capillarRadius) {
+                    < radius * radius) {
                 return false;
             }
             i++;
         }
         return true;
     }
+
+//    @Override
+//    protected boolean isCapillarCoordinateValid(Point3D[] coordinates, Point3D coordinate) {
+////        ////////////
+////        CartesianPoint[] capillarsCenters = new CartesianPoint[capillarsAmount];
+////        CartesianPoint coordinate;
+////        SphericalPoint sper;
+////
+////        for (int i = 0; i < capillarsAmount; i++) {
+////            do {
+////                sper = coordinateFactory.getCoordinate();
+////                coordinate = sper.convertToCartesian();
+////            } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
+////
+////            capillarsCenters[i] = coordinate;
+////
+////            CartesianPoint front = coordinate.getNewByShift(curvRadius, 0.0, 0.0).shift(center);
+////
+////            SphericalPoint position = sper.getNewByShift(0.0, -PI / 2.0, -PI);
+////
+////            capillars.add(capillarFactory.getNewCapillar(front, position));
+////        /////////
+//
+//        int i = 0;
+//        while (coordinates[i] != null && i < coordinates.length) {
+//            if (      (coordinate.getQ1() - coordinates[i].getQ1()) * (coordinate.getQ1() - coordinates[i].getQ1())
+//                    + (coordinate.getQ2() - coordinates[i].getQ2()) * (coordinate.getQ2() - coordinates[i].getQ2())
+//                    + (coordinate.getQ3() - coordinates[i].getQ3()) * (coordinate.getQ3() - coordinates[i].getQ3())
+//                    < 4.0 * capillarRadius * capillarRadius) {
+//                return false;
+//            }
+//            i++;
+//        }
+//        return true;
+//    }
 }

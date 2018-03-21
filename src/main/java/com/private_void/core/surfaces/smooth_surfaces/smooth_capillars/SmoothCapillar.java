@@ -63,8 +63,10 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
         transformToReferenceFrame(particle, ReferenceFrame.GLOBAL);
     }
 
-    @Override
+    @Override //TODO протестить
     public boolean willParticleGetInside(final Particle p) {
+        transformToReferenceFrame(p, ReferenceFrame.INNER);
+
         double x0 = front.getX();
 
         double x = p.getCoordinate().getX();
@@ -78,15 +80,12 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
         double newY = (Vy / Vx) * (x0 - x) + y;
         double newZ = (Vz / Vx) * (x0 - x) + z;
 
-        // Решение только для параллельного пучка. Если частицы падают под углом, то нужно все таки переходить в локальную систему отсчета
-        double R;
-        if (position != null) {
-            R = radius * Math.cos(position.getTheta()) * Math.cos(position.getPhi());
-        } else {
-            R = radius;
-        }
 
-        return (newY - front.getY()) * (newY - front.getY()) + (newZ - front.getZ()) * (newZ - front.getZ()) < R * R;
+        boolean result = (newY - front.getY()) * (newY - front.getY()) + (newZ - front.getZ()) * (newZ - front.getZ()) < radius * radius;
+
+        transformToReferenceFrame(p, ReferenceFrame.GLOBAL);
+
+        return result;
     }
 
     @Override

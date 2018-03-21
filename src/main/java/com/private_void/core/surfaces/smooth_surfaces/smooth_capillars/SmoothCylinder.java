@@ -143,7 +143,7 @@ public class SmoothCylinder extends SmoothCapillar {
         return point.getX() < front.getX() + length;
     }
 
-    @Override
+    @Override //TODO протестить, на те ли углы и вокруг тех ли осей поворачиваю
     protected void transformToReferenceFrame(Particle particle, ReferenceFrame frame) {
         if (position == null) {
             return;
