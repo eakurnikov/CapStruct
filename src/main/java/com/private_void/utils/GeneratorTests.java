@@ -1,9 +1,14 @@
 package com.private_void.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Arrays;
 import java.util.Random;
 
 public final class GeneratorTests {
+    private static final Logger log = LoggerFactory.getLogger(GeneratorTests.class);
+
     private static int n1 = 16;
     private static int n2 = 8;
     private static int n3 = 5;
@@ -79,7 +84,7 @@ public final class GeneratorTests {
             }
         }
         F = max(X2);
-        System.out.println("F6 = " + F);
+        log.info("F6 = " + F);
         try {
             System.in.read();
         } catch (Exception ex) {
@@ -127,7 +132,7 @@ public final class GeneratorTests {
             }
         }
         F = max(X2);
-        System.out.println("F6 = " + F);
+        log.info("F6 = " + F);
         try {
             System.in.read();
         } catch (Exception ex) {
@@ -183,7 +188,7 @@ public final class GeneratorTests {
             X2[s - 6] = sum * 256 / N;
         }
         F = max(X2);
-        System.out.println("F5 = " + F);
+        log.info("F5 = " + F);
     }
 
     private static void test4(double[] e) {
@@ -226,7 +231,7 @@ public final class GeneratorTests {
             X2[s - 4] = sum * 125 / N;
         }
         F = max(X2);
-        System.out.println("F4 = " + F);
+        log.info("F4 = " + F);
     }
 
     private static void test3(double[] e) {
@@ -261,7 +266,7 @@ public final class GeneratorTests {
             X2[s - 2] = sum * 64 / N;
         }
         F = max(X2);
-        System.out.println("F3 = " + F);
+        log.info("F3 = " + F);
     }
 
     private static void test2(double[] e) {
@@ -288,7 +293,7 @@ public final class GeneratorTests {
             X2[s - 1] = sum * 16 / N;
         }
         F = max(X2);
-        System.out.println("F2 = " + F);
+        log.info("F2 = " + F);
     }
 
     private static void test1(double[] e) {
@@ -311,7 +316,7 @@ public final class GeneratorTests {
 
     private static void hip(double Dm, double N) {
         double kappa = Dm * Math.sqrt(N);
-        System.out.println("Kappa = " + kappa);
+        log.info("Kappa = " + kappa);
     }
 
     private static void makeArray(double[] e) {

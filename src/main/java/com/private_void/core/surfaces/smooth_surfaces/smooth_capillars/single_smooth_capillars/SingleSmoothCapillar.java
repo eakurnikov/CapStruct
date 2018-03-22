@@ -8,6 +8,8 @@ import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.core.surfaces.smooth_surfaces.SmoothSurface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.*;
@@ -16,6 +18,7 @@ import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
 public abstract class SingleSmoothCapillar extends SmoothSurface implements CapillarSystem {
+    private static final Logger log = LoggerFactory.getLogger(SingleSmoothCapillar.class);
     protected double length;
     protected double radius;
     protected Detector detector;
@@ -69,7 +72,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         }
 
         long finish = System.nanoTime();
-        System.out.println("time = " + (finish - start) / 1_000_000 + " ms");
+        log.info("time = " + (finish - start) / 1_000_000 + " ms");
     }
 
     public void interactParallel(Flux flux) {
@@ -131,7 +134,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         }
 
         long finish = System.nanoTime();
-        System.out.println("time = " + (finish - start) / 1_000_000 + " ms");
+        log.info("time = " + (finish - start) / 1_000_000 + " ms");
     }
 
     public void interactStream(Flux flux) {
@@ -167,7 +170,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         });
 
         long finish = System.nanoTime();
-        System.out.println("time = " + (finish - start) / 1_000_000 + " ms");
+        log.info("time = " + (finish - start) / 1_000_000 + " ms");
     }
 
     public void interactFork(Flux flux) {
@@ -235,7 +238,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         pool.invoke(interaction);
 
         long finish = System.nanoTime();
-        System.out.println("time = " + (finish - start) / 1_000_000 + " ms");
+        log.info("time = " + (finish - start) / 1_000_000 + " ms");
     }
 
     @Override

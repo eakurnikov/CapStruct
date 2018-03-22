@@ -8,11 +8,14 @@ import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarFactory;
 import com.private_void.core.surfaces.CapillarSystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Plate implements CapillarSystem {
+    private static final Logger log = LoggerFactory.getLogger(Plate.class);
     protected static final int CAPILLARS_PER_DOMAIN_AMOUNT = 4;
     protected CapillarFactory capillarFactory;
     protected CartesianPoint center;
@@ -34,7 +37,7 @@ public abstract class Plate implements CapillarSystem {
 
     @Override
     public void interact(Flux flux) {
-        System.out.println("Particles-capillars interaction start ...");
+        log.info("Particles-capillars interaction start ...");
         long start = System.nanoTime();
 
         boolean isOut;
@@ -45,7 +48,9 @@ public abstract class Plate implements CapillarSystem {
         for (Particle particle : flux.getParticles()) {
             isOut = true;
 
-            if (particlesCounter % (particlesAmount / 10) == 0.0) System.out.println("    ... " + (particlesCounter * 100 / particlesAmount) + "% paricles processed");
+            if (particlesCounter % (particlesAmount / 10) == 0.0) {
+                log.info("    ... " + (particlesCounter * 100 / particlesAmount) + "% paricles processed");
+            }
             particlesCounter++;
 
             int capillarsCounter = 0;
@@ -64,8 +69,7 @@ public abstract class Plate implements CapillarSystem {
         }
 
         long finish = System.nanoTime();
-        System.out.println("Particles-capillars interaction finish. Total time = " + (finish - start) / 1_000_000 + " ms");
-        System.out.println();
+        log.info("Particles-capillars interaction finish. Total time = " + (finish - start) / 1_000_000 + " ms\n");
     }
 
     @Override

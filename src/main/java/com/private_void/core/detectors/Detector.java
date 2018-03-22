@@ -3,11 +3,14 @@ package com.private_void.core.detectors;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.CartesianPoint;
 import com.private_void.core.particles.Particle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Detector {
+    private static final Logger log = LoggerFactory.getLogger(Detector.class);
     protected CartesianPoint center;
     protected double width;
     protected double upperBound;
@@ -68,7 +71,7 @@ public class Detector {
         flux.setParticles(detectedParticles);
 
         long finish = System.nanoTime();
-        System.out.println("Detecting particles time = " + (finish - start) / 1_000_000 + " ms");
+        log.info("Detecting particles time = " + (finish - start) / 1_000_000 + " ms");
     }
 
     protected CartesianPoint getCoordinateOnDetector(Particle p) {

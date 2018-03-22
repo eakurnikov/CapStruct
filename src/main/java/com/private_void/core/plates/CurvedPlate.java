@@ -3,11 +3,14 @@ package com.private_void.core.plates;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.*;
 import com.private_void.core.surfaces.CapillarFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.private_void.utils.Generator.generator;
 import static com.private_void.utils.Constants.PI;
 
 public class CurvedPlate extends Plate {
+    private static final Logger log = LoggerFactory.getLogger(CurvedPlate.class);
     private double maxAngleR;
     private double curvRadius;
 
@@ -22,7 +25,7 @@ public class CurvedPlate extends Plate {
 
     @Override
     protected void createCapillars() {
-        System.out.println("Creating capillars start ...");
+        log.info("Creating capillars start ...");
         long start = System.nanoTime();
 
         double frontSquare = 2.0 * PI * curvRadius * curvRadius * (1.0 -  Math.cos(maxAngleR));
@@ -33,13 +36,13 @@ public class CurvedPlate extends Plate {
         double maxCapillarDensity = 1.0 / minCapillarSquare;
 
         if (capillarsDensity > maxCapillarDensity) {
-            System.out.println("Capillars density is too big, it has been automatically set to " + maxCapillarDensity);
+            log.info("Capillars density is too big, it has been automatically set to " + maxCapillarDensity);
             capillarsAmount = (int) (frontSquare / minCapillarSquare);
             // todo заполняю сеткой впритирку
             capillars = null;
 
         } else if (capillarsDensity > 0.67 * maxCapillarDensity) {
-            System.out.println("Capillars density is very big, so it has been automatically set to " + maxCapillarDensity);
+            log.info("Capillars density is very big, so it has been automatically set to " + maxCapillarDensity);
             /*todo capillarsAmount = ...
             заполняю сеткой с каким-то шагом*/
             capillars = null;
@@ -69,13 +72,13 @@ public class CurvedPlate extends Plate {
 
                 capillars.add(capillarFactory.getNewCapillar(front, position));
 
-                if (i % (capillarsAmount / 10) == 0.0) System.out.println("    ... " + (i * 100 / capillarsAmount) + "% capillars created");
+                if (i % (capillarsAmount / 10) == 0.0)
+                    log.info("    ... " + (i * 100 / capillarsAmount) + "% capillars created");
             }
         }
 
         long finish = System.nanoTime();
-        System.out.println("Creating capillars finish. Total time = " + (finish - start) / 1_000_000 + " ms");
-        System.out.println();
+        log.info("Creating capillars finish. Total time = " + (finish - start) / 1_000_000 + " ms\n");
     }
 
     @Override

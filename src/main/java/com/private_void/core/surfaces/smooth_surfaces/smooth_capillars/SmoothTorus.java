@@ -8,11 +8,14 @@ import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarFactory;
 import com.private_void.utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.private_void.utils.Constants.*;
 import static com.private_void.utils.Generator.generator;
 
 public class SmoothTorus extends SmoothCapillar {
+    private static final Logger log = LoggerFactory.getLogger(SmoothCapillar.class);
     private double curvRadius;
     private double curvAngleR;
 
@@ -160,9 +163,9 @@ public class SmoothTorus extends SmoothCapillar {
                     solution[i] -= delta[i];
                 }
             } catch (ArithmeticException e) {
-                System.out.println(e.getMessage());
+                log.error(e.getMessage());
             } catch (Exception e){
-                System.out.println(e.getMessage());
+                log.error(e.getMessage());
             }
         }
 

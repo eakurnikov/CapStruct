@@ -5,10 +5,13 @@ import com.private_void.core.geometry.CartesianPoint;
 import com.private_void.core.geometry.CoordinateFactory;
 import com.private_void.core.geometry.Point3D;
 import com.private_void.core.surfaces.CapillarFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.private_void.utils.Generator.generator;
 
 public class FlatPlate extends Plate {
+    private static final Logger log = LoggerFactory.getLogger(FlatPlate.class);
     private double sideLength;
 
     public FlatPlate(final CapillarFactory capillarFactory, final CartesianPoint center, double capillarsDensity,
@@ -21,7 +24,7 @@ public class FlatPlate extends Plate {
 
     @Override
     protected void createCapillars() {
-        System.out.println("Creating capillars start ...");
+        log.info("Creating capillars start ...");
         long start = System.nanoTime();
 
         double frontSquare = sideLength * sideLength;
@@ -29,13 +32,13 @@ public class FlatPlate extends Plate {
         double maxCapillarDensity = 1.0 / minCapillarSquare;
 
         if (capillarsDensity > maxCapillarDensity) {
-            System.out.println("Capillars density is too big, it has been automatically set to " + maxCapillarDensity);
+            log.info("Capillars density is too big, it has been automatically set to " + maxCapillarDensity);
             capillarsAmount = (int) (frontSquare / minCapillarSquare);
             // todo заполняю сеткой впритирку
             capillars = null;
 
         } else if (capillarsDensity > 0.67 * maxCapillarDensity) {
-            System.out.println("Capillars density is very big, so it has been automatically set to " + maxCapillarDensity);
+            log.info("Capillars density is very big, so it has been automatically set to " + maxCapillarDensity);
             /*todo capillarsAmount = ...
             заполняю сеткой с каким-то шагом*/
             capillars = null;
@@ -58,13 +61,13 @@ public class FlatPlate extends Plate {
                 capillarsCenters[i] = coordinate;
                 capillars.add(capillarFactory.getNewCapillar(coordinate, null));
 
-                if (i % (capillarsAmount / 10) == 0.0) System.out.println("    ... " + (i * 100 / capillarsAmount) + "% capillars created");
+                if (i % (capillarsAmount / 10) == 0.0)
+                    log.info("    ... " + (i * 100 / capillarsAmount) + "% capillars created");
             }
         }
 
         long finish = System.nanoTime();
-        System.out.println("Creating capillars fifnish. Total time = = " + (finish - start) / 1_000_000 + " ms");
-        System.out.println();
+        log.info("Creating capillars fifnish. Total time = = " + (finish - start) / 1_000_000 + " ms\n");
     }
 
 //    @Override
@@ -113,8 +116,7 @@ public class FlatPlate extends Plate {
 //        }
 //
 //        long finish = System.nanoTime();
-//        System.out.println();
-//        System.out.println("Creating capillars time = " + (finish - start) / 1_000_000 + " ms");
+//        log.info("Creating capillars time = " + (finish - start) / 1_000_000 + " ms\n");
 //    }
 
     @Override

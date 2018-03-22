@@ -5,12 +5,15 @@ import com.private_void.core.geometry.CartesianPoint;
 import com.private_void.core.geometry.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.private_void.utils.Constants.ITERATIONS_MAX;
 import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
 public class SingleSmoothTorus extends SingleSmoothCapillar {
+    private static final Logger log = LoggerFactory.getLogger(SingleSmoothTorus.class);
     private double curvRadius;
     private double curvAngleR;
 
@@ -133,9 +136,9 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
                     solution[i] -= delta[i];
                 }
             } catch (ArithmeticException e) {
-                System.out.println(e.getMessage());
+                log.error(e.getMessage());
             } catch (Exception e){
-                System.out.println(e.getMessage());
+                log.error(e.getMessage());
             }
         }
 

@@ -1,8 +1,12 @@
 package com.private_void.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static com.private_void.utils.Constants.ZERO;
 
 public final class Utils {
+    private static final Logger log = LoggerFactory.getLogger(Utils.class);
 
     private Utils() {}
 
@@ -34,11 +38,11 @@ public final class Utils {
             }
         }
         catch (ArithmeticException e) {
-            System.out.println("Division by zero.");
-            System.out.println(e.getMessage());
+            log.error("Division by zero.");
+            log.error(e.getMessage());
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         }
         return B;
     }
