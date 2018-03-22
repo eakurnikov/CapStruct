@@ -155,13 +155,13 @@ public class SmoothCylinder extends SmoothCapillar {
         }
 
         particle.getCoordinate()
-                .shift(0.0, 
-                        Math.sin(-directionCoefficient * position.getTheta()),
-                        Math.sin(-directionCoefficient * position.getPhi()));
+                .shift(0.0,
+                        position.getRadius() * Math.sin(-directionCoefficient * position.getTheta()),
+                        position.getRadius() * Math.sin(-directionCoefficient * position.getPhi()));
 
         particle.getSpeed()
-                .turnAroundVector(directionCoefficient * position.getTheta(), new Vector(0.0, 0.0, 1.0))
-                .turnAroundVector(directionCoefficient * position.getPhi(), new Vector(0.0, 1.0, 0.0));
+                .turnAroundVector(-directionCoefficient * position.getTheta(), new Vector(0.0, 0.0, 1.0))
+                .turnAroundVector(-directionCoefficient * position.getPhi(), new Vector(0.0, 1.0, 0.0));
     }
 
     public static CapillarFactory getFactory(double radius, double length, double roughnessSize, double roughnessAngleR,

@@ -80,7 +80,6 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
         double newY = (Vy / Vx) * (x0 - x) + y;
         double newZ = (Vz / Vx) * (x0 - x) + z;
 
-
         boolean result = (newY - front.getY()) * (newY - front.getY()) + (newZ - front.getZ()) * (newZ - front.getZ()) < radius * radius;
 
         transformToReferenceFrame(p, ReferenceFrame.GLOBAL);
