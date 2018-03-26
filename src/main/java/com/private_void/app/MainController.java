@@ -165,11 +165,11 @@ public class MainController {
         planeSize.setText("50");
 
         clearChartItem = new MenuItem("Clear all");
-        clearChartItem.setOnAction((ActionEvent) -> chart.getData().clear());
+        clearChartItem.setOnAction((actionEvent) -> chart.getData().clear());
         menu = new ContextMenu(clearChartItem);
-        chart.setOnMouseClicked((MouseEvent event) -> {
-            if (event.getButton().equals(MouseButton.SECONDARY)) {
-                menu.show(chart.getScene().getWindow(), event.getScreenX(), event.getScreenY());
+        chart.setOnMouseClicked((mouseEvent) -> {
+            if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
+                menu.show(chart.getScene().getWindow(), mouseEvent.getScreenX(), mouseEvent.getScreenY());
             }
         });
     }
