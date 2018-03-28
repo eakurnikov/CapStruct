@@ -63,7 +63,7 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
         transformToReferenceFrame(particle, ReferenceFrame.GLOBAL);
     }
 
-    @Override //TODO протестить
+    @Override //TODO работает некорректно
     public boolean willParticleGetInside(final Particle p) {
         transformToReferenceFrame(p, ReferenceFrame.INNER);
 
