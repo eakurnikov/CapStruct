@@ -41,18 +41,16 @@ public class ReferenceFrameTransformationTest {
                         new SphericalPoint(100.0, 0.0, anglePhi));
 
         // To inner reference frame
-        double directionCoefficient = -1.0;
-
         SphericalPoint position = capillar.getPosition();
 
         particle.getCoordinate()
                 .shift(0.0,
-                        position.getRadius() * Math.sin(-directionCoefficient * position.getTheta()),
-                        position.getRadius() * Math.sin(-directionCoefficient * position.getPhi()));
+                        position.getRadius() * Math.sin(position.getTheta()),
+                        position.getRadius() * Math.sin(position.getPhi()));
 
         particle.getSpeed()
-                .turnAroundVector(directionCoefficient * position.getTheta(), new Vector(0.0, 0.0, 1.0))
-                .turnAroundVector(-directionCoefficient * position.getPhi(), new Vector(0.0, 1.0, 0.0));
+                .turnAroundVector(-position.getTheta(), new Vector(0.0, 0.0, 1.0))
+                .turnAroundVector( position.getPhi(), new Vector(0.0, 1.0, 0.0));
 
         assertTrue(Utils.compareToZero(base.getCoordinate().getX() - particle.getCoordinate().getX()));
         assertTrue(Utils.compareToZero(base.getCoordinate().getY() - particle.getCoordinate().getY()));

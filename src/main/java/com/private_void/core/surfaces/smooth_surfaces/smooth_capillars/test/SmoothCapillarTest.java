@@ -1,4 +1,4 @@
-package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
+package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.test;
 
 import com.private_void.core.geometry.CartesianPoint;
 import com.private_void.core.geometry.SphericalPoint;
@@ -11,18 +11,18 @@ import com.private_void.core.surfaces.smooth_surfaces.SmoothSurface;
 import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
-public abstract  class SmoothCapillar extends SmoothSurface implements Capillar {
+public abstract  class SmoothCapillarTest extends SmoothSurface implements Capillar {
     protected SphericalPoint position;
     protected double length;
     protected double radius;
 
-    protected SmoothCapillar(final CartesianPoint front, double radius, double roughnessSize, double roughnessAngleR,
+    protected SmoothCapillarTest(final CartesianPoint front, double radius, double roughnessSize, double roughnessAngleR,
                              double reflectivity, double criticalAngleR) {
         super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.radius = radius;
     }
 
-    protected SmoothCapillar(final CartesianPoint front, final SphericalPoint position, double radius,
+    protected SmoothCapillarTest(final CartesianPoint front, final SphericalPoint position, double radius,
                              double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
         super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.position = position;
@@ -63,9 +63,9 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
         toGlobalReferenceFrame(particle);
     }
 
-    @Override //TODO работает некорректно
-    public boolean willParticleGetInside(final Particle p) {
-        double x0 = front.getX();
+    @Override
+    public boolean willParticleGetInside(Particle p) {
+        toInnerReferenceFrame(p);
 
         double x = p.getCoordinate().getX();
         double y = p.getCoordinate().getY();
@@ -75,14 +75,14 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
         double Vy = p.getSpeed().getY();
         double Vz = p.getSpeed().getZ();
 
-        double newY = (Vy / Vx) * (x0 - x) + y;
-        double newZ = (Vz / Vx) * (x0 - x) + z;
+        double newY = y -(Vy / Vx) * x;
+        double newZ = z -(Vz / Vx) * x;
 
-        double radiusY = radius * Math.cos(position.getTheta());
-        double radiusZ = radius * Math.cos(position.getPhi());
+        boolean result = newY * newY + newZ * newZ < radius * radius;
 
-        return  (newY - front.getY()) * (newY - front.getY()) / (radiusY * radiusY) +
-                (newZ - front.getZ()) * (newZ - front.getZ()) / (radiusZ * radiusZ) < 1.0;
+        toGlobalReferenceFrame(p);
+
+        return result;
     }
 
     @Override

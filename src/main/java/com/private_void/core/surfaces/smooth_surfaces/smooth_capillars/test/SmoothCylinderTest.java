@@ -1,4 +1,4 @@
-package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
+package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.test;
 
 import com.private_void.core.geometry.CartesianPoint;
 import com.private_void.core.geometry.SphericalPoint;
@@ -12,15 +12,15 @@ import com.private_void.utils.Utils;
 import static com.private_void.utils.Constants.*;
 import static com.private_void.utils.Generator.generator;
 
-public class SmoothCylinder extends SmoothCapillar {
+public class SmoothCylinderTest extends SmoothCapillarTest {
 
-    public SmoothCylinder(final CartesianPoint front, double radius, double length, double roughnessSize, double roughnessAngleR,
+    public SmoothCylinderTest(final CartesianPoint front, double radius, double length, double roughnessSize, double roughnessAngleR,
                           double reflectivity, double criticalAngleR) {
         super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.length = length;
     }
 
-    public SmoothCylinder(final CartesianPoint front, final SphericalPoint position, double radius, double length,
+    public SmoothCylinderTest(final CartesianPoint front, final SphericalPoint position, double radius, double length,
                           double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
         super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.length = length;
@@ -29,7 +29,7 @@ public class SmoothCylinder extends SmoothCapillar {
 
     @Override
     protected Vector getNormal(final CartesianPoint point) {
-        return new Vector(0.0, -2.0 * (point.getY() - front.getY()), -2.0 * (point.getZ() - front.getZ()));
+        return new Vector(0.0, -2.0 * point.getY(), -2.0 * point.getZ());
     }
 
     @Override
@@ -44,9 +44,10 @@ public class SmoothCylinder extends SmoothCapillar {
             return p.getCoordinate();
         }
 
-        double[] solution = {p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
-                             p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
-                             p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()};
+        double[] solution = {
+                p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
+                p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
+                p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()};
 
         double[] delta = {1.0, 1.0, 1.0};
         double[] F  = new double[3];
@@ -73,8 +74,8 @@ public class SmoothCylinder extends SmoothCapillar {
                     }
                 }
 
-                y = solution[1] - front.getY();
-                z = solution[2] - front.getZ();
+                y = solution[1];
+                z = solution[2];
 
                 W[0][0] = 0.0;
                 W[0][1] = 2.0 * y;
@@ -140,18 +141,14 @@ public class SmoothCylinder extends SmoothCapillar {
 
     @Override
     protected boolean isPointInside(final CartesianPoint point) {
-        return point.getX() < front.getX() + length;
+        return point.getX() < length;
     }
 
     @Override
     protected void toInnerReferenceFrame(Particle particle) {
         if (position == null) return;
 
-        particle.getCoordinate()
-                .shift(0.0,
-                        position.getRadius() * Math.sin(position.getTheta()),
-                        position.getRadius() * Math.sin(position.getPhi()));
-
+        particle.getCoordinate().shift(-front.getX(), -front.getY(), -front.getZ());
         particle.getSpeed()
                 .turnAroundVector(-position.getTheta(), new Vector(0.0, 0.0, 1.0))
                 .turnAroundVector( position.getPhi(), new Vector(0.0, 1.0, 0.0));
@@ -161,15 +158,10 @@ public class SmoothCylinder extends SmoothCapillar {
     protected void toGlobalReferenceFrame(Particle particle) {
         if (position == null) return;
 
-        particle.getCoordinate()
-                .shift(0.0,
-                        position.getRadius() * Math.sin(position.getTheta()),
-                        position.getRadius() * Math.sin(position.getPhi()));
-
+        particle.getCoordinate().shift(front.getX(), front.getY(), front.getZ());
         particle.getSpeed()
                 .turnAroundVector(-position.getPhi(), new Vector(0.0, 1.0, 0.0))
                 .turnAroundVector( position.getTheta(), new Vector(0.0, 0.0, 1.0));
-
     }
 
     public static CapillarFactory getFactory(double radius, double length, double roughnessSize, double roughnessAngleR,
@@ -178,7 +170,7 @@ public class SmoothCylinder extends SmoothCapillar {
 
             @Override
             public Capillar getNewCapillar(final CartesianPoint coordinate, final SphericalPoint position) {
-                return new SmoothCylinder(coordinate, position, radius, length, roughnessSize, roughnessAngleR,
+                return new SmoothCylinderTest(coordinate, position, radius, length, roughnessSize, roughnessAngleR,
                         reflectivity, criticalAngleR);
             }
 

@@ -4,6 +4,7 @@ import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.CartesianPoint;
 import com.private_void.core.geometry.CoordinateFactory;
 import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.SphericalPoint;
 import com.private_void.core.surfaces.CapillarFactory;
 
 import static com.private_void.utils.Generator.generator;
@@ -56,7 +57,7 @@ public class FlatPlate extends Plate {
                 } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
 
                 capillarsCenters[i] = coordinate;
-                capillars.add(capillarFactory.getNewCapillar(coordinate, null));
+                capillars.add(capillarFactory.getNewCapillar(coordinate, new SphericalPoint(1_00, 0.0, Math.toRadians(1.1))));
 
                 if (i % (capillarsAmount / 10) == 0.0) System.out.println("    ... " + (i * 100 / capillarsAmount) + "% capillars created");
             }

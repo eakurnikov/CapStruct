@@ -21,6 +21,7 @@ import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_sm
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCylinder;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothTorus;
+import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.test.SmoothCylinderTest;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.NumberAxis;
@@ -28,7 +29,6 @@ import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 
 import static com.private_void.utils.Constants.CONE_COEFFICIENT;
 import static com.private_void.utils.Generator.generator;
@@ -280,6 +280,14 @@ public class MainController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
+            CapillarFactory testSmoothCylinderFactory = SmoothCylinderTest.getFactory(
+                    capillarRadius,
+                    capillarLength,
+                    capillarRoughnessSize,
+                    capillarRougnessAngleR,
+                    capillarReflectivity,
+                    capillarCriticalAngleR);
+
 //            return new CurvedPlate(
 //                    smoothCylinderFactory,
 //                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
@@ -288,7 +296,7 @@ public class MainController {
 //                    50_000.0);
 
             return new FlatPlate(
-                    smoothCylinderFactory,
+                    testSmoothCylinderFactory,
                     new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
                     plateCapillarsDensity,
                     plateSideLength);

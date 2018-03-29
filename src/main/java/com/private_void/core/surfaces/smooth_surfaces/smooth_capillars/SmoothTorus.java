@@ -185,7 +185,12 @@ public class SmoothTorus extends SmoothCapillar {
     }
 
     @Override
-    protected void transformToReferenceFrame(Particle particle, ReferenceFrame frame) {
+    protected void toInnerReferenceFrame(Particle particle) {
+        // todo
+    }
+
+    @Override
+    protected void toGlobalReferenceFrame(Particle particle) {
         // todo
     }
 
