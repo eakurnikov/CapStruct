@@ -93,6 +93,17 @@ public class Vector extends CartesianPoint {
         return new Vector(temp[0], temp[1], temp[2]);
     }
 
+    public Vector getNewByTurningAroundOY(double angle) {
+        double[] temp = {0.0, 0.0, 0.0};
+        setRotationMatrixY(angle);
+
+        for (int i = 0; i < 3; i++) {
+            temp[i] = rotationMatrixY[0][i] * x + rotationMatrixY[1][i] * y + rotationMatrixY[2][i] * z;
+        }
+
+        return new Vector(temp[0], temp[1], temp[2]);
+    }
+
     public Vector getNewByTurningAroundVector(double angle, final Vector axis) {
         double[] temp = {0.0, 0.0, 0.0};
         setRotationMatrixXYZ(angle, axis);

@@ -11,7 +11,7 @@ public class RotatedDetector extends Detector {
     public RotatedDetector(final CartesianPoint centerCoordinate, double width, double angleR) {
         super(centerCoordinate, width);
         this.angleR = angleR;
-        this.normal = new Vector(1.0, 0.0, 0.0).turnAroundOY(angleR);
+        this.normal = new Vector(1.0, 0.0, 0.0).getNewByTurningAroundOY(angleR);
     }
 
     @Override

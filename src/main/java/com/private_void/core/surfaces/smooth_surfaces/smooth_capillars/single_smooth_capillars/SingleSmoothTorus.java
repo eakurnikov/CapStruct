@@ -44,7 +44,7 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
     protected Vector getParticleSpeedRotationAxis(final CartesianPoint point, final Vector normal) {
         return normal
                 .getNewByTurningAroundOX(PI / 2.0)
-                .turnAroundOY(getPointsAngle(point));
+                .getNewByTurningAroundOY(getPointsAngle(point));
     }
 
     @Override

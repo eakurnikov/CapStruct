@@ -57,7 +57,7 @@ public class FlatPlate extends Plate {
                 } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
 
                 capillarsCenters[i] = coordinate;
-                capillars.add(capillarFactory.getNewCapillar(coordinate, new SphericalPoint(1_00, 0.0, Math.toRadians(1.1))));
+                capillars.add(capillarFactory.getNewCapillar(coordinate, new SphericalPoint(10_000, 0.0, Math.toRadians(6.9))));
 
                 if (i % (capillarsAmount / 10) == 0.0) System.out.println("    ... " + (i * 100 / capillarsAmount) + "% capillars created");
             }

@@ -40,9 +40,9 @@ public abstract  class SmoothCapillarTest extends SmoothSurface implements Capil
             CartesianPoint newCoordinate = getHitPoint(p);
 
             while (!p.isAbsorbed() && isPointInside(newCoordinate)) {
-                normal = getNormal(newCoordinate).turnAroundVector(
+                normal = getNormal(newCoordinate).getNewByTurningAroundVector(
                         generator().uniformDouble(0.0, roughnessAngleR),
-                        new Vector(1.0, 0.0, 0.0).turnAroundOY(generator().uniformDouble(0.0, 2.0 * PI)));
+                        new Vector(1.0, 0.0, 0.0).getNewByTurningAroundOY(generator().uniformDouble(0.0, 2.0 * PI)));
 
                 double angleWithSurface = p.getSpeed().getAngle(normal) - PI / 2.0;
                 p.decreaseIntensity(reflectivity);

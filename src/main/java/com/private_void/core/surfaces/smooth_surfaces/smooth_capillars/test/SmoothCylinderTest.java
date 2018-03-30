@@ -149,9 +149,18 @@ public class SmoothCylinderTest extends SmoothCapillarTest {
         if (position == null) return;
 
         particle.getCoordinate().shift(-front.getX(), -front.getY(), -front.getZ());
-        particle.getSpeed()
-                .turnAroundVector(-position.getTheta(), new Vector(0.0, 0.0, 1.0))
-                .turnAroundVector( position.getPhi(), new Vector(0.0, 1.0, 0.0));
+
+        particle.setSpeed(particle.getSpeed()
+                .getNewByTurningAroundVector(
+                        -position.getTheta(),
+                        new Vector(0.0, 0.0, 1.0))
+                .getNewByTurningAroundVector(
+                        position.getPhi(),
+                        new Vector(0.0, 1.0, 0.0)));
+
+//        particle.getSpeed()
+//                .turnAroundVector(-position.getTheta(), new Vector(0.0, 0.0, 1.0))
+//                .turnAroundVector( position.getPhi(), new Vector(0.0, 1.0, 0.0));
     }
 
     @Override
@@ -159,9 +168,18 @@ public class SmoothCylinderTest extends SmoothCapillarTest {
         if (position == null) return;
 
         particle.getCoordinate().shift(front.getX(), front.getY(), front.getZ());
-        particle.getSpeed()
-                .turnAroundVector(-position.getPhi(), new Vector(0.0, 1.0, 0.0))
-                .turnAroundVector( position.getTheta(), new Vector(0.0, 0.0, 1.0));
+
+        particle.setSpeed(particle.getSpeed()
+                .getNewByTurningAroundVector(
+                        -position.getPhi(),
+                        new Vector(0.0, 1.0, 0.0))
+                .getNewByTurningAroundVector(
+                        position.getTheta(),
+                        new Vector(0.0, 0.0, 1.0)));
+
+//        particle.getSpeed()
+//                .turnAroundVector(-position.getPhi(), new Vector(0.0, 1.0, 0.0))
+//                .turnAroundVector( position.getTheta(), new Vector(0.0, 0.0, 1.0));
     }
 
     public static CapillarFactory getFactory(double radius, double length, double roughnessSize, double roughnessAngleR,
