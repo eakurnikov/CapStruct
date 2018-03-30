@@ -68,7 +68,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
     }
 
     @Override
-    protected Vector getAxis(final CartesianPoint point) {
+    protected Vector getParticleSpeedRotationAxis(final CartesianPoint point, final Vector normal) {
         return new Vector(0.0, 0.0, 1.0);
     }
 

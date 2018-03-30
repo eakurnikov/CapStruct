@@ -80,7 +80,7 @@ public class SmoothCone extends SmoothCapillar {
     }
 
     @Override
-    protected Vector getAxis(final CartesianPoint point) {
+    protected Vector getParticleSpeedRotationAxis(final CartesianPoint point, final Vector normal) {
         return normal.getNewByTurningAroundOX(PI / 2.0);
     }
 

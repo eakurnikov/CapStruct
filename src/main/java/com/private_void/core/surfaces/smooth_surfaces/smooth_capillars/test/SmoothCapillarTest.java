@@ -31,6 +31,8 @@ public abstract  class SmoothCapillarTest extends SmoothSurface implements Capil
 
     @Override
     public void interact(Particle particle) {
+        Vector normal;
+
         toInnerReferenceFrame(particle);
 
         try {
@@ -38,18 +40,18 @@ public abstract  class SmoothCapillarTest extends SmoothSurface implements Capil
             CartesianPoint newCoordinate = getHitPoint(p);
 
             while (!p.isAbsorbed() && isPointInside(newCoordinate)) {
-                axis = new Vector(1.0, 0.0, 0.0)
-                        .turnAroundOY(generator().uniformDouble(0.0, 2.0 * PI));
-                normal = getNormal(newCoordinate)
-                        .turnAroundVector(generator().uniformDouble(0.0, roughnessAngleR), axis);
-                axis = getAxis(newCoordinate);
+                normal = getNormal(newCoordinate).turnAroundVector(
+                        generator().uniformDouble(0.0, roughnessAngleR),
+                        new Vector(1.0, 0.0, 0.0).turnAroundOY(generator().uniformDouble(0.0, 2.0 * PI)));
 
                 double angleWithSurface = p.getSpeed().getAngle(normal) - PI / 2.0;
                 p.decreaseIntensity(reflectivity);
 
                 if (angleWithSurface <= criticalAngleR) {
                     p.setCoordinate(newCoordinate);
-                    p.setSpeed(p.getSpeed().getNewByTurningAroundVector(2.0 * Math.abs(angleWithSurface), axis));
+                    p.setSpeed(p.getSpeed().getNewByTurningAroundVector(
+                            2.0 * Math.abs(angleWithSurface),
+                            getParticleSpeedRotationAxis(newCoordinate, normal)));
                     newCoordinate = getHitPoint(p);
                 } else {
                     p.setAbsorbed(true);

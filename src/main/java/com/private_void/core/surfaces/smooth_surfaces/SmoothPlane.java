@@ -31,6 +31,7 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
         CartesianPoint hitPoint;
         double angleWithSurface;
         Iterator<? extends Particle> iterator = flux.getParticles().iterator();
+        Vector normal = new Vector(0.0, 1.0, 0.0);
 
         while (iterator.hasNext()) {
             try {
@@ -43,7 +44,9 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
 
                     if (angleWithSurface <= criticalAngleR && p.getIntensity() >= flux.getMinIntensity()) {
                         p.setCoordinate(hitPoint);
-                        p.setSpeed(p.getSpeed().getNewByTurningAroundVector(2.0 * Math.abs(angleWithSurface), getAxis(hitPoint)));
+                        p.setSpeed(p.getSpeed().getNewByTurningAroundVector(
+                                2.0 * Math.abs(angleWithSurface),
+                                getParticleSpeedRotationAxis(hitPoint, normal)));
 
                     } else {
                         p.setAbsorbed(true);
@@ -70,7 +73,7 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
     }
 
     @Override
-    protected Vector getAxis(final CartesianPoint point) {
+    protected Vector getParticleSpeedRotationAxis(final CartesianPoint point, final Vector normal) {
         return new Vector(0.0, 0.0, 1.0);
     }
 

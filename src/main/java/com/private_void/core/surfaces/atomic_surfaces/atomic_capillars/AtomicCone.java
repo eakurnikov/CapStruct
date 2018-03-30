@@ -42,7 +42,7 @@ public class AtomicCone extends AtomicCapillar {
     }
 
     @Override
-    protected Vector getAxis(final CartesianPoint point) {
+    protected Vector getParticleSpeedRotationAxis(final CartesianPoint point, final Vector normal) {
         return null;
     }
 

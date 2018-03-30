@@ -32,6 +32,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
 
         NeutralParticle p;
         CartesianPoint newCoordinate;
+        Vector normal;
         double angleWithSurface;
 
         for (Particle particle : flux.getParticles()) {
@@ -42,18 +43,18 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                     newCoordinate = getHitPoint(p);
 
                     while (!p.isAbsorbed() && isPointInside(newCoordinate)) {
-                        axis = new Vector(1.0, 0.0, 0.0)
-                                .turnAroundOY(generator().uniformDouble(0.0, 2.0 * PI));
-                        normal = getNormal(newCoordinate)
-                                .turnAroundVector(generator().uniformDouble(0.0, roughnessAngleR), axis);
-                        axis = getAxis(newCoordinate);
+                        normal = getNormal(newCoordinate).turnAroundVector(
+                                generator().uniformDouble(0.0, roughnessAngleR),
+                                new Vector(1.0, 0.0, 0.0).turnAroundOY(generator().uniformDouble(0.0, 2.0 * PI)));
 
                         angleWithSurface = p.getSpeed().getAngle(normal) - PI / 2.0;
                         p.decreaseIntensity(reflectivity);
 
                         if (angleWithSurface <= criticalAngleR && p.getIntensity() >= flux.getMinIntensity()) {
                             p.setCoordinate(newCoordinate);
-                            p.setSpeed(p.getSpeed().getNewByTurningAroundVector(2.0 * Math.abs(angleWithSurface), axis));
+                            p.setSpeed(p.getSpeed().getNewByTurningAroundVector(
+                                    2.0 * Math.abs(angleWithSurface),
+                                    getParticleSpeedRotationAxis(newCoordinate, normal)));
                             newCoordinate = getHitPoint(p);
                         } else {
                             p.setAbsorbed(true);
@@ -80,6 +81,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         class Interaction implements Runnable {
             private NeutralParticle particle;
             private CartesianPoint newCoordinate;
+            private Vector normal;
             private double angleWithSurface;
 
             public Interaction(NeutralParticle particle) {
@@ -92,18 +94,17 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                     newCoordinate = getHitPoint(particle);
 
                     while (isPointInside(newCoordinate)) {
-                        axis = new Vector(1.0, 0.0, 0.0)
-                                .turnAroundOY(generator().uniformDouble(0.0, 2.0 * PI));
-                        normal = getNormal(newCoordinate)
-                                .turnAroundVector(generator().uniformDouble(0.0, roughnessAngleR), axis);
-                        axis = getAxis(newCoordinate);
+                        normal = getNormal(newCoordinate).turnAroundVector(generator().uniformDouble(0.0, roughnessAngleR),
+                                new Vector(1.0, 0.0, 0.0).turnAroundOY(generator().uniformDouble(0.0, 2.0 * PI)));
 
                         angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
                         particle.decreaseIntensity(reflectivity);
 
                         if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
                             particle.setCoordinate(newCoordinate);
-                            particle.setSpeed(particle.getSpeed().getNewByTurningAroundVector(2.0 * Math.abs(angleWithSurface), axis));
+                            particle.setSpeed(particle.getSpeed().getNewByTurningAroundVector(
+                                    2.0 * Math.abs(angleWithSurface),
+                                    getParticleSpeedRotationAxis(newCoordinate, normal)));
                             newCoordinate = getHitPoint(particle);
                         } else {
                             particle.setAbsorbed(true);
@@ -139,22 +140,23 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
 
         flux.getParticles().forEach(p -> {
             NeutralParticle particle = (NeutralParticle) p;
+            Vector normal;
+
             if (willParticleGetInside(particle)) {
                 CartesianPoint newCoordinate = getHitPoint(particle);
 
                 while (isPointInside(newCoordinate)) {
-                    axis = new Vector(1.0, 0.0, 0.0)
-                            .turnAroundOY(generator().uniformDouble(0.0, 2.0 * PI));
-                    normal = getNormal(newCoordinate)
-                            .turnAroundVector(generator().uniformDouble(0.0, roughnessAngleR), axis);
-                    axis = getAxis(newCoordinate);
+                    normal = getNormal(newCoordinate).turnAroundVector(generator().uniformDouble(0.0, roughnessAngleR),
+                            new Vector(1.0, 0.0, 0.0).turnAroundOY(generator().uniformDouble(0.0, 2.0 * PI)));
 
                     double angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
                     particle.decreaseIntensity(reflectivity);
 
                     if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
                         particle.setCoordinate(newCoordinate);
-                        particle.setSpeed(particle.getSpeed().getNewByTurningAroundVector(2.0 * Math.abs(angleWithSurface), axis));
+                        p.setSpeed(p.getSpeed().getNewByTurningAroundVector(
+                                2.0 * Math.abs(angleWithSurface),
+                                getParticleSpeedRotationAxis(newCoordinate, normal)));
                         newCoordinate = getHitPoint(particle);
                     } else {
                         particle.setAbsorbed(true);
@@ -187,23 +189,23 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
             private void interact() {
                 for (int i = startIndex; i < startIndex + length; i++) {
                     NeutralParticle particle = (NeutralParticle) particles.get(i);
+                    Vector normal;
 
                     if (willParticleGetInside(particle)) {
                         CartesianPoint newCoordinate = getHitPoint(particle);
 
                         while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
-                            axis = new Vector(1.0, 0.0, 0.0)
-                                    .turnAroundOY(generator().uniformDouble(0.0, 2.0 * PI));
-                            normal = getNormal(newCoordinate)
-                                    .turnAroundVector(generator().uniformDouble(0.0, roughnessAngleR), axis);
-                            axis = getAxis(newCoordinate);
+                            normal = getNormal(newCoordinate).turnAroundVector(generator().uniformDouble(0.0, roughnessAngleR),
+                                    new Vector(1.0, 0.0, 0.0).turnAroundOY(generator().uniformDouble(0.0, 2.0 * PI)));
 
                             double angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
                             particle.decreaseIntensity(reflectivity);
 
                             if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
                                 particle.setCoordinate(newCoordinate);
-                                particle.setSpeed(particle.getSpeed().getNewByTurningAroundVector(2.0 * Math.abs(angleWithSurface), axis));
+                                particle.setSpeed(particle.getSpeed().getNewByTurningAroundVector(
+                                        2.0 * Math.abs(angleWithSurface),
+                                        getParticleSpeedRotationAxis(newCoordinate, normal)));
                                 newCoordinate = getHitPoint(particle);
                             } else {
                                 particle.setAbsorbed(true);

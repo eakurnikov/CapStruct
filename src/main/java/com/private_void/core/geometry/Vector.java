@@ -90,9 +90,7 @@ public class Vector extends CartesianPoint {
             temp[i] = rotationMatrixX[0][i] * x + rotationMatrixX[1][i] * y + rotationMatrixX[2][i] * z;
         }
 
-        Vector result = new Vector(temp[0], temp[1], temp[2]);
-        result.normalize();
-        return result;
+        return new Vector(temp[0], temp[1], temp[2]);
     }
 
     public Vector getNewByTurningAroundVector(double angle, final Vector axis) {
@@ -103,9 +101,7 @@ public class Vector extends CartesianPoint {
             temp[i] = rotationMatrixXYZ[0][i] * x + rotationMatrixXYZ[1][i] * y + rotationMatrixXYZ[2][i] * z;
         }
 
-        Vector result = new Vector(temp[0], temp[1], temp[2]);
-        result.normalize();
-        return result;
+        return new Vector(temp[0], temp[1], temp[2]);
     }
 
     public double getAngle(final Vector vector) {
