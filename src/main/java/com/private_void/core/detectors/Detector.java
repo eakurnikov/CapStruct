@@ -69,6 +69,7 @@ public class Detector {
 
         long finish = System.nanoTime();
         System.out.println("Detecting particles time = " + (finish - start) / 1_000_000 + " ms");
+        System.out.println();
     }
 
     protected CartesianPoint getCoordinateOnDetector(Particle p) {
