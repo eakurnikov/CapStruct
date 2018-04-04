@@ -45,6 +45,8 @@ public class Detector {
 
         for (Particle particle : flux.getParticles()) {
 
+            System.out.println(particle.getCoordinate().getX() + " " + particle.getCoordinate().getY() + " " + particle.getCoordinate().getZ());
+
             if (!particle.isOut()) {
 
                 if (!particle.isAbsorbed()) {
@@ -69,6 +71,7 @@ public class Detector {
 
         long finish = System.nanoTime();
         System.out.println("Detecting particles time = " + (finish - start) / 1_000_000 + " ms");
+        System.out.println();
     }
 
     protected CartesianPoint getCoordinateOnDetector(Particle p) {
