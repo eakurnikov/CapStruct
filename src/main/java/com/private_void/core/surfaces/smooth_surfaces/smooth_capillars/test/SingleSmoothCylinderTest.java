@@ -36,7 +36,8 @@ public class SingleSmoothCylinderTest extends SingleSmoothCapillarTest {
             return p.getCoordinate();
         }
 
-        double[] solution = {p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
+        double[] solution = {
+                p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
                 p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
                 p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()};
 

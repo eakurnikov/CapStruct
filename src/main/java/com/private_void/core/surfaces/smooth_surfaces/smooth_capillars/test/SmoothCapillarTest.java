@@ -49,9 +49,9 @@ public abstract  class SmoothCapillarTest extends SmoothSurface implements Capil
 
                 if (angleWithSurface <= criticalAngleR) {
                     p.setCoordinate(newCoordinate);
-                    p.setSpeed(p.getSpeed().getNewByTurningAroundVector(
+                    p.getSpeed().turnAroundVector(
                             2.0 * Math.abs(angleWithSurface),
-                            getParticleSpeedRotationAxis(newCoordinate, normal)));
+                            getParticleSpeedRotationAxis(newCoordinate, normal));
                     newCoordinate = getHitPoint(p);
                 } else {
                     p.setAbsorbed(true);

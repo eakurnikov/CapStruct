@@ -52,9 +52,9 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
 
                         if (angleWithSurface <= criticalAngleR && p.getIntensity() >= flux.getMinIntensity()) {
                             p.setCoordinate(newCoordinate);
-                            p.setSpeed(p.getSpeed().getNewByTurningAroundVector(
+                            p.getSpeed().turnAroundVector(
                                     2.0 * Math.abs(angleWithSurface),
-                                    getParticleSpeedRotationAxis(newCoordinate, normal)));
+                                    getParticleSpeedRotationAxis(newCoordinate, normal));
                             newCoordinate = getHitPoint(p);
                         } else {
                             p.setAbsorbed(true);
@@ -102,9 +102,9 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
 
                         if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
                             particle.setCoordinate(newCoordinate);
-                            particle.setSpeed(particle.getSpeed().getNewByTurningAroundVector(
+                            particle.getSpeed().turnAroundVector(
                                     2.0 * Math.abs(angleWithSurface),
-                                    getParticleSpeedRotationAxis(newCoordinate, normal)));
+                                    getParticleSpeedRotationAxis(newCoordinate, normal));
                             newCoordinate = getHitPoint(particle);
                         } else {
                             particle.setAbsorbed(true);
@@ -154,9 +154,9 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
 
                     if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
                         particle.setCoordinate(newCoordinate);
-                        p.setSpeed(p.getSpeed().getNewByTurningAroundVector(
+                        p.getSpeed().turnAroundVector(
                                 2.0 * Math.abs(angleWithSurface),
-                                getParticleSpeedRotationAxis(newCoordinate, normal)));
+                                getParticleSpeedRotationAxis(newCoordinate, normal));
                         newCoordinate = getHitPoint(particle);
                     } else {
                         particle.setAbsorbed(true);
@@ -203,9 +203,9 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
 
                             if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
                                 particle.setCoordinate(newCoordinate);
-                                particle.setSpeed(particle.getSpeed().getNewByTurningAroundVector(
+                                particle.getSpeed().turnAroundVector(
                                         2.0 * Math.abs(angleWithSurface),
-                                        getParticleSpeedRotationAxis(newCoordinate, normal)));
+                                        getParticleSpeedRotationAxis(newCoordinate, normal));
                                 newCoordinate = getHitPoint(particle);
                             } else {
                                 particle.setAbsorbed(true);

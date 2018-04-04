@@ -32,7 +32,7 @@ public class ParallelFlux extends Flux {
                 particleCoordinate.setX(fluxCoordinate.getX() - i * layerDistance);
                 particleCoordinate.setY(particleCoordinate.getY() + fluxCoordinate.getY() - i * fluxAxis.getY());
                 particleCoordinate.setZ(particleCoordinate.getZ() + fluxCoordinate.getZ() - i * fluxAxis.getZ());
-                newParticles.add(particleFactory.getNewParticle(particleCoordinate, fluxAxis));
+                newParticles.add(particleFactory.getNewParticle(particleCoordinate, new Vector(fluxAxis.getX(), fluxAxis.getY(), fluxAxis.getZ())));
             }
         }
         particles = newParticles;

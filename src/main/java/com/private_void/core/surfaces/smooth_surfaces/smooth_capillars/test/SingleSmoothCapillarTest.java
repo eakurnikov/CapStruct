@@ -102,9 +102,9 @@ public abstract class SingleSmoothCapillarTest extends SmoothSurface implements 
 
                         if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
                             particle.setCoordinate(newCoordinate);
-                            particle.setSpeed(particle.getSpeed().getNewByTurningAroundVector(
+                            particle.getSpeed().turnAroundVector(
                                     2.0 * Math.abs(angleWithSurface),
-                                    getParticleSpeedRotationAxis(newCoordinate, normal)));
+                                    getParticleSpeedRotationAxis(newCoordinate, normal));
                             newCoordinate = getHitPoint(particle);
                         } else {
                             particle.setAbsorbed(true);

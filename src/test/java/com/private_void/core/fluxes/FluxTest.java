@@ -44,9 +44,9 @@ public class FluxTest {
                 CartesianPoint p1 = interactedParticles1.get(i).getCoordinate();
                 CartesianPoint p2 = interactedParticles2.get(i).getCoordinate();
 
-                System.out.println(p1.getX() + " " + p1.getY() + " " + p1.getZ());
-                System.out.println(p2.getX() + " " + p2.getY() + " " + p2.getZ());
-                System.out.println();
+//                System.out.println(p1.getX() + " " + p1.getY() + " " + p1.getZ());
+//                System.out.println(p2.getX() + " " + p2.getY() + " " + p2.getZ());
+//                System.out.println();
 
                 assertTrue(p1.getX() == p2.getX());
                 assertTrue(p1.getY() == p2.getY());
@@ -78,7 +78,7 @@ public class FluxTest {
 
         System.out.println("SingleSmoothCylinder interacton");
         capillar.interact(flux);
-        capillar.getDetector().detect(flux);
+//        capillar.getDetector().detect(flux);
 
         return flux.getParticles();
     }
@@ -106,7 +106,7 @@ public class FluxTest {
 
         System.out.println("SingleSmoothCylinderTest interacton");
         capillar.interact(flux);
-        capillar.getDetector().detect(flux);
+//        capillar.getDetector().detect(flux);
 
         return flux.getParticles();
     }
