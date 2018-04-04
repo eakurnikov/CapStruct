@@ -1,6 +1,6 @@
 package com.private_void.core.surfaces;
 
-import com.private_void.core.geometry.SphericalPoint;
+import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.core.particles.Particle;
 
 public interface Capillar {

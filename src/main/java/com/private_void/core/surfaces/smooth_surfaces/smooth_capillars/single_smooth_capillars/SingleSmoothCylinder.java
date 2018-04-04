@@ -1,8 +1,8 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars;
 
 import com.private_void.core.detectors.Detector;
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.Vector;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.utils.Utils;
 
@@ -21,12 +21,12 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
 
     @Override
     protected Vector getNormal(final CartesianPoint point) {
-        return new Vector(0.0, -2.0 * (point.getY() - front.getY()), -2.0 * (point.getZ() - front.getZ()));
+        return Vector.set(0.0, -2.0 * (point.getY() - front.getY()), -2.0 * (point.getZ() - front.getZ()));
     }
 
     @Override
     protected Vector getParticleSpeedRotationAxis(final CartesianPoint point, final Vector normal) {
-        return normal.getNewByTurningAroundOX(PI / 2.0);
+        return normal.rotateAroundOX(PI / 2.0);
     }
 
     @Override

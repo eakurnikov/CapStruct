@@ -1,8 +1,8 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.SphericalPoint;
-import com.private_void.core.geometry.Vector;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.SphericalPoint;
+import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
@@ -30,31 +30,33 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
     }
 
     @Override
-    public void interact(Particle particle) {
+    public void interact(Particle p) {
         Vector normal;
 
-        toInnerReferenceFrame(particle);
+        toInnerReferenceFrame(p);
 
         try {
-            NeutralParticle p = (NeutralParticle) particle;
-            CartesianPoint newCoordinate = getHitPoint(p);
+            NeutralParticle particle = (NeutralParticle) p;
+            CartesianPoint newCoordinate = getHitPoint(particle);
 
-            while (!p.isAbsorbed() && isPointInside(newCoordinate)) {
-                normal = getNormal(newCoordinate).getNewByTurningAroundVector(
-                        generator().uniformDouble(0.0, roughnessAngleR),
-                        new Vector(1.0, 0.0, 0.0).getNewByTurningAroundOY(generator().uniformDouble(0.0, 2.0 * PI)));
+            while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
+                normal = getNormal(newCoordinate)
+                        .rotateAroundVector(
+                                Vector.E_X.rotateAroundOY(generator().uniformDouble(0.0, 2.0 * PI)),
+                                generator().uniformDouble(0.0, roughnessAngleR));
 
-                double angleWithSurface = p.getSpeed().getAngle(normal) - PI / 2.0;
-                p.decreaseIntensity(reflectivity);
+                double angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
+                particle.decreaseIntensity(reflectivity);
 
                 if (angleWithSurface <= criticalAngleR) {
-                    p.setCoordinate(newCoordinate);
-                    p.getSpeed().turnAroundVector(
-                            2.0 * Math.abs(angleWithSurface),
-                            getParticleSpeedRotationAxis(newCoordinate, normal));
-                    newCoordinate = getHitPoint(p);
+                    particle
+                            .setCoordinate(newCoordinate)
+                            .rotateSpeed(
+                                    getParticleSpeedRotationAxis(newCoordinate, normal),
+                                    2.0 * Math.abs(angleWithSurface));
+                    newCoordinate = getHitPoint(particle);
                 } else {
-                    p.setAbsorbed(true);
+                    particle.setAbsorbed(true);
                     break;
                 }
             }
@@ -62,7 +64,7 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
             e.printStackTrace();
         }
 
-        toGlobalReferenceFrame(particle);
+        toGlobalReferenceFrame(p);
     }
 
     @Override //TODO работает некорректно

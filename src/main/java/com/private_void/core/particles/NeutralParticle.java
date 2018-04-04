@@ -1,7 +1,7 @@
 package com.private_void.core.particles;
 
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.Vector;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.vectors.Vector;
 
 import static com.private_void.utils.Constants.RECURSIVE_ITERATIONS_MAX;
 
@@ -39,7 +39,7 @@ public class NeutralParticle extends Particle {
         recursiveIterationCount = 1;
     }
 
-    public static ParticleFactory getFactory(double intensity) {
+    public static Particle.Factory getFactory(double intensity) {
         return (final CartesianPoint coordinate, final Vector speed) -> new NeutralParticle(coordinate, speed, intensity);
     }
 }

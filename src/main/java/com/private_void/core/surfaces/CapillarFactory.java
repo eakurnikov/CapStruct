@@ -1,7 +1,7 @@
 package com.private_void.core.surfaces;
 
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.SphericalPoint;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.SphericalPoint;
 
 public interface CapillarFactory {
 

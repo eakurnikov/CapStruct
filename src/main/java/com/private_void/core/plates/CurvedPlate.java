@@ -1,15 +1,17 @@
 package com.private_void.core.plates;
 
 import com.private_void.core.detectors.Detector;
-import com.private_void.core.geometry.*;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.Point3D;
+import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.core.surfaces.CapillarFactory;
 
 import static com.private_void.utils.Generator.generator;
 import static com.private_void.utils.Constants.PI;
 
 public class CurvedPlate extends Plate {
-    private double maxAngleR;
-    private double curvRadius;
+    private final double maxAngleR;
+    private final double curvRadius;
 
     public CurvedPlate(final CapillarFactory capillarFactory, final CartesianPoint center, double capillarsDensity,
                        double maxAngleR, double curvRadius) {
@@ -47,7 +49,7 @@ public class CurvedPlate extends Plate {
         } else {
             capillarsAmount = (int) (capillarsDensity * frontSquare);
 
-            SphericalCoordinateFactory coordinateFactory = generator().getSphericalUniformDistribution(
+            SphericalPoint.Factory coordinateFactory = generator().getSphericalUniformDistribution(
                     new SphericalPoint(0.0, PI / 2.0, PI),// тета отсчитывается от оси игрек, фи от оси икс, поворачиваю так, чтобы координаты попадали на мою пластину
                     curvRadius, maxAngleR, maxAngleR);
 
@@ -65,7 +67,7 @@ public class CurvedPlate extends Plate {
                         .shift(curvRadius, 0.0, 0.0)
                         .shift(center);
 
-                SphericalPoint position = coordinate.getNewByShift(0.0, -PI / 2.0, -PI);
+                SphericalPoint position = coordinate.shift(0.0, -PI / 2.0, -PI);
 
                 capillars.add(capillarFactory.getNewCapillar(front, position));
 
@@ -80,7 +82,7 @@ public class CurvedPlate extends Plate {
 
     @Override
     protected CartesianPoint getDetectorsCoordinate() {
-        return center.getNewByShift(curvRadius, 0.0, 0.0);
+        return center.shift(curvRadius, 0.0, 0.0);
     }
 
     @Override //TODO сделать наконец этот метод

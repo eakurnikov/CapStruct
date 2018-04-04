@@ -1,8 +1,8 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.SphericalPoint;
-import com.private_void.core.geometry.Vector;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.SphericalPoint;
+import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
@@ -13,7 +13,7 @@ import static com.private_void.utils.Constants.*;
 import static com.private_void.utils.Generator.generator;
 
 public class SmoothCone extends SmoothCapillar {
-    private double divergentAngleR;
+    private final double divergentAngleR;
 
     public SmoothCone(final CartesianPoint front, double radius, int divergentAngleR, double coneCoefficient, double roughnessSize,
                       double roughnessAngleR, double reflectivity, double criticalAngleR)
@@ -69,7 +69,8 @@ public class SmoothCone extends SmoothCapillar {
 
     @Override
     protected Vector getNormal(final CartesianPoint point) {
-        return new Vector(-1.0, 
+        return Vector.set(
+                -1.0,
                 -(point.getY() - front.getY()) * (1.0 / Math.tan(divergentAngleR)) 
                         / (Math.sqrt((point.getY() - front.getY()) * (point.getY() - front.getY())
                         + (point.getZ() - front.getZ()) * (point.getZ() - front.getZ()))),
@@ -81,7 +82,7 @@ public class SmoothCone extends SmoothCapillar {
 
     @Override
     protected Vector getParticleSpeedRotationAxis(final CartesianPoint point, final Vector normal) {
-        return normal.getNewByTurningAroundOX(PI / 2.0);
+        return normal.rotateAroundOX(PI / 2.0);
     }
 
     @Override

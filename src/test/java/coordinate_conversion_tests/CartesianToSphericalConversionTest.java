@@ -1,7 +1,7 @@
 package coordinate_conversion_tests;
 
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.SphericalPoint;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.utils.Utils;
 import org.junit.Test;
 

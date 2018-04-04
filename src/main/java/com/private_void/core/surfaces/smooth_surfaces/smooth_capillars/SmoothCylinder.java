@@ -1,8 +1,8 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.SphericalPoint;
-import com.private_void.core.geometry.Vector;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.SphericalPoint;
+import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
@@ -29,12 +29,12 @@ public class SmoothCylinder extends SmoothCapillar {
 
     @Override
     protected Vector getNormal(final CartesianPoint point) {
-        return new Vector(0.0, -2.0 * (point.getY() - front.getY()), -2.0 * (point.getZ() - front.getZ()));
+        return Vector.set(0.0, -2.0 * (point.getY() - front.getY()), -2.0 * (point.getZ() - front.getZ()));
     }
 
     @Override
     protected Vector getParticleSpeedRotationAxis(final CartesianPoint point, final Vector normal) {
-        return normal.getNewByTurningAroundOX(PI / 2.0);
+        return normal.rotateAroundOX(PI / 2.0);
     }
 
     @Override
@@ -147,28 +147,26 @@ public class SmoothCylinder extends SmoothCapillar {
     protected void toInnerReferenceFrame(Particle particle) {
         if (position == null) return;
 
-        particle.getCoordinate()
-                .shift(0.0,
+        particle
+                .shiftCoordinate(
+                        0.0,
                         position.getRadius() * Math.sin(position.getTheta()),
-                        position.getRadius() * Math.sin(position.getPhi()));
-
-        particle.getSpeed()
-                .turnAroundVector(-position.getTheta(), new Vector(0.0, 0.0, 1.0))
-                .turnAroundVector( position.getPhi(), new Vector(0.0, 1.0, 0.0));
+                        position.getRadius() * Math.sin(position.getPhi()))
+                .rotateSpeed(Vector.E_Z, -position.getTheta())
+                .rotateSpeed(Vector.E_Y, position.getPhi());
     }
 
     @Override
     protected void toGlobalReferenceFrame(Particle particle) {
         if (position == null) return;
 
-        particle.getCoordinate()
-                .shift(0.0,
+        particle
+                .shiftCoordinate(
+                        0.0,
                         position.getRadius() * Math.sin(position.getTheta()),
-                        position.getRadius() * Math.sin(position.getPhi()));
-
-        particle.getSpeed()
-                .turnAroundVector(-position.getPhi(), new Vector(0.0, 1.0, 0.0))
-                .turnAroundVector( position.getTheta(), new Vector(0.0, 0.0, 1.0));
+                        position.getRadius() * Math.sin(position.getPhi()))
+                .rotateSpeed(Vector.E_Y, -position.getPhi())
+                .rotateSpeed(Vector.E_Z, position.getTheta());
 
     }
 

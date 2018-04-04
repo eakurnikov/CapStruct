@@ -1,15 +1,15 @@
 package com.private_void.core.detectors;
 
 import com.private_void.core.fluxes.Flux;
-import com.private_void.core.geometry.CartesianPoint;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.particles.Particle;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Detector {
-    protected CartesianPoint center;
-    protected double width;
+    protected final CartesianPoint center;
+    protected final double width;
     protected double upperBound;
     protected double lowerBound;
 
@@ -26,7 +26,6 @@ public class Detector {
         this.width = width;
         this.upperBound = width / 2;
         this.lowerBound = -width / 2;
-        init();
     }
 
     private void init() {
@@ -40,12 +39,9 @@ public class Detector {
         long start = System.nanoTime();
 
         init();
-
         List<Particle> detectedParticles = new ArrayList<>();
 
         for (Particle particle : flux.getParticles()) {
-
-            System.out.println(particle.getCoordinate().getX() + " " + particle.getCoordinate().getY() + " " + particle.getCoordinate().getZ());
 
             if (!particle.isOut()) {
 
@@ -145,32 +141,3 @@ public class Detector {
         return outOfDetectorAmount;
     }
 }
-
-//    protected double detectedIntensity;
-//    protected double absorbedIntensity;
-//    protected double outOfCapillarIntensity;
-//    protected double outOfDetectorIntensity;
-//
-//    public double getDetectedIntensity() {
-//        return detectedIntensity;
-//    }
-//
-//    public double getAbsorbedIntensity() {
-//        return absorbedIntensity;
-//    }
-//
-//    public double getOutOfCapillarIntensity() {
-//        return outOfCapillarIntensity;
-//    }
-//
-//    public double getOutOfDetectorIntensity() {
-//        return outOfDetectorIntensity;
-//    }
-//
-//    public void increaseOutOfCapillarIntensity(double intensity) {
-//        outOfCapillarIntensity += intensity;
-//    }
-//
-//    public void increaseAbsorbedIntensity(double intensity) {
-//        absorbedIntensity += intensity;
-//    }

@@ -1,9 +1,10 @@
 package com.private_void.core.surfaces;
 
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.Vector;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.vectors.Vector;
 
 public abstract class Surface {
+
     protected CartesianPoint front;
 
     protected Surface(final CartesianPoint front) {

@@ -1,19 +1,17 @@
 package com.private_void.core.fluxes;
 
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.Vector;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.Particle;
-import com.private_void.core.particles.ParticleFactory;
-import com.private_void.core.geometry.CoordinateFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ParallelFlux extends Flux {
-    private int layersAmount;
-    private double layerDistance;
+    private final int layersAmount;
+    private final double layerDistance;
 
-    public ParallelFlux(final ParticleFactory particleFactory, final CoordinateFactory coordinateFactory,
+    public ParallelFlux(final Particle.Factory particleFactory, final CartesianPoint.Factory coordinateFactory,
                         final CartesianPoint fluxCoordinate, final Vector fluxAxis, int layersAmount,
                         int particlesAmount, double layerDistance, double minIntensity) {
 
@@ -26,15 +24,20 @@ public class ParallelFlux extends Flux {
     @Override
     protected void createParticles() {
         List<Particle> newParticles = new ArrayList<>();
+
         for (int i = 0; i < layersAmount; i++) {
             for (int j = 0; j < particlesAmount; j++) {
-                CartesianPoint particleCoordinate = coordinateFactory.getCoordinate();
-                particleCoordinate.setX(fluxCoordinate.getX() - i * layerDistance);
-                particleCoordinate.setY(particleCoordinate.getY() + fluxCoordinate.getY() - i * fluxAxis.getY());
-                particleCoordinate.setZ(particleCoordinate.getZ() + fluxCoordinate.getZ() - i * fluxAxis.getZ());
-                newParticles.add(particleFactory.getNewParticle(particleCoordinate, new Vector(fluxAxis.getX(), fluxAxis.getY(), fluxAxis.getZ())));
+                CartesianPoint randomCoordinate = coordinateFactory.getCoordinate();
+
+                CartesianPoint particleCoordinate = new CartesianPoint(
+                        fluxCoordinate.getX() - i * layerDistance,
+                        randomCoordinate.getY() + fluxCoordinate.getY() - i * fluxAxis.getY(),
+                        randomCoordinate.getZ() + fluxCoordinate.getZ() - i * fluxAxis.getZ());
+
+                newParticles.add(particleFactory.getNewParticle(particleCoordinate, Vector.set(fluxAxis)));
             }
         }
+
         particles = newParticles;
     }
 }

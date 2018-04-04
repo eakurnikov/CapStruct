@@ -1,8 +1,8 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars;
 
 import com.private_void.core.detectors.Detector;
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.Vector;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.utils.Utils;
 
@@ -11,8 +11,8 @@ import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
 public class SingleSmoothTorus extends SingleSmoothCapillar {
-    private double curvRadius;
-    private double curvAngleR;
+    private final double curvRadius;
+    private final double curvAngleR;
 
     public SingleSmoothTorus(final CartesianPoint front, double radius, double curvRadius, double curvAngleR, double roughnessSize,
                              double roughnessAngleR, double reflectivity, double criticalAngleR) {
@@ -30,7 +30,7 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
         double y = point.getY() - front.getY();
         double z = point.getZ() - front.getZ() - curvRadius; // + curvRadius сместит влево
 
-        return new Vector(
+        return Vector.set(
                 (-2.0 * (x * x + y * y + z * z + curvRadius * curvRadius - radius * radius) * 2.0 * x
                         + 8.0 * curvRadius * curvRadius * x),
 
@@ -43,8 +43,8 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
     @Override
     protected Vector getParticleSpeedRotationAxis(final CartesianPoint point, final Vector normal) {
         return normal
-                .getNewByTurningAroundOX(PI / 2.0)
-                .getNewByTurningAroundOY(getPointsAngle(point));
+                .rotateAroundOX(PI / 2.0)
+                .rotateAroundOY(getPointsAngle(point));
     }
 
     @Override

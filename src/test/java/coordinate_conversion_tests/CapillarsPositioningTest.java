@@ -1,6 +1,6 @@
 package coordinate_conversion_tests;
 
-import com.private_void.core.geometry.CartesianPoint;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.plates.CurvedPlate;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarFactory;
@@ -37,7 +37,7 @@ public class CapillarsPositioningTest {
 
         CurvedPlate curvedPlate = new CurvedPlate(
                 smoothCylinderFactory,
-                new CartesianPoint(0.0, 0.0, 0.0),
+                CartesianPoint.ORIGIN,
                 0.0034,
                 Math.toRadians(3.65),
                 2000.0);

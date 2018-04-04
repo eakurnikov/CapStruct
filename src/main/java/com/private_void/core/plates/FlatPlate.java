@@ -1,16 +1,15 @@
 package com.private_void.core.plates;
 
 import com.private_void.core.detectors.Detector;
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.CoordinateFactory;
-import com.private_void.core.geometry.Point3D;
-import com.private_void.core.geometry.SphericalPoint;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.Point3D;
+import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.core.surfaces.CapillarFactory;
 
 import static com.private_void.utils.Generator.generator;
 
 public class FlatPlate extends Plate {
-    private double sideLength;
+    private final double sideLength;
 
     public FlatPlate(final CapillarFactory capillarFactory, final CartesianPoint center, double capillarsDensity,
                      double sideLength) {
@@ -44,7 +43,7 @@ public class FlatPlate extends Plate {
         } else {
             capillarsAmount = (int) (capillarsDensity * frontSquare);
 
-            CoordinateFactory coordinateFactory = generator().getXFlatUniformDistribution(center,
+            CartesianPoint.Factory coordinateFactory = generator().getXFlatUniformDistribution(center,
                     sideLength / 2 - capillarRadius,
                     sideLength / 2 - capillarRadius);
 
@@ -89,7 +88,7 @@ public class FlatPlate extends Plate {
 //
 //        CartesianPoint coordinate;
 //        CartesianPoint[] capillarsCenters;
-//        CoordinateFactory coordinateFactory;
+//        CartesianPoint.Factory coordinateFactory;
 //
 //        for (int y = 0; y < domainsAmountPerLine; y++) {
 //            for (int z = 0; z < domainsAmountPerLine; z++) {

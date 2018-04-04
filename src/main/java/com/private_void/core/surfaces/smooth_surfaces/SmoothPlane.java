@@ -2,8 +2,8 @@ package com.private_void.core.surfaces.smooth_surfaces;
 
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.fluxes.Flux;
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.Vector;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.CapillarSystem;
@@ -13,8 +13,8 @@ import java.util.Iterator;
 import static com.private_void.utils.Constants.PI;
 
 public class SmoothPlane extends SmoothSurface implements CapillarSystem {
-    private double size;
-    protected Detector detector;
+    private final double size;
+    protected final Detector detector;
 
     public SmoothPlane(final CartesianPoint front, double size, double roughnessSize, double roughnessAngleR, double reflectivity,
                        double criticalAngleR) {
@@ -27,33 +27,34 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
 
     @Override
     public void interact(Flux flux) {
-        NeutralParticle p;
+        NeutralParticle particle;
         CartesianPoint hitPoint;
         double angleWithSurface;
         Iterator<? extends Particle> iterator = flux.getParticles().iterator();
-        Vector normal = new Vector(0.0, 1.0, 0.0);
+        Vector normal = Vector.E_Y;
 
         while (iterator.hasNext()) {
             try {
-                p = (NeutralParticle) iterator.next();
-                hitPoint = getHitPoint(p);
+                particle = (NeutralParticle) iterator.next();
+                hitPoint = getHitPoint(particle);
 
                 if (true /*doesPointBelongToPlane(hitPoint)*/) {
-                    angleWithSurface = p.getSpeed().getAngle(normal) - PI / 2.0;
-                    p.decreaseIntensity(reflectivity);
+                    angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
+                    particle.decreaseIntensity(reflectivity);
 
-                    if (angleWithSurface <= criticalAngleR && p.getIntensity() >= flux.getMinIntensity()) {
-                        p.setCoordinate(hitPoint);
-                        p.setSpeed(p.getSpeed().getNewByTurningAroundVector(
-                                2.0 * Math.abs(angleWithSurface),
-                                getParticleSpeedRotationAxis(hitPoint, normal)));
+                    if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
+                        particle
+                                .setCoordinate(hitPoint)
+                                .rotateSpeed(
+                                        getParticleSpeedRotationAxis(hitPoint, normal),
+                                        2.0 * Math.abs(angleWithSurface));
 
                     } else {
-                        p.setAbsorbed(true);
+                        particle.setAbsorbed(true);
                         break;
                     }
                 } else {
-                    p.setOut(true);
+                    particle.setOut(true);
                 }
             } catch (ClassCastException e) {
                 e.printStackTrace();
@@ -69,12 +70,12 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
 
     @Override
     protected Vector getNormal(final CartesianPoint point) {
-        return new Vector(0.0, 1.0, 0.0);
+        return Vector.E_Y;
     }
 
     @Override
     protected Vector getParticleSpeedRotationAxis(final CartesianPoint point, final Vector normal) {
-        return new Vector(0.0, 0.0, 1.0);
+        return Vector.E_Z;
     }
 
     @Override

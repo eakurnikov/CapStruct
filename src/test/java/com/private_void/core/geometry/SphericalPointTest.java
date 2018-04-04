@@ -1,5 +1,7 @@
 package com.private_void.core.geometry;
 
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.utils.Utils;
 import org.junit.Test;
 
@@ -140,7 +142,7 @@ public class SphericalPointTest {
         // Shift to R = 200, Theta = 0, Phi = 0
         SphericalPoint b = new SphericalPoint(200.0, 0.0, 0.0);
         SphericalPoint s = new SphericalPoint(100.0, 0.0, 0.0);
-        s.shift(100.0, 0.0, 0.0);
+        s = s.shift(100.0, 0.0, 0.0);
 
         assertTrue(Utils.compareToZero(s.getRadius() - b.getRadius()));
         assertTrue(Utils.compareToZero(s.getTheta() - b.getTheta()));
@@ -149,7 +151,7 @@ public class SphericalPointTest {
         //Shift to R = 100, Theta = PI, Phi = 0
         b = new SphericalPoint(100.0, PI, 0.0);
         s = new SphericalPoint(100.0, 0.0, 0.0);
-        s.shift(0.0, PI, 0.0);
+        s = s.shift(0.0, PI, 0.0);
 
         assertTrue(Utils.compareToZero(s.getRadius() - b.getRadius()));
         assertTrue(Utils.compareToZero(s.getTheta() - b.getTheta()));
@@ -157,7 +159,7 @@ public class SphericalPointTest {
 
         //Shift to R = 100, Theta = 0, Phi = PI
         b = new SphericalPoint(100.0, 0.0, PI);
-        s = new SphericalPoint(100.0, 0.0, 0.0)
+        s = s = new SphericalPoint(100.0, 0.0, 0.0)
                 .shift(0.0, 0.0, PI);
 
         assertTrue(Utils.compareToZero(s.getRadius() - b.getRadius()));

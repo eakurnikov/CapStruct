@@ -1,9 +1,9 @@
 package com.private_void.core.surfaces.atomic_surfaces.atomic_capillars;
 
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.SphericalPoint;
-import com.private_void.core.geometry.Vector;
-import com.private_void.core.particles.AtomFactory;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.SphericalPoint;
+import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.particles.Atom;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarFactory;
@@ -12,10 +12,10 @@ import com.private_void.utils.Utils;
 import java.util.ArrayList;
 
 public class AtomicTorus extends AtomicCapillar {
-    private double curvRadius;
-    private double curvAngleR;
+    private final double curvRadius;
+    private final double curvAngleR;
 
-    public AtomicTorus(final AtomFactory atomFactory, final CartesianPoint front, double period, double chargeNumber,
+    public AtomicTorus(final Atom.Factory atomFactory, final CartesianPoint front, double period, double chargeNumber,
                        double radius, double curvRadius, double curvAngleR) {
         super(atomFactory, front, period, chargeNumber, radius);
         this.curvRadius = curvRadius;
@@ -23,7 +23,7 @@ public class AtomicTorus extends AtomicCapillar {
         this.length = Utils.getTorusLength(curvRadius, curvAngleR);
     }
 
-    public AtomicTorus(final AtomFactory atomFactory, final CartesianPoint front, final SphericalPoint position, double period,
+    public AtomicTorus(final Atom.Factory atomFactory, final CartesianPoint front, final SphericalPoint position, double period,
                        double chargeNumber, double radius, double curvRadius, double curvAngleR) {
         super(atomFactory, front, period, chargeNumber, radius);
         this.position = position;
@@ -67,7 +67,7 @@ public class AtomicTorus extends AtomicCapillar {
         return false;
     }
 
-    public static CapillarFactory getFactory(final AtomFactory atomFactory, double period, double chargeNumber,
+    public static CapillarFactory getFactory(final Atom.Factory atomFactory, double period, double chargeNumber,
                                              double radius, double curvRadius, double curvAngleR) {
         return new CapillarFactory() {
 

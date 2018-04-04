@@ -1,7 +1,8 @@
 package com.private_void.core.particles;
 
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.Vector;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.rotation_matrixes.RotationMatrixY;
+import com.private_void.core.geometry.vectors.Vector;
 
 public abstract class Particle {
     protected CartesianPoint coordinate;
@@ -18,37 +19,38 @@ public abstract class Particle {
         this.out = false;
     }
 
+    public Particle shiftCoordinate(final CartesianPoint step) {
+        CartesianPoint newCoordinate = coordinate.shift(step);
+        increaseTrace(newCoordinate);
+        coordinate = newCoordinate;
+        return this;
+    }
+
+    public Particle shiftCoordinate(double x, double y, double z) {
+        CartesianPoint newCoordinate = coordinate.shift(x, y, z);
+        increaseTrace(newCoordinate);
+        coordinate = newCoordinate;
+        return this;
+    }
+
+    public Particle rotateSpeed(final Vector vector, double angle) {
+        speed = speed.rotateAroundVector(vector, angle);
+        return this;
+    }
+
     public CartesianPoint getCoordinate() {
         return coordinate;
     }
 
-    public void setCoordinate(final CartesianPoint newCoordinate) {
+    public Particle setCoordinate(final CartesianPoint newCoordinate) {
         increaseTrace(newCoordinate);
         this.coordinate = newCoordinate;
+        return this;
     }
 
     // Возвращает проекцию координаты на плоскость, расположенную под углом angle к абсолютной
-    public CartesianPoint getProjection(double angle) {
-        double[][] rotationMatrixY = new double[3][3];
-
-        rotationMatrixY[0][0] = Math.cos(angle);
-        rotationMatrixY[1][0] = 0.0;
-        rotationMatrixY[2][0] = Math.sin(angle);
-
-        rotationMatrixY[0][1] = 0.0;
-        rotationMatrixY[1][1] = 1.0;
-        rotationMatrixY[2][1] = 0.0;
-
-        rotationMatrixY[0][2] = -Math.sin(angle);
-        rotationMatrixY[1][2] = 0.0;
-        rotationMatrixY[2][2] = Math.cos(angle);
-
-        double[] temp = {0.0, 0.0, 0.0};
-        for (int i = 0; i < 3; i++) {
-            temp[i] = rotationMatrixY[0][i] * coordinate.getX() + rotationMatrixY[1][i] * coordinate.getY() + rotationMatrixY[2][i] * coordinate.getZ();
-        }
-
-        return new CartesianPoint(temp[0], temp[1], temp[2]);
+    public CartesianPoint rotateFrameAroundOY(double angle) {
+        return new RotationMatrixY(angle).rotate(coordinate);
     }
 
     public Vector getSpeed() {
@@ -57,20 +59,6 @@ public abstract class Particle {
 
     public void setSpeed(final Vector speed) {
         this.speed = speed;
-    }
-
-    public double getTrace() {
-        return trace;
-    }
-
-    public void setTrace(double trace) {
-        this.trace = trace;
-    }
-
-    public void increaseTrace(final CartesianPoint point) {
-        trace = Math.sqrt((point.getX() - coordinate.getX()) * (point.getX() - coordinate.getX())
-                + (point.getY() - coordinate.getY()) * (point.getY() - coordinate.getY())
-                + (point.getZ() - coordinate.getZ()) * (point.getZ() - coordinate.getZ()));
     }
 
     public boolean isAbsorbed() {
@@ -87,5 +75,19 @@ public abstract class Particle {
 
     public void setOut(boolean out) {
         this.out = out;
+    }
+
+    public double getTrace() {
+        return trace;
+    }
+
+    public void increaseTrace(final CartesianPoint point) {
+        trace = Math.sqrt((point.getX() - coordinate.getX()) * (point.getX() - coordinate.getX())
+                + (point.getY() - coordinate.getY()) * (point.getY() - coordinate.getY())
+                + (point.getZ() - coordinate.getZ()) * (point.getZ() - coordinate.getZ()));
+    }
+
+    public interface Factory {
+        Particle getNewParticle(final CartesianPoint coordinate, final Vector speed);
     }
 }

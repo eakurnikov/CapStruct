@@ -1,4 +1,4 @@
-package com.private_void.core.geometry;
+package com.private_void.core.geometry.coordinates;
 
 public interface Point3D {
     double getQ1();

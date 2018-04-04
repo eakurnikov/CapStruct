@@ -1,9 +1,7 @@
 package com.private_void.utils;
 
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.CoordinateFactory;
-import com.private_void.core.geometry.SphericalCoordinateFactory;
-import com.private_void.core.geometry.SphericalPoint;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.SphericalPoint;
 
 import java.util.Random;
 
@@ -32,7 +30,7 @@ public class Generator {
         return minValue + (maxValue - minValue) * rand.nextDouble();
     }
 
-    public CoordinateFactory getGaussDistribution(double mean, double dev) {
+    public CartesianPoint.Factory getGaussDistribution(double mean, double dev) {
         return () -> {
             double u, v, s;
             double y, z;
@@ -50,7 +48,7 @@ public class Generator {
         };
     }
 
-    public CoordinateFactory getGaussDistribution(final CartesianPoint center, double mean, double dev) {
+    public CartesianPoint.Factory getGaussDistribution(final CartesianPoint center, double mean, double dev) {
         return () -> {
             double u, v, s;
             double y, z;
@@ -68,7 +66,7 @@ public class Generator {
         };
     }
 
-    public CoordinateFactory getXFlatCircleUniformDistribution(double radius) {
+    public CartesianPoint.Factory getXFlatCircleUniformDistribution(double radius) {
         return () -> {
             double y;
             double z;
@@ -82,7 +80,7 @@ public class Generator {
         };
     }
 
-    public CoordinateFactory getXFlatCircleUniformDistribution(final CartesianPoint center, double radius) {
+    public CartesianPoint.Factory getXFlatCircleUniformDistribution(final CartesianPoint center, double radius) {
         return () -> {
             double y;
             double z;
@@ -96,14 +94,14 @@ public class Generator {
         };
     }
 
-    public CoordinateFactory getXFlatUniformDistribution(double yRange, double zRange) {
+    public CartesianPoint.Factory getXFlatUniformDistribution(double yRange, double zRange) {
         return () -> new CartesianPoint(
                 0.0,
                 uniformDouble(-yRange, yRange),
                 uniformDouble(-zRange, zRange));
     }
 
-    public CoordinateFactory getXFlatUniformDistribution(final CartesianPoint center, double yRange, double zRange) {
+    public CartesianPoint.Factory getXFlatUniformDistribution(final CartesianPoint center, double yRange, double zRange) {
         return () -> new CartesianPoint(
                 0.0,
                 uniformDouble(-yRange, yRange),
@@ -111,29 +109,29 @@ public class Generator {
                 .shift(center);
     }
 
-    public SphericalCoordinateFactory getSphericalUniformDistribution(double radius, double thetaRange, double phiRange) {
+    public SphericalPoint.Factory getSphericalUniformDistribution(double radius, double thetaRange, double phiRange) {
         return () -> new SphericalPoint(radius,
                 uniformDouble(-thetaRange, thetaRange),
                 uniformDouble(-phiRange, phiRange));
     }
 
-    public SphericalCoordinateFactory getSphericalUniformDistribution(final SphericalPoint config,
-                                                                      double radius, double thetaRange, double phiRange) {
+    public SphericalPoint.Factory getSphericalUniformDistribution(final SphericalPoint config,
+                                                                  double radius, double thetaRange, double phiRange) {
         return () -> new SphericalPoint(radius,
                 uniformDouble(-thetaRange, thetaRange),
                 uniformDouble(-phiRange, phiRange))
                 .shift(config);
     }
 
-    public CoordinateFactory getVolumeUniformDistribution(double xRange, double yRange, double zRange) {
+    public CartesianPoint.Factory getVolumeUniformDistribution(double xRange, double yRange, double zRange) {
         return () -> new CartesianPoint(
                 uniformDouble(-xRange, xRange),
                 uniformDouble(-yRange, yRange),
                 uniformDouble(-zRange, zRange));
     }
 
-    public CoordinateFactory getVolumeUniformDistribution(final CartesianPoint center,
-                                                          double xRange, double yRange, double zRange) {
+    public CartesianPoint.Factory getVolumeUniformDistribution(final CartesianPoint center,
+                                                                   double xRange, double yRange, double zRange) {
         return () -> new CartesianPoint(
                 uniformDouble(-xRange, xRange),
                 uniformDouble(-yRange, yRange),

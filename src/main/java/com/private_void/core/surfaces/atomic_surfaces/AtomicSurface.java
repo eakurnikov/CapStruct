@@ -1,9 +1,8 @@
 package com.private_void.core.surfaces.atomic_surfaces;
 
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.Vector;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.Atom;
-import com.private_void.core.particles.AtomFactory;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.surfaces.Surface;
 
@@ -13,13 +12,14 @@ import java.util.List;
 import static com.private_void.utils.Constants.BOHR_RADIUS;
 
 public abstract class AtomicSurface extends Surface {
-    protected double period;
-    protected double chargeNumber;
+    protected final double period;
+    protected final double chargeNumber;
+    protected final Atom.Factory atomFactory;
+
     protected double shieldingDistance;
-    protected AtomFactory atomFactory;
     protected List<Atom> atoms;
 
-    public AtomicSurface(final AtomFactory atomFactory, final CartesianPoint front, double period, double chargeNumber) {
+    public AtomicSurface(final Atom.Factory atomFactory, final CartesianPoint front, double period, double chargeNumber) {
         super(front);
         this.atomFactory = atomFactory;
         this.period = period;

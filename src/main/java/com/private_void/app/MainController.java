@@ -5,11 +5,9 @@ import com.private_void.core.detectors.RotatedDetector;
 import com.private_void.core.fluxes.DivergentFlux;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.fluxes.ParallelFlux;
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.CoordinateFactory;
-import com.private_void.core.geometry.Vector;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.*;
-import com.private_void.core.plates.CurvedPlate;
 import com.private_void.core.plates.FlatPlate;
 import com.private_void.core.plates.Plate;
 import com.private_void.core.plates.TorusPlate;
@@ -192,7 +190,7 @@ public class MainController {
     }
 
     private Flux createFlux() {
-        ParticleFactory neutralParticleFactory = NeutralParticle.getFactory(1.0);
+        Particle.Factory neutralParticleFactory = NeutralParticle.getFactory(1.0);
 
         if (pFluxTab.isSelected()) {
             double x = Double.parseDouble(pFluxX.getText());
@@ -208,24 +206,24 @@ public class MainController {
             double layerDistance = Double.parseDouble(pFluxLayersDist.getText());
             double minIntensity = Double.parseDouble(pFluxMinIntensity.getText());
 
-            CoordinateFactory gaussDistribution = generator().getGaussDistribution(0.0, 1.0);
+            CartesianPoint.Factory gaussDistribution = generator().getGaussDistribution(0.0, 1.0);
 
-            CoordinateFactory uniformDistribution = generator().getXFlatUniformDistribution(250.0, 250.0);
+            CartesianPoint.Factory uniformDistribution = generator().getXFlatUniformDistribution(250.0, 250.0);
 
-            CoordinateFactory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(150.0);
+            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(150.0);
 
             return new ParallelFlux(
                     neutralParticleFactory,
                     circleUniformDistribution,
                     new CartesianPoint(x, y, z),
-                    new Vector(axisX, axisY, axisZ),
+                    Vector.set(axisX, axisY, axisZ),
                     layersAmount,
                     particlesPerLayerAmount,
                     layerDistance,
                     minIntensity);
         }
         else {
-            CoordinateFactory gaussDistribution = generator().getGaussDistribution(0.0,
+            CartesianPoint.Factory gaussDistribution = generator().getGaussDistribution(0.0,
                     Math.toRadians(Double.parseDouble(dFluxAngle.getText())));
 
             double x = Double.parseDouble(dFluxX.getText());
@@ -243,7 +241,7 @@ public class MainController {
                     neutralParticleFactory,
                     gaussDistribution,
                     new CartesianPoint(x, y, z),
-                    new Vector(axisX, axisY, axisZ),
+                    Vector.set(axisX, axisY, axisZ),
                     totalParticlesAmount,
                     minIntensity);
         }
@@ -490,7 +488,7 @@ public class MainController {
         if (detector instanceof RotatedDetector) {
             double angle = -((RotatedDetector) detector).getAngle();
             for (Particle p : flux.getParticles()) {
-                CartesianPoint rotatedCoordinate = p.getProjection(angle);
+                CartesianPoint rotatedCoordinate = p.rotateFrameAroundOY(angle);
                 series.getData().add(new XYChart.Data(detector.getCenter().getZ() + rotatedCoordinate.getZ(), rotatedCoordinate.getY()));
             }
         } else {

@@ -2,8 +2,8 @@ package com.private_void.core.plates;
 
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.fluxes.Flux;
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.Point3D;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.Point3D;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarFactory;
@@ -14,12 +14,14 @@ import java.util.List;
 
 public abstract class Plate implements CapillarSystem {
     protected static final int CAPILLARS_PER_DOMAIN_AMOUNT = 4;
-    protected CapillarFactory capillarFactory;
-    protected CartesianPoint center;
-    protected double width;
+
+    protected final CapillarFactory capillarFactory;
+    protected final CartesianPoint center;
+    protected final double width;
+    protected final double capillarsDensity;
+    protected final double capillarRadius;
+
     protected int capillarsAmount;
-    protected double capillarsDensity;
-    protected double capillarRadius;
     protected List<Capillar> capillars;
     protected Detector detector;
 

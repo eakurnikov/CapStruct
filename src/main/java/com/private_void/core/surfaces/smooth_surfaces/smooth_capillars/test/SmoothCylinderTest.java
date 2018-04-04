@@ -1,8 +1,8 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.test;
 
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.SphericalPoint;
-import com.private_void.core.geometry.Vector;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.SphericalPoint;
+import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
@@ -29,12 +29,12 @@ public class SmoothCylinderTest extends SmoothCapillarTest {
 
     @Override
     protected Vector getNormal(final CartesianPoint point) {
-        return new Vector(0.0, -2.0 * point.getY(), -2.0 * point.getZ());
+        return Vector.set(0.0, -2.0 * point.getY(), -2.0 * point.getZ());
     }
 
     @Override
     protected Vector getParticleSpeedRotationAxis(final CartesianPoint point, final Vector normal) {
-        return normal.getNewByTurningAroundOX(PI / 2.0);
+        return normal.rotateAroundOX(PI / 2.0);
     }
 
     @Override
@@ -148,38 +148,20 @@ public class SmoothCylinderTest extends SmoothCapillarTest {
     protected void toInnerReferenceFrame(Particle particle) {
         if (position == null) return;
 
-        particle.getCoordinate().shift(-front.getX(), -front.getY(), -front.getZ());
-
-        particle.setSpeed(particle.getSpeed()
-                .getNewByTurningAroundVector(
-                        -position.getTheta(),
-                        new Vector(0.0, 0.0, 1.0))
-                .getNewByTurningAroundVector(
-                        position.getPhi(),
-                        new Vector(0.0, 1.0, 0.0)));
-
-//        particle.getSpeed()
-//                .turnAroundVector(-position.getTheta(), new Vector(0.0, 0.0, 1.0))
-//                .turnAroundVector( position.getPhi(), new Vector(0.0, 1.0, 0.0));
+        particle
+                .shiftCoordinate(-front.getX(), -front.getY(), -front.getZ())
+                .rotateSpeed(Vector.E_Z, -position.getTheta())
+                .rotateSpeed(Vector.E_Y, position.getPhi());
     }
 
     @Override
     protected void toGlobalReferenceFrame(Particle particle) {
         if (position == null) return;
 
-        particle.getCoordinate().shift(front.getX(), front.getY(), front.getZ());
-
-        particle.setSpeed(particle.getSpeed()
-                .getNewByTurningAroundVector(
-                        -position.getPhi(),
-                        new Vector(0.0, 1.0, 0.0))
-                .getNewByTurningAroundVector(
-                        position.getTheta(),
-                        new Vector(0.0, 0.0, 1.0)));
-
-//        particle.getSpeed()
-//                .turnAroundVector(-position.getPhi(), new Vector(0.0, 1.0, 0.0))
-//                .turnAroundVector( position.getTheta(), new Vector(0.0, 0.0, 1.0));
+        particle
+                .shiftCoordinate(front.getX(), front.getY(), front.getZ())
+                .rotateSpeed(Vector.E_Y, -position.getPhi())
+                .rotateSpeed(Vector.E_Z, position.getTheta());
     }
 
     public static CapillarFactory getFactory(double radius, double length, double roughnessSize, double roughnessAngleR,

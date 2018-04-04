@@ -2,9 +2,9 @@ package com.private_void.core.surfaces.atomic_surfaces;
 
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.fluxes.Flux;
-import com.private_void.core.geometry.CartesianPoint;
-import com.private_void.core.geometry.Vector;
-import com.private_void.core.particles.AtomFactory;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.particles.Atom;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.CapillarSystem;
@@ -16,11 +16,11 @@ import static com.private_void.utils.Constants.ELECTRON_CHARGE;
 import static com.private_void.utils.Constants.PI;
 
 public class AtomicPlane extends AtomicSurface implements CapillarSystem {
-    private double size;
-    private double chargePlanarDensity;
-    protected Detector detector;
+    private final double size;
+    private final double chargePlanarDensity;
+    private final Detector detector;
 
-    public AtomicPlane(final AtomFactory atomFactory, final CartesianPoint front, double period, double chargeNumber,
+    public AtomicPlane(final Atom.Factory atomFactory, final CartesianPoint front, double period, double chargeNumber,
                        double size) {
         super(atomFactory, front, period, chargeNumber);
         this.size = size;
@@ -31,7 +31,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
 
     @Override
     public void interact(Flux flux) {
-        ChargedParticle p;
+        ChargedParticle particle;
         CartesianPoint newCoordinate;
         double angleWithSurface;
         Iterator<? extends Particle> iterator = flux.getParticles().iterator();
@@ -40,16 +40,17 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
 
         while (iterator.hasNext()) {
             try {
-                p = (ChargedParticle) iterator.next();
-                angleWithSurface = p.getSpeed().getAngle(getNormal(p.getCoordinate())) - PI / 2.0;
+                particle = (ChargedParticle) iterator.next();
+                angleWithSurface = particle.getSpeed().getAngle(getNormal(particle.getCoordinate())) - PI / 2.0;
 
-                if (angleWithSurface <= getCriticalAngle(p)) {
-                    newCoordinate = p.getCoordinate();
+                if (angleWithSurface <= getCriticalAngle(particle)) {
+                    newCoordinate = particle.getCoordinate();
 
                     while (newCoordinate.getX() <= front.getX() + size) {
-                        p.setCoordinate(newCoordinate);
-                        p.setSpeed(getNewSpeed(p));
-                        newCoordinate = getNewCoordinate(p);
+                        particle
+                                .setCoordinate(newCoordinate)
+                                .setSpeed(getNewSpeed(particle));
+                        newCoordinate = getNewCoordinate(particle);
                     }
                 } else {
                     iterator.remove();
@@ -64,12 +65,12 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
 
     @Override
     protected Vector getNormal(final CartesianPoint point) {
-        return new Vector(0.0, 1.0, 0.0);
+        return Vector.E_Y;
     }
 
     @Override
     protected Vector getParticleSpeedRotationAxis(final CartesianPoint point, final Vector normal) {
-        return new Vector(0.0, 0.0, 1.0);
+        return Vector.E_Z;
     }
 
     @Override
@@ -117,7 +118,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
                 * chargePlanarDensity * (1.0 - y / Math.sqrt((y / shieldingDistance) * (y / shieldingDistance) + C2));
         double dVy = (Fy / particle.getMass()) * timeInterval;
 
-        return new Vector(particle.getSpeed().getX(), particle.getSpeed().getY() + 0.009, particle.getSpeed().getZ());
+        return Vector.set(particle.getSpeed().getX(), particle.getSpeed().getY() + 0.009, particle.getSpeed().getZ());
 //        return new Vector(particle.getSpeed().getX(), particle.getSpeed().getY() + dVy, particle.getSpeed().getZ());
     }
 
