@@ -159,7 +159,7 @@ public class SphericalPointTest {
 
         //Shift to R = 100, Theta = 0, Phi = PI
         b = new SphericalPoint(100.0, 0.0, PI);
-        s = s = new SphericalPoint(100.0, 0.0, 0.0)
+        s = new SphericalPoint(100.0, 0.0, 0.0)
                 .shift(0.0, 0.0, PI);
 
         assertTrue(Utils.compareToZero(s.getRadius() - b.getRadius()));

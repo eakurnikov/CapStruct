@@ -110,14 +110,16 @@ public class Generator {
     }
 
     public SphericalPoint.Factory getSphericalUniformDistribution(double radius, double thetaRange, double phiRange) {
-        return () -> new SphericalPoint(radius,
+        return () -> new SphericalPoint(
+                radius,
                 uniformDouble(-thetaRange, thetaRange),
                 uniformDouble(-phiRange, phiRange));
     }
 
     public SphericalPoint.Factory getSphericalUniformDistribution(final SphericalPoint config,
                                                                   double radius, double thetaRange, double phiRange) {
-        return () -> new SphericalPoint(radius,
+        return () -> new SphericalPoint(
+                radius,
                 uniformDouble(-thetaRange, thetaRange),
                 uniformDouble(-phiRange, phiRange))
                 .shift(config);
@@ -131,7 +133,7 @@ public class Generator {
     }
 
     public CartesianPoint.Factory getVolumeUniformDistribution(final CartesianPoint center,
-                                                                   double xRange, double yRange, double zRange) {
+                                                               double xRange, double yRange, double zRange) {
         return () -> new CartesianPoint(
                 uniformDouble(-xRange, xRange),
                 uniformDouble(-yRange, yRange),

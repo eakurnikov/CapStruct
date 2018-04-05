@@ -30,6 +30,6 @@ public abstract class RotationMatrix {
             temp[i] = matrix[0][i] * point.getX() + matrix[1][i] * point.getY() + matrix[2][i] * point.getZ();
         }
 
-        return new CartesianPoint(temp[0], temp[1], temp[2]);
+        return new CartesianPoint(temp);
     }
 }

@@ -15,6 +15,12 @@ public class CartesianPoint implements Point3D {
         this.z = z;
     }
 
+    public CartesianPoint(double[] component) {
+        this.x = component[0];
+        this.y = component[1];
+        this.z = component[2];
+    }
+
     public CartesianPoint(final CartesianPoint point) {
         this.x = point.x;
         this.y = point.y;
