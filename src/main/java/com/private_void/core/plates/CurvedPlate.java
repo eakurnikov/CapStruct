@@ -61,7 +61,7 @@ public class CurvedPlate extends Plate {
             for (int i = 0; i < capillarsAmount; i++) {
                 do {
                     coordinate = coordinateFactory.getCoordinate();
-                } while (false/*!isCapillarCoordinateValid(capillarsCenters, coordinate)*/);
+                } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
 
                 capillarsCenters[i] = coordinate;
 

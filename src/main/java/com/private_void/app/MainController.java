@@ -8,6 +8,7 @@ import com.private_void.core.fluxes.ParallelFlux;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.*;
+import com.private_void.core.plates.CurvedPlate;
 import com.private_void.core.plates.InclinedPlate;
 import com.private_void.core.plates.Plate;
 import com.private_void.core.plates.TorusPlate;
@@ -282,19 +283,6 @@ public class MainController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
-//            return new FlatPlate(
-//                    smoothCylinderFactory,
-//                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
-//                    plateCapillarsDensity,
-//                    plateSideLength);
-
-//            return new CurvedPlate(
-//                    smoothCylinderFactory,
-//                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
-//                    plateCapillarsDensity,
-//                    Math.toRadians(1.0),
-//                    50_000.0);
-
             RotatedCapillar.Factory rotatedSmoothCylinderFactory = RotatedSmoothCylinder.getFactory(
                     capillarRadius,
                     capillarLength,
@@ -303,11 +291,24 @@ public class MainController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
-            return new InclinedPlate(
+//            return new FlatPlate(
+//                    smoothCylinderFactory,
+//                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
+//                    plateCapillarsDensity,
+//                    plateSideLength);
+
+//            return new InclinedPlate(
+//                    rotatedSmoothCylinderFactory,
+//                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
+//                    plateCapillarsDensity,
+//                    plateSideLength);
+
+            return new CurvedPlate(
                     rotatedSmoothCylinderFactory,
                     new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
                     plateCapillarsDensity,
-                    plateSideLength);
+                    Math.toRadians(1.0),
+                    50_000.0);
         }
 
         if (torusTab.isSelected()) {

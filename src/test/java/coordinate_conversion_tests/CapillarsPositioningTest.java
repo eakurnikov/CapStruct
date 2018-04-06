@@ -1,18 +1,126 @@
 package coordinate_conversion_tests;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.core.plates.CurvedPlate;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedCapillar;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedSmoothCylinder;
 import com.private_void.utils.Utils;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
 
+import static java.lang.Math.*;
 import static junit.framework.TestCase.assertTrue;
 
 public class CapillarsPositioningTest {
+
+    @Test
+    public void capillarPositionTest() {
+        double sqrt2 = sqrt(2.0);
+
+        CartesianPoint s = new SphericalPoint(1_000.0, toRadians(0.0) + PI / 2.0, toRadians(0.0) + PI)
+                .convertToCartesian();
+        CartesianPoint c = new SphericalPoint(1_000.0, toRadians(0.0), toRadians(0.0))
+                .shift(0.0, PI / 2.0, PI)
+                .convertToCartesian();
+
+        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
+        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
+        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+
+        // Theta = 0, Phi = 0
+        s = new SphericalPoint(1_000.0, toRadians(0.0) + PI / 2.0, toRadians(0.0) + PI)
+                .convertToCartesian();
+        c = new CartesianPoint(-1_000.0, 0.0, 0.0);
+
+        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
+        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
+        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+        //---
+
+        // Theta = 0, Phi = 1
+        s = new SphericalPoint(1_000.0, Math.toRadians(0.0) + PI / 2.0, Math.toRadians(45.0) + PI)
+                .convertToCartesian();
+        c = new CartesianPoint(-1_000.0 / sqrt2, -1_000.0 / sqrt2, 0.0);
+
+        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
+        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
+        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+        //---
+
+        // Theta = 0, Phi = -1
+        s = new SphericalPoint(1_000.0, Math.toRadians(0.0) + PI / 2.0, Math.toRadians(-45.0) + PI)
+                .convertToCartesian();
+        c = new CartesianPoint(-1_000.0 / sqrt2, 1_000.0 / sqrt2, 0.0);
+
+        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
+        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
+        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+        //---
+
+        // Theta = 1, Phi = 0
+        s = new SphericalPoint(1_000.0, Math.toRadians(45.0) + PI / 2.0, Math.toRadians(0.0) + PI)
+                .convertToCartesian();
+        c = new CartesianPoint(-1_000.0 / sqrt2, 0.0, -1_000.0 / sqrt2);
+
+        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
+        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
+        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+        //---
+
+        // Theta = -1, Phi = 0
+        s = new SphericalPoint(1_000.0, Math.toRadians(-45.0) + PI / 2.0, Math.toRadians(0.0) + PI)
+                .convertToCartesian();
+        c = new CartesianPoint(-1_000.0 / sqrt2, 0.0, 1_000.0 / sqrt2);
+
+        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
+        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
+        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+        //---
+
+        // Theta = 1, Phi = 1
+        s = new SphericalPoint(1_000.0, Math.toRadians(45.0) + PI / 2.0, Math.toRadians(45.0) + PI)
+                .convertToCartesian();
+        c = new CartesianPoint(-500.0, -500.0, -707.106781186547);
+
+        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
+        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
+        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+        //---
+
+        // Theta = -1, Phi = -1
+        s = new SphericalPoint(1_000.0, Math.toRadians(-45.0) + PI / 2.0, Math.toRadians(-45.0) + PI)
+                .convertToCartesian();
+        c = new CartesianPoint(-500.0, 500.0, 707.106781186547);
+
+        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
+        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
+        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+        //---
+
+        // Theta = 1, Phi = -1
+        s = new SphericalPoint(1_000.0, Math.toRadians(45.0) + PI / 2.0, Math.toRadians(-45.0) + PI)
+                .convertToCartesian();
+        c = new CartesianPoint(-500.0, 500.0, -707.106781186547);
+
+        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
+        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
+        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+        //---
+
+        // Theta = -1, Phi = 1
+        s = new SphericalPoint(1_000.0, Math.toRadians(-45.0) + PI / 2.0, Math.toRadians(45.0) + PI)
+                .convertToCartesian();
+        c = new CartesianPoint(-500.0, -500.0, 707.106781186547);
+
+        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
+        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
+        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+        //---
+    }
 
     @Test
     public void willParticleGetInsideTest() {
@@ -39,7 +147,7 @@ public class CapillarsPositioningTest {
                 rotatedSmoothCylinderFactory,
                 CartesianPoint.ORIGIN,
                 0.0034,
-                Math.toRadians(3.65),
+                toRadians(3.65),
                 2000.0);
 
         List<Capillar> capillars = curvedPlate.getCapillars();

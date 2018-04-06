@@ -74,7 +74,9 @@ public abstract class Plate implements CapillarSystem {
         for (Particle particle : flux.getParticles()) {
             isOut = true;
 
-            if (particlesCounter % (particlesAmount / 10) == 0.0) System.out.println("    ... " + (particlesCounter * 100 / particlesAmount) + "% paricles processed");
+            if (particlesCounter % (particlesAmount / 10) == 0.0) {
+                System.out.println("    ... " + (particlesCounter * 100 / particlesAmount) + "% paricles processed");
+            }
             particlesCounter++;
 
             int capillarsCounter = 0;
