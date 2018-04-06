@@ -1,39 +1,33 @@
-package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.test;
+package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
-import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.smooth_surfaces.SmoothSurface;
 
 import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
-public abstract  class SmoothCapillarTest extends SmoothSurface implements Capillar {
-    protected SphericalPoint position;
-    protected double length;
-    protected double radius;
+public abstract  class RotatedSmoothCapillar extends SmoothSurface implements RotatedCapillar {
+    protected final SphericalPoint position;
+    protected final double radius;
+    protected final double length;
 
-    protected SmoothCapillarTest(final CartesianPoint front, double radius, double roughnessSize, double roughnessAngleR,
-                             double reflectivity, double criticalAngleR) {
-        super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
-        this.radius = radius;
-    }
-
-    protected SmoothCapillarTest(final CartesianPoint front, final SphericalPoint position, double radius,
-                             double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
+    protected RotatedSmoothCapillar(final CartesianPoint front, final SphericalPoint position, double radius, double length,
+                                    double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
         super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.position = position;
         this.radius = radius;
+        this.length = length;
     }
 
     @Override
     public void interact(Particle p) {
         Vector normal;
 
-        toInnerReferenceFrame(p);
+        toInnerRefFrame(p);
 
         try {
             NeutralParticle particle = (NeutralParticle) p;
@@ -64,12 +58,12 @@ public abstract  class SmoothCapillarTest extends SmoothSurface implements Capil
             e.printStackTrace();
         }
 
-        toGlobalReferenceFrame(p);
+        toGlobalRefFrame(p);
     }
 
     @Override
     public boolean willParticleGetInside(Particle p) {
-        toInnerReferenceFrame(p);
+        toInnerRefFrame(p);
 
         double x = p.getCoordinate().getX();
         double y = p.getCoordinate().getY();
@@ -84,7 +78,7 @@ public abstract  class SmoothCapillarTest extends SmoothSurface implements Capil
 
         boolean result = newY * newY + newZ * newZ < radius * radius;
 
-        toGlobalReferenceFrame(p);
+        toGlobalRefFrame(p);
 
         return result;
     }
@@ -95,8 +89,4 @@ public abstract  class SmoothCapillarTest extends SmoothSurface implements Capil
     }
 
     protected abstract boolean isPointInside(CartesianPoint point);
-
-    protected abstract void toInnerReferenceFrame(Particle particle);
-
-    protected abstract void toGlobalReferenceFrame(Particle particle);
 }

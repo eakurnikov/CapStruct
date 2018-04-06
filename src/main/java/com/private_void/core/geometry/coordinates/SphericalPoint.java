@@ -1,14 +1,12 @@
 package com.private_void.core.geometry.coordinates;
 
-//todo сделать валидацию углов при создании координаты, как в Vector
-
 public class SphericalPoint implements Point3D {
     private final double radius;
     private final double theta;
     private final double phi;
 
     public SphericalPoint(double radius, double theta, double phi) {
-        this.radius = radius;
+        this.radius = Math.abs(radius);
         this.theta = theta;
         this.phi = phi;
     }
@@ -21,8 +19,8 @@ public class SphericalPoint implements Point3D {
 
     public CartesianPoint convertToCartesian() {
         double x = radius * Math.sin(theta) * Math.cos(phi);
-        double y = radius * Math.cos(theta);
-        double z = radius * Math.sin(theta) * Math.sin(phi);
+        double y = radius * Math.sin(theta) * Math.sin(phi);
+        double z = radius * Math.cos(theta);
 
         return new CartesianPoint(x, y, z);
     }

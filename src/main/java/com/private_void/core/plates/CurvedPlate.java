@@ -4,18 +4,20 @@ import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.coordinates.Point3D;
 import com.private_void.core.geometry.coordinates.SphericalPoint;
-import com.private_void.core.surfaces.CapillarFactory;
+import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedCapillar;
 
 import static com.private_void.utils.Generator.generator;
 import static com.private_void.utils.Constants.PI;
 
 public class CurvedPlate extends Plate {
+    private final RotatedCapillar.Factory capillarFactory;
     private final double maxAngleR;
     private final double curvRadius;
 
-    public CurvedPlate(final CapillarFactory capillarFactory, final CartesianPoint center, double capillarsDensity,
+    public CurvedPlate(final RotatedCapillar.Factory capillarFactory, final CartesianPoint center, double capillarsDensity,
                        double maxAngleR, double curvRadius) {
-        super(capillarFactory, center, capillarsDensity);
+        super(center, capillarFactory.getRadius(), capillarFactory.getLength(), capillarsDensity);
+        this.capillarFactory = capillarFactory;
         this.maxAngleR = maxAngleR;
         this.curvRadius = curvRadius;
         createCapillars();
@@ -50,7 +52,7 @@ public class CurvedPlate extends Plate {
             capillarsAmount = (int) (capillarsDensity * frontSquare);
 
             SphericalPoint.Factory coordinateFactory = generator().getSphericalUniformDistribution(
-                    new SphericalPoint(0.0, PI / 2.0, PI),// тета отсчитывается от оси игрек, фи от оси икс, поворачиваю так, чтобы координаты попадали на мою пластину
+                    new SphericalPoint(0.0, PI / 2.0, PI),
                     curvRadius, maxAngleR, maxAngleR);
 
             SphericalPoint[] capillarsCenters = new SphericalPoint[capillarsAmount];

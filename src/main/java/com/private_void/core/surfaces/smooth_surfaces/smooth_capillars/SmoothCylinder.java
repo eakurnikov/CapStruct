@@ -1,12 +1,9 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
-import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
-import com.private_void.core.surfaces.CapillarFactory;
 import com.private_void.utils.Utils;
 
 import static com.private_void.utils.Constants.*;
@@ -16,15 +13,7 @@ public class SmoothCylinder extends SmoothCapillar {
 
     public SmoothCylinder(final CartesianPoint front, double radius, double length, double roughnessSize, double roughnessAngleR,
                           double reflectivity, double criticalAngleR) {
-        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
-        this.length = length;
-    }
-
-    public SmoothCylinder(final CartesianPoint front, final SphericalPoint position, double radius, double length,
-                          double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
-        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
-        this.length = length;
-        this.position = position;
+        super(front, radius, length, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
     }
 
     @Override
@@ -143,40 +132,13 @@ public class SmoothCylinder extends SmoothCapillar {
         return point.getX() < front.getX() + length;
     }
 
-    @Override
-    protected void toInnerReferenceFrame(Particle particle) {
-        if (position == null) return;
-
-        particle
-                .shiftCoordinate(
-                        0.0,
-                        position.getRadius() * Math.sin(position.getTheta()),
-                        position.getRadius() * Math.sin(position.getPhi()))
-                .rotateSpeed(Vector.E_Z, -position.getTheta())
-                .rotateSpeed(Vector.E_Y, position.getPhi());
-    }
-
-    @Override
-    protected void toGlobalReferenceFrame(Particle particle) {
-        if (position == null) return;
-
-        particle
-                .shiftCoordinate(
-                        0.0,
-                        position.getRadius() * Math.sin(position.getTheta()),
-                        position.getRadius() * Math.sin(position.getPhi()))
-                .rotateSpeed(Vector.E_Y, -position.getPhi())
-                .rotateSpeed(Vector.E_Z, position.getTheta());
-
-    }
-
-    public static CapillarFactory getFactory(double radius, double length, double roughnessSize, double roughnessAngleR,
+    public static Capillar.Factory getFactory(double radius, double length, double roughnessSize, double roughnessAngleR,
                                              double reflectivity, double criticalAngleR) {
-        return new CapillarFactory() {
+        return new Capillar.Factory() {
 
             @Override
-            public Capillar getNewCapillar(final CartesianPoint coordinate, final SphericalPoint position) {
-                return new SmoothCylinder(coordinate, position, radius, length, roughnessSize, roughnessAngleR,
+            public Capillar getNewCapillar(final CartesianPoint coordinate) {
+                return new SmoothCylinder(coordinate, radius, length, roughnessSize, roughnessAngleR,
                         reflectivity, criticalAngleR);
             }
 

@@ -35,8 +35,8 @@ public class CartesianPoint implements Point3D {
 
     public SphericalPoint convertToSpherical() {
         double radius = Math.sqrt(x * x + y * y + z * z);
-        double theta =  Math.atan2(Math.sqrt(x * x + z * z), y);
-        double phi = Math.atan2(z, x);
+        double theta =  Math.atan2(Math.sqrt(x * x + y * y), z);
+        double phi = Math.atan2(y, x);
 
         return new SphericalPoint(radius, theta, phi);
     }

@@ -17,12 +17,12 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
                             double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR)
             throws IllegalArgumentException {
 
-        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        super(front, radius, Utils.getConeLength(radius, divergentAngleR, coneCoefficient),
+                roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         if (coneCoefficient >= 1.0 || coneCoefficient <= 0.0) {
             throw new IllegalArgumentException();
         }
         this.divergentAngleR = divergentAngleR;
-        this.length = Utils.getConeLength(radius, divergentAngleR, coneCoefficient);
         this.detector = new Detector(getDetectorsCoordinate(), 2.0 * radius);
     }
 
@@ -30,11 +30,10 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
                             double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR)
             throws IllegalArgumentException {
 
-        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        super(front, radius, length, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         if (coneCoefficient >= 1.0 || coneCoefficient <= 0.0) {
             throw new IllegalArgumentException();
         }
-        this.length = length;
         this.divergentAngleR = Utils.getConeDivergentAngle(radius, length, coneCoefficient);
         this.detector = new Detector(getDetectorsCoordinate(), 2.0 * radius);
     }

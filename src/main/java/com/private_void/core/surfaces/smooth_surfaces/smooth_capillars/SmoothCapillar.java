@@ -1,7 +1,6 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
@@ -12,28 +11,19 @@ import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
 public abstract  class SmoothCapillar extends SmoothSurface implements Capillar {
-    protected SphericalPoint position;
-    protected double length;
-    protected double radius;
+    protected final double radius;
+    protected final double length;
 
-    protected SmoothCapillar(final CartesianPoint front, double radius, double roughnessSize, double roughnessAngleR,
-                             double reflectivity, double criticalAngleR) {
-        super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
-        this.radius = radius;
-    }
-
-    protected SmoothCapillar(final CartesianPoint front, final SphericalPoint position, double radius,
+    protected SmoothCapillar(final CartesianPoint front, double radius, double length,
                              double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
         super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
-        this.position = position;
         this.radius = radius;
+        this.length = length;
     }
 
     @Override
     public void interact(Particle p) {
         Vector normal;
-
-        toInnerReferenceFrame(p);
 
         try {
             NeutralParticle particle = (NeutralParticle) p;
@@ -63,11 +53,31 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
         } catch (ClassCastException e) {
             e.printStackTrace();
         }
-
-        toGlobalReferenceFrame(p);
     }
 
-    @Override //TODO работает некорректно
+//    @Override //TODO работает некорректно
+//    public boolean willParticleGetInside(final Particle p) {
+//        double x0 = front.getX();
+//
+//        double x = p.getCoordinate().getX();
+//        double y = p.getCoordinate().getY();
+//        double z = p.getCoordinate().getZ();
+//
+//        double Vx = p.getSpeed().getX();
+//        double Vy = p.getSpeed().getY();
+//        double Vz = p.getSpeed().getZ();
+//
+//        double newY = (Vy / Vx) * (x0 - x) + y;
+//        double newZ = (Vz / Vx) * (x0 - x) + z;
+//
+//        double radiusY = radius * Math.cos(position.getTheta());
+//        double radiusZ = radius * Math.cos(position.getPhi());
+//
+//        return  (newY - front.getY()) * (newY - front.getY()) / (radiusY * radiusY) +
+//                (newZ - front.getZ()) * (newZ - front.getZ()) / (radiusZ * radiusZ) < 1.0;
+//    }
+
+    @Override
     public boolean willParticleGetInside(final Particle p) {
         double x0 = front.getX();
 
@@ -82,21 +92,9 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
         double newY = (Vy / Vx) * (x0 - x) + y;
         double newZ = (Vz / Vx) * (x0 - x) + z;
 
-        double radiusY = radius * Math.cos(position.getTheta());
-        double radiusZ = radius * Math.cos(position.getPhi());
-
-        return  (newY - front.getY()) * (newY - front.getY()) / (radiusY * radiusY) +
-                (newZ - front.getZ()) * (newZ - front.getZ()) / (radiusZ * radiusZ) < 1.0;
-    }
-
-    @Override
-    public SphericalPoint getPosition() {
-        return position;
+        return (newY - front.getY()) * (newY - front.getY()) + (newZ - front.getZ()) * (newZ - front.getZ())
+                < radius * radius;
     }
 
     protected abstract boolean isPointInside(CartesianPoint point);
-
-    protected abstract void toInnerReferenceFrame(Particle particle);
-
-    protected abstract void toGlobalReferenceFrame(Particle particle);
 }

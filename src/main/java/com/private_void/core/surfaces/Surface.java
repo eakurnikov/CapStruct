@@ -4,8 +4,7 @@ import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.vectors.Vector;
 
 public abstract class Surface {
-
-    protected CartesianPoint front;
+    protected final CartesianPoint front;
 
     protected Surface(final CartesianPoint front) {
         this.front = front;

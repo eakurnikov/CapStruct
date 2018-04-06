@@ -1,6 +1,8 @@
 package com.private_void.core.particles;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.rotation_matrixes.RotationMatrixX;
+import com.private_void.core.geometry.rotation_matrixes.RotationMatrixXYZ;
 import com.private_void.core.geometry.rotation_matrixes.RotationMatrixY;
 import com.private_void.core.geometry.vectors.Vector;
 
@@ -19,6 +21,16 @@ public abstract class Particle {
         this.out = false;
     }
 
+    public CartesianPoint getCoordinate() {
+        return coordinate;
+    }
+
+    public Particle setCoordinate(final CartesianPoint newCoordinate) {
+        increaseTrace(newCoordinate);
+        this.coordinate = newCoordinate;
+        return this;
+    }
+
     public Particle shiftCoordinate(final CartesianPoint step) {
         CartesianPoint newCoordinate = coordinate.shift(step);
         increaseTrace(newCoordinate);
@@ -33,32 +45,45 @@ public abstract class Particle {
         return this;
     }
 
-    public Particle rotateSpeed(final Vector vector, double angle) {
-        speed = speed.rotateAroundVector(vector, angle);
-        return this;
-    }
-
-    public CartesianPoint getCoordinate() {
-        return coordinate;
-    }
-
-    public Particle setCoordinate(final CartesianPoint newCoordinate) {
-        increaseTrace(newCoordinate);
-        this.coordinate = newCoordinate;
-        return this;
-    }
-
-    // Возвращает проекцию координаты на плоскость, расположенную под углом angle к абсолютной
-    public CartesianPoint rotateFrameAroundOY(double angle) {
-        return new RotationMatrixY(angle).rotate(coordinate);
-    }
-
     public Vector getSpeed() {
         return speed;
     }
 
     public void setSpeed(final Vector speed) {
         this.speed = speed;
+    }
+
+    public Particle rotateSpeed(final Vector vector, double angle) {
+        speed = speed.rotateAroundVector(vector, angle);
+        return this;
+    }
+
+    public Particle rotateRefFrameAroundOX(double angle) {
+        RotationMatrixX matrix = new RotationMatrixX(angle);
+        coordinate = matrix.rotate(coordinate);
+        speed = matrix.rotate(speed);
+        return this;
+    }
+
+    public Particle rotateRefFrameAroundOY(double angle) {
+        RotationMatrixY matrix = new RotationMatrixY(angle);
+        coordinate = matrix.rotate(coordinate);
+        speed = matrix.rotate(speed);
+        return this;
+    }
+
+    public Particle rotateRefFrameAroundOZ(double angle) {
+        RotationMatrixXYZ matrix = new RotationMatrixXYZ(Vector.E_Z, angle);
+        coordinate = matrix.rotate(coordinate);
+        speed = matrix.rotate(speed);
+        return this;
+    }
+
+    public Particle rotateRefFrameAroundVector(final Vector vector, double angle) {
+        RotationMatrixXYZ matrix = new RotationMatrixXYZ(vector, angle);
+        coordinate = matrix.rotate(coordinate);
+        speed = matrix.rotate(speed);
+        return this;
     }
 
     public boolean isAbsorbed() {
@@ -89,5 +114,10 @@ public abstract class Particle {
 
     public interface Factory {
         Particle getNewParticle(final CartesianPoint coordinate, final Vector speed);
+    }
+
+    // Возвращает проекцию координаты на плоскость, расположенную под углом angle к абсолютной
+    public CartesianPoint rotateCoordinateAroundOY(double angle) {
+        return new RotationMatrixY(angle).rotate(coordinate);
     }
 }

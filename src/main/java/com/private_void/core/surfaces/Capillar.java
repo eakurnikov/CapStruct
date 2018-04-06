@@ -1,6 +1,6 @@
 package com.private_void.core.surfaces;
 
-import com.private_void.core.geometry.coordinates.SphericalPoint;
+import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.particles.Particle;
 
 public interface Capillar {
@@ -9,5 +9,12 @@ public interface Capillar {
 
     void interact(Particle particle);
 
-    SphericalPoint getPosition();
+    interface Factory {
+
+        Capillar getNewCapillar(final CartesianPoint coordinate);
+
+        double getRadius();
+
+        double getLength();
+    }
 }

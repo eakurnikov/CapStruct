@@ -1,12 +1,9 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
-import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
-import com.private_void.core.surfaces.CapillarFactory;
 import com.private_void.utils.Utils;
 
 import static com.private_void.utils.Constants.*;
@@ -19,51 +16,23 @@ public class SmoothCone extends SmoothCapillar {
                       double roughnessAngleR, double reflectivity, double criticalAngleR)
             throws IllegalArgumentException {
 
-        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        super(front, radius, Utils.getConeLength(radius, divergentAngleR, coneCoefficient),
+                roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+
         if (coneCoefficient >= 1.0 || coneCoefficient <= 0.0) {
             throw new IllegalArgumentException();
         }
         this.divergentAngleR = divergentAngleR;
-        this.length = Utils.getConeLength(radius, divergentAngleR, coneCoefficient);
     }
 
     public SmoothCone(final CartesianPoint front, double radius, double length, double coneCoefficient, double roughnessSize,
                       double roughnessAngleR, double reflectivity, double criticalAngleR)
             throws IllegalArgumentException {
 
-        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        super(front, radius, length, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         if (coneCoefficient >= 1.0 || coneCoefficient <= 0.0) {
             throw new IllegalArgumentException();
         }
-        this.length = length;
-        this.divergentAngleR = Utils.getConeDivergentAngle(radius, length, coneCoefficient);
-    }
-
-    public SmoothCone(final CartesianPoint front, final SphericalPoint position, double radius, int divergentAngleR,
-                      double coneCoefficient, double roughnessSize, double roughnessAngleR, double reflectivity,
-                      double criticalAngleR)
-            throws IllegalArgumentException {
-
-        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
-        if (coneCoefficient >= 1.0 || coneCoefficient <= 0.0) {
-            throw new IllegalArgumentException();
-        }
-        this.position = position;
-        this.divergentAngleR = divergentAngleR;
-        this.length = Utils.getConeLength(radius, divergentAngleR, coneCoefficient);
-    }
-
-    public SmoothCone(final CartesianPoint front, final SphericalPoint position, double radius, double length,
-                      double coneCoefficient, double roughnessSize, double roughnessAngleR, double reflectivity,
-                      double criticalAngleR)
-            throws IllegalArgumentException {
-
-        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
-        if (coneCoefficient >= 1.0 || coneCoefficient <= 0.0) {
-            throw new IllegalArgumentException();
-        }
-        this.position = position;
-        this.length = length;
         this.divergentAngleR = Utils.getConeDivergentAngle(radius, length, coneCoefficient);
     }
 
@@ -194,23 +163,13 @@ public class SmoothCone extends SmoothCapillar {
         return point.getX() < front.getX() + length;
     }
 
-    @Override
-    protected void toInnerReferenceFrame(Particle particle) {
-        // todo
-    }
-
-    @Override
-    protected void toGlobalReferenceFrame(Particle particle) {
-        // todo
-    }
-
-    public static CapillarFactory getFactory(double radius, double length, double coneCoefficient, double roughnessSize,
+    public static Capillar.Factory getFactory(double radius, double length, double coneCoefficient, double roughnessSize,
                                              double roughnessAngleR, double reflectivity, double criticalAngleR) {
-        return new CapillarFactory() {
+        return new Capillar.Factory() {
 
             @Override
-            public Capillar getNewCapillar(final CartesianPoint coordinate, final SphericalPoint position) {
-                return new SmoothCone(coordinate, position, radius, length, coneCoefficient, roughnessSize,
+            public Capillar getNewCapillar(final CartesianPoint coordinate) {
+                return new SmoothCone(coordinate, radius, length, coneCoefficient, roughnessSize,
                         roughnessAngleR, reflectivity, criticalAngleR);
             }
 

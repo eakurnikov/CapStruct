@@ -1,12 +1,10 @@
 package com.private_void.core.surfaces.atomic_surfaces.atomic_capillars;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.Atom;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.surfaces.Capillar;
-import com.private_void.core.surfaces.CapillarFactory;
 import com.private_void.utils.Utils;
 
 import java.util.ArrayList;
@@ -16,23 +14,10 @@ public class AtomicCone extends AtomicCapillar {
 
     public AtomicCone(final Atom.Factory atomFactory, final CartesianPoint front, double period, double chargeNumber,
                       double radius, double length, double coneCoefficient) throws IllegalArgumentException {
-        super(atomFactory, front, period, chargeNumber, radius);
+        super(atomFactory, front, period, chargeNumber, radius, length);
         if (coneCoefficient >= 1 || coneCoefficient <= 0) {
             throw new IllegalArgumentException();
         }
-        this.length = length;
-        this.divergentAngleR = Utils.getConeDivergentAngle(radius, length, coneCoefficient);
-    }
-
-    public AtomicCone(final Atom.Factory atomFactory, final CartesianPoint front, final SphericalPoint position,
-                      double period, double chargeNumber, double radius, double length, double coneCoefficient)
-            throws IllegalArgumentException {
-        super(atomFactory, front, period, chargeNumber, radius);
-        if (coneCoefficient >= 1 || coneCoefficient <= 0) {
-            throw new IllegalArgumentException();
-        }
-        this.position = position;
-        this.length = length;
         this.divergentAngleR = Utils.getConeDivergentAngle(radius, length, coneCoefficient);
     }
 
@@ -71,13 +56,13 @@ public class AtomicCone extends AtomicCapillar {
         return false;
     }
 
-    public static CapillarFactory getFactory(final Atom.Factory atomFactory, double period, double chargeNumber,
+    public static Capillar.Factory getFactory(final Atom.Factory atomFactory, double period, double chargeNumber,
                                              double radius, double length, double coneCoefficient) {
-        return new CapillarFactory() {
+        return new Capillar.Factory() {
 
             @Override
-            public Capillar getNewCapillar(final CartesianPoint coordinate, final SphericalPoint position) {
-                return new AtomicCone(atomFactory, coordinate, position, period, chargeNumber, radius, length,
+            public Capillar getNewCapillar(final CartesianPoint coordinate) {
+                return new AtomicCone(atomFactory, coordinate, period, chargeNumber, radius, length,
                         coneCoefficient);
             }
 

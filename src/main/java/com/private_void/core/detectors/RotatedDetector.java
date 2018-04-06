@@ -34,7 +34,7 @@ public class RotatedDetector extends Detector {
 
     @Override
     protected boolean isParticleWithinBorders(Particle p) {
-        CartesianPoint rotatedCoordinate = p.rotateFrameAroundOY(-angleR);
+        CartesianPoint rotatedCoordinate = p.rotateCoordinateAroundOY(-angleR);
 
         return rotatedCoordinate.getY() * rotatedCoordinate.getY()
                 + (center.getZ() + rotatedCoordinate.getZ()) * (center.getZ() + rotatedCoordinate.getZ())

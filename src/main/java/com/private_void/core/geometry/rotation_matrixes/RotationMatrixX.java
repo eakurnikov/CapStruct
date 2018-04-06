@@ -18,3 +18,8 @@ public class RotationMatrixX extends RotationMatrix {
         matrix[2][2] = Math.cos(angle);
     }
 }
+
+//    super(new double[][]{
+//        {1.0, 0.0,              0.0},
+//        {0.0, Math.cos(angle), -Math.sin(angle)},
+//        {0.0, Math.sin(angle), Math.cos(angle)}});

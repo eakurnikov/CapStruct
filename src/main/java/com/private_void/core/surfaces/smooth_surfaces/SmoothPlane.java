@@ -14,7 +14,7 @@ import static com.private_void.utils.Constants.PI;
 
 public class SmoothPlane extends SmoothSurface implements CapillarSystem {
     private final double size;
-    protected final Detector detector;
+    private final Detector detector;
 
     public SmoothPlane(final CartesianPoint front, double size, double roughnessSize, double roughnessAngleR, double reflectivity,
                        double criticalAngleR) {

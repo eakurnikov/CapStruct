@@ -16,14 +16,15 @@ import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
 public abstract class SingleSmoothCapillar extends SmoothSurface implements CapillarSystem {
-    protected double length;
-    protected double radius;
+    protected final double radius;
+    protected final double length;
     protected Detector detector;
 
-    protected SingleSmoothCapillar(final CartesianPoint front, double radius, double roughnessSize, double roughnessAngleR,
-                                   double reflectivity, double criticalAngleR) {
+    protected SingleSmoothCapillar(final CartesianPoint front, double radius, double length,
+                                   double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
         super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.radius = radius;
+        this.length = length;
     }
 
     @Override

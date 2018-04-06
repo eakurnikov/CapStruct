@@ -1,12 +1,10 @@
 package com.private_void.core.surfaces.atomic_surfaces.atomic_capillars;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.Atom;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.surfaces.Capillar;
-import com.private_void.core.surfaces.CapillarFactory;
 import com.private_void.utils.Utils;
 
 import java.util.ArrayList;
@@ -17,19 +15,9 @@ public class AtomicTorus extends AtomicCapillar {
 
     public AtomicTorus(final Atom.Factory atomFactory, final CartesianPoint front, double period, double chargeNumber,
                        double radius, double curvRadius, double curvAngleR) {
-        super(atomFactory, front, period, chargeNumber, radius);
+        super(atomFactory, front, period, chargeNumber, radius, Utils.getTorusLength(curvRadius, curvAngleR));
         this.curvRadius = curvRadius;
         this.curvAngleR = curvAngleR;
-        this.length = Utils.getTorusLength(curvRadius, curvAngleR);
-    }
-
-    public AtomicTorus(final Atom.Factory atomFactory, final CartesianPoint front, final SphericalPoint position, double period,
-                       double chargeNumber, double radius, double curvRadius, double curvAngleR) {
-        super(atomFactory, front, period, chargeNumber, radius);
-        this.position = position;
-        this.curvRadius = curvRadius;
-        this.curvAngleR = curvAngleR;
-        this.length = Utils.getTorusLength(curvRadius, curvAngleR);
     }
 
     @Override
@@ -67,13 +55,13 @@ public class AtomicTorus extends AtomicCapillar {
         return false;
     }
 
-    public static CapillarFactory getFactory(final Atom.Factory atomFactory, double period, double chargeNumber,
+    public static Capillar.Factory getFactory(final Atom.Factory atomFactory, double period, double chargeNumber,
                                              double radius, double curvRadius, double curvAngleR) {
-        return new CapillarFactory() {
+        return new Capillar.Factory() {
 
             @Override
-            public Capillar getNewCapillar(final CartesianPoint coordinate, final SphericalPoint position) {
-                return new AtomicTorus(atomFactory, coordinate, position, period, chargeNumber, radius, curvRadius,
+            public Capillar getNewCapillar(final CartesianPoint coordinate) {
+                return new AtomicTorus(atomFactory, coordinate, period, chargeNumber, radius, curvRadius,
                         curvAngleR);
             }
 

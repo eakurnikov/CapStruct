@@ -1,12 +1,9 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
-import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
-import com.private_void.core.surfaces.CapillarFactory;
 import com.private_void.utils.Utils;
 
 import static com.private_void.utils.Constants.*;
@@ -18,37 +15,17 @@ public class SmoothTorus extends SmoothCapillar {
 
     public SmoothTorus(final CartesianPoint front, double radius, double curvRadius, double curvAngleR, double roughnessSize,
                        double roughnessAngleR, double reflectivity, double criticalAngleR) {
-        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        super(front, radius, Utils.getTorusLength(curvRadius, curvAngleR),
+                roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.curvRadius = curvRadius;
         this.curvAngleR = curvAngleR;
-        this.length = Utils.getTorusLength(curvRadius, curvAngleR);
     }
 
     public SmoothTorus(double length, final CartesianPoint front, double radius, double curvAngleR, double roughnessSize,
                        double roughnessAngleR, double reflectivity, double criticalAngleR) {
-        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        super(front, radius, length, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.curvRadius = Utils.getTorusCurvRadius(length, curvAngleR);
         this.curvAngleR = curvAngleR;
-        this.length = length;
-    }
-
-    public SmoothTorus(final CartesianPoint front, final SphericalPoint position, double radius, double curvRadius,
-                       double curvAngleR, double roughnessSize, double roughnessAngleR, double reflectivity,
-                       double criticalAngleR) {
-        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
-        this.position = position;
-        this.curvRadius = curvRadius;
-        this.curvAngleR = curvAngleR;
-        this.length = Utils.getTorusLength(curvRadius, curvAngleR);
-    }
-
-    public SmoothTorus(double length, final CartesianPoint front, final SphericalPoint position, double radius, double curvAngleR,
-                       double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
-        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
-        this.position = position;
-        this.curvRadius = Utils.getTorusCurvRadius(length, curvAngleR);
-        this.curvAngleR = curvAngleR;
-        this.length = length;
     }
 
     @Override
@@ -186,16 +163,6 @@ public class SmoothTorus extends SmoothCapillar {
         return point.getX() < front.getX() + length;
     }
 
-    @Override
-    protected void toInnerReferenceFrame(Particle particle) {
-        // todo
-    }
-
-    @Override
-    protected void toGlobalReferenceFrame(Particle particle) {
-        // todo
-    }
-
     private double getPointsAngle(final CartesianPoint point) {
         double x = point.getX();
         double y = point.getY();
@@ -204,13 +171,13 @@ public class SmoothTorus extends SmoothCapillar {
         return Math.asin(x / Math.sqrt(x * x + y * y + (z - curvRadius) * (z - curvRadius)));
     }
 
-    public static CapillarFactory getFactory(double radius, double curvRadius, double curvAngleR, double roughnessSize,
+    public static Capillar.Factory getFactory(double radius, double curvRadius, double curvAngleR, double roughnessSize,
                                              double roughnessAngleR, double reflectivity, double criticalAngleR) {
-        return new CapillarFactory() {
+        return new Capillar.Factory() {
 
             @Override
-            public Capillar getNewCapillar(final CartesianPoint coordinate, final SphericalPoint position) {
-                return new SmoothTorus(coordinate, position, radius, curvRadius, curvAngleR, roughnessSize, roughnessAngleR,
+            public Capillar getNewCapillar(final CartesianPoint coordinate) {
+                return new SmoothTorus(coordinate, radius, curvRadius, curvAngleR, roughnessSize, roughnessAngleR,
                         reflectivity, criticalAngleR);
             }
 
@@ -226,13 +193,13 @@ public class SmoothTorus extends SmoothCapillar {
         };
     }
 
-    public static CapillarFactory getFactoryWithLength(double radius, double length, double curvAngleR, double roughnessSize,
+    public static Capillar.Factory getFactoryWithLength(double radius, double length, double curvAngleR, double roughnessSize,
                                              double roughnessAngleR, double reflectivity, double criticalAngleR) {
-        return new CapillarFactory() {
+        return new Capillar.Factory() {
 
             @Override
-            public Capillar getNewCapillar(final CartesianPoint coordinate, final SphericalPoint position) {
-                return new SmoothTorus(length, coordinate, position, radius, curvAngleR, roughnessSize, roughnessAngleR,
+            public Capillar getNewCapillar(final CartesianPoint coordinate) {
+                return new SmoothTorus(length, coordinate, radius, curvAngleR, roughnessSize, roughnessAngleR,
                         reflectivity, criticalAngleR);
             }
 

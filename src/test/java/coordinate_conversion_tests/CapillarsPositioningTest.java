@@ -3,8 +3,8 @@ package coordinate_conversion_tests;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.plates.CurvedPlate;
 import com.private_void.core.surfaces.Capillar;
-import com.private_void.core.surfaces.CapillarFactory;
-import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothCylinder;
+import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedCapillar;
+import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedSmoothCylinder;
 import com.private_void.utils.Utils;
 import org.junit.Test;
 
@@ -27,7 +27,7 @@ public class CapillarsPositioningTest {
     @Test
     public void sphericalPositioningTest() {
 
-        CapillarFactory smoothCylinderFactory = SmoothCylinder.getFactory(
+        RotatedCapillar.Factory rotatedSmoothCylinderFactory = RotatedSmoothCylinder.getFactory(
                 7.0,
                 500.0,
                 0.0,
@@ -36,7 +36,7 @@ public class CapillarsPositioningTest {
                 90.0);
 
         CurvedPlate curvedPlate = new CurvedPlate(
-                smoothCylinderFactory,
+                rotatedSmoothCylinderFactory,
                 CartesianPoint.ORIGIN,
                 0.0034,
                 Math.toRadians(3.65),
@@ -45,7 +45,7 @@ public class CapillarsPositioningTest {
         List<Capillar> capillars = curvedPlate.getCapillars();
 
         for (Capillar capillar : capillars) {
-            SmoothCylinder cylinder = (SmoothCylinder) capillar;
+            RotatedSmoothCylinder cylinder = (RotatedSmoothCylinder) capillar;
 
             CartesianPoint c = cylinder.getPosition().convertToCartesian();
             assertTrue(Utils.compareToZero(

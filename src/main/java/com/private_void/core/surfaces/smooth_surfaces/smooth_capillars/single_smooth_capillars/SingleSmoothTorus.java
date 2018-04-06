@@ -16,10 +16,10 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
 
     public SingleSmoothTorus(final CartesianPoint front, double radius, double curvRadius, double curvAngleR, double roughnessSize,
                              double roughnessAngleR, double reflectivity, double criticalAngleR) {
-        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        super(front, radius, Utils.getTorusLength(curvRadius, curvAngleR),
+                roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.curvRadius = curvRadius;
         this.curvAngleR = curvAngleR;
-        this.length = Utils.getTorusLength(curvRadius, curvAngleR);
 //        this.detector = new RotatedDetector(getDetectorsCoordinate(), 2.0 * radius, curvAngleR);
         this.detector = new Detector(getDetectorsCoordinate(), 2.0 * radius);
     }

@@ -3,15 +3,16 @@ package com.private_void.core.plates;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.coordinates.Point3D;
-import com.private_void.core.surfaces.Capillar;
+import com.private_void.core.geometry.coordinates.SphericalPoint;
+import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedCapillar;
 
 import static com.private_void.utils.Generator.generator;
 
-public class FlatPlate extends Plate {
-    private final Capillar.Factory capillarFactory;
+public class InclinedPlate extends Plate {
+    private final RotatedCapillar.Factory capillarFactory;
     private final double sideLength;
 
-    public FlatPlate(final Capillar.Factory capillarFactory, final CartesianPoint center, double capillarsDensity,
+    public InclinedPlate(final RotatedCapillar.Factory capillarFactory, final CartesianPoint center, double capillarsDensity,
                      double sideLength) {
         super(center, capillarFactory.getRadius(), capillarFactory.getLength(), capillarsDensity);
         this.capillarFactory = capillarFactory;
@@ -57,7 +58,7 @@ public class FlatPlate extends Plate {
                 } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
 
                 capillarsCenters[i] = coordinate;
-                capillars.add(capillarFactory.getNewCapillar(coordinate));
+                capillars.add(capillarFactory.getNewCapillar(coordinate, new SphericalPoint(1_000, Math.toRadians(0.0), Math.toRadians(5.0))));
 
                 if (i % (capillarsAmount / 10) == 0.0) System.out.println("    ... " + (i * 100 / capillarsAmount) + "% capillars created");
             }
@@ -67,56 +68,6 @@ public class FlatPlate extends Plate {
         System.out.println("Creating capillars fifnish. Total time = = " + (finish - start) / 1_000_000 + " ms");
         System.out.println();
     }
-
-//    @Override
-//    protected void createCapillars() throws IllegalArgumentException {
-//        long start = System.nanoTime();
-//
-//        double domainsAmount = capillarsAmount / CAPILLARS_PER_DOMAIN_AMOUNT;
-//        int domainsAmountPerLine = (int) Math.sqrt(domainsAmount);
-//
-//        double domainSquare = CAPILLARS_PER_DOMAIN_AMOUNT / capillarsDensity;
-//        if (domainSquare < 4 * capillarRadius * capillarRadius * CAPILLARS_PER_DOMAIN_AMOUNT) {
-//            throw new IllegalArgumentException();
-//        }
-//        double domainSideLength = Math.sqrt(domainSquare);
-//
-//        sideLength = domainsAmountPerLine * domainSideLength;
-//
-//        double initialX = center.getX();
-//        double initialY = center.getY() - sideLength / 2;
-//        double initialZ = center.getZ() - sideLength / 2;
-//
-//        CartesianPoint coordinate;
-//        CartesianPoint[] capillarsCenters;
-//        CartesianPoint.Factory coordinateFactory;
-//
-//        for (int y = 0; y < domainsAmountPerLine; y++) {
-//            for (int z = 0; z < domainsAmountPerLine; z++) {
-//                capillarsCenters = new CartesianPoint[CAPILLARS_PER_DOMAIN_AMOUNT];
-//
-//                coordinateFactory = generator().getXFlatUniformDistribution(initialX,
-//                        initialY + capillarRadius + domainSideLength *  y,
-//                        initialY - capillarRadius + domainSideLength * (y + 1),
-//
-//                        initialZ + capillarRadius + domainSideLength *  z,
-//                        initialZ - capillarRadius + domainSideLength * (z + 1));
-//
-//                for (int i = 0; i < CAPILLARS_PER_DOMAIN_AMOUNT; i++) {
-//                    do {
-//                        coordinate = coordinateFactory.getCoordinate();
-//                    } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
-//
-//                    capillarsCenters[i] = coordinate;
-//                    capillars.add(capillarFactory.getNewCapillar(capillarsCenters[i]));
-//                }
-//            }
-//        }
-//
-//        long finish = System.nanoTime();
-//        System.out.println();
-//        System.out.println("Creating capillars time = " + (finish - start) / 1_000_000 + " ms");
-//    }
 
     @Override
     protected CartesianPoint getDetectorsCoordinate() {

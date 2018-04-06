@@ -1,30 +1,20 @@
-package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.test;
+package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
-import com.private_void.core.surfaces.Capillar;
-import com.private_void.core.surfaces.CapillarFactory;
 import com.private_void.utils.Utils;
 
 import static com.private_void.utils.Constants.*;
 import static com.private_void.utils.Generator.generator;
 
-public class SmoothCylinderTest extends SmoothCapillarTest {
+public class RotatedSmoothCylinder extends RotatedSmoothCapillar {
 
-    public SmoothCylinderTest(final CartesianPoint front, double radius, double length, double roughnessSize, double roughnessAngleR,
-                          double reflectivity, double criticalAngleR) {
-        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
-        this.length = length;
-    }
-
-    public SmoothCylinderTest(final CartesianPoint front, final SphericalPoint position, double radius, double length,
-                          double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
-        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
-        this.length = length;
-        this.position = position;
+    public RotatedSmoothCylinder(final CartesianPoint front, final SphericalPoint position, double radius, double length,
+                                 double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
+        super(front, position, radius, length, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
     }
 
     @Override
@@ -144,33 +134,49 @@ public class SmoothCylinderTest extends SmoothCapillarTest {
         return point.getX() < length;
     }
 
-    @Override
-    protected void toInnerReferenceFrame(Particle particle) {
-        if (position == null) return;
+//    @Override
+//    public void toInnerRefFrame(Particle particle) {
+//        particle
+//                .shiftCoordinate(-front.getX(), -front.getY(), -front.getZ())
+//                .rotateCoordinate(Vector.E_Y, position.getTheta())
+//                .rotateCoordinate(Vector.E_Z, -position.getPhi())
+//                .rotateSpeed(Vector.E_Y, position.getTheta())
+//                .rotateSpeed(Vector.E_Z, -position.getPhi());
+//    }
+//
+//    @Override
+//    public void toGlobalRefFrame(Particle particle) {
+//        particle
+//                .rotateCoordinate(Vector.E_Z, position.getPhi())
+//                .rotateCoordinate(Vector.E_Y, -position.getTheta())
+//                .shiftCoordinate(front.getX(), front.getY(), front.getZ())
+//                .rotateSpeed(Vector.E_Z, position.getPhi())
+//                .rotateSpeed(Vector.E_Y, -position.getTheta());
+//    }
 
+    @Override
+    public void toInnerRefFrame(Particle particle) {
         particle
                 .shiftCoordinate(-front.getX(), -front.getY(), -front.getZ())
-                .rotateSpeed(Vector.E_Z, -position.getTheta())
-                .rotateSpeed(Vector.E_Y, position.getPhi());
+                .rotateRefFrameAroundOY(-position.getTheta())
+                .rotateRefFrameAroundOZ(-position.getPhi());
     }
 
     @Override
-    protected void toGlobalReferenceFrame(Particle particle) {
-        if (position == null) return;
-
+    public void toGlobalRefFrame(Particle particle) {
         particle
-                .shiftCoordinate(front.getX(), front.getY(), front.getZ())
-                .rotateSpeed(Vector.E_Y, -position.getPhi())
-                .rotateSpeed(Vector.E_Z, position.getTheta());
+                .rotateRefFrameAroundOZ(position.getPhi())
+                .rotateRefFrameAroundOY(position.getTheta())
+                .shiftCoordinate(front.getX(), front.getY(), front.getZ());
     }
 
-    public static CapillarFactory getFactory(double radius, double length, double roughnessSize, double roughnessAngleR,
+    public static RotatedCapillar.Factory getFactory(double radius, double length, double roughnessSize, double roughnessAngleR,
                                              double reflectivity, double criticalAngleR) {
-        return new CapillarFactory() {
+        return new RotatedCapillar.Factory() {
 
             @Override
-            public Capillar getNewCapillar(final CartesianPoint coordinate, final SphericalPoint position) {
-                return new SmoothCylinderTest(coordinate, position, radius, length, roughnessSize, roughnessAngleR,
+            public RotatedCapillar getNewCapillar(final CartesianPoint coordinate, final SphericalPoint position) {
+                return new RotatedSmoothCylinder(coordinate, position, radius, length, roughnessSize, roughnessAngleR,
                         reflectivity, criticalAngleR);
             }
 

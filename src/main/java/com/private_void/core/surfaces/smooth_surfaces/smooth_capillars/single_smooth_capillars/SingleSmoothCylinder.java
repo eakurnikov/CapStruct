@@ -14,8 +14,7 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
 
     public SingleSmoothCylinder(final CartesianPoint front, double radius, double length, double roughnessSize,
                                 double roughnessAngleR, double reflectivity, double criticalAngleR) {
-        super(front, radius, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
-        this.length = length;
+        super(front, radius, length, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.detector = new Detector(getDetectorsCoordinate(), 2.0 * radius);
     }
 
