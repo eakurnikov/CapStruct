@@ -126,7 +126,7 @@ public class FlatPlate extends Plate {
     @Override
     protected boolean isCapillarCoordinateValid(Point3D[] coordinates, Point3D coordinate) {
         int i = 0;
-        while (coordinates[i] != null && i < coordinates.length) {
+        while (i < coordinates.length && coordinates[i] != null) {
             if ((coordinate.getQ2() - coordinates[i].getQ2()) * (coordinate.getQ2() - coordinates[i].getQ2())
                     + (coordinate.getQ3() - coordinates[i].getQ3()) * (coordinate.getQ3() - coordinates[i].getQ3())
                     < 4.0 * capillarRadius * capillarRadius) {

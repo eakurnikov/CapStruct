@@ -58,7 +58,9 @@ public class InclinedPlate extends Plate {
                 } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
 
                 capillarsCenters[i] = coordinate;
-                capillars.add(capillarFactory.getNewCapillar(coordinate, new SphericalPoint(1_000, Math.toRadians(0.0), Math.toRadians(15.0))));
+                capillars.add(capillarFactory.getNewCapillar(
+                        coordinate,
+                        new SphericalPoint(1_000, Math.toRadians(15.0), Math.toRadians(15.0))));
 
                 if (i % (capillarsAmount / 10) == 0.0) System.out.println("    ... " + (i * 100 / capillarsAmount) + "% capillars created");
             }

@@ -7,7 +7,8 @@ import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.utils.Utils;
 
-import static com.private_void.utils.Constants.*;
+import static com.private_void.utils.Constants.ITERATIONS_MAX;
+import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
 public class RotatedSmoothCylinder extends RotatedSmoothCapillar {
@@ -34,15 +35,15 @@ public class RotatedSmoothCylinder extends RotatedSmoothCapillar {
             return p.getCoordinate();
         }
 
-        double[] solution = {
-                p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
-                p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
-                p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()};
-
 //        double[] solution = {
-//                p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),
-//                p.getCoordinate().getY() + radius * Math.signum(p.getSpeed().getY()),
-//                p.getCoordinate().getZ() + radius * Math.signum(p.getSpeed().getZ())};
+//                p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
+//                p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
+//                p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()};
+
+        double[] solution = {
+                p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),
+                p.getCoordinate().getY() + radius * Math.signum(p.getSpeed().getY()),
+                p.getCoordinate().getZ() + radius * Math.signum(p.getSpeed().getZ())};
 
         double[] delta = {1.0, 1.0, 1.0};
         double[] F  = new double[3];
@@ -163,7 +164,7 @@ public class RotatedSmoothCylinder extends RotatedSmoothCapillar {
     public void toInnerRefFrame(Particle particle) {
         particle
                 .shiftCoordinate(-front.getX(), -front.getY(), -front.getZ())
-                .rotateRefFrameAroundOY(-position.getTheta())
+                .rotateRefFrameAroundOY(position.getTheta())
                 .rotateRefFrameAroundOZ(-position.getPhi());
     }
 
@@ -171,7 +172,7 @@ public class RotatedSmoothCylinder extends RotatedSmoothCapillar {
     public void toGlobalRefFrame(Particle particle) {
         particle
                 .rotateRefFrameAroundOZ(position.getPhi())
-                .rotateRefFrameAroundOY(position.getTheta())
+                .rotateRefFrameAroundOY(-position.getTheta())
                 .shiftCoordinate(front.getX(), front.getY(), front.getZ());
     }
 
