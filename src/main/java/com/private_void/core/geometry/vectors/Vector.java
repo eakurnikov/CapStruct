@@ -1,9 +1,7 @@
 package com.private_void.core.geometry.vectors;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.rotation_matrixes.RotationMatrixX;
-import com.private_void.core.geometry.rotation_matrixes.RotationMatrixXYZ;
-import com.private_void.core.geometry.rotation_matrixes.RotationMatrixY;
+import com.private_void.core.geometry.rotation_matrix.RotationMatrix;
 
 public class Vector extends CartesianPoint {
     public static final Vector E_X = new Vector(1.0, 0.0, 0.0);
@@ -47,15 +45,15 @@ public class Vector extends CartesianPoint {
     }
 
     public Vector rotateAroundOX(double angle) {
-        return new RotationMatrixX(angle).rotate(this);
+        return RotationMatrix.aroundOX(angle).rotate(this);
     }
 
     public Vector rotateAroundOY(double angle) {
-        return new RotationMatrixY(angle).rotate(this);
+        return RotationMatrix.aroundOY(angle).rotate(this);
     }
 
     public Vector rotateAroundVector(final Vector vector, double angle) {
-        return new RotationMatrixXYZ(vector, angle).rotate(this);
+        return RotationMatrix.aroundVector(vector, angle).rotate(this);
     }
 
     public double getAngle(final Vector vec) {

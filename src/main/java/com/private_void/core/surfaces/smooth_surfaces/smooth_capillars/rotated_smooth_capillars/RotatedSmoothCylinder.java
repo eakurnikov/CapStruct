@@ -140,26 +140,6 @@ public class RotatedSmoothCylinder extends RotatedSmoothCapillar {
         return point.getX() < length;
     }
 
-//    @Override
-//    public void toInnerRefFrame(Particle particle) {
-//        particle
-//                .shiftCoordinate(-front.getX(), -front.getY(), -front.getZ())
-//                .rotateCoordinate(Vector.E_Y, position.getTheta())
-//                .rotateCoordinate(Vector.E_Z, -position.getPhi())
-//                .rotateSpeed(Vector.E_Y, position.getTheta())
-//                .rotateSpeed(Vector.E_Z, -position.getPhi());
-//    }
-//
-//    @Override
-//    public void toGlobalRefFrame(Particle particle) {
-//        particle
-//                .rotateCoordinate(Vector.E_Z, position.getPhi())
-//                .rotateCoordinate(Vector.E_Y, -position.getTheta())
-//                .shiftCoordinate(front.getX(), front.getY(), front.getZ())
-//                .rotateSpeed(Vector.E_Z, position.getPhi())
-//                .rotateSpeed(Vector.E_Y, -position.getTheta());
-//    }
-
     @Override
     public void toInnerRefFrame(Particle particle) {
         particle

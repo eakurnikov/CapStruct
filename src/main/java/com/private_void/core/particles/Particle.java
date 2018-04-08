@@ -1,9 +1,7 @@
 package com.private_void.core.particles;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.rotation_matrixes.RotationMatrixX;
-import com.private_void.core.geometry.rotation_matrixes.RotationMatrixXYZ;
-import com.private_void.core.geometry.rotation_matrixes.RotationMatrixY;
+import com.private_void.core.geometry.rotation_matrix.RotationMatrix;
 import com.private_void.core.geometry.vectors.Vector;
 
 public abstract class Particle {
@@ -59,28 +57,28 @@ public abstract class Particle {
     }
 
     public Particle rotateRefFrameAroundOX(double angle) {
-        RotationMatrixX matrix = new RotationMatrixX(angle);
+        RotationMatrix matrix = RotationMatrix.aroundOX(angle);
         coordinate = matrix.rotate(coordinate);
         speed = matrix.rotate(speed);
         return this;
     }
 
     public Particle rotateRefFrameAroundOY(double angle) {
-        RotationMatrixY matrix = new RotationMatrixY(angle);
+        RotationMatrix matrix = RotationMatrix.aroundOY(angle);
         coordinate = matrix.rotate(coordinate);
         speed = matrix.rotate(speed);
         return this;
     }
 
     public Particle rotateRefFrameAroundOZ(double angle) {
-        RotationMatrixXYZ matrix = new RotationMatrixXYZ(Vector.E_Z, angle);
+        RotationMatrix matrix = RotationMatrix.aroundOZ(angle);
         coordinate = matrix.rotate(coordinate);
         speed = matrix.rotate(speed);
         return this;
     }
 
     public Particle rotateRefFrameAroundVector(final Vector vector, double angle) {
-        RotationMatrixXYZ matrix = new RotationMatrixXYZ(vector, angle);
+        RotationMatrix matrix = RotationMatrix.aroundVector(vector, angle);
         coordinate = matrix.rotate(coordinate);
         speed = matrix.rotate(speed);
         return this;
@@ -118,6 +116,6 @@ public abstract class Particle {
 
     // Возвращает проекцию координаты на плоскость, расположенную под углом angle к абсолютной
     public CartesianPoint rotateCoordinateAroundOY(double angle) {
-        return new RotationMatrixY(angle).rotate(coordinate);
+        return RotationMatrix.aroundOY(angle).rotate(coordinate);
     }
 }
