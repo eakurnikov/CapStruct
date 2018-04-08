@@ -3,10 +3,13 @@ package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
+import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
+import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.utils.Utils;
 
-import static com.private_void.utils.Constants.*;
+import static com.private_void.utils.Constants.ITERATIONS_MAX;
+import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
 public class SmoothCone extends SmoothCapillar {
@@ -40,13 +43,10 @@ public class SmoothCone extends SmoothCapillar {
     protected Vector getNormal(final CartesianPoint point) {
         return Vector.set(
                 -1.0,
-                -(point.getY() - front.getY()) * (1.0 / Math.tan(divergentAngleR)) 
-                        / (Math.sqrt((point.getY() - front.getY()) * (point.getY() - front.getY())
-                        + (point.getZ() - front.getZ()) * (point.getZ() - front.getZ()))),
-
-                -(point.getZ() - front.getZ()) * (1.0 / Math.tan(divergentAngleR))
-                        / (Math.sqrt((point.getY() - front.getY()) * (point.getY() - front.getY())
-                        + (point.getZ() - front.getZ()) * (point.getZ() - front.getZ()))));
+                -point.getY() * (1.0 / Math.tan(divergentAngleR))
+                        / (Math.sqrt(point.getY() * point.getY() + point.getZ() * point.getZ())),
+                -point.getZ() * (1.0 / Math.tan(divergentAngleR))
+                        / (Math.sqrt(point.getY() * point.getY() + point.getZ() * point.getZ())));
     }
 
     @Override
@@ -90,9 +90,9 @@ public class SmoothCone extends SmoothCapillar {
                     }
                 }
 
-                x = solution[0] - front.getX();
-                y = solution[1] - front.getY();
-                z = solution[2] - front.getZ();
+                x = solution[0];
+                y = solution[1];
+                z = solution[2];
 
                 //Возможно, с уравнением что-то не так
                 W[0][0] = 1.0;
@@ -146,7 +146,8 @@ public class SmoothCone extends SmoothCapillar {
         }
 
         CartesianPoint newCoordinate = new CartesianPoint(solution[0], solution[1], solution[2]);
-        if ((newCoordinate.isNear(p.getCoordinate()) || newCoordinate.getX() <= p.getCoordinate().getX()) && !p.isRecursiveIterationsLimitReached()) {
+        if ((newCoordinate.isNear(p.getCoordinate()) || newCoordinate.getX() <= p.getCoordinate().getX())
+                && !p.isRecursiveIterationsLimitReached()) {
             p.recursiveIteration();
             return getHitPoint(p);
         } else {
@@ -159,13 +160,23 @@ public class SmoothCone extends SmoothCapillar {
     }
 
     @Override
-    protected boolean isPointInside(final CartesianPoint point) {
-        return point.getX() < front.getX() + length;
+    public void toInnerRefFrame(Particle particle) {
+        particle.shiftCoordinate(-front.getX(), -front.getY(), -front.getZ());
     }
 
-    public static Capillar.Factory getFactory(double radius, double length, double coneCoefficient, double roughnessSize,
+    @Override
+    public void toGlobalRefFrame(Particle particle) {
+        particle.shiftCoordinate(front.getX(), front.getY(), front.getZ());
+    }
+
+    @Override
+    protected boolean isPointInside(final CartesianPoint point) {
+        return point.getX() < length;
+    }
+
+    public static CapillarFactory getFactory(double radius, double length, double coneCoefficient, double roughnessSize,
                                              double roughnessAngleR, double reflectivity, double criticalAngleR) {
-        return new Capillar.Factory() {
+        return new CapillarFactory() {
 
             @Override
             public Capillar getNewCapillar(final CartesianPoint coordinate) {

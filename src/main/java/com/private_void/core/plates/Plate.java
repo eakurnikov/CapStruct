@@ -79,16 +79,17 @@ public abstract class Plate implements CapillarSystem {
             }
             particlesCounter++;
 
-            int capillarsCounter = 0;
-
             for (Capillar capillar : capillars) {
-                capillarsCounter++;
+                capillar.toInnerRefFrame(particle);
 
                 if (capillar.willParticleGetInside(particle)) {
                     capillar.interact(particle);
+                    capillar.toGlobalRefFrame(particle);
                     isOut = false;
                     break;
                 }
+
+                capillar.toGlobalRefFrame(particle);
             }
 
             particle.setOut(isOut);

@@ -24,63 +24,34 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
     @Override
     public void interact(Particle p) {
         Vector normal;
+        NeutralParticle particle = (NeutralParticle) p;
+        CartesianPoint newCoordinate = getHitPoint(particle);
 
-        try {
-            NeutralParticle particle = (NeutralParticle) p;
-            CartesianPoint newCoordinate = getHitPoint(particle);
+        while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
+            normal = getNormal(newCoordinate)
+                    .rotateAroundVector(
+                            Vector.E_X.rotateAroundOY(generator().uniformDouble(0.0, 2.0 * PI)),
+                            generator().uniformDouble(0.0, roughnessAngleR));
 
-            while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
-                normal = getNormal(newCoordinate)
-                        .rotateAroundVector(
-                                Vector.E_X.rotateAroundOY(generator().uniformDouble(0.0, 2.0 * PI)),
-                                generator().uniformDouble(0.0, roughnessAngleR));
+            double angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
+            particle.decreaseIntensity(reflectivity);
 
-                double angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
-                particle.decreaseIntensity(reflectivity);
-
-                if (angleWithSurface <= criticalAngleR) {
-                    particle
-                            .setCoordinate(newCoordinate)
-                            .rotateSpeed(
-                                    getParticleSpeedRotationAxis(newCoordinate, normal),
-                                    2.0 * Math.abs(angleWithSurface));
-                    newCoordinate = getHitPoint(particle);
-                } else {
-                    particle.setAbsorbed(true);
-                    break;
-                }
+            if (angleWithSurface <= criticalAngleR) {
+                particle
+                        .setCoordinate(newCoordinate)
+                        .rotateSpeed(
+                                getParticleSpeedRotationAxis(newCoordinate, normal),
+                                2.0 * Math.abs(angleWithSurface));
+                newCoordinate = getHitPoint(particle);
+            } else {
+                particle.setAbsorbed(true);
+                break;
             }
-        } catch (ClassCastException e) {
-            e.printStackTrace();
         }
     }
 
-//    @Override //TODO работает некорректно
-//    public boolean willParticleGetInside(final Particle p) {
-//        double x0 = front.getX();
-//
-//        double x = p.getCoordinate().getX();
-//        double y = p.getCoordinate().getY();
-//        double z = p.getCoordinate().getZ();
-//
-//        double Vx = p.getSpeed().getX();
-//        double Vy = p.getSpeed().getY();
-//        double Vz = p.getSpeed().getZ();
-//
-//        double newY = (Vy / Vx) * (x0 - x) + y;
-//        double newZ = (Vz / Vx) * (x0 - x) + z;
-//
-//        double radiusY = radius * Math.cos(position.getTheta());
-//        double radiusZ = radius * Math.cos(position.getPhi());
-//
-//        return  (newY - front.getY()) * (newY - front.getY()) / (radiusY * radiusY) +
-//                (newZ - front.getZ()) * (newZ - front.getZ()) / (radiusZ * radiusZ) < 1.0;
-//    }
-
     @Override
     public boolean willParticleGetInside(final Particle p) {
-        double x0 = front.getX();
-
         double x = p.getCoordinate().getX();
         double y = p.getCoordinate().getY();
         double z = p.getCoordinate().getZ();
@@ -89,11 +60,10 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
         double Vy = p.getSpeed().getY();
         double Vz = p.getSpeed().getZ();
 
-        double newY = (Vy / Vx) * (x0 - x) + y;
-        double newZ = (Vz / Vx) * (x0 - x) + z;
+        double newY = y - x * (Vy / Vx);
+        double newZ = z - x * (Vz / Vx);
 
-        return (newY - front.getY()) * (newY - front.getY()) + (newZ - front.getZ()) * (newZ - front.getZ())
-                < radius * radius;
+        return newY * newY + newZ * newZ < radius * radius;
     }
 
     protected abstract boolean isPointInside(CartesianPoint point);

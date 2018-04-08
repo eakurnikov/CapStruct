@@ -3,15 +3,15 @@ package com.private_void.core.plates;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.coordinates.Point3D;
-import com.private_void.core.surfaces.Capillar;
+import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 
 import static com.private_void.utils.Generator.generator;
 
 public class FlatPlate extends Plate {
-    private final Capillar.Factory capillarFactory;
+    private final CapillarFactory capillarFactory;
     private final double sideLength;
 
-    public FlatPlate(final Capillar.Factory capillarFactory, final CartesianPoint center, double capillarsDensity,
+    public FlatPlate(final CapillarFactory capillarFactory, final CartesianPoint center, double capillarsDensity,
                      double sideLength) {
         super(center, capillarFactory.getRadius(), capillarFactory.getLength(), capillarsDensity);
         this.capillarFactory = capillarFactory;

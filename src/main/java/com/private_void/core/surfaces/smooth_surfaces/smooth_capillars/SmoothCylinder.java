@@ -3,10 +3,13 @@ package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
+import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
+import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.utils.Utils;
 
-import static com.private_void.utils.Constants.*;
+import static com.private_void.utils.Constants.ITERATIONS_MAX;
+import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
 public class SmoothCylinder extends SmoothCapillar {
@@ -18,7 +21,7 @@ public class SmoothCylinder extends SmoothCapillar {
 
     @Override
     protected Vector getNormal(final CartesianPoint point) {
-        return Vector.set(0.0, -2.0 * (point.getY() - front.getY()), -2.0 * (point.getZ() - front.getZ()));
+        return Vector.set(0.0, -2.0 * point.getY(), -2.0 * point.getZ());
     }
 
     @Override
@@ -67,8 +70,8 @@ public class SmoothCylinder extends SmoothCapillar {
                     }
                 }
 
-                y = solution[1] - front.getY();
-                z = solution[2] - front.getZ();
+                y = solution[1];
+                z = solution[2];
 
                 W[0][0] = 0.0;
                 W[0][1] = 2.0 * y;
@@ -120,7 +123,8 @@ public class SmoothCylinder extends SmoothCapillar {
         }
 
         CartesianPoint newCoordinate = new CartesianPoint(solution[0], solution[1], solution[2]);
-        if ((newCoordinate.isNear(p.getCoordinate()) || newCoordinate.getX() <= p.getCoordinate().getX()) && !p.isRecursiveIterationsLimitReached()) {
+        if ((newCoordinate.isNear(p.getCoordinate()) || newCoordinate.getX() <= p.getCoordinate().getX())
+                && !p.isRecursiveIterationsLimitReached()) {
             p.recursiveIteration();
             return getHitPoint(p);
         } else {
@@ -133,13 +137,23 @@ public class SmoothCylinder extends SmoothCapillar {
     }
 
     @Override
-    protected boolean isPointInside(final CartesianPoint point) {
-        return point.getX() < front.getX() + length;
+    public void toInnerRefFrame(Particle particle) {
+        particle.shiftCoordinate(-front.getX(), -front.getY(), -front.getZ());
     }
 
-    public static Capillar.Factory getFactory(double radius, double length, double roughnessSize, double roughnessAngleR,
+    @Override
+    public void toGlobalRefFrame(Particle particle) {
+        particle.shiftCoordinate(front.getX(), front.getY(), front.getZ());
+    }
+
+    @Override
+    protected boolean isPointInside(final CartesianPoint point) {
+        return point.getX() < length;
+    }
+
+    public static CapillarFactory getFactory(double radius, double length, double roughnessSize, double roughnessAngleR,
                                              double reflectivity, double criticalAngleR) {
-        return new Capillar.Factory() {
+        return new CapillarFactory() {
 
             @Override
             public Capillar getNewCapillar(final CartesianPoint coordinate) {

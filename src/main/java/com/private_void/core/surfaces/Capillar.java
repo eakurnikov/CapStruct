@@ -1,20 +1,14 @@
 package com.private_void.core.surfaces;
 
-import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.particles.Particle;
 
 public interface Capillar {
 
-    boolean willParticleGetInside(final Particle p);
-
     void interact(Particle particle);
 
-    interface Factory {
+    boolean willParticleGetInside(final Particle p);
 
-        Capillar getNewCapillar(final CartesianPoint coordinate);
+    void toInnerRefFrame(Particle particle);
 
-        double getRadius();
-
-        double getLength();
-    }
+    void toGlobalRefFrame(Particle particle);
 }

@@ -4,7 +4,9 @@ import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.Atom;
 import com.private_void.core.particles.ChargedParticle;
+import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
+import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.utils.Utils;
 
 import java.util.ArrayList;
@@ -52,13 +54,23 @@ public class AtomicCone extends AtomicCapillar {
     }
 
     @Override
+    public void toInnerRefFrame(Particle particle) {
+        particle.shiftCoordinate(-front.getX(), -front.getY(), -front.getZ());
+    }
+
+    @Override
+    public void toGlobalRefFrame(Particle particle) {
+        particle.shiftCoordinate(front.getX(), front.getY(), front.getZ());
+    }
+
+    @Override
     protected boolean isPointInside(CartesianPoint point) {
         return false;
     }
 
-    public static Capillar.Factory getFactory(final Atom.Factory atomFactory, double period, double chargeNumber,
+    public static CapillarFactory getFactory(final Atom.Factory atomFactory, double period, double chargeNumber,
                                              double radius, double length, double coneCoefficient) {
-        return new Capillar.Factory() {
+        return new CapillarFactory() {
 
             @Override
             public Capillar getNewCapillar(final CartesianPoint coordinate) {

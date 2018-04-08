@@ -148,7 +148,8 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
         }
 
         CartesianPoint newCoordinate = new CartesianPoint(solution);
-        if ((newCoordinate.isNear(p.getCoordinate()) || newCoordinate.getX() <= p.getCoordinate().getX()) && !p.isRecursiveIterationsLimitReached()) {
+        if ((newCoordinate.isNear(p.getCoordinate()) || newCoordinate.getX() <= p.getCoordinate().getX())
+                && !p.isRecursiveIterationsLimitReached()) {
             p.recursiveIteration();
             return getHitPoint(p);
         } else {

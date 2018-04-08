@@ -5,6 +5,8 @@ import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
+import com.private_void.core.surfaces.Capillar;
+import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
 import com.private_void.utils.Utils;
 
 import static com.private_void.utils.Constants.ITERATIONS_MAX;
@@ -123,7 +125,8 @@ public class RotatedSmoothCylinder extends RotatedSmoothCapillar {
         }
 
         CartesianPoint newCoordinate = new CartesianPoint(solution[0], solution[1], solution[2]);
-        if ((newCoordinate.isNear(p.getCoordinate()) || newCoordinate.getX() <= p.getCoordinate().getX()) && !p.isRecursiveIterationsLimitReached()) {
+        if ((newCoordinate.isNear(p.getCoordinate()) || newCoordinate.getX() <= p.getCoordinate().getX())
+                && !p.isRecursiveIterationsLimitReached()) {
             p.recursiveIteration();
             return getHitPoint(p);
         } else {
@@ -133,11 +136,6 @@ public class RotatedSmoothCylinder extends RotatedSmoothCapillar {
             p.stopRecursiveIterations();
             return newCoordinate;
         }
-    }
-
-    @Override
-    protected boolean isPointInside(final CartesianPoint point) {
-        return point.getX() < length;
     }
 
     @Override
@@ -156,12 +154,17 @@ public class RotatedSmoothCylinder extends RotatedSmoothCapillar {
                 .shiftCoordinate(front.getX(), front.getY(), front.getZ());
     }
 
-    public static RotatedCapillar.Factory getFactory(double radius, double length, double roughnessSize, double roughnessAngleR,
+    @Override
+    protected boolean isPointInside(final CartesianPoint point) {
+        return point.getX() < length;
+    }
+
+    public static RotatedCapillarFactory getFactory(double radius, double length, double roughnessSize, double roughnessAngleR,
                                              double reflectivity, double criticalAngleR) {
-        return new RotatedCapillar.Factory() {
+        return new RotatedCapillarFactory() {
 
             @Override
-            public RotatedCapillar getNewCapillar(final CartesianPoint coordinate, final SphericalPoint position) {
+            public Capillar getNewCapillar(final CartesianPoint coordinate, final SphericalPoint position) {
                 return new RotatedSmoothCylinder(coordinate, position, radius, length, roughnessSize, roughnessAngleR,
                         reflectivity, criticalAngleR);
             }

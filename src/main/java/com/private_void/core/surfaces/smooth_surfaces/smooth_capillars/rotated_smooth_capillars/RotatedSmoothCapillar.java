@@ -5,12 +5,13 @@ import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
+import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.smooth_surfaces.SmoothSurface;
 
 import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
-public abstract  class RotatedSmoothCapillar extends SmoothSurface implements RotatedCapillar {
+public abstract  class RotatedSmoothCapillar extends SmoothSurface implements Capillar {
     protected final SphericalPoint position;
     protected final double radius;
     protected final double length;
@@ -26,45 +27,34 @@ public abstract  class RotatedSmoothCapillar extends SmoothSurface implements Ro
     @Override
     public void interact(Particle p) {
         Vector normal;
+        NeutralParticle particle = (NeutralParticle) p;
+        CartesianPoint newCoordinate = getHitPoint(particle);
 
-        toInnerRefFrame(p);
+        while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
+            normal = getNormal(newCoordinate)
+                    .rotateAroundVector(
+                            Vector.E_X.rotateAroundOY(generator().uniformDouble(0.0, 2.0 * PI)),
+                            generator().uniformDouble(0.0, roughnessAngleR));
 
-        try {
-            NeutralParticle particle = (NeutralParticle) p;
-            CartesianPoint newCoordinate = getHitPoint(particle);
+            double angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
+            particle.decreaseIntensity(reflectivity);
 
-            while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
-                normal = getNormal(newCoordinate)
-                        .rotateAroundVector(
-                                Vector.E_X.rotateAroundOY(generator().uniformDouble(0.0, 2.0 * PI)),
-                                generator().uniformDouble(0.0, roughnessAngleR));
-
-                double angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
-                particle.decreaseIntensity(reflectivity);
-
-                if (angleWithSurface <= criticalAngleR) {
-                    particle
-                            .setCoordinate(newCoordinate)
-                            .rotateSpeed(
-                                    getParticleSpeedRotationAxis(newCoordinate, normal),
-                                    2.0 * Math.abs(angleWithSurface));
-                    newCoordinate = getHitPoint(particle);
-                } else {
-                    particle.setAbsorbed(true);
-                    break;
-                }
+            if (angleWithSurface <= criticalAngleR) {
+                particle
+                        .setCoordinate(newCoordinate)
+                        .rotateSpeed(
+                                getParticleSpeedRotationAxis(newCoordinate, normal),
+                                2.0 * Math.abs(angleWithSurface));
+                newCoordinate = getHitPoint(particle);
+            } else {
+                particle.setAbsorbed(true);
+                break;
             }
-        } catch (ClassCastException e) {
-            e.printStackTrace();
         }
-
-        toGlobalRefFrame(p);
     }
 
     @Override
     public boolean willParticleGetInside(Particle p) {
-        toInnerRefFrame(p);
-
         double x = p.getCoordinate().getX();
         double y = p.getCoordinate().getY();
         double z = p.getCoordinate().getZ();
@@ -76,16 +66,7 @@ public abstract  class RotatedSmoothCapillar extends SmoothSurface implements Ro
         double newY = y -(Vy / Vx) * x;
         double newZ = z -(Vz / Vx) * x;
 
-        boolean result = newY * newY + newZ * newZ < radius * radius;
-
-        toGlobalRefFrame(p);
-
-        return result;
-    }
-
-    @Override
-    public SphericalPoint getPosition() {
-        return position;
+        return newY * newY + newZ * newZ < radius * radius;
     }
 
     protected abstract boolean isPointInside(CartesianPoint point);

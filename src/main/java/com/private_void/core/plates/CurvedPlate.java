@@ -4,17 +4,17 @@ import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.coordinates.Point3D;
 import com.private_void.core.geometry.coordinates.SphericalPoint;
-import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedCapillar;
+import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
 
 import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
 public class CurvedPlate extends Plate {
-    private final RotatedCapillar.Factory capillarFactory;
+    private final RotatedCapillarFactory capillarFactory;
     private final double maxAngleR;
     private final double curvRadius;
 
-    public CurvedPlate(final RotatedCapillar.Factory capillarFactory, final CartesianPoint center, double capillarsDensity,
+    public CurvedPlate(final RotatedCapillarFactory capillarFactory, final CartesianPoint center, double capillarsDensity,
                        double maxAngleR, double curvRadius) {
         super(center, capillarFactory.getRadius(), capillarFactory.getLength(), capillarsDensity);
         this.capillarFactory = capillarFactory;

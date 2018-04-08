@@ -37,38 +37,34 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         double angleWithSurface;
 
         for (Particle p : flux.getParticles()) {
-            try {
-                particle = (NeutralParticle) p;
+            particle = (NeutralParticle) p;
 
-                if (willParticleGetInside(particle)) {
-                    newCoordinate = getHitPoint(particle);
+            if (willParticleGetInside(particle)) {
+                newCoordinate = getHitPoint(particle);
 
-                    while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
-                        normal = getNormal(newCoordinate)
-                                .rotateAroundVector(
-                                        Vector.E_X.rotateAroundOY(generator().uniformDouble(0.0, 2.0 * PI)),
-                                        generator().uniformDouble(0.0, roughnessAngleR));
+                while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
+                    normal = getNormal(newCoordinate)
+                            .rotateAroundVector(
+                                    Vector.E_X.rotateAroundOY(generator().uniformDouble(0.0, 2.0 * PI)),
+                                    generator().uniformDouble(0.0, roughnessAngleR));
 
-                        angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
-                        particle.decreaseIntensity(reflectivity);
+                    angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
+                    particle.decreaseIntensity(reflectivity);
 
-                        if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
-                            particle
-                                    .setCoordinate(newCoordinate)
-                                    .rotateSpeed(
-                                            getParticleSpeedRotationAxis(newCoordinate, normal),
-                                            2.0 * Math.abs(angleWithSurface));
-                            newCoordinate = getHitPoint(particle);
-                        } else {
-                            particle.setAbsorbed(true);
-                            break;
-                        }
+                    if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
+                        particle
+                                .setCoordinate(newCoordinate)
+                                .rotateSpeed(
+                                        getParticleSpeedRotationAxis(newCoordinate, normal),
+                                        2.0 * Math.abs(angleWithSurface));
+                        newCoordinate = getHitPoint(particle);
+                    } else {
+                        particle.setAbsorbed(true);
+                        break;
                     }
-                } else {
-                    particle.setOut(true);
                 }
-            } catch (ClassCastException e) {
-                e.printStackTrace();
+            } else {
+                particle.setOut(true);
             }
         }
 

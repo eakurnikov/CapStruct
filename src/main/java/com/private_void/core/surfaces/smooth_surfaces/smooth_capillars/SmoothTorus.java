@@ -3,10 +3,13 @@ package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
+import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
+import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.utils.Utils;
 
-import static com.private_void.utils.Constants.*;
+import static com.private_void.utils.Constants.ITERATIONS_MAX;
+import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
 public class SmoothTorus extends SmoothCapillar {
@@ -30,9 +33,9 @@ public class SmoothTorus extends SmoothCapillar {
 
     @Override
     protected Vector getNormal(final CartesianPoint point) {
-        double x = point.getX() - front.getX();
-        double y = point.getY() - front.getY();
-        double z = point.getZ() - front.getZ() - curvRadius; // + curvRadius сместит влево
+        double x = point.getX();
+        double y = point.getY();
+        double z = point.getZ();
 
         return Vector.set(
                 (-2.0 * (x * x + y * y + z * z + curvRadius * curvRadius - radius * radius) * 2.0 * x
@@ -87,9 +90,9 @@ public class SmoothTorus extends SmoothCapillar {
                     }
                 }
 
-                x = solution[0] - front.getX();
-                y = solution[1] - front.getY();
-                z = solution[2] - front.getZ() - curvRadius;
+                x = solution[0];
+                y = solution[1];
+                z = solution[2];
 
                 W[0][0] = 2 * (x * x + y * y + z * z + curvRadius * curvRadius - r * r) * 2.0 * x
                         - 8 * curvRadius * curvRadius * x;
@@ -146,7 +149,8 @@ public class SmoothTorus extends SmoothCapillar {
         }
 
         CartesianPoint newCoordinate = new CartesianPoint(solution);
-        if ((newCoordinate.isNear(p.getCoordinate()) || newCoordinate.getX() <= p.getCoordinate().getX()) && !p.isRecursiveIterationsLimitReached()) {
+        if ((newCoordinate.isNear(p.getCoordinate()) || newCoordinate.getX() <= p.getCoordinate().getX())
+                && !p.isRecursiveIterationsLimitReached()) {
             p.recursiveIteration();
             return getHitPoint(p);
         } else {
@@ -159,8 +163,18 @@ public class SmoothTorus extends SmoothCapillar {
     }
 
     @Override
+    public void toInnerRefFrame(Particle particle) {
+        particle.shiftCoordinate(-front.getX(), -front.getY(), -front.getZ() - curvRadius); // + curvRadius сместит влево
+    }
+
+    @Override
+    public void toGlobalRefFrame(Particle particle) {
+        particle.shiftCoordinate(front.getX(), front.getY(), front.getZ() + curvRadius);
+    }
+
+    @Override
     protected boolean isPointInside(final CartesianPoint point) {
-        return point.getX() < front.getX() + length;
+        return point.getX() < length;
     }
 
     private double getPointsAngle(final CartesianPoint point) {
@@ -168,12 +182,12 @@ public class SmoothTorus extends SmoothCapillar {
         double y = point.getY();
         double z = point.getZ();
 
-        return Math.asin(x / Math.sqrt(x * x + y * y + (z - curvRadius) * (z - curvRadius)));
+        return Math.asin(x / Math.sqrt(x * x + y * y + z * z));
     }
 
-    public static Capillar.Factory getFactory(double radius, double curvRadius, double curvAngleR, double roughnessSize,
+    public static CapillarFactory getFactory(double radius, double curvRadius, double curvAngleR, double roughnessSize,
                                              double roughnessAngleR, double reflectivity, double criticalAngleR) {
-        return new Capillar.Factory() {
+        return new CapillarFactory() {
 
             @Override
             public Capillar getNewCapillar(final CartesianPoint coordinate) {
@@ -193,9 +207,9 @@ public class SmoothTorus extends SmoothCapillar {
         };
     }
 
-    public static Capillar.Factory getFactoryWithLength(double radius, double length, double curvAngleR, double roughnessSize,
+    public static CapillarFactory getFactoryWithLength(double radius, double length, double curvAngleR, double roughnessSize,
                                              double roughnessAngleR, double reflectivity, double criticalAngleR) {
-        return new Capillar.Factory() {
+        return new CapillarFactory() {
 
             @Override
             public Capillar getNewCapillar(final CartesianPoint coordinate) {
