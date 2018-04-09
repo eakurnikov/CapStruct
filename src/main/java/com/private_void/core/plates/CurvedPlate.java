@@ -3,6 +3,7 @@ package com.private_void.core.plates;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.coordinates.Point3D;
+import com.private_void.core.geometry.coordinates.ReferenceFrame;
 import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
 
@@ -69,9 +70,8 @@ public class CurvedPlate extends Plate {
                         .shift(curvRadius, 0.0, 0.0)
                         .shift(center);
 
-                SphericalPoint position = coordinate.shift(0.0, -PI / 2.0, -PI);
-
-                capillars.add(capillarFactory.getNewCapillar(front, position));
+                capillars.add(capillarFactory.getNewCapillar(front, new ReferenceFrame(
+                        front, coordinate.shift(0.0, -PI / 2.0, -PI))));
 
                 if (i % (capillarsAmount / 10) == 0.0) System.out.println("    ... " + (i * 100 / capillarsAmount) + "% capillars created");
             }

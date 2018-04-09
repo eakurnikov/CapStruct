@@ -49,6 +49,10 @@ public class CartesianPoint implements Point3D {
         return new CartesianPoint(this.x + point.x, this.y + point.y, this.z + point.z);
     }
 
+    public CartesianPoint inverse() {
+        return new CartesianPoint(-x, -y, -z);
+    }
+
     public double getX() {
         return x;
     }

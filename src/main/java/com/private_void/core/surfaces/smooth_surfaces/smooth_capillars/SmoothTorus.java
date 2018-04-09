@@ -3,7 +3,6 @@ package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
-import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.utils.Utils;
@@ -160,16 +159,6 @@ public class SmoothTorus extends SmoothCapillar {
             p.stopRecursiveIterations();
             return newCoordinate;
         }
-    }
-
-    @Override
-    public void toInnerRefFrame(Particle particle) {
-        particle.shiftCoordinate(-front.getX(), -front.getY(), -front.getZ() - curvRadius); // + curvRadius сместит влево
-    }
-
-    @Override
-    public void toGlobalRefFrame(Particle particle) {
-        particle.shiftCoordinate(front.getX(), front.getY(), front.getZ() + curvRadius);
     }
 
     @Override

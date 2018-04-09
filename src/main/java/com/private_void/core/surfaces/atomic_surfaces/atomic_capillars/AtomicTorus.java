@@ -4,7 +4,6 @@ import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.Atom;
 import com.private_void.core.particles.ChargedParticle;
-import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.utils.Utils;
@@ -50,16 +49,6 @@ public class AtomicTorus extends AtomicCapillar {
     @Override
     protected CartesianPoint getNewCoordinate(final ChargedParticle p) {
         return null;
-    }
-
-    @Override
-    public void toInnerRefFrame(Particle particle) {
-        particle.shiftCoordinate(-front.getX(), -front.getY(), -front.getZ());
-    }
-
-    @Override
-    public void toGlobalRefFrame(Particle particle) {
-        particle.shiftCoordinate(front.getX(), front.getY(), front.getZ());
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.private_void.core.plates;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.coordinates.Point3D;
+import com.private_void.core.geometry.coordinates.ReferenceFrame;
 import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
 
@@ -58,9 +59,8 @@ public class InclinedPlate extends Plate {
                 } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
 
                 capillarsCenters[i] = coordinate;
-                capillars.add(capillarFactory.getNewCapillar(
-                        coordinate,
-                        new SphericalPoint(1_000, Math.toRadians(15.0), Math.toRadians(15.0))));
+                capillars.add(capillarFactory.getNewCapillar(coordinate, new ReferenceFrame(
+                        coordinate, new SphericalPoint(1_000, Math.toRadians(15.0), Math.toRadians(15.0)))));
 
                 if (i % (capillarsAmount / 10) == 0.0) System.out.println("    ... " + (i * 100 / capillarsAmount) + "% capillars created");
             }

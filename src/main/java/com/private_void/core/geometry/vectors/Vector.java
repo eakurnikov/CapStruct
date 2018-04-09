@@ -52,6 +52,10 @@ public class Vector extends CartesianPoint {
         return RotationMatrix.aroundOY(angle).rotate(this);
     }
 
+    public Vector rotateAroundOZ(double angle) {
+        return RotationMatrix.aroundOZ(angle).rotate(this);
+    }
+
     public Vector rotateAroundVector(final Vector vector, double angle) {
         return RotationMatrix.aroundVector(vector, angle).rotate(this);
     }

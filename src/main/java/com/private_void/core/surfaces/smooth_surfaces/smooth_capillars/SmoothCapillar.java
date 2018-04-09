@@ -1,6 +1,7 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.ReferenceFrame;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
@@ -11,12 +12,14 @@ import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
 public abstract  class SmoothCapillar extends SmoothSurface implements Capillar {
+    protected final ReferenceFrame refFrame;
     protected final double radius;
     protected final double length;
 
     protected SmoothCapillar(final CartesianPoint front, double radius, double length,
                              double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
         super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        this.refFrame = new ReferenceFrame(front);
         this.radius = radius;
         this.length = length;
     }
@@ -64,6 +67,11 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
         double newZ = z - x * (Vz / Vx);
 
         return newY * newY + newZ * newZ < radius * radius;
+    }
+
+    @Override
+    public ReferenceFrame getReferenceFrame() {
+        return refFrame;
     }
 
     protected abstract boolean isPointInside(CartesianPoint point);

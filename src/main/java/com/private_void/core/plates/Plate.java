@@ -4,8 +4,7 @@ import com.private_void.core.detectors.Detector;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.coordinates.Point3D;
-import com.private_void.core.geometry.coordinates.SphericalPoint;
-import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.geometry.coordinates.ReferenceFrame;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarSystem;
@@ -34,32 +33,32 @@ public abstract class Plate implements CapillarSystem {
         this.capillars = new ArrayList<>();
     }
 
-    public void testInteract(Flux flux) {
-        System.out.println("Particles-capillars interaction start ...");
-        long start = System.nanoTime();
-
-        int particlesCounter = 0;
-        int particlesAmount = flux.getParticles().size();
-
-        for (Particle particle : flux.getParticles()) {
-            if (particlesCounter % (particlesAmount / 10) == 0.0) System.out.println("    ... " + (particlesCounter * 100 / particlesAmount) + "% paricles processed");
-            particlesCounter++;
-
-            SphericalPoint position = new SphericalPoint(1_000, Math.toRadians(45.0), Math.toRadians(45.0));
-
-            particle
-                    .rotateRefFrameAroundVector(Vector.E_Y, -position.getTheta())
-                    .rotateRefFrameAroundVector(Vector.E_Z, -position.getPhi());
-
-            particle
-                    .rotateRefFrameAroundVector(Vector.E_Z, position.getPhi())
-                    .rotateRefFrameAroundVector(Vector.E_Y, position.getTheta());
-        }
-
-        long finish = System.nanoTime();
-        System.out.println("Particles-capillars interaction finish. Total time = " + (finish - start) / 1_000_000 + " ms");
-        System.out.println();
-    }
+//    public void testInteract(Flux flux) {
+//        System.out.println("Particles-capillars interaction start ...");
+//        long start = System.nanoTime();
+//
+//        int particlesCounter = 0;
+//        int particlesAmount = flux.getParticles().size();
+//
+//        for (Particle particle : flux.getParticles()) {
+//            if (particlesCounter % (particlesAmount / 10) == 0.0) System.out.println("    ... " + (particlesCounter * 100 / particlesAmount) + "% paricles processed");
+//            particlesCounter++;
+//
+//            SphericalPoint position = new SphericalPoint(1_000, Math.toRadians(45.0), Math.toRadians(45.0));
+//
+//            particle
+//                    .rotateRefFrameAroundVector(Vector.E_Y, -position.getTheta())
+//                    .rotateRefFrameAroundVector(Vector.E_Z, -position.getPhi());
+//
+//            particle
+//                    .rotateRefFrameAroundVector(Vector.E_Z, position.getPhi())
+//                    .rotateRefFrameAroundVector(Vector.E_Y, position.getTheta());
+//        }
+//
+//        long finish = System.nanoTime();
+//        System.out.println("Particles-capillars interaction finish. Total time = " + (finish - start) / 1_000_000 + " ms");
+//        System.out.println();
+//    }
 
     @Override
     public void interact(Flux flux) {
@@ -80,16 +79,16 @@ public abstract class Plate implements CapillarSystem {
             particlesCounter++;
 
             for (Capillar capillar : capillars) {
-                capillar.toInnerRefFrame(particle);
+                particle.toReferenceFrame(capillar.getReferenceFrame());
 
                 if (capillar.willParticleGetInside(particle)) {
                     capillar.interact(particle);
-                    capillar.toGlobalRefFrame(particle);
+                    particle.toReferenceFrame(ReferenceFrame.GLOBAL);
                     isOut = false;
                     break;
                 }
 
-                capillar.toGlobalRefFrame(particle);
+                particle.toReferenceFrame(ReferenceFrame.GLOBAL);
             }
 
             particle.setOut(isOut);

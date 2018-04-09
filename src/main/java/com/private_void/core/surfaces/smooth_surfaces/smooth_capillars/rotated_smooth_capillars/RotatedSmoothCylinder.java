@@ -1,10 +1,9 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.coordinates.SphericalPoint;
+import com.private_void.core.geometry.coordinates.ReferenceFrame;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
-import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
 import com.private_void.utils.Utils;
@@ -15,9 +14,9 @@ import static com.private_void.utils.Generator.generator;
 
 public class RotatedSmoothCylinder extends RotatedSmoothCapillar {
 
-    public RotatedSmoothCylinder(final CartesianPoint front, final SphericalPoint position, double radius, double length,
+    public RotatedSmoothCylinder(final CartesianPoint front, final ReferenceFrame refFrame, double radius, double length,
                                  double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
-        super(front, position, radius, length, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        super(front, refFrame, radius, length, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
     }
 
     @Override
@@ -139,22 +138,6 @@ public class RotatedSmoothCylinder extends RotatedSmoothCapillar {
     }
 
     @Override
-    public void toInnerRefFrame(Particle particle) {
-        particle
-                .shiftCoordinate(-front.getX(), -front.getY(), -front.getZ())
-                .rotateRefFrameAroundOY(position.getTheta())
-                .rotateRefFrameAroundOZ(-position.getPhi());
-    }
-
-    @Override
-    public void toGlobalRefFrame(Particle particle) {
-        particle
-                .rotateRefFrameAroundOZ(position.getPhi())
-                .rotateRefFrameAroundOY(-position.getTheta())
-                .shiftCoordinate(front.getX(), front.getY(), front.getZ());
-    }
-
-    @Override
     protected boolean isPointInside(final CartesianPoint point) {
         return point.getX() < length;
     }
@@ -164,8 +147,8 @@ public class RotatedSmoothCylinder extends RotatedSmoothCapillar {
         return new RotatedCapillarFactory() {
 
             @Override
-            public Capillar getNewCapillar(final CartesianPoint coordinate, final SphericalPoint position) {
-                return new RotatedSmoothCylinder(coordinate, position, radius, length, roughnessSize, roughnessAngleR,
+            public Capillar getNewCapillar(final CartesianPoint coordinate, final ReferenceFrame refFrame) {
+                return new RotatedSmoothCylinder(coordinate, refFrame, radius, length, roughnessSize, roughnessAngleR,
                         reflectivity, criticalAngleR);
             }
 

@@ -1,5 +1,6 @@
 package com.private_void.core.surfaces;
 
+import com.private_void.core.geometry.coordinates.ReferenceFrame;
 import com.private_void.core.particles.Particle;
 
 public interface Capillar {
@@ -8,7 +9,5 @@ public interface Capillar {
 
     boolean willParticleGetInside(final Particle p);
 
-    void toInnerRefFrame(Particle particle);
-
-    void toGlobalRefFrame(Particle particle);
+    ReferenceFrame getReferenceFrame();
 }
