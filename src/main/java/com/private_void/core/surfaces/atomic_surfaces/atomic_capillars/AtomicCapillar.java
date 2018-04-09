@@ -15,10 +15,9 @@ public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
     public AtomicCapillar(final Atom.Factory atomFactory, final CartesianPoint front, double period, double chargeNumber,
                           double radius, double length) {
         super(atomFactory, front, period, chargeNumber);
-        this.refFrame = new ReferenceFrame(front);
+        this.refFrame = ReferenceFrame.builder().atPoint(front).build();
         this.radius = radius;
         this.length = length;
-
     }
 
     @Override

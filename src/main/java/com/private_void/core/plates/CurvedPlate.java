@@ -70,8 +70,12 @@ public class CurvedPlate extends Plate {
                         .shift(curvRadius, 0.0, 0.0)
                         .shift(center);
 
-                capillars.add(capillarFactory.getNewCapillar(front, new ReferenceFrame(
-                        front, coordinate.shift(0.0, -PI / 2.0, -PI))));
+                capillars.add(capillarFactory.getNewCapillar(front,
+                        ReferenceFrame.builder()
+                                .atPoint(front)
+                                .setAngleAroundOY(coordinate.getTheta() - PI / 2.0)
+                                .setAngleAroundOZ(-coordinate.getPhi() - PI)
+                                .build()));
 
                 if (i % (capillarsAmount / 10) == 0.0) System.out.println("    ... " + (i * 100 / capillarsAmount) + "% capillars created");
             }

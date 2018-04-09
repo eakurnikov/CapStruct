@@ -1,6 +1,7 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.ReferenceFrame;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.surfaces.Capillar;
@@ -17,15 +18,38 @@ public class SmoothTorus extends SmoothCapillar {
 
     public SmoothTorus(final CartesianPoint front, double radius, double curvRadius, double curvAngleR, double roughnessSize,
                        double roughnessAngleR, double reflectivity, double criticalAngleR) {
-        super(front, radius, Utils.getTorusLength(curvRadius, curvAngleR),
-                roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        super(front,
+                ReferenceFrame.builder()
+                        .setShiftX(-front.getX())
+                        .setShiftY(-front.getY())
+                        .setShiftZ(-front.getZ() - curvRadius)
+                        .build(),
+                radius,
+                Utils.getTorusLength(curvRadius, curvAngleR),
+                roughnessSize,
+                roughnessAngleR,
+                reflectivity,
+                criticalAngleR);
+
         this.curvRadius = curvRadius;
         this.curvAngleR = curvAngleR;
     }
 
     public SmoothTorus(double length, final CartesianPoint front, double radius, double curvAngleR, double roughnessSize,
                        double roughnessAngleR, double reflectivity, double criticalAngleR) {
-        super(front, radius, length, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        super(front,
+                ReferenceFrame.builder()
+                        .setShiftX(-front.getX())
+                        .setShiftY(-front.getY())
+                        .setShiftZ(-front.getZ() - Utils.getTorusCurvRadius(length, curvAngleR))
+                        .build(),
+                radius,
+                length,
+                roughnessSize,
+                roughnessAngleR,
+                reflectivity,
+                criticalAngleR);
+
         this.curvRadius = Utils.getTorusCurvRadius(length, curvAngleR);
         this.curvAngleR = curvAngleR;
     }

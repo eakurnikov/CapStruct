@@ -1,6 +1,7 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.ReferenceFrame;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.surfaces.Capillar;
@@ -18,8 +19,18 @@ public class SmoothCone extends SmoothCapillar {
                       double roughnessAngleR, double reflectivity, double criticalAngleR)
             throws IllegalArgumentException {
 
-        super(front, radius, Utils.getConeLength(radius, divergentAngleR, coneCoefficient),
-                roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        super(front,
+                ReferenceFrame.builder()
+                        .setShiftX(-front.getX())
+                        .setShiftY(-front.getY())
+                        .setShiftZ(-front.getZ())
+                        .build(),
+                radius,
+                Utils.getConeLength(radius, divergentAngleR, coneCoefficient),
+                roughnessSize,
+                roughnessAngleR,
+                reflectivity,
+                criticalAngleR);
 
         if (coneCoefficient >= 1.0 || coneCoefficient <= 0.0) {
             throw new IllegalArgumentException();
@@ -31,7 +42,9 @@ public class SmoothCone extends SmoothCapillar {
                       double roughnessAngleR, double reflectivity, double criticalAngleR)
             throws IllegalArgumentException {
 
-        super(front, radius, length, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        super(front, ReferenceFrame.builder().atPoint(front).build(), radius, length,
+                roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+
         if (coneCoefficient >= 1.0 || coneCoefficient <= 0.0) {
             throw new IllegalArgumentException();
         }

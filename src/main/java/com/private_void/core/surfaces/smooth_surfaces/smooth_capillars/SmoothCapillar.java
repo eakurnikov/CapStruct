@@ -16,10 +16,10 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
     protected final double radius;
     protected final double length;
 
-    protected SmoothCapillar(final CartesianPoint front, double radius, double length,
+    protected SmoothCapillar(final CartesianPoint front, final ReferenceFrame refFrame, double radius, double length,
                              double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
         super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
-        this.refFrame = new ReferenceFrame(front);
+        this.refFrame = refFrame;
         this.radius = radius;
         this.length = length;
     }

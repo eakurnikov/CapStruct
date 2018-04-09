@@ -178,8 +178,8 @@ public class MainController {
         successLabel.setVisible(false);
 
         Flux flux = createFlux();
-//        CapillarSystem system = createPlate();
-        CapillarSystem system = createCapillar();
+        CapillarSystem system = createPlate();
+//        CapillarSystem system = createCapillar();
         Detector detector = system.getDetector();
 
         system.interact(flux);
@@ -219,7 +219,7 @@ public class MainController {
 
             return new ParallelFlux(
                     neutralParticleFactory,
-                    gaussDistribution,
+                    circleUniformDistribution,
                     new CartesianPoint(x, y, z),
                     Vector.set(axisX, axisY, axisZ),
                     layersAmount,

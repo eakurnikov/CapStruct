@@ -1,6 +1,7 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.ReferenceFrame;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.surfaces.Capillar;
@@ -15,7 +16,8 @@ public class SmoothCylinder extends SmoothCapillar {
 
     public SmoothCylinder(final CartesianPoint front, double radius, double length, double roughnessSize, double roughnessAngleR,
                           double reflectivity, double criticalAngleR) {
-        super(front, radius, length, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+        super(front, ReferenceFrame.builder().atPoint(front).build(), radius, length,
+                roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
     }
 
     @Override

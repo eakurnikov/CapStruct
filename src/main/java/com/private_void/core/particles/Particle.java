@@ -45,15 +45,15 @@ public abstract class Particle {
         }
 
         if (refFrame == ReferenceFrame.GLOBAL) {
-            RotationMatrix matrixZ = RotationMatrix.aroundOZ(-this.refFrame.getAngleWithOZ());
+            RotationMatrix matrixZ = RotationMatrix.aroundOZ(-this.refFrame.getAngleAroundOZ());
             coordinate = matrixZ.rotate(coordinate);
             speed = matrixZ.rotate(speed);
 
-            RotationMatrix matrixY = RotationMatrix.aroundOY(-this.refFrame.getAngleWithOY());
+            RotationMatrix matrixY = RotationMatrix.aroundOY(-this.refFrame.getAngleAroundOY());
             coordinate = matrixY.rotate(coordinate);
             speed = matrixY.rotate(speed);
 
-            RotationMatrix matrixX = RotationMatrix.aroundOX(-this.refFrame.getAngleWithOX());
+            RotationMatrix matrixX = RotationMatrix.aroundOX(-this.refFrame.getAngleAroundOX());
             coordinate = matrixX.rotate(coordinate);
             speed = matrixX.rotate(speed);
 
@@ -61,15 +61,15 @@ public abstract class Particle {
         } else {
             coordinate = coordinate.shift(refFrame.getShiftX(), refFrame.getShiftY(), refFrame.getShiftZ());
 
-            RotationMatrix matrixX = RotationMatrix.aroundOX(refFrame.getAngleWithOX());
+            RotationMatrix matrixX = RotationMatrix.aroundOX(refFrame.getAngleAroundOX());
             coordinate = matrixX.rotate(coordinate);
             speed = matrixX.rotate(speed);
 
-            RotationMatrix matrixY = RotationMatrix.aroundOY(refFrame.getAngleWithOY());
+            RotationMatrix matrixY = RotationMatrix.aroundOY(refFrame.getAngleAroundOY());
             coordinate = matrixY.rotate(coordinate);
             speed = matrixY.rotate(speed);
 
-            RotationMatrix matrixZ = RotationMatrix.aroundOZ(refFrame.getAngleWithOZ());
+            RotationMatrix matrixZ = RotationMatrix.aroundOZ(refFrame.getAngleAroundOZ());
             coordinate = matrixZ.rotate(coordinate);
             speed = matrixZ.rotate(speed);
         }
