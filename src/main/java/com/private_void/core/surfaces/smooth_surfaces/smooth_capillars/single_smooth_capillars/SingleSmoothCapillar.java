@@ -1,5 +1,6 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars;
 
+import com.private_void.app.Logger;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
@@ -29,7 +30,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
 
     @Override
     public void interact(Flux flux) {
-        long start = System.nanoTime();
+        Logger.interactionStart();
 
         NeutralParticle particle;
         CartesianPoint newCoordinate;
@@ -68,12 +69,11 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
             }
         }
 
-        long finish = System.nanoTime();
-        System.out.println("time = " + (finish - start) / 1_000_000 + " ms");
+        Logger.interactionFinish();
     }
 
     public void interactParallel(Flux flux) {
-        long start = System.nanoTime();
+        Logger.interactionStart();
 
         ExecutorService exec = Executors.newFixedThreadPool(4);
 
@@ -133,12 +133,11 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
             e.printStackTrace();
         }
 
-        long finish = System.nanoTime();
-        System.out.println("time = " + (finish - start) / 1_000_000 + " ms");
+        Logger.interactionFinish();
     }
 
     public void interactStream(Flux flux) {
-        long start = System.nanoTime();
+        Logger.interactionStart();
 
         flux.getParticles().forEach(p -> {
             NeutralParticle particle = (NeutralParticle) p;
@@ -173,12 +172,11 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
             }
         });
 
-        long finish = System.nanoTime();
-        System.out.println("time = " + (finish - start) / 1_000_000 + " ms");
+        Logger.interactionFinish();
     }
 
     public void interactFork(Flux flux) {
-        long start = System.nanoTime();
+        Logger.interactionStart();
 
         class Interaction extends RecursiveAction {
             private List<? extends Particle> particles;
@@ -244,8 +242,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         ForkJoinPool pool = new ForkJoinPool();
         pool.invoke(interaction);
 
-        long finish = System.nanoTime();
-        System.out.println("time = " + (finish - start) / 1_000_000 + " ms");
+        Logger.interactionFinish();
     }
 
     @Override

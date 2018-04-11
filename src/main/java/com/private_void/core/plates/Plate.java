@@ -1,5 +1,6 @@
 package com.private_void.core.plates;
 
+import com.private_void.app.Logger;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
@@ -19,7 +20,6 @@ public abstract class Plate implements CapillarSystem {
     protected final double width;
     protected final double capillarRadius;
     protected final double capillarsDensity;
-
 
     protected int capillarsAmount;
     protected List<Capillar> capillars;
@@ -62,8 +62,7 @@ public abstract class Plate implements CapillarSystem {
 
     @Override
     public void interact(Flux flux) {
-        System.out.println("Particles-capillars interaction start ...");
-        long start = System.nanoTime();
+        Logger.interactionStart();
 
         boolean isOut;
 
@@ -74,7 +73,7 @@ public abstract class Plate implements CapillarSystem {
             isOut = true;
 
             if (particlesCounter % (particlesAmount / 10) == 0.0) {
-                System.out.println("    ... " + (particlesCounter * 100 / particlesAmount) + "% paricles processed");
+                Logger.processedParticlesPercent(particlesCounter * 100 / particlesAmount);
             }
             particlesCounter++;
 
@@ -94,9 +93,7 @@ public abstract class Plate implements CapillarSystem {
             particle.setOut(isOut);
         }
 
-        long finish = System.nanoTime();
-        System.out.println("Particles-capillars interaction finish. Total time = " + (finish - start) / 1_000_000 + " ms");
-        System.out.println();
+        Logger.interactionFinish();
     }
 
     @Override

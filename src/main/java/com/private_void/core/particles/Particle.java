@@ -12,6 +12,7 @@ public abstract class Particle {
     protected double trace;
     protected boolean absorbed;
     protected boolean out;
+    protected boolean deleted;
 
     protected Particle(final CartesianPoint coordinate, final Vector speed) {
         this.coordinate = coordinate;
@@ -20,6 +21,7 @@ public abstract class Particle {
         this.trace = 0.0;
         this.absorbed = false;
         this.out = false;
+        this.deleted = false;
     }
 
 //    @Override
@@ -116,6 +118,14 @@ public abstract class Particle {
 
     public void setOut(boolean out) {
         this.out = out;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void delete() {
+        deleted = true;
     }
 
     public double getTrace() {

@@ -1,5 +1,6 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars;
 
+import com.private_void.app.Logger;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.coordinates.ReferenceFrame;
 import com.private_void.core.geometry.vectors.Vector;
@@ -63,7 +64,8 @@ public class RotatedSmoothCylinder extends RotatedSmoothCapillar {
                 iterationsAmount++;
                 if (iterationsAmount > ITERATIONS_MAX) {
                     if (p.isRecursiveIterationsLimitReached()) {
-                        p.setAbsorbed(true);
+                        Logger.particleDeleted();
+                        p.delete();
                         return p.getCoordinate();
                     } else {
                         p.recursiveIteration();
@@ -130,7 +132,8 @@ public class RotatedSmoothCylinder extends RotatedSmoothCapillar {
             return getHitPoint(p);
         } else {
             if (p.isRecursiveIterationsLimitReached()) {
-                p.setAbsorbed(true);
+                Logger.particleDeleted();
+                p.delete();
             }
             p.stopRecursiveIterations();
             return newCoordinate;

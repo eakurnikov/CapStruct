@@ -1,9 +1,9 @@
 package com.private_void.core.fluxes;
 
+import com.private_void.app.Logger;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.Particle;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,6 @@ import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
 public class DivergentFlux extends Flux {
-
     public DivergentFlux(final Particle.Factory particleFactory, final CartesianPoint.Factory coordinateFactory,
                          final CartesianPoint fluxCoordinate, final Vector fluxAxis,
                          int particlesAmount, double minIntensity) {
@@ -23,6 +22,8 @@ public class DivergentFlux extends Flux {
 
     @Override
     protected void createParticles() {
+        Logger.fluxCreationStart();
+
         List<Particle> newParticles = new ArrayList<>();
 
         for (int i = 0; i < particlesAmount; i++) {
@@ -36,5 +37,7 @@ public class DivergentFlux extends Flux {
         }
 
         particles = newParticles;
+
+        Logger.fluxCreationFinish();
     }
 }

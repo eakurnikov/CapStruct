@@ -494,6 +494,8 @@ public class MainController {
     }
 
     private void showResult(Flux flux, Detector detector) {
+        Logger.renderingStart();
+
         XYChart.Series series = new XYChart.Series();
         series.setName("Particles");
         if (detector instanceof RotatedDetector) {
@@ -519,6 +521,8 @@ public class MainController {
         outOfDetectorAmount.setText(String.valueOf(detector.getOutOfDetectorAmount()));
 
         successLabel.setVisible(true);
+
+        Logger.renderingFinish();
     }
 
     private void setChartScale(double upperBound, double lowerBound) {

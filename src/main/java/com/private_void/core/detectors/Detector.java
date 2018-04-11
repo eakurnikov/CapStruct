@@ -1,5 +1,6 @@
 package com.private_void.core.detectors;
 
+import com.private_void.app.Logger;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.particles.Particle;
@@ -17,6 +18,7 @@ public class Detector {
     protected int absorbedAmount;
     protected int outOfCapillarsAmount;
     protected int outOfDetectorAmount;
+    protected int deletedAmount;
 
     private double L;
 
@@ -33,41 +35,44 @@ public class Detector {
         outOfDetectorAmount = 0;
         absorbedAmount = 0;
         outOfCapillarsAmount = 0;
+        deletedAmount = 0;
     }
 
     public void detect(Flux flux) {
-        long start = System.nanoTime();
+        Logger.detectingParticlesStart();
 
         init();
         List<Particle> detectedParticles = new ArrayList<>();
 
         for (Particle particle : flux.getParticles()) {
 
-            if (!particle.isOut()) {
+            if (!particle.isDeleted()) {
+                if (!particle.isOut()) {
+                    if (!particle.isAbsorbed()) {
 
-                if (!particle.isAbsorbed()) {
-                    particle.setCoordinate(getCoordinateOnDetector(particle));
+                        particle.setCoordinate(getCoordinateOnDetector(particle));
 
-                    if (isParticleWithinBorders(particle)) {
-                        detectedAmount++;
-                        detectedParticles.add(particle);
+                        if (isParticleWithinBorders(particle)) {
+                            detectedAmount++;
+                            detectedParticles.add(particle);
+                        } else {
+                            outOfDetectorAmount++;
+                        }
                     } else {
-                        outOfDetectorAmount++;
+                        absorbedAmount++;
                     }
                 } else {
-                    absorbedAmount++;
+                    outOfCapillarsAmount++;
                 }
             } else {
-                outOfCapillarsAmount++;
+                deletedAmount++;
             }
         }
 
         computeScatter(detectedParticles);
         flux.setParticles(detectedParticles);
 
-        long finish = System.nanoTime();
-        System.out.println("Detecting particles time = " + (finish - start) / 1_000_000 + " ms");
-        System.out.println();
+        Logger.detectingParticlesFinish();
     }
 
     protected CartesianPoint getCoordinateOnDetector(Particle p) {
@@ -139,5 +144,9 @@ public class Detector {
 
     public int getOutOfDetectorAmount() {
         return outOfDetectorAmount;
+    }
+
+    public int getDeletedAmount() {
+        return deletedAmount;
     }
 }

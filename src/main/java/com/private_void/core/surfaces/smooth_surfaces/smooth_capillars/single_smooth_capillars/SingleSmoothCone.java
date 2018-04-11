@@ -1,5 +1,6 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars;
 
+import com.private_void.app.Logger;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.vectors.Vector;
@@ -84,7 +85,8 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
                 iterationsAmount++;
                 if (iterationsAmount > ITERATIONS_MAX) {
                     if (p.isRecursiveIterationsLimitReached()) {
-                        p.setAbsorbed(true);
+                        Logger.particleDeleted();
+                        p.delete();
                         return p.getCoordinate();
                     } else {
                         p.recursiveIteration();
@@ -154,7 +156,8 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
             return getHitPoint(p);
         } else {
             if (p.isRecursiveIterationsLimitReached()) {
-                p.setAbsorbed(true);
+                Logger.particleDeleted();
+                p.delete();
             }
             p.stopRecursiveIterations();
             return newCoordinate;
