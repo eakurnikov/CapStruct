@@ -2,7 +2,7 @@ package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
 import com.private_void.app.Logger;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.coordinates.ReferenceFrame;
+import com.private_void.core.geometry.reference_frames.ReferenceFrame;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.surfaces.Capillar;

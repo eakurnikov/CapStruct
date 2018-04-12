@@ -328,7 +328,7 @@ public class MainController {
             double capillarCriticalAngleD = Double.parseDouble(torSlideAngle.getText());
             double capillarCriticalAngleR = Math.toRadians(capillarCriticalAngleD);
 
-            double plateCapillarsDensity = 0.0034; //for radius = 7
+            double plateCapillarsDensity = 0.0032; //for radius = 7
 //          double plateCapillarsDensity = 0.0025; //for radius < 10 for domains
 
             double plateSideLength = 300.0;
@@ -366,8 +366,7 @@ public class MainController {
                     rotatedSmoothTorusFactoryWithRadius,
                     new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
                     plateCapillarsDensity,
-                    plateSideLength,
-                    plateMaxAngleR);
+                    capillarCurvAngleR);
         }
 
         return null;

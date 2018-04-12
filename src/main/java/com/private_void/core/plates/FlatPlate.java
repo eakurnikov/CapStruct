@@ -27,7 +27,7 @@ public class FlatPlate extends Plate {
     protected void createCapillars() {
         Logger.creatingCapillarsStart();
 
-        double frontSquare = sideLength * sideLength;
+        double frontSquare = Math.PI * sideLength * sideLength / 4.0;
         double minCapillarSquare = (2.0 * capillarRadius) * (2.0 * capillarRadius);
         double maxCapillarDensity = 1.0 / minCapillarSquare;
 
@@ -35,22 +35,41 @@ public class FlatPlate extends Plate {
             Logger.capillarsDensityTooBig(maxCapillarDensity);
 
             capillarsAmount = (int) (frontSquare / minCapillarSquare);
-            // todo заполняю сеткой впритирку
-            capillars = null;
+            int capillarsCounter = 0;
+            int pool = (int) (sideLength / (2.0 * capillarRadius));
+            double plateRadius = sideLength / 2.0;
 
+            CartesianPoint initialPoint = center.shift(0.0, -plateRadius + capillarRadius, -plateRadius + capillarRadius);
+
+            for (int i = 0; i < pool + 1; i++) {
+                for (int j = 0; j < pool; j++) {
+
+                    CartesianPoint coordinate = initialPoint.shift(
+                            0.0, i * 2.0 * capillarRadius, j * 2.0 * capillarRadius);
+
+                    if (      (coordinate.getY() - center.getY()) * (coordinate.getY() - center.getY())
+                            + (coordinate.getZ() - center.getZ()) * (coordinate.getZ() - center.getZ())
+                            < (plateRadius - capillarRadius) * (plateRadius - capillarRadius)) {
+
+                        capillars.add(capillarFactory.getNewCapillar(coordinate));
+
+                        if (++capillarsCounter % (capillarsAmount / 10) == 0.0) {
+                            Logger.createdCapillarsPercent(i * 100 / capillarsAmount);
+                        }
+                    }
+                }
+            }
         } else if (capillarsDensity > 0.67 * maxCapillarDensity) {
             Logger.capillarsDensityTooBig(maxCapillarDensity);
 
-            /*todo capillarsAmount = ...
-            заполняю сеткой с каким-то шагом*/
-            capillars = null;
+
 
         } else {
             capillarsAmount = (int) (capillarsDensity * frontSquare);
 
             CartesianPoint.Factory coordinateFactory = generator().getXFlatUniformDistribution(center,
-                    sideLength / 2 - capillarRadius,
-                    sideLength / 2 - capillarRadius);
+                    sideLength / 2.0 - capillarRadius,
+                    sideLength / 2.0 - capillarRadius);
 
             CartesianPoint[] capillarsCenters = new CartesianPoint[capillarsAmount];
             CartesianPoint coordinate;

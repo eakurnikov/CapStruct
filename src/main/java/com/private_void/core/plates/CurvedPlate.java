@@ -4,7 +4,7 @@ import com.private_void.app.Logger;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.coordinates.Point3D;
-import com.private_void.core.geometry.coordinates.ReferenceFrame;
+import com.private_void.core.geometry.reference_frames.ReferenceFrame;
 import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
 

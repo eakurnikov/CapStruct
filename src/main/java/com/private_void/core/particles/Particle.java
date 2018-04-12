@@ -1,7 +1,7 @@
 package com.private_void.core.particles;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.coordinates.ReferenceFrame;
+import com.private_void.core.geometry.reference_frames.ReferenceFrame;
 import com.private_void.core.geometry.rotation_matrix.RotationMatrix;
 import com.private_void.core.geometry.vectors.Vector;
 

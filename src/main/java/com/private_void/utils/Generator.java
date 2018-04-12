@@ -148,4 +148,12 @@ public class Generator {
                 uniformDouble(0.0, 2.0 * Math.PI),
                 0.0);
     }
+
+    public CylindricalPoint.Factory getRadialUniformDistribution(final CylindricalPoint center, double radiusRange) {
+        return () -> new CylindricalPoint(
+                uniformDouble(0.0, radiusRange),
+                uniformDouble(0.0, 2.0 * Math.PI),
+                0.0)
+                .shift(center);
+    }
 }

@@ -1,4 +1,6 @@
-package com.private_void.core.geometry.coordinates;
+package com.private_void.core.geometry.reference_frames;
+
+import com.private_void.core.geometry.coordinates.CartesianPoint;
 
 public class ReferenceFrame {
     public static final ReferenceFrame GLOBAL = new ReferenceFrame(
@@ -110,4 +112,21 @@ public class ReferenceFrame {
             return new ReferenceFrame(shiftX, shiftY, shiftZ, angleAroundOX, angleAroundOY, angleAroundOZ);
         }
     }
+
+//    public static abstract class Converter<T extends CartesianPoint> {
+//        protected final T obj;
+//        protected ReferenceFrame refFrame;
+//
+//        protected Converter(final T obj) {
+//            this.obj = obj;
+//            this.refFrame = ReferenceFrame.GLOBAL;
+//        }
+//
+//        protected Converter(final T obj, final ReferenceFrame refFrame) {
+//            this.obj = obj;
+//            this.refFrame = refFrame;
+//        }
+//
+//        public abstract T convert(final ReferenceFrame refFrame);
+//    }
 }
