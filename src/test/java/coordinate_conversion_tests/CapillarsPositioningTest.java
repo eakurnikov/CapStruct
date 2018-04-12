@@ -1,22 +1,25 @@
-//package coordinate_conversion_tests;
-//
-//import com.private_void.core.geometry.coordinates.CartesianPoint;
-//import com.private_void.core.geometry.coordinates.SphericalPoint;
-//import com.private_void.core.plates.CurvedPlate;
-//import com.private_void.core.surfaces.Capillar;
-//import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedCapillar;
-//import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedSmoothCylinder;
-//import com.private_void.utils.Utils;
-//import org.junit.Assert;
-//import org.junit.Test;
-//
-//import java.util.List;
-//
-//import static java.lang.Math.*;
-//import static junit.framework.TestCase.assertTrue;
-//
-//public class CapillarsPositioningTest {
-//
+package coordinate_conversion_tests;
+
+import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.SphericalPoint;
+import com.private_void.core.plates.CurvedPlate;
+import com.private_void.core.surfaces.Capillar;
+
+import com.private_void.utils.Utils;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.List;
+
+import static java.lang.Math.*;
+import static junit.framework.TestCase.assertTrue;
+
+public class CapillarsPositioningTest {
+
+    @Test
+    public void capillarsPositionTest() {
+
+    }
 //    @Test
 //    public void capillarPositionTest() {
 //        double sqrt2 = sqrt(2.0);
@@ -169,4 +172,4 @@
 //                            2000.0 * 2000.0));
 //        }
 //    }
-//}
+}

@@ -268,7 +268,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                 < radius * radius;
     }
 
-    protected abstract boolean isPointInside(CartesianPoint point);
+    protected abstract boolean isPointInside(final CartesianPoint point);
 
     protected abstract CartesianPoint getDetectorsCoordinate();
 }

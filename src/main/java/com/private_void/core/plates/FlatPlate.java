@@ -11,14 +11,16 @@ import static com.private_void.utils.Generator.generator;
 public class FlatPlate extends Plate {
     private final CapillarFactory capillarFactory;
     private final double sideLength;
+    private final double width;
 
     public FlatPlate(final CapillarFactory capillarFactory, final CartesianPoint center, double capillarsDensity,
                      double sideLength) {
-        super(center, capillarFactory.getRadius(), capillarFactory.getLength(), capillarsDensity);
+        super(center, capillarFactory.getRadius(), capillarsDensity);
         this.capillarFactory = capillarFactory;
         this.sideLength = sideLength;
+        this.width = capillarFactory.getLength();
+        this.detector = new Detector(getDetectorsCoordinate(), sideLength);
         createCapillars();
-        this.detector = new Detector(getDetectorsCoordinate(), sideLength * 1.0);
     }
 
     @Override
@@ -122,7 +124,7 @@ public class FlatPlate extends Plate {
 
     @Override
     protected CartesianPoint getDetectorsCoordinate() {
-        return new CartesianPoint(center.getX() + width, center.getY(), center.getZ());
+        return center.shift(width, 0.0, 0.0);
     }
 
     @Override

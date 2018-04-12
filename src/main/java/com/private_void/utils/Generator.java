@@ -1,6 +1,7 @@
 package com.private_void.utils;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.CylindricalPoint;
 import com.private_void.core.geometry.coordinates.SphericalPoint;
 
 import java.util.Random;
@@ -139,5 +140,12 @@ public class Generator {
                 uniformDouble(-yRange, yRange),
                 uniformDouble(-zRange, zRange))
                 .shift(center);
+    }
+
+    public CylindricalPoint.Factory getRadialUniformDistribution(double radiusRange) {
+        return () -> new CylindricalPoint(
+                uniformDouble(0.0, radiusRange),
+                uniformDouble(0.0, 2.0 * Math.PI),
+                0.0);
     }
 }

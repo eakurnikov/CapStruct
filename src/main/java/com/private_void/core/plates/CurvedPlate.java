@@ -18,12 +18,12 @@ public class CurvedPlate extends Plate {
 
     public CurvedPlate(final RotatedCapillarFactory capillarFactory, final CartesianPoint center, double capillarsDensity,
                        double maxAngleR, double curvRadius) {
-        super(center, capillarFactory.getRadius(), capillarFactory.getLength(), capillarsDensity);
+        super(center, capillarFactory.getRadius(), capillarsDensity);
         this.capillarFactory = capillarFactory;
         this.maxAngleR = maxAngleR;
         this.curvRadius = curvRadius;
-        createCapillars();
         this.detector = new Detector(getDetectorsCoordinate(), curvRadius *  Math.sin(maxAngleR));
+        createCapillars();
     }
 
     @Override

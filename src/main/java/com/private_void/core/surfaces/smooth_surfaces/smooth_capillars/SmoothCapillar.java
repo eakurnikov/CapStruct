@@ -63,8 +63,8 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
         double Vy = p.getSpeed().getY();
         double Vz = p.getSpeed().getZ();
 
-        double newY = y - x * (Vy / Vx);
-        double newZ = z - x * (Vz / Vx);
+        double newY = y - (Vy / Vx) * x;
+        double newZ = z - (Vz / Vx) * x;
 
         return newY * newY + newZ * newZ < radius * radius;
     }
@@ -74,5 +74,5 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
         return refFrame;
     }
 
-    protected abstract boolean isPointInside(CartesianPoint point);
+    protected abstract boolean isPointInside(final CartesianPoint point);
 }

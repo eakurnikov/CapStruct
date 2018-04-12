@@ -12,14 +12,16 @@ import static com.private_void.utils.Generator.generator;
 public class InclinedPlate extends Plate {
     private final RotatedCapillarFactory capillarFactory;
     private final double sideLength;
+    private final double width;
 
     public InclinedPlate(final RotatedCapillarFactory capillarFactory, final CartesianPoint center, double capillarsDensity,
                      double sideLength) {
-        super(center, capillarFactory.getRadius(), capillarFactory.getLength(), capillarsDensity);
+        super(center, capillarFactory.getRadius(), capillarsDensity);
         this.capillarFactory = capillarFactory;
         this.sideLength = sideLength;
+        this.width = capillarFactory.getLength();
+        this.detector = new Detector(getDetectorsCoordinate(), sideLength);
         createCapillars();
-        this.detector = new Detector(getDetectorsCoordinate(), sideLength * 3.0);
     }
 
     @Override
@@ -79,7 +81,7 @@ public class InclinedPlate extends Plate {
 
     @Override
     protected CartesianPoint getDetectorsCoordinate() {
-        return new CartesianPoint(center.getX() + width, center.getY(), center.getZ());
+        return center.shift(width, 0.0, 0.0);
     }
 
     @Override

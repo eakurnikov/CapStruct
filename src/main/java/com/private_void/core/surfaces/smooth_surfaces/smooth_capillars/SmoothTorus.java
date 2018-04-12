@@ -7,6 +7,7 @@ import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
+import com.private_void.core.surfaces.capillar_factories.RotatedTorusFactory;
 import com.private_void.utils.Utils;
 
 import static com.private_void.utils.Constants.ITERATIONS_MAX;
@@ -19,18 +20,8 @@ public class SmoothTorus extends SmoothCapillar {
 
     public SmoothTorus(final CartesianPoint front, double radius, double curvRadius, double curvAngleR, double roughnessSize,
                        double roughnessAngleR, double reflectivity, double criticalAngleR) {
-        super(front,
-                ReferenceFrame.builder()
-                        .setShiftX(-front.getX())
-                        .setShiftY(-front.getY())
-                        .setShiftZ(-front.getZ() - curvRadius)
-                        .build(),
-                radius,
-                Utils.getTorusLength(curvRadius, curvAngleR),
-                roughnessSize,
-                roughnessAngleR,
-                reflectivity,
-                criticalAngleR);
+        super(front, ReferenceFrame.builder().atPoint(front).build(), radius, Utils.getTorusLength(curvRadius, curvAngleR),
+                roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
 
         this.curvRadius = curvRadius;
         this.curvAngleR = curvAngleR;
@@ -38,19 +29,17 @@ public class SmoothTorus extends SmoothCapillar {
 
     public SmoothTorus(double length, final CartesianPoint front, double radius, double curvAngleR, double roughnessSize,
                        double roughnessAngleR, double reflectivity, double criticalAngleR) {
-        super(front,
-                ReferenceFrame.builder()
-                        .setShiftX(-front.getX())
-                        .setShiftY(-front.getY())
-                        .setShiftZ(-front.getZ() - Utils.getTorusCurvRadius(length, curvAngleR))
-                        .build(),
-                radius,
-                length,
-                roughnessSize,
-                roughnessAngleR,
-                reflectivity,
-                criticalAngleR);
+        super(front, ReferenceFrame.builder().atPoint(front).build(), radius, length,
+                roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
 
+        this.curvRadius = Utils.getTorusCurvRadius(length, curvAngleR);
+        this.curvAngleR = curvAngleR;
+    }
+
+    public SmoothTorus(double length, final CartesianPoint front, final ReferenceFrame refFrame, double radius,
+                       double curvAngleR, double roughnessSize, double roughnessAngleR, double reflectivity,
+                       double criticalAngleR) {
+        super(front, refFrame, radius, length, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.curvRadius = Utils.getTorusCurvRadius(length, curvAngleR);
         this.curvAngleR = curvAngleR;
     }
@@ -59,7 +48,7 @@ public class SmoothTorus extends SmoothCapillar {
     protected Vector getNormal(final CartesianPoint point) {
         double x = point.getX();
         double y = point.getY();
-        double z = point.getZ();
+        double z = point.getZ() - curvRadius;
 
         return Vector.set(
                 (-2.0 * (x * x + y * y + z * z + curvRadius * curvRadius - radius * radius) * 2.0 * x
@@ -117,7 +106,7 @@ public class SmoothTorus extends SmoothCapillar {
 
                 x = solution[0];
                 y = solution[1];
-                z = solution[2];
+                z = solution[2] - curvRadius;
 
                 W[0][0] = 2 * (x * x + y * y + z * z + curvRadius * curvRadius - r * r) * 2.0 * x
                         - 8 * curvRadius * curvRadius * x;
@@ -196,7 +185,7 @@ public class SmoothTorus extends SmoothCapillar {
     private double getPointsAngle(final CartesianPoint point) {
         double x = point.getX();
         double y = point.getY();
-        double z = point.getZ();
+        double z = point.getZ() - curvRadius;
 
         return Math.asin(x / Math.sqrt(x * x + y * y + z * z));
     }
@@ -230,6 +219,30 @@ public class SmoothTorus extends SmoothCapillar {
             @Override
             public Capillar getNewCapillar(final CartesianPoint coordinate) {
                 return new SmoothTorus(length, coordinate, radius, curvAngleR, roughnessSize, roughnessAngleR,
+                        reflectivity, criticalAngleR);
+            }
+
+            @Override
+            public double getRadius() {
+                return radius;
+            }
+
+            @Override
+            public double getLength() {
+                return length;
+            }
+        };
+    }
+
+    public static RotatedTorusFactory getRotatedTorusFactory(double radius, double length, double roughnessSize,
+                                                             double roughnessAngleR, double reflectivity,
+                                                             double criticalAngleR) {
+        return new RotatedTorusFactory() {
+
+            @Override
+            public Capillar getNewCapillar(final CartesianPoint coordinate, double curvAngleR,
+                                           final ReferenceFrame refFrame) {
+                return new SmoothTorus(length, coordinate, refFrame, radius, curvAngleR, roughnessSize, roughnessAngleR,
                         reflectivity, criticalAngleR);
             }
 

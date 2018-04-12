@@ -7,6 +7,7 @@ import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
+import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
 import com.private_void.utils.Utils;
 
 import static com.private_void.utils.Constants.ITERATIONS_MAX;
@@ -15,10 +16,9 @@ import static com.private_void.utils.Generator.generator;
 
 public class SmoothCylinder extends SmoothCapillar {
 
-    public SmoothCylinder(final CartesianPoint front, double radius, double length, double roughnessSize, double roughnessAngleR,
-                          double reflectivity, double criticalAngleR) {
-        super(front, ReferenceFrame.builder().atPoint(front).build(), radius, length,
-                roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+    public SmoothCylinder(final CartesianPoint front, final ReferenceFrame refFrame, double radius, double length,
+                                 double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
+        super(front, refFrame, radius, length, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
     }
 
     @Override
@@ -38,14 +38,14 @@ public class SmoothCylinder extends SmoothCapillar {
             return p.getCoordinate();
         }
 
-        double[] solution = {p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
-                             p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
-                             p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()};
+//        double[] solution = {p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
+//                             p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
+//                             p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()};
 
-//        double[] solution = {
-//                p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),
-//                p.getCoordinate().getY() + radius * Math.signum(p.getSpeed().getY()),
-//                p.getCoordinate().getZ() + radius * Math.signum(p.getSpeed().getZ())};
+        double[] solution = {
+                p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),
+                p.getCoordinate().getY() + radius * Math.signum(p.getSpeed().getY()),
+                p.getCoordinate().getZ() + radius * Math.signum(p.getSpeed().getZ())};
 
         double[] delta = {1.0, 1.0, 1.0};
         double[] F  = new double[3];
@@ -145,13 +145,37 @@ public class SmoothCylinder extends SmoothCapillar {
         return point.getX() < length;
     }
 
-    public static CapillarFactory getFactory(double radius, double length, double roughnessSize, double roughnessAngleR,
-                                             double reflectivity, double criticalAngleR) {
+    public static CapillarFactory getCapillarFactory(double radius, double length, double roughnessSize,
+                                                     double roughnessAngleR, double reflectivity,
+                                                     double criticalAngleR) {
         return new CapillarFactory() {
 
             @Override
             public Capillar getNewCapillar(final CartesianPoint coordinate) {
-                return new SmoothCylinder(coordinate, radius, length, roughnessSize, roughnessAngleR,
+                return new SmoothCylinder(coordinate, ReferenceFrame.builder().atPoint(coordinate).build(),
+                        radius, length, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
+            }
+
+            @Override
+            public double getRadius() {
+                return radius;
+            }
+
+            @Override
+            public double getLength() {
+                return length;
+            }
+        };
+    }
+
+    public static RotatedCapillarFactory getRotatedCapillarFactory(double radius, double length, double roughnessSize,
+                                                                   double roughnessAngleR, double reflectivity,
+                                                                   double criticalAngleR) {
+        return new RotatedCapillarFactory() {
+
+            @Override
+            public Capillar getNewCapillar(final CartesianPoint coordinate, final ReferenceFrame refFrame) {
+                return new SmoothCylinder(coordinate, refFrame, radius, length, roughnessSize, roughnessAngleR,
                         reflectivity, criticalAngleR);
             }
 

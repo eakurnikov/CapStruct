@@ -17,7 +17,6 @@ public abstract class Plate implements CapillarSystem {
     protected static final int CAPILLARS_PER_DOMAIN_AMOUNT = 4;
 
     protected final CartesianPoint center;
-    protected final double width;
     protected final double capillarRadius;
     protected final double capillarsDensity;
 
@@ -25,9 +24,8 @@ public abstract class Plate implements CapillarSystem {
     protected List<Capillar> capillars;
     protected Detector detector;
 
-    public Plate(final CartesianPoint center, double radius, double length, double capillarsDensity) {
+    public Plate(final CartesianPoint center, double radius, double capillarsDensity) {
         this.center = center;
-        this.width = length;
         this.capillarRadius = radius;
         this.capillarsDensity = capillarsDensity;
         this.capillars = new ArrayList<>();

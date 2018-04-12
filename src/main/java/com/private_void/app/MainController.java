@@ -10,14 +10,15 @@ import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.plates.CurvedPlate;
+import com.private_void.core.plates.FlatPlate;
 import com.private_void.core.plates.Plate;
 import com.private_void.core.plates.TorusPlate;
 import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
+import com.private_void.core.surfaces.capillar_factories.RotatedTorusFactory;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothCylinder;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothTorus;
-import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedSmoothCylinder;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCapillar;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCylinder;
@@ -144,11 +145,11 @@ public class MainController {
         cylReflect.setText("1");
         cylSlideAngle.setText("90");
 
-        torRadius.setText("20");
+        torRadius.setText("7");
         torBigRadius.setText("1000");
-        torAngle.setText("5");
-        torRoughSize.setText("0.2");
-        torRoughAngle.setText("5");
+        torAngle.setText("1");
+        torRoughSize.setText("0");
+        torRoughAngle.setText("0");
         torReflect.setText("1");
         torSlideAngle.setText("90");
 
@@ -275,7 +276,7 @@ public class MainController {
 //          int capillarsAmount = 320;
             double plateSideLength = 300.0;
 
-            CapillarFactory smoothCylinderFactory = SmoothCylinder.getFactory(
+            CapillarFactory smoothCylinderFactory = SmoothCylinder.getCapillarFactory(
                     capillarRadius,
                     capillarLength,
                     capillarRoughnessSize,
@@ -283,7 +284,7 @@ public class MainController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
-            RotatedCapillarFactory rotatedSmoothCylinderFactory = RotatedSmoothCylinder.getFactory(
+            RotatedCapillarFactory rotatedSmoothCylinderFactory = SmoothCylinder.getRotatedCapillarFactory(
                     capillarRadius,
                     capillarLength,
                     capillarRoughnessSize,
@@ -291,11 +292,11 @@ public class MainController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
-//            return new FlatPlate(
-//                    smoothCylinderFactory,
-//                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
-//                    plateCapillarsDensity,
-//                    plateSideLength);
+            return new FlatPlate(
+                    smoothCylinderFactory,
+                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
+                    plateCapillarsDensity,
+                    plateSideLength);
 
 //            return new InclinedPlate(
 //                    rotatedSmoothCylinderFactory,
@@ -303,12 +304,12 @@ public class MainController {
 //                    plateCapillarsDensity,
 //                    plateSideLength);
 
-            return new CurvedPlate(
-                    rotatedSmoothCylinderFactory,
-                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
-                    plateCapillarsDensity,
-                    Math.toRadians(1.0),
-                    50_000.0);
+//            return new CurvedPlate(
+//                    rotatedSmoothCylinderFactory,
+//                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
+//                    plateCapillarsDensity,
+//                    Math.toRadians(1.0),
+//                    50_000.0);
         }
 
         if (torusTab.isSelected()) {
@@ -333,7 +334,7 @@ public class MainController {
             double plateSideLength = 300.0;
 
 //          int capillarsAmount = 320;
-            double plateMaxAngleR = 5.0;
+            double plateMaxAngleR = Math.toRadians(3.0);
 
             CapillarFactory smoothTorusFactoryWithRadius = SmoothTorus.getFactory(
                     capillarSmallRadius,
@@ -353,8 +354,16 @@ public class MainController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
+            RotatedTorusFactory rotatedSmoothTorusFactoryWithRadius = SmoothTorus.getRotatedTorusFactory(
+                    capillarSmallRadius,
+                    1000.0,
+                    capillarRoughnessSize,
+                    capillarRoughnessAngleR,
+                    capillarReflectivity,
+                    capillarCriticalAngleR);
+
             return new TorusPlate(
-                    smoothTorusFactoryWithRadius,
+                    rotatedSmoothTorusFactoryWithRadius,
                     new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
                     plateCapillarsDensity,
                     plateSideLength,
