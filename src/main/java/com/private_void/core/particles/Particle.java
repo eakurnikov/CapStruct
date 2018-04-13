@@ -1,84 +1,26 @@
 package com.private_void.core.particles;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.reference_frames.ReferenceFrame;
 import com.private_void.core.geometry.rotation_matrix.RotationMatrix;
 import com.private_void.core.geometry.vectors.Vector;
 
 public abstract class Particle {
     protected CartesianPoint coordinate;
     protected Vector speed;
-    protected ReferenceFrame refFrame;
     protected double trace;
+
     protected boolean absorbed;
-    protected boolean out;
+    protected boolean interacted;
     protected boolean deleted;
 
     protected Particle(final CartesianPoint coordinate, final Vector speed) {
         this.coordinate = coordinate;
         this.speed = speed;
-        this.refFrame = ReferenceFrame.GLOBAL;
         this.trace = 0.0;
+
         this.absorbed = false;
-        this.out = false;
+        this.interacted = false;
         this.deleted = false;
-    }
-
-//    @Override
-//    public void toInnerRefFrame(Particle particle) {
-//        particle
-//                .shiftCoordinate(-front.getX(), -front.getY(), -front.getZ())
-//                .rotateRefFrameAroundOY(position.getTheta())
-//                .rotateRefFrameAroundOZ(-position.getPhi());
-//    }
-//
-//    @Override
-//    public void toGlobalRefFrame(Particle particle) {
-//        particle
-//                .rotateRefFrameAroundOZ(position.getPhi())
-//                .rotateRefFrameAroundOY(-position.getTheta())
-//                .shiftCoordinate(front.getX(), front.getY(), front.getZ());
-//    }
-
-    public Particle toReferenceFrame(final ReferenceFrame refFrame) {
-        //todo override equals and hashcode for ref frame2
-        if (this.refFrame == ReferenceFrame.GLOBAL && refFrame == ReferenceFrame.GLOBAL) {
-            return this;
-        }
-
-        if (refFrame == ReferenceFrame.GLOBAL) {
-            RotationMatrix matrixZ = RotationMatrix.aroundOZ(-this.refFrame.getAngleAroundOZ());
-            coordinate = matrixZ.rotate(coordinate);
-            speed = matrixZ.rotate(speed);
-
-            RotationMatrix matrixY = RotationMatrix.aroundOY(-this.refFrame.getAngleAroundOY());
-            coordinate = matrixY.rotate(coordinate);
-            speed = matrixY.rotate(speed);
-
-            RotationMatrix matrixX = RotationMatrix.aroundOX(-this.refFrame.getAngleAroundOX());
-            coordinate = matrixX.rotate(coordinate);
-            speed = matrixX.rotate(speed);
-
-            coordinate = coordinate.shift(-this.refFrame.getShiftX(), -this.refFrame.getShiftY(), -this.refFrame.getShiftZ());
-        } else {
-            coordinate = coordinate.shift(refFrame.getShiftX(), refFrame.getShiftY(), refFrame.getShiftZ());
-
-            RotationMatrix matrixX = RotationMatrix.aroundOX(refFrame.getAngleAroundOX());
-            coordinate = matrixX.rotate(coordinate);
-            speed = matrixX.rotate(speed);
-
-            RotationMatrix matrixY = RotationMatrix.aroundOY(refFrame.getAngleAroundOY());
-            coordinate = matrixY.rotate(coordinate);
-            speed = matrixY.rotate(speed);
-
-            RotationMatrix matrixZ = RotationMatrix.aroundOZ(refFrame.getAngleAroundOZ());
-            coordinate = matrixZ.rotate(coordinate);
-            speed = matrixZ.rotate(speed);
-        }
-
-        this.refFrame = refFrame;
-
-        return this;
     }
 
     public CartesianPoint getCoordinate() {
@@ -95,8 +37,9 @@ public abstract class Particle {
         return speed;
     }
 
-    public void setSpeed(final Vector speed) {
+    public Particle setSpeed(final Vector speed) {
         this.speed = speed;
+        return this;
     }
 
     public Particle rotateSpeed(final Vector vector, double angle) {
@@ -112,12 +55,12 @@ public abstract class Particle {
         this.absorbed = absorbed;
     }
 
-    public boolean isOut() {
-        return out;
+    public boolean isInteracted() {
+        return interacted;
     }
 
-    public void setOut(boolean out) {
-        this.out = out;
+    public void setInteracted() {
+        this.interacted = true;
     }
 
     public boolean isDeleted() {
@@ -147,3 +90,19 @@ public abstract class Particle {
         return RotationMatrix.aroundOY(angle).rotate(coordinate);
     }
 }
+
+//    @Override
+//    public void toInnerRefFrame(Particle particle) {
+//        particle
+//                .shiftCoordinate(-front.getX(), -front.getY(), -front.getZ())
+//                .rotateRefFrameAroundOY(position.getTheta())
+//                .rotateRefFrameAroundOZ(-position.getPhi());
+//    }
+//
+//    @Override
+//    public void toGlobalRefFrame(Particle particle) {
+//        particle
+//                .rotateRefFrameAroundOZ(position.getPhi())
+//                .rotateRefFrameAroundOY(-position.getTheta())
+//                .shiftCoordinate(front.getX(), front.getY(), front.getZ());
+//    }

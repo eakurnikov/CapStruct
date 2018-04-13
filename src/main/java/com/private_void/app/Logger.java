@@ -65,6 +65,10 @@ public class Logger {
         log().info("    ... " + percent + "% paricles processed");
     }
 
+    public static void processedCapillarsPercent(int percent) {
+        log().info("    ... " + percent + "% capillars processed");
+    }
+
     public static void interactionFinish() {
         log().info("Particles-capillars interaction finish. Total time = "
                 + (System.nanoTime() - processingParticlesTimer) / 1_000_000 + " ms\n");

@@ -31,64 +31,38 @@ public abstract class Plate implements CapillarSystem {
         this.capillars = new ArrayList<>();
     }
 
-//    public void testInteract(Flux flux) {
-//        System.out.println("Particles-capillars interaction start ...");
-//        long start = System.nanoTime();
-//
-//        int particlesCounter = 0;
-//        int particlesAmount = flux.getParticles().size();
-//
-//        for (Particle particle : flux.getParticles()) {
-//            if (particlesCounter % (particlesAmount / 10) == 0.0) System.out.println("    ... " + (particlesCounter * 100 / particlesAmount) + "% paricles processed");
-//            particlesCounter++;
-//
-//            SphericalPoint position = new SphericalPoint(1_000, Math.toRadians(45.0), Math.toRadians(45.0));
-//
-//            particle
-//                    .rotateRefFrameAroundVector(Vector.E_Y, -position.getTheta())
-//                    .rotateRefFrameAroundVector(Vector.E_Z, -position.getPhi());
-//
-//            particle
-//                    .rotateRefFrameAroundVector(Vector.E_Z, position.getPhi())
-//                    .rotateRefFrameAroundVector(Vector.E_Y, position.getTheta());
-//        }
-//
-//        long finish = System.nanoTime();
-//        System.out.println("Particles-capillars interaction finish. Total time = " + (finish - start) / 1_000_000 + " ms");
-//        System.out.println();
-//    }
-
     @Override
     public void interact(Flux flux) {
         Logger.interactionStart();
 
-        boolean isOut;
+        ReferenceFrame.Converter converter;
 
-        int particlesCounter = 0;
-        int particlesAmount = flux.getParticles().size();
+        int capillarsCounter = 0;
+        int tenPercentOfCapillarsAmount = capillarsAmount / 10;
 
-        for (Particle particle : flux.getParticles()) {
-            isOut = true;
+        for (Capillar capillar : capillars) {
+            converter = new ReferenceFrame.Converter(capillar.getReferenceFrame());
 
-            if (particlesCounter % (particlesAmount / 10) == 0.0) {
-                Logger.processedParticlesPercent(particlesCounter * 100 / particlesAmount);
+            if (++capillarsCounter % tenPercentOfCapillarsAmount == 0.0) {
+                Logger.processedCapillarsPercent(capillarsCounter * 10 / tenPercentOfCapillarsAmount);
             }
-            particlesCounter++;
 
-            for (Capillar capillar : capillars) {
-                particle.toReferenceFrame(capillar.getReferenceFrame());
+            for (Particle particle : flux.getParticles()) {
+                if (particle.isInteracted()) {
+                    continue;
+                }
+
+                converter.convert(particle);
 
                 if (capillar.willParticleGetInside(particle)) {
                     capillar.interact(particle);
-                    particle.toReferenceFrame(ReferenceFrame.GLOBAL);
-                    isOut = false;
-                    break;
+                    converter.convertBack(particle);
+                    particle.setInteracted();
+                    continue;
                 }
 
-                particle.toReferenceFrame(ReferenceFrame.GLOBAL);
+                converter.convertBack(particle);
             }
-
-            particle.setOut(isOut);
         }
 
         Logger.interactionFinish();
@@ -97,10 +71,6 @@ public abstract class Plate implements CapillarSystem {
     @Override
     public Detector getDetector() {
         return detector;
-    }
-
-    public List<Capillar> getCapillars() {
-        return capillars;
     }
 
     protected abstract CartesianPoint getDetectorsCoordinate();

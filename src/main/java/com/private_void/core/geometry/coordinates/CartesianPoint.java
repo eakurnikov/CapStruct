@@ -110,41 +110,36 @@ public class CartesianPoint implements Point3D {
 //    public static RefFrameConverter getRefFrameConverter(final CartesianPoint point, final ReferenceFrame refFrame) {
 //        return new RefFrameConverter(point, refFrame);
 //    }
-//
+
 //    public static class RefFrameConverter extends ReferenceFrame.Converter<CartesianPoint> {
 //
-//        private RefFrameConverter(final CartesianPoint point) {
-//            super(point);
+//        public RefFrameConverter(final ReferenceFrame to) {
+//            super(to);
 //        }
 //
-//        private RefFrameConverter(final CartesianPoint point, final ReferenceFrame refFrame) {
-//            super(point, refFrame);
+//        public RefFrameConverter(final ReferenceFrame from, final ReferenceFrame to) {
+//            super(from, to);
 //        }
 //
 //        @Override
-//        public CartesianPoint convert(final ReferenceFrame refFrame) {
-//            if (this.refFrame == ReferenceFrame.GLOBAL && refFrame == ReferenceFrame.GLOBAL) {
-//                return obj;
-//            }
+//        public CartesianPoint convert(final CartesianPoint point) {
+//            return RotationMatrix.aroundOZ(conversion.getAngleAroundOZ()).rotate(
+//                    RotationMatrix.aroundOY(conversion.getAngleAroundOY()).rotate(
+//                            RotationMatrix.aroundOX(conversion.getAngleAroundOX()).rotate(
+//                                    point.shift(conversion.getShiftX(), conversion.getShiftY(), conversion.getShiftZ())
+//                            )
+//                    )
+//            );
+//        }
 //
-//            CartesianPoint newPoint;
-//
-//            if (refFrame == ReferenceFrame.GLOBAL) {
-//                newPoint = RotationMatrix.aroundOX(-this.refFrame.getAngleAroundOX()).rotate(
-//                        RotationMatrix.aroundOY(-this.refFrame.getAngleAroundOY()).rotate(
-//                                RotationMatrix.aroundOZ(-this.refFrame.getAngleAroundOZ()).rotate(
-//                                        obj)))
-//                        .shift(-this.refFrame.getShiftX(), -this.refFrame.getShiftY(), -this.refFrame.getShiftZ());
-//
-//            } else {
-//                newPoint = RotationMatrix.aroundOZ(refFrame.getAngleAroundOZ()).rotate(
-//                        RotationMatrix.aroundOY(refFrame.getAngleAroundOY()).rotate(
-//                                RotationMatrix.aroundOX(refFrame.getAngleAroundOX()).rotate(
-//                                        obj.shift(refFrame.getShiftX(), refFrame.getShiftY(), refFrame.getShiftZ()))));
-//            }
-//
-//            this.refFrame = refFrame;
-//            return newPoint;
+//        @Override
+//        public CartesianPoint convertBack(final CartesianPoint point) {
+//            return RotationMatrix.aroundOX(-conversion.getAngleAroundOX()).rotate(
+//                    RotationMatrix.aroundOY(-conversion.getAngleAroundOY()).rotate(
+//                            RotationMatrix.aroundOZ(-conversion.getAngleAroundOZ()).rotate(
+//                                    point)
+//                    )
+//            ).shift(-conversion.getShiftX(), -conversion.getShiftY(), -conversion.getShiftZ());
 //        }
 //    }
 }

@@ -1,6 +1,9 @@
 package com.private_void.core.geometry.reference_frames;
 
 import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.rotation_matrix.RotationMatrix;
+import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.particles.Particle;
 
 public class ReferenceFrame {
     public static final ReferenceFrame GLOBAL = new ReferenceFrame(
@@ -113,20 +116,73 @@ public class ReferenceFrame {
         }
     }
 
-//    public static abstract class Converter<T extends CartesianPoint> {
-//        protected final T obj;
-//        protected ReferenceFrame refFrame;
-//
-//        protected Converter(final T obj) {
-//            this.obj = obj;
-//            this.refFrame = ReferenceFrame.GLOBAL;
-//        }
-//
-//        protected Converter(final T obj, final ReferenceFrame refFrame) {
-//            this.obj = obj;
-//            this.refFrame = refFrame;
-//        }
-//
-//        public abstract T convert(final ReferenceFrame refFrame);
-//    }
+    public static class Converter {
+        private final double shiftX;
+        private final double shiftY;
+        private final double shiftZ;
+
+        private final RotationMatrix matrixX;
+        private final RotationMatrix matrixY;
+        private final RotationMatrix matrixZ;
+
+        private final RotationMatrix matrixXBack;
+        private final RotationMatrix matrixYBack;
+        private final RotationMatrix matrixZBack;
+
+        public Converter(final ReferenceFrame to) {
+            this.shiftX = to.shiftX;
+            this.shiftY = to.shiftY;
+            this.shiftZ = to.shiftZ;
+
+            this.matrixX = RotationMatrix.aroundOX(to.angleAroundOX);
+            this.matrixY = RotationMatrix.aroundOY(to.angleAroundOY);
+            this.matrixZ = RotationMatrix.aroundOZ(to.angleAroundOZ);
+
+            this.matrixXBack = RotationMatrix.aroundOX(-to.angleAroundOX);
+            this.matrixYBack = RotationMatrix.aroundOY(-to.angleAroundOY);
+            this.matrixZBack = RotationMatrix.aroundOZ(-to.angleAroundOZ);
+        }
+
+        public Converter(final ReferenceFrame from, final ReferenceFrame to) {
+            this.shiftX = to.shiftX - from.shiftX;
+            this.shiftY = to.shiftY - from.shiftY;
+            this.shiftZ = to.shiftZ - from.shiftZ;
+
+            this.matrixX = RotationMatrix.aroundOX(to.angleAroundOX - from.angleAroundOX);
+            this.matrixY = RotationMatrix.aroundOY(to.angleAroundOY - from.angleAroundOY);
+            this.matrixZ = RotationMatrix.aroundOZ(to.angleAroundOZ - from.angleAroundOZ);
+
+            this.matrixXBack = RotationMatrix.aroundOX(-to.angleAroundOX + from.angleAroundOX);
+            this.matrixYBack = RotationMatrix.aroundOY(-to.angleAroundOY + from.angleAroundOY);
+            this.matrixZBack = RotationMatrix.aroundOZ(-to.angleAroundOZ + from.angleAroundOZ);
+        }
+
+        public CartesianPoint convert(final CartesianPoint point) {
+            return matrixZ.rotate(matrixY.rotate(matrixX.rotate(point.shift(shiftX, shiftY, shiftZ))));
+        }
+
+        public CartesianPoint convertBack(final CartesianPoint point) {
+            return matrixXBack.rotate(matrixYBack.rotate(matrixZBack.rotate(point))).shift(-shiftX, -shiftY, -shiftZ);
+        }
+
+        public Vector convert(final Vector vector) {
+            return matrixZ.rotate(matrixY.rotate(matrixX.rotate(vector)));
+        }
+
+        public Vector convertBack(final Vector vector) {
+            return matrixXBack.rotate(matrixYBack.rotate(matrixZBack.rotate(vector)));
+        }
+
+        public void convert(final Particle particle) {
+            particle
+                    .setSpeed(convert(particle.getSpeed()))
+                    .setCoordinate(convert(particle.getCoordinate()));
+        }
+
+        public void convertBack(final Particle particle) {
+            particle
+                    .setCoordinate(convertBack(particle.getCoordinate()))
+                    .setSpeed(convertBack(particle.getSpeed()));
+        }
+    }
 }

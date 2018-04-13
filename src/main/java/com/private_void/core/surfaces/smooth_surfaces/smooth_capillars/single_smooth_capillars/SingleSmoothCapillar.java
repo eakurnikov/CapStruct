@@ -64,8 +64,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                         break;
                     }
                 }
-            } else {
-                particle.setOut(true);
+                particle.setInteracted();
             }
         }
 
@@ -113,10 +112,8 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                             break;
                         }
                     }
-                } else {
-                    particle.setOut(true);
+                    particle.setInteracted();
                 }
-
                 Thread.yield();
             }
         }
@@ -167,8 +164,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                         break;
                     }
                 }
-            } else {
-                particle.setOut(true);
+                particle.setInteracted();
             }
         });
 
@@ -218,8 +214,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                                 break;
                             }
                         }
-                    } else {
-                        particle.setOut(true);
+                        particle.setInteracted();
                     }
                 }
             }

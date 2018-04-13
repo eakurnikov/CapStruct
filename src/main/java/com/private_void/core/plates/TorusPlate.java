@@ -62,54 +62,51 @@ public class TorusPlate extends Plate {
                     new CylindricalPoint(0.0, 0.0, width),
                     sideLength / 2.0 - capillarRadius);
 
-            CartesianPoint[] capillarsCenters = new CartesianPoint[capillarsAmount];
-            CartesianPoint coordinate;
-            CylindricalPoint cylindricalCoordinate;
+            CartesianPoint[] capillarsEndCenters = new CartesianPoint[capillarsAmount];
+            CartesianPoint capillarsEndCenter;
+            CylindricalPoint cylindricalRandomPoint;
 
             for (int i = 0; i < capillarsAmount; i++) {
                 do {
-                    cylindricalCoordinate = coordinateFactory.getCoordinate();
-                    coordinate = cylindricalCoordinate.convertToCartesian();
-                } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
+                    cylindricalRandomPoint = coordinateFactory.getCoordinate();
+                    capillarsEndCenter = cylindricalRandomPoint.convertToCartesian();
+                } while (!isCapillarCoordinateValid(capillarsEndCenters, capillarsEndCenter));
 
-                capillarsCenters[i] = coordinate;
+                capillarsEndCenters[i] = capillarsEndCenter;
 
-                double curvAngleR = Math.atan(cylindricalCoordinate.getR() / (focus.getX() - width));
+                double curvAngleR = Math.atan(cylindricalRandomPoint.getR() / (focus.getX() - width));
                 double curvRadius = Utils.getTorusCurvRadius(width, curvAngleR);
 
-                CartesianPoint frontCoordinateInGlobalRefFrame = coordinate
-                        .rotateAroundOX(cylindricalCoordinate.getPhi() - Math.PI)
-                        .shift(coordinate.inverse())
-
-                        .shift(-curvRadius * Math.sin(curvAngleR),
-                                0.0,
-                                -curvRadius * (1.0 - Math.cos(curvAngleR)))
-
-                        .shift(coordinate)
-                        .rotateAroundOX(-cylindricalCoordinate.getPhi() + Math.PI);
-
-//                ReferenceFrame localCapillarRefFrame = ReferenceFrame.builder()
-//                        .atPoint(coordinate)
-//                        .setAngleAroundOX(cylindricalCoordinate.getPhi() - Math.PI)
-//                        .build();
+//                CartesianPoint capillarsFrontCenter = capillarsEndCenter
+//                        .rotateAroundOX(cylindricalRandomPoint.getPhi() - Math.PI)
+//                        .shift(capillarsEndCenter.inverse())
 //
-//                CartesianPoint coordinateInLocalCapillarRefFrame = CartesianPoint
-//                        .getRefFrameConverter(coordinate)
-//                        .convert(localCapillarRefFrame)
 //                        .shift(-curvRadius * Math.sin(curvAngleR),
 //                                0.0,
-//                                -curvRadius * (1.0 - Math.cos(curvAngleR)));
+//                                -curvRadius * (1.0 - Math.cos(curvAngleR)))
 //
-//                CartesianPoint frontCoordinateInGlobalRefFrame = CartesianPoint
-//                        .getRefFrameConverter(coordinateInLocalCapillarRefFrame, localCapillarRefFrame)
-//                        .convert(ReferenceFrame.GLOBAL);
+//                        .shift(capillarsEndCenter)
+//                        .rotateAroundOX(-cylindricalRandomPoint.getPhi() + Math.PI);
 
-                ReferenceFrame refFrame = ReferenceFrame.builder()
-                        .atPoint(frontCoordinateInGlobalRefFrame)
-                        .setAngleAroundOX(cylindricalCoordinate.getPhi() - Math.PI)
+                ReferenceFrame capillarsEndRefFrame = ReferenceFrame.builder()
+                        .atPoint(capillarsEndCenter)
+                        .setAngleAroundOX(cylindricalRandomPoint.getPhi() - Math.PI)
                         .build();
 
-                capillars.add(capillarFactory.getNewCapillar(frontCoordinateInGlobalRefFrame, curvAngleR, refFrame));
+                ReferenceFrame.Converter converter = new ReferenceFrame.Converter(capillarsEndRefFrame);
+
+                CartesianPoint capillarsFrontCenter = converter.convertBack(
+                        converter.convert(capillarsEndCenter)
+                                .shift(-curvRadius * Math.sin(curvAngleR),
+                                        0.0,
+                                        -curvRadius * (1.0 - Math.cos(curvAngleR))));
+
+                ReferenceFrame capillarsFrontRefFrame = ReferenceFrame.builder()
+                        .atPoint(capillarsFrontCenter)
+                        .setAngleAroundOX(cylindricalRandomPoint.getPhi() - Math.PI)
+                        .build();
+
+                capillars.add(capillarFactory.getNewCapillar(capillarsFrontCenter, curvAngleR, capillarsFrontRefFrame));
 
                 if (i % (capillarsAmount / 10) == 0.0) {
                     Logger.createdCapillarsPercent(i * 100 / capillarsAmount);

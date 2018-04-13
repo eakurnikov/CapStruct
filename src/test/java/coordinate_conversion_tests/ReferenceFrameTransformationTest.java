@@ -19,7 +19,7 @@
 //    public void toInnerTestTheta2D() {
 //        double angleTheta = Math.toRadians(30.0);
 //
-//        Particle base = NeutralParticle
+//        Particle from = NeutralParticle
 //                .getFactory(1.0)
 //                .getNewParticle(
 //                        new CartesianPoint(0.0, 0.0, 50.0),
@@ -50,20 +50,20 @@
 ////                .rotateSpeed(Vector.E_Z, -position.getTheta())
 ////                .rotateSpeed(Vector.E_Y, position.getPhi());
 //
-//        assertTrue(Utils.compareToZero(base.getCoordinate().getX() - particle.getCoordinate().getX()));
-//        assertTrue(Utils.compareToZero(base.getCoordinate().getY() - particle.getCoordinate().getY()));
-//        assertTrue(Utils.compareToZero(base.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+//        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
+//        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
+//        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
 //
-//        assertTrue(Utils.compareToZero(base.getSpeed().getX() - particle.getSpeed().getX()));
-//        assertTrue(Utils.compareToZero(base.getSpeed().getY() - particle.getSpeed().getY()));
-//        assertTrue(Utils.compareToZero(base.getSpeed().getZ() - particle.getSpeed().getZ()));
+//        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
+//        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
+//        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
 //    }
 //
 //    @Test
 //    public void toInnerTestPhi2D() {
 //        double anglePhi = Math.toRadians(30.0);
 //
-//        Particle base = NeutralParticle
+//        Particle from = NeutralParticle
 //                .getFactory(1.0)
 //                .getNewParticle(
 //                        new CartesianPoint(0.0, 50.0, 0.0),
@@ -94,20 +94,20 @@
 ////                .rotateSpeed(Vector.E_Z, -position.getTheta())
 ////                .rotateSpeed(Vector.E_Y, position.getPhi());
 //
-//        assertTrue(Utils.compareToZero(base.getCoordinate().getX() - particle.getCoordinate().getX()));
-//        assertTrue(Utils.compareToZero(base.getCoordinate().getY() - particle.getCoordinate().getY()));
-//        assertTrue(Utils.compareToZero(base.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+//        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
+//        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
+//        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
 //
-//        assertTrue(Utils.compareToZero(base.getSpeed().getX() - particle.getSpeed().getX()));
-//        assertTrue(Utils.compareToZero(base.getSpeed().getY() - particle.getSpeed().getY()));
-//        assertTrue(Utils.compareToZero(base.getSpeed().getZ() - particle.getSpeed().getZ()));
+//        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
+//        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
+//        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
 //    }
 //
 ////    @Test
 ////    public void toGlobalTestPhi2D() {
 ////        double anglePhi = Math.toRadians(30.0);
 ////
-////        Particle base = NeutralParticle
+////        Particle from = NeutralParticle
 ////                .getFactory(1.0)
 ////                .getNewParticle(CartesianPoint.ORIGIN, Vector.E_X);
 ////
@@ -139,20 +139,20 @@
 ////                .rotateSpeed(Vector.E_Z, directionCoefficient * position.getTheta())
 ////                .rotateSpeed(Vector.E_Y, -directionCoefficient * position.getPhi());
 ////
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getX() - particle.getCoordinate().getX()));
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getY() - particle.getCoordinate().getY()));
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
 ////
-////        assertTrue(Utils.compareToZero(base.getSpeed().getX() - particle.getSpeed().getX()));
-////        assertTrue(Utils.compareToZero(base.getSpeed().getY() - particle.getSpeed().getY()));
-////        assertTrue(Utils.compareToZero(base.getSpeed().getZ() - particle.getSpeed().getZ()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
 ////    }
 ////
 ////    @Test
 ////    public void toInnerAndBackPhi2D() {
 ////        double anglePhi = Math.toRadians(30.0);
 ////
-////        Particle base = NeutralParticle
+////        Particle from = NeutralParticle
 ////                .getFactory(1.0)
 ////                .getNewParticle(CartesianPoint.ORIGIN, Vector.E_X);
 ////
@@ -197,20 +197,20 @@
 ////                .rotateSpeed(Vector.E_Y, -directionCoefficient * position.getPhi());
 ////        //---
 ////
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getX() - particle.getCoordinate().getX()));
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getY() - particle.getCoordinate().getY()));
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
 ////
-////        assertTrue(Utils.compareToZero(base.getSpeed().getX() - particle.getSpeed().getX()));
-////        assertTrue(Utils.compareToZero(base.getSpeed().getY() - particle.getSpeed().getY()));
-////        assertTrue(Utils.compareToZero(base.getSpeed().getZ() - particle.getSpeed().getZ()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
 ////    }
 ////
 ////    @Test
 ////    public void toInnerTestTheta2D() {
 ////        double angleTheta = Math.toRadians(30.0);
 ////
-////        Particle base = NeutralParticle
+////        Particle from = NeutralParticle
 ////                .getFactory(1.0)
 ////                .getNewParticle(
 ////                        new CartesianPoint(0.0, 50.0, 0.0),
@@ -242,20 +242,20 @@
 ////                .rotateSpeed(Vector.E_Z, directionCoefficient * position.getTheta())
 ////                .rotateSpeed(Vector.E_Y, -directionCoefficient * position.getPhi());
 ////
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getX() - particle.getCoordinate().getX()));
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getY() - particle.getCoordinate().getY()));
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
 ////
-////        assertTrue(Utils.compareToZero(base.getSpeed().getX() - particle.getSpeed().getX()));
-////        assertTrue(Utils.compareToZero(base.getSpeed().getY() - particle.getSpeed().getY()));
-////        assertTrue(Utils.compareToZero(base.getSpeed().getZ() - particle.getSpeed().getZ()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
 ////    }
 ////
 ////    @Test
 ////    public void toGlobalTestTheta2D() {
 ////        double angleTheta = Math.toRadians(30.0);
 ////
-////        Particle base = NeutralParticle
+////        Particle from = NeutralParticle
 ////                .getFactory(1.0)
 ////                .getNewParticle(CartesianPoint.ORIGIN, Vector.E_X);
 ////
@@ -286,20 +286,20 @@
 ////                .rotateSpeed(Vector.E_Z, directionCoefficient * position.getTheta())
 ////                .rotateSpeed(Vector.E_Y, -directionCoefficient * position.getPhi());
 ////
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getX() - particle.getCoordinate().getX()));
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getY() - particle.getCoordinate().getY()));
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
 ////
-////        assertTrue(Utils.compareToZero(base.getSpeed().getX() - particle.getSpeed().getX()));
-////        assertTrue(Utils.compareToZero(base.getSpeed().getY() - particle.getSpeed().getY()));
-////        assertTrue(Utils.compareToZero(base.getSpeed().getZ() - particle.getSpeed().getZ()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
 ////    }
 ////
 ////    @Test
 ////    public void toInnerAndBackTestTheta2D() {
 ////        double angleTheta = Math.toRadians(30.0);
 ////
-////        Particle base = NeutralParticle
+////        Particle from = NeutralParticle
 ////                .getFactory(1.0)
 ////                .getNewParticle(CartesianPoint.ORIGIN, Vector.E_X);
 ////
@@ -344,20 +344,20 @@
 ////                .rotateSpeed(Vector.E_Y, -directionCoefficient * position.getPhi());
 ////        //---
 ////
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getX() - particle.getCoordinate().getX()));
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getY() - particle.getCoordinate().getY()));
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
 ////
-////        assertTrue(Utils.compareToZero(base.getSpeed().getX() - particle.getSpeed().getX()));
-////        assertTrue(Utils.compareToZero(base.getSpeed().getY() - particle.getSpeed().getY()));
-////        assertTrue(Utils.compareToZero(base.getSpeed().getZ() - particle.getSpeed().getZ()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
 ////    }
 ////
 ////    @Test
 ////    public void toInnerTest3D() {
 //////        double angle = Math.toRadians(30.0);
 //////
-//////        Particle base = NeutralParticle
+//////        Particle from = NeutralParticle
 //////                .getFactory(1.0)
 //////                .getNewParticle(
 //////                        new CartesianPoint(0.0, 50.0, 50.0),
@@ -389,20 +389,20 @@
 //////                .rotateSpeed(Vector.E_Y, -directionCoefficient * position.getTheta())
 //////                .rotateSpeed(Vector.E_Z, -directionCoefficient * position.getPhi());
 //////
-//////        assertTrue(Utils.compareToZero(base.getCoordinate().getX() - particle.getCoordinate().getX()));
-//////        assertTrue(Utils.compareToZero(base.getCoordinate().getY() - particle.getCoordinate().getY()));
-//////        assertTrue(Utils.compareToZero(base.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+//////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
+//////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
+//////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
 //////
-//////        assertTrue(Utils.compareToZero(base.getSpeed().getX() - particle.getSpeed().getX()));
-//////        assertTrue(Utils.compareToZero(base.getSpeed().getY() - particle.getSpeed().getY()));
-//////        assertTrue(Utils.compareToZero(base.getSpeed().getZ() - particle.getSpeed().getZ()));
+//////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
+//////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
+//////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
 ////    }
 ////
 ////    @Test
 ////    public void toGlobalTest3D() {
 ////        double angle = Math.toRadians(30.0);
 ////
-////        Particle base = NeutralParticle
+////        Particle from = NeutralParticle
 ////                .getFactory(1.0)
 ////                .getNewParticle(CartesianPoint.ORIGIN, Vector.E_X);
 ////
@@ -433,20 +433,20 @@
 ////                .rotateSpeed(Vector.E_Z, -directionCoefficient * position.getTheta())
 ////                .rotateSpeed(Vector.E_Y, -directionCoefficient * position.getPhi());
 ////
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getX() - particle.getCoordinate().getX()));
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getY() - particle.getCoordinate().getY()));
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
 ////
-////        assertTrue(Utils.compareToZero(base.getSpeed().getX() - particle.getSpeed().getX()));
-////        assertTrue(Utils.compareToZero(base.getSpeed().getY() - particle.getSpeed().getY()));
-////        assertTrue(Utils.compareToZero(base.getSpeed().getZ() - particle.getSpeed().getZ()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
 ////    }
 ////
 ////    @Test
 ////    public void toInnerAndBackSameAngle3D() {
 ////        double angle = Math.toRadians(45.0);
 ////
-////        Particle base = NeutralParticle
+////        Particle from = NeutralParticle
 ////                .getFactory(1.0)
 ////                .getNewParticle(CartesianPoint.ORIGIN, Vector.E_X);
 ////
@@ -491,13 +491,13 @@
 ////                .rotateSpeed(Vector.E_Z, directionCoefficient * position.getTheta());
 ////        //---
 ////
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getX() - particle.getCoordinate().getX()));
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getY() - particle.getCoordinate().getY()));
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
 ////
-////        assertTrue(Utils.compareToZero(base.getSpeed().getX() - particle.getSpeed().getX()));
-////        assertTrue(Utils.compareToZero(base.getSpeed().getY() - particle.getSpeed().getY()));
-////        assertTrue(Utils.compareToZero(base.getSpeed().getZ() - particle.getSpeed().getZ()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
 ////    }
 ////
 ////    @Test
@@ -505,7 +505,7 @@
 ////        double angleTheta = Math.toRadians(45.0);
 ////        double anglePhi = Math.toRadians(30.0);
 ////
-////        Particle base = NeutralParticle
+////        Particle from = NeutralParticle
 ////                .getFactory(1.0)
 ////                .getNewParticle(CartesianPoint.ORIGIN, Vector.E_X);
 ////
@@ -550,20 +550,20 @@
 ////                .rotateSpeed(Vector.E_Z, directionCoefficient * position.getTheta());
 ////        //---
 ////
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getX() - particle.getCoordinate().getX()));
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getY() - particle.getCoordinate().getY()));
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
 ////
-////        assertTrue(Utils.compareToZero(base.getSpeed().getX() - particle.getSpeed().getX()));
-////        assertTrue(Utils.compareToZero(base.getSpeed().getY() - particle.getSpeed().getY()));
-////        assertTrue(Utils.compareToZero(base.getSpeed().getZ() - particle.getSpeed().getZ()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
 ////    }
 ////
 ////    @Test
 ////    public void toInnerAndBackOneAxis3D() {
 ////        double anglePhi = Math.toRadians(45.0);
 ////
-////        Particle base = NeutralParticle
+////        Particle from = NeutralParticle
 ////                .getFactory(1.0)
 ////                .getNewParticle(CartesianPoint.ORIGIN, Vector.E_X);
 ////
@@ -609,12 +609,12 @@
 //////                .turnAroundVector(-directionCoefficient * position.getPhi(), axis);
 ////        //---
 ////
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getX() - particle.getCoordinate().getX()));
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getY() - particle.getCoordinate().getY()));
-////        assertTrue(Utils.compareToZero(base.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
 ////
-////        assertTrue(Utils.compareToZero(base.getSpeed().getX() - particle.getSpeed().getX()));
-////        assertTrue(Utils.compareToZero(base.getSpeed().getY() - particle.getSpeed().getY()));
-////        assertTrue(Utils.compareToZero(base.getSpeed().getZ() - particle.getSpeed().getZ()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
 ////    }
 //}
