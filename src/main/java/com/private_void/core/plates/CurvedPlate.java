@@ -4,8 +4,8 @@ import com.private_void.app.Logger;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.coordinates.Point3D;
-import com.private_void.core.geometry.reference_frames.ReferenceFrame;
 import com.private_void.core.geometry.coordinates.SphericalPoint;
+import com.private_void.core.geometry.reference_frames.ReferenceFrame;
 import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
 
 import static com.private_void.utils.Constants.PI;
@@ -15,6 +15,7 @@ public class CurvedPlate extends Plate {
     private final RotatedCapillarFactory capillarFactory;
     private final double maxAngleR;
     private final double curvRadius;
+    private final double capillarRadiusR;
 
     public CurvedPlate(final RotatedCapillarFactory capillarFactory, final CartesianPoint center, double capillarsDensity,
                        double maxAngleR, double curvRadius) {
@@ -22,7 +23,8 @@ public class CurvedPlate extends Plate {
         this.capillarFactory = capillarFactory;
         this.maxAngleR = maxAngleR;
         this.curvRadius = curvRadius;
-        this.detector = new Detector(getDetectorsCoordinate(), curvRadius *  Math.sin(maxAngleR));
+        this.capillarRadiusR = Math.atan(capillarRadius / curvRadius);
+        this.detector = new Detector(getDetectorsCoordinate(), 0.5*curvRadius *  Math.sin(maxAngleR));
         createCapillars();
     }
 
@@ -37,46 +39,86 @@ public class CurvedPlate extends Plate {
         double minCapillarSquare = 2.0 * PI * curvRadius * curvRadius * (1.0 - Math.cos(Math.asin(capillarRadius / curvRadius)));
         double maxCapillarDensity = 1.0 / minCapillarSquare;
 
-        if (capillarsDensity > maxCapillarDensity) {
-            Logger.capillarsDensityTooBig(maxCapillarDensity);
+        if (capillarsDensity > 0.67 * maxCapillarDensity) {
+            double capillarsCellSideLengthR;
 
-            capillarsAmount = (int) (frontSquare / minCapillarSquare);
-            // todo заполняю сеткой впритирку
-            capillars = null;
+            if (capillarsDensity >= maxCapillarDensity) {
+                Logger.capillarsDensityTooBig(maxCapillarDensity);
+                capillarsAmount = (int) (frontSquare / minCapillarSquare);
+                capillarsCellSideLengthR = 2.0 * capillarRadiusR;
+            } else {
+                capillarsAmount = (int) (capillarsDensity * frontSquare);
+                capillarsCellSideLengthR = Math.sqrt(frontSquare / capillarsAmount);
+            }
 
-        } else if (capillarsDensity > 0.67 * maxCapillarDensity) {
-            Logger.capillarsDensityTooBig(maxCapillarDensity);
+            int capillarsCounter = 0;
+            int pool = (int) (maxAngleR / capillarsCellSideLengthR);
+            double plateRadiusR = maxAngleR / 2.0;
 
-            /*todo capillarsAmount = ...
-            заполняю сеткой с каким-то шагом*/
-            capillars = null;
+            SphericalPoint sphericalCenter = new SphericalPoint(
+                    curvRadius - capillarFactory.getLength(), 0.0, 0.0);
 
+            SphericalPoint initialPoint = sphericalCenter
+                    .shift(0.0, -plateRadiusR + capillarRadiusR, -plateRadiusR + capillarRadiusR);
+
+            for (int i = 0; i < pool; i++) {
+                for (int j = 0; j < pool; j++) {
+
+                    SphericalPoint capillarsEndCenter = initialPoint.shift(
+                            0.0, i * capillarsCellSideLengthR, j * capillarsCellSideLengthR);
+
+                    if (      (capillarsEndCenter.getTheta() - sphericalCenter.getTheta())
+                            * (capillarsEndCenter.getTheta() - sphericalCenter.getTheta())
+                            + (capillarsEndCenter.getPhi() - sphericalCenter.getPhi())
+                            * (capillarsEndCenter.getPhi() - sphericalCenter.getPhi())
+                            < (plateRadiusR - capillarRadiusR) * (plateRadiusR - capillarRadiusR)) {
+
+                        CartesianPoint capillarsFrontCenter = capillarsEndCenter
+                                .shift(capillarFactory.getLength(), PI / 2.0, PI)
+                                .convertToCartesian()
+                                .shift(curvRadius, 0.0, 0.0)
+                                .shift(center);
+
+                        capillars.add(capillarFactory.getNewCapillar(capillarsFrontCenter,
+                                ReferenceFrame.builder()
+                                        .atPoint(capillarsFrontCenter)
+                                        .setAngleAroundOY(capillarsEndCenter.getTheta())
+                                        .setAngleAroundOZ(-capillarsEndCenter.getPhi())
+                                        .build()));
+
+                        if (++capillarsCounter % (capillarsAmount / 10) == 0.0) {
+                            Logger.createdCapillarsPercent(i * 100 / capillarsAmount);
+                        }
+                    }
+                }
+            }
         } else {
+            //todo generate capillars end centers first
             capillarsAmount = (int) (capillarsDensity * frontSquare);
 
             SphericalPoint.Factory coordinateFactory = generator().getSphericalUniformDistribution(
                     new SphericalPoint(0.0, PI / 2.0, PI),
                     curvRadius, maxAngleR, maxAngleR);
 
-            SphericalPoint[] capillarsCenters = new SphericalPoint[capillarsAmount];
-            SphericalPoint coordinate;
+            SphericalPoint[] capillarsFrontCenters = new SphericalPoint[capillarsAmount];
+            SphericalPoint capillarsFrontCenter;
 
             for (int i = 0; i < capillarsAmount; i++) {
                 do {
-                    coordinate = coordinateFactory.getCoordinate();
-                } while (!isCapillarCoordinateValid(capillarsCenters, coordinate));
+                    capillarsFrontCenter = coordinateFactory.getCoordinate();
+                } while (!isCapillarCoordinateValid(capillarsFrontCenters, capillarsFrontCenter));
 
-                capillarsCenters[i] = coordinate;
+                capillarsFrontCenters[i] = capillarsFrontCenter;
 
-                CartesianPoint front = coordinate.convertToCartesian()
+                CartesianPoint front = capillarsFrontCenter.convertToCartesian()
                         .shift(curvRadius, 0.0, 0.0)
                         .shift(center);
 
                 capillars.add(capillarFactory.getNewCapillar(front,
                         ReferenceFrame.builder()
                                 .atPoint(front)
-                                .setAngleAroundOY(coordinate.getTheta() - PI / 2.0)
-                                .setAngleAroundOZ(-coordinate.getPhi() - PI)
+                                .setAngleAroundOY(capillarsFrontCenter.getTheta() - PI / 2.0)
+                                .setAngleAroundOZ(-capillarsFrontCenter.getPhi() - PI)
                                 .build()));
 
                 if (i % (capillarsAmount / 10) == 0.0) {
@@ -95,12 +137,11 @@ public class CurvedPlate extends Plate {
 
     @Override
     protected boolean isCapillarCoordinateValid(Point3D[] coordinates, Point3D coordinate) {
-        double radius = Math.atan(capillarRadius / curvRadius);
         int i = 0;
         while (i < coordinates.length && coordinates[i] != null) {
             if (      (coordinate.getQ2() - coordinates[i].getQ2()) * (coordinate.getQ2() - coordinates[i].getQ2())
                     + (coordinate.getQ3() - coordinates[i].getQ3()) * (coordinate.getQ3() - coordinates[i].getQ3())
-                    < 4.0 * radius * radius) {
+                    < 4.0 * capillarRadiusR * capillarRadiusR) {
                 return false;
             }
             i++;

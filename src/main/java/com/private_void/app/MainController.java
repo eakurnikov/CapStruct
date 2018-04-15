@@ -9,7 +9,7 @@ import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
-import com.private_void.core.plates.FlatPlate;
+import com.private_void.core.plates.CurvedPlate;
 import com.private_void.core.plates.Plate;
 import com.private_void.core.plates.TorusPlate;
 import com.private_void.core.surfaces.CapillarSystem;
@@ -128,7 +128,7 @@ public class MainController {
         pFluxAxisY.setText("-0.0");
 
         pFluxParticlesAmount.setText("1000");
-        pFluxLayersAmount.setText("30");
+        pFluxLayersAmount.setText("10");
         pFluxLayersDist.setText("1");
         pFluxMinIntensity.setText("0.5");
 
@@ -215,7 +215,7 @@ public class MainController {
 
             CartesianPoint.Factory uniformDistribution = generator().getXFlatUniformDistribution(250.0, 250.0);
 
-            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(250.0);
+            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(150.0);
 
             return new ParallelFlux(
                     neutralParticleFactory,
@@ -291,11 +291,11 @@ public class MainController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
-            return new FlatPlate(
-                    smoothCylinderFactory,
-                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
-                    plateCapillarsDensity,
-                    plateSideLength);
+//            return new FlatPlate(
+//                    smoothCylinderFactory,
+//                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
+//                    plateCapillarsDensity,
+//                    plateSideLength);
 
 //            return new InclinedPlate(
 //                    rotatedSmoothCylinderFactory,
@@ -303,12 +303,12 @@ public class MainController {
 //                    plateCapillarsDensity,
 //                    plateSideLength);
 
-//            return new CurvedPlate(
-//                    rotatedSmoothCylinderFactory,
-//                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
-//                    plateCapillarsDensity,
-//                    Math.toRadians(1.0),
-//                    50_000.0);
+            return new CurvedPlate(
+                    rotatedSmoothCylinderFactory,
+                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
+                    plateCapillarsDensity,
+                    Math.toRadians(1.0),
+                    50_000.0);
         }
 
         if (torusTab.isSelected()) {

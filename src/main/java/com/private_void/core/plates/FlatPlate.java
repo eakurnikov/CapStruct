@@ -27,44 +27,40 @@ public class FlatPlate extends Plate {
     protected void createCapillars() {
         Logger.creatingCapillarsStart();
 
-        double frontSquare = Math.PI * sideLength * sideLength / 4.0;
+        double frontSquare = sideLength * sideLength;
         double minCapillarSquare = (2.0 * capillarRadius) * (2.0 * capillarRadius);
         double maxCapillarDensity = 1.0 / minCapillarSquare;
 
-        if (capillarsDensity >= maxCapillarDensity) {
-            Logger.capillarsDensityTooBig(maxCapillarDensity);
+        if (capillarsDensity > 0.67 * maxCapillarDensity) {
+            double capillarsCellSideLength;
+            if (capillarsDensity >= maxCapillarDensity) {
+                Logger.capillarsDensityTooBig(maxCapillarDensity);
+                capillarsAmount = (int) (frontSquare / minCapillarSquare);
+                capillarsCellSideLength = 2.0 * capillarRadius;
+            } else {
+                capillarsAmount = (int) (capillarsDensity * frontSquare);
+                capillarsCellSideLength = Math.sqrt(frontSquare / capillarsAmount);
+            }
 
-            capillarsAmount = (int) (frontSquare / minCapillarSquare);
             int capillarsCounter = 0;
-            int pool = (int) (sideLength / (2.0 * capillarRadius));
+            int pool = (int) (sideLength / capillarsCellSideLength);
             double plateRadius = sideLength / 2.0;
 
             CartesianPoint initialPoint = center.shift(0.0, -plateRadius + capillarRadius, -plateRadius + capillarRadius);
 
-            for (int i = 0; i < pool + 1; i++) {
+            for (int i = 0; i < pool; i++) {
                 for (int j = 0; j < pool; j++) {
 
                     CartesianPoint coordinate = initialPoint.shift(
-                            0.0, i * 2.0 * capillarRadius, j * 2.0 * capillarRadius);
+                            0.0, i * capillarsCellSideLength, j * capillarsCellSideLength);
 
-                    if (      (coordinate.getY() - center.getY()) * (coordinate.getY() - center.getY())
-                            + (coordinate.getZ() - center.getZ()) * (coordinate.getZ() - center.getZ())
-                            < (plateRadius - capillarRadius) * (plateRadius - capillarRadius)) {
+                    capillars.add(capillarFactory.getNewCapillar(coordinate));
 
-                        capillars.add(capillarFactory.getNewCapillar(coordinate));
-
-                        if (++capillarsCounter % (capillarsAmount / 10) == 0.0) {
-                            Logger.createdCapillarsPercent(i * 100 / capillarsAmount);
-                        }
+                    if (++capillarsCounter % (capillarsAmount / 10) == 0.0) {
+                        Logger.createdCapillarsPercent(i * 100 / capillarsAmount);
                     }
                 }
             }
-        } else if (capillarsDensity > 0.67 * maxCapillarDensity) {
-            Logger.capillarsDensityTooBig(maxCapillarDensity);
-
-            capillarsAmount = (int) (capillarsDensity * frontSquare);
-
-
         } else {
             capillarsAmount = (int) (capillarsDensity * frontSquare);
 
