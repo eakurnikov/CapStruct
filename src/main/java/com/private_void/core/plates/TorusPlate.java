@@ -90,7 +90,7 @@ public class TorusPlate extends Plate {
 
                 ReferenceFrame capillarsEndRefFrame = ReferenceFrame.builder()
                         .atPoint(capillarsEndCenter)
-                        .setAngleAroundOX(cylindricalRandomPoint.getPhi() - Math.PI)
+                        .setAngleAroundOX(cylindricalRandomPoint.getPhi())
                         .build();
 
                 ReferenceFrame.Converter converter = new ReferenceFrame.Converter(capillarsEndRefFrame);
@@ -99,11 +99,11 @@ public class TorusPlate extends Plate {
                         converter.convert(capillarsEndCenter)
                                 .shift(-curvRadius * Math.sin(curvAngleR),
                                         0.0,
-                                        -curvRadius * (1.0 - Math.cos(curvAngleR))));
+                                        curvRadius * (1.0 - Math.cos(curvAngleR))));
 
                 ReferenceFrame capillarsFrontRefFrame = ReferenceFrame.builder()
                         .atPoint(capillarsFrontCenter)
-                        .setAngleAroundOX(cylindricalRandomPoint.getPhi() - Math.PI)
+                        .setAngleAroundOX(cylindricalRandomPoint.getPhi())
                         .build();
 
                 capillars.add(capillarFactory.getNewCapillar(capillarsFrontCenter, curvAngleR, capillarsFrontRefFrame));

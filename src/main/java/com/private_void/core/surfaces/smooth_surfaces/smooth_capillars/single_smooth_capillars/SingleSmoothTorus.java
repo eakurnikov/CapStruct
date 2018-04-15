@@ -177,8 +177,8 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
     private double getPointsAngle(final CartesianPoint point) {
         double x = point.getX();
         double y = point.getY();
-        double z = point.getZ();
+        double z = point.getZ() - curvRadius;
 
-        return Math.asin(x / Math.sqrt(x * x + y * y + (z - curvRadius) * (z - curvRadius)));
+        return Math.asin(x / Math.sqrt(x * x + y * y + z * z));
     }
 }

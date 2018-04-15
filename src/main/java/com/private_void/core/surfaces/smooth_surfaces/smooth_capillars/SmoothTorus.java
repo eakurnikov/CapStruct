@@ -48,7 +48,7 @@ public class SmoothTorus extends SmoothCapillar {
     protected Vector getNormal(final CartesianPoint point) {
         double x = point.getX();
         double y = point.getY();
-        double z = point.getZ() - curvRadius;
+        double z = point.getZ() + curvRadius;
 
         return Vector.set(
                 (-2.0 * (x * x + y * y + z * z + curvRadius * curvRadius - radius * radius) * 2.0 * x
@@ -106,7 +106,7 @@ public class SmoothTorus extends SmoothCapillar {
 
                 x = solution[0];
                 y = solution[1];
-                z = solution[2] - curvRadius;
+                z = solution[2] + curvRadius;
 
                 W[0][0] = 2 * (x * x + y * y + z * z + curvRadius * curvRadius - r * r) * 2.0 * x
                         - 8 * curvRadius * curvRadius * x;
@@ -185,7 +185,7 @@ public class SmoothTorus extends SmoothCapillar {
     private double getPointsAngle(final CartesianPoint point) {
         double x = point.getX();
         double y = point.getY();
-        double z = point.getZ() - curvRadius;
+        double z = point.getZ() + curvRadius;
 
         return Math.asin(x / Math.sqrt(x * x + y * y + z * z));
     }

@@ -9,7 +9,6 @@ import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
-import com.private_void.core.plates.CurvedPlate;
 import com.private_void.core.plates.FlatPlate;
 import com.private_void.core.plates.Plate;
 import com.private_void.core.plates.TorusPlate;
@@ -129,7 +128,7 @@ public class MainController {
         pFluxAxisY.setText("-0.0");
 
         pFluxParticlesAmount.setText("1000");
-        pFluxLayersAmount.setText("10");
+        pFluxLayersAmount.setText("30");
         pFluxLayersDist.setText("1");
         pFluxMinIntensity.setText("0.5");
 
@@ -216,7 +215,7 @@ public class MainController {
 
             CartesianPoint.Factory uniformDistribution = generator().getXFlatUniformDistribution(250.0, 250.0);
 
-            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(150.0);
+            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(250.0);
 
             return new ParallelFlux(
                     neutralParticleFactory,
