@@ -28,7 +28,7 @@ public class InclinedPlate extends Plate {
     protected void createCapillars() {
         Logger.creatingCapillarsStart();
 
-        double frontSquare = sideLength * sideLength;
+        double frontSquare = Math.PI * sideLength * sideLength / 4.0;
         double minCapillarSquare = (2.0 * capillarRadius) * (2.0 * capillarRadius);
         double maxCapillarDensity = 1.0 / minCapillarSquare;
 

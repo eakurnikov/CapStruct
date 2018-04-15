@@ -34,30 +34,25 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
         Vector normal = Vector.E_Y;
 
         while (iterator.hasNext()) {
-            try {
-                particle = (NeutralParticle) iterator.next();
-                hitPoint = getHitPoint(particle);
+            particle = (NeutralParticle) iterator.next();
+            hitPoint = getHitPoint(particle);
 
-                if (true /*doesPointBelongToPlane(hitPoint)*/) {
-                    angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
-                    particle.decreaseIntensity(reflectivity);
+            if (true /*doesPointBelongToPlane(hitPoint)*/) {
+                angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
+                particle.decreaseIntensity(reflectivity);
 
-                    if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
-                        particle
-                                .setCoordinate(hitPoint)
-                                .rotateSpeed(
-                                        getParticleSpeedRotationAxis(hitPoint, normal),
-                                        2.0 * Math.abs(angleWithSurface));
+                if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
+                    particle
+                            .setCoordinate(hitPoint)
+                            .rotateSpeed(
+                                    getParticleSpeedRotationAxis(hitPoint, normal),
+                                    2.0 * Math.abs(angleWithSurface));
 
-                    } else {
-                        particle.setAbsorbed(true);
-                        break;
-                    }
                 } else {
-                    particle.setOut(true);
+                    particle.setAbsorbed(true);
+                    break;
                 }
-            } catch (ClassCastException e) {
-                e.printStackTrace();
+                particle.setInteracted();
             }
         }
         detector.detect(flux);

@@ -4,7 +4,7 @@ import com.private_void.utils.Utils;
 import org.junit.Test;
 
 import static java.lang.Math.PI;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class CartesianPointTest {
 
@@ -114,5 +114,38 @@ public class CartesianPointTest {
         assertTrue(Utils.compareToZero(s.getPhi() - c.getPhi()) ||
                 Utils.compareToZero(s.getPhi() - c.getPhi() + 2.0 * PI) ||
                 Utils.compareToZero(s.getPhi() - c.getPhi() - 2.0 * PI));
+    }
+
+    @Test
+    public void conversionToCylindricalTest() {
+        CylindricalPoint base = new CylindricalPoint(100.0, 0.0, 0.0);
+        CylindricalPoint point = new CartesianPoint(0.0, 0.0, 100.0).convertToCylindrical();
+
+        assertTrue(Utils.compareToZero(base.getR() - point.getR()) ||
+                Utils.compareToZero(base.getPhi() - point.getPhi()) ||
+                Utils.compareToZero(base.getZ() - point.getZ()));
+        //---
+
+        base = new CylindricalPoint(100.0, 0.0, 10.0);
+        point = new CartesianPoint(10.0, 0.0, 100.0).convertToCylindrical();
+
+        assertTrue(Utils.compareToZero(base.getR() - point.getR()) ||
+                Utils.compareToZero(base.getPhi() - point.getPhi()) ||
+                Utils.compareToZero(base.getZ() - point.getZ()));
+        //---
+
+        CartesianPoint base1 = new CylindricalPoint(100.0, PI / 4.0, 0.0).convertToCartesian();
+        CartesianPoint point1 = new CartesianPoint(0.0, 70.71067811865474, 70.71067811865474);
+
+        assertTrue(Utils.compareToZero(base1.getX() - point1.getX()) ||
+                Utils.compareToZero(base1.getY() - point1.getY()) ||
+                Utils.compareToZero(base1.getZ() - point1.getZ()));
+
+        base = new CylindricalPoint(100.0, PI / 4.0, 0.0);
+        point = new CartesianPoint(0.0, 70.71067811865474, 70.71067811865474).convertToCylindrical();
+
+        assertTrue(Utils.compareToZero(base.getR() - point.getR()) ||
+                Utils.compareToZero(base.getPhi() - point.getPhi()) ||
+                Utils.compareToZero(base.getZ() - point.getZ()));
     }
 }

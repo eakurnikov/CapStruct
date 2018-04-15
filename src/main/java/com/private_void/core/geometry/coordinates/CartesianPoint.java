@@ -44,6 +44,14 @@ public class CartesianPoint implements Point3D {
         return new SphericalPoint(radius, theta, phi);
     }
 
+    public CylindricalPoint convertToCylindrical() {
+        double r = Math.sqrt(this.z * this.z + y * y);
+        double phi = Math.atan2(y, this.z);
+        double z = x;
+
+        return new CylindricalPoint(r, phi, z);
+    }
+
     public CartesianPoint shift(double x, double y, double z) {
         return new CartesianPoint(this.x + x, this.y + y, this.z + z);
     }
@@ -102,44 +110,4 @@ public class CartesianPoint implements Point3D {
     public interface Factory {
         CartesianPoint getCoordinate();
     }
-
-//    public static RefFrameConverter getRefFrameConverter(final CartesianPoint point) {
-//        return new RefFrameConverter(point);
-//    }
-//
-//    public static RefFrameConverter getRefFrameConverter(final CartesianPoint point, final ReferenceFrame refFrame) {
-//        return new RefFrameConverter(point, refFrame);
-//    }
-
-//    public static class RefFrameConverter extends ReferenceFrame.Converter<CartesianPoint> {
-//
-//        public RefFrameConverter(final ReferenceFrame to) {
-//            super(to);
-//        }
-//
-//        public RefFrameConverter(final ReferenceFrame from, final ReferenceFrame to) {
-//            super(from, to);
-//        }
-//
-//        @Override
-//        public CartesianPoint convert(final CartesianPoint point) {
-//            return RotationMatrix.aroundOZ(conversion.getAngleAroundOZ()).rotate(
-//                    RotationMatrix.aroundOY(conversion.getAngleAroundOY()).rotate(
-//                            RotationMatrix.aroundOX(conversion.getAngleAroundOX()).rotate(
-//                                    point.shift(conversion.getShiftX(), conversion.getShiftY(), conversion.getShiftZ())
-//                            )
-//                    )
-//            );
-//        }
-//
-//        @Override
-//        public CartesianPoint convertBack(final CartesianPoint point) {
-//            return RotationMatrix.aroundOX(-conversion.getAngleAroundOX()).rotate(
-//                    RotationMatrix.aroundOY(-conversion.getAngleAroundOY()).rotate(
-//                            RotationMatrix.aroundOZ(-conversion.getAngleAroundOZ()).rotate(
-//                                    point)
-//                    )
-//            ).shift(-conversion.getShiftX(), -conversion.getShiftY(), -conversion.getShiftZ());
-//        }
-//    }
 }

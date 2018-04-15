@@ -31,7 +31,7 @@ public class FlatPlate extends Plate {
         double minCapillarSquare = (2.0 * capillarRadius) * (2.0 * capillarRadius);
         double maxCapillarDensity = 1.0 / minCapillarSquare;
 
-        if (capillarsDensity > maxCapillarDensity) {
+        if (capillarsDensity >= maxCapillarDensity) {
             Logger.capillarsDensityTooBig(maxCapillarDensity);
 
             capillarsAmount = (int) (frontSquare / minCapillarSquare);
@@ -62,6 +62,7 @@ public class FlatPlate extends Plate {
         } else if (capillarsDensity > 0.67 * maxCapillarDensity) {
             Logger.capillarsDensityTooBig(maxCapillarDensity);
 
+            capillarsAmount = (int) (capillarsDensity * frontSquare);
 
 
         } else {
