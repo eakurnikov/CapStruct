@@ -27,7 +27,10 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 
 import static com.private_void.utils.Constants.CONE_COEFFICIENT;
@@ -109,12 +112,11 @@ public class MainController {
     @FXML
     public ScatterChart chart;
 
-    @FXML
-    public Label detectedAmount;
-    public Label absorbedAmount;
-    public Label outOfCapillarsAmount;
-    public Label outOfDetectorAmount;
-    public Label successLabel;
+//    @FXML
+//    public Label detectedAmount;
+//    public Label absorbedAmount;
+//    public Label outOfCapillarsAmount;
+//    public Label outOfDetectorAmount;
 
     public NumberAxis yAxis;
     public NumberAxis xAxis;
@@ -165,18 +167,38 @@ public class MainController {
         planeSize.setText("50");
 
         clearChartItem = new MenuItem("Clear all");
-        clearChartItem.setOnAction((actionEvent) -> chart.getData().clear());
+        clearChartItem.setOnAction(actionEvent -> chart.getData().clear());
         menu = new ContextMenu(clearChartItem);
-        chart.setOnMouseClicked((mouseEvent) -> {
+
+        final double SCALE_DELTA = 1.1;
+        chart.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
                 menu.show(chart.getScene().getWindow(), mouseEvent.getScreenX(), mouseEvent.getScreenY());
+            }
+        });
+
+        chart.setOnScroll(event -> {
+            event.consume();
+
+            if (event.getDeltaY() == 0) {
+                return;
+            }
+
+            double scaleFactor = (event.getDeltaY() > 0) ? SCALE_DELTA : 1 / SCALE_DELTA;
+
+            chart.setScaleX(chart.getScaleX() * scaleFactor);
+            chart.setScaleY(chart.getScaleY() * scaleFactor);
+        });
+
+        chart.setOnMousePressed(event -> {
+            if (event.getClickCount() == 2) {
+                chart.setScaleX(1.0);
+                chart.setScaleY(1.0);
             }
         });
     }
 
     public void startBtnClick(ActionEvent actionEvent) {
-        successLabel.setVisible(false);
-
         Flux flux = createFlux();
         CapillarSystem system = createPlate();
 //        CapillarSystem system = createCapillar();
@@ -523,14 +545,18 @@ public class MainController {
         chart.getData().addAll(series);
         setChartScale(detector.getUpperBound(), detector.getLowerBound());
 
-        detectedAmount.setText(String.valueOf(detector.getDetectedAmount()));
-        absorbedAmount.setText(String.valueOf(detector.getAbsorbedAmount()));
-        outOfCapillarsAmount.setText(String.valueOf(detector.getOutOfCapillarsAmount()));
-        outOfDetectorAmount.setText(String.valueOf(detector.getOutOfDetectorAmount()));
-
-        successLabel.setVisible(true);
+//        detectedAmount.setText(String.valueOf(detector.getDetectedAmount()));
+//        absorbedAmount.setText(String.valueOf(detector.getAbsorbedAmount()));
+//        outOfCapillarsAmount.setText(String.valueOf(detector.getOutOfCapillarsAmount()));
+//        outOfDetectorAmount.setText(String.valueOf(detector.getOutOfDetectorAmount()));
 
         Logger.renderingFinish();
+
+        Logger.totalDetectedAmount(detector.getDetectedAmount());
+        Logger.totalAbsorbededAmount(detector.getAbsorbedAmount());
+        Logger.totalOutOfCapillarsAmount(detector.getOutOfCapillarsAmount());
+        Logger.totalOutOfDetector(detector.getOutOfDetectorAmount());
+        Logger.totalDeletedAmount(detector.getDeletedAmount());
     }
 
     private void setChartScale(double upperBound, double lowerBound) {

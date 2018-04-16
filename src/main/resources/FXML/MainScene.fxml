@@ -3,92 +3,137 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.ScatterChart?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
-
-<HBox xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.private_void.app.MainController"
-      maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<HBox xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.private_void.app.MainController"
+      maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="700.0" prefWidth="1070.0">
 
     <children>
-        <VBox prefHeight="700.0" prefWidth="300.0">
+        <VBox prefHeight="700.0" prefWidth="330.0">
             <children>
-                <Text id="paramarers_text" strokeType="OUTSIDE" strokeWidth="0.0" text="Parameters" textOrigin="CENTER" translateX="110.0">
-
-                    <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                    </VBox.margin>
-                </Text>
 
                 <TabPane fx:id="fluxTabs" prefHeight="250.0" prefWidth="280.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
+
                         <Tab id="parallelFlux_tab" fx:id="pFluxTab" closable="false" text="Parallel flux">
                             <content>
+
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="293.0">
                                     <children>
-                                        <Label id="par_coord" fx:id="pFluxCoordianteLabel" layoutX="15.0" layoutY="15.0" text="Flux's front coordinate: " />
-                                        <TextField id="par_coord_x_param" fx:id="pFluxX" alignment="CENTER" layoutX="140.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
-                                        <TextField id="par_coord_y_param" fx:id="pFluxY" alignment="CENTER" layoutX="186.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
-                                        <TextField id="par_coord_z_param" fx:id="pFluxZ" alignment="CENTER" layoutX="231.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
 
-                                        <Label id="par_axis" fx:id="pFluxAxisLabel" layoutX="15.0" layoutY="50.0" text="Flux's axis: " />
-                                        <TextField id="par_axis_x_param" fx:id="pFluxAxisX" alignment="CENTER" layoutX="140.0" layoutY="45.0" prefHeight="25.0" prefWidth="35.0" text="0" />
-                                        <TextField id="par_axis_y_param" fx:id="pFluxAxisY" alignment="CENTER" layoutX="186.0" layoutY="45.0" prefHeight="25.0" prefWidth="35.0" text="0" />
-                                        <TextField id="par_axis_z_param" fx:id="pFluxAxisZ" alignment="CENTER" layoutX="231.0" layoutY="45.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+                                        <Label id="par_coord" fx:id="pFluxCoordianteLabel" layoutX="15.0" layoutY="15.0"
+                                               text="Flux's front coordinate: "/>
+                                        <TextField id="par_coord_x_param" fx:id="pFluxX" alignment="CENTER"
+                                                   layoutX="140.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0"
+                                                   text="0"/>
+                                        <TextField id="par_coord_y_param" fx:id="pFluxY" alignment="CENTER"
+                                                   layoutX="186.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0"
+                                                   text="0"/>
+                                        <TextField id="par_coord_z_param" fx:id="pFluxZ" alignment="CENTER"
+                                                   layoutX="231.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0"
+                                                   text="0"/>
 
-                                        <Label id="par_amount" fx:id="pFluxParticlesAmountLabel" layoutX="15.0" layoutY="85.0" text="Amount of particles in layer: " />
-                                        <TextField id="par_amount_param" fx:id="pFluxParticlesAmount" alignment="CENTER" layoutX="176.0" layoutY="80.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="par_axis" fx:id="pFluxAxisLabel" layoutX="15.0" layoutY="50.0"
+                                               text="Flux's axis: "/>
+                                        <TextField id="par_axis_x_param" fx:id="pFluxAxisX" alignment="CENTER"
+                                                   layoutX="140.0" layoutY="45.0" prefHeight="25.0" prefWidth="35.0"
+                                                   text="0"/>
+                                        <TextField id="par_axis_y_param" fx:id="pFluxAxisY" alignment="CENTER"
+                                                   layoutX="186.0" layoutY="45.0" prefHeight="25.0" prefWidth="35.0"
+                                                   text="0"/>
+                                        <TextField id="par_axis_z_param" fx:id="pFluxAxisZ" alignment="CENTER"
+                                                   layoutX="231.0" layoutY="45.0" prefHeight="25.0" prefWidth="35.0"
+                                                   text="0"/>
 
-                                        <Label id="par_layers" fx:id="pFluxLayersAmountLabel" layoutX="15.0" layoutY="120.0" text="Amount of layers: " />
-                                        <TextField id="par_layers_param" fx:id="pFluxLayersAmount" alignment="CENTER" layoutX="176.0" layoutY="115.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="par_amount" fx:id="pFluxParticlesAmountLabel" layoutX="15.0"
+                                               layoutY="85.0" text="Amount of particles in layer: "/>
+                                        <TextField id="par_amount_param" fx:id="pFluxParticlesAmount" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="80.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="par_dist" fx:id="pFluxLayersDistLabel" layoutX="15.0" layoutY="155.0" text="Distance between two layers: " />
-                                        <TextField id="par_dist_param" fx:id="pFluxLayersDist" alignment="CENTER" layoutX="176.0" layoutY="150.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="par_layers" fx:id="pFluxLayersAmountLabel" layoutX="15.0"
+                                               layoutY="120.0" text="Amount of layers: "/>
+                                        <TextField id="par_layers_param" fx:id="pFluxLayersAmount" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="115.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="par_min_i" fx:id="pFluxMinIntensityLabel" layoutX="15.0" layoutY="190.0" text="Minimal intensity: " />
-                                        <TextField id="par_min_i_param" fx:id="pFluxMinIntensity" alignment="CENTER" layoutX="176.0" layoutY="185.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="par_dist" fx:id="pFluxLayersDistLabel" layoutX="15.0" layoutY="155.0"
+                                               text="Distance between two layers: "/>
+                                        <TextField id="par_dist_param" fx:id="pFluxLayersDist" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="150.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
+
+                                        <Label id="par_min_i" fx:id="pFluxMinIntensityLabel" layoutX="15.0"
+                                               layoutY="190.0" text="Minimal intensity: "/>
+                                        <TextField id="par_min_i_param" fx:id="pFluxMinIntensity" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="185.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
+
                                     </children>
                                 </AnchorPane>
+
                             </content>
                         </Tab>
 
                         <Tab id="divergentFlux_tab" fx:id="dFluxTab" closable="false" text="Divergent flux">
                             <content>
+
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
-                                        <Label id="div_coord" fx:id="dFluxCoordinateLabel" layoutX="15.0" layoutY="15.0" text="Flux's front coordinate: " />
-                                        <TextField id="div_coord_x_param" fx:id="dFluxX" alignment="CENTER" layoutX="140.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
-                                        <TextField id="div_coord_y_param" fx:id="dFluxY" alignment="CENTER" layoutX="186.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
-                                        <TextField id="div_coord_z_param" fx:id="dFluxZ" alignment="CENTER" layoutX="231.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
 
-                                        <Label id="div_axis" fx:id="dFluxAxisLabel" layoutX="15.0" layoutY="50.0" text="Flux's axis: " />
-                                        <TextField id="div_axis_x_param" fx:id="dFluxAxisX" alignment="CENTER" layoutX="140.0" layoutY="45.0" prefHeight="25.0" prefWidth="35.0" text="0" />
-                                        <TextField id="div_axis_y_param" fx:id="dFluxAxisY" alignment="CENTER" layoutX="186.0" layoutY="45.0" prefHeight="25.0" prefWidth="35.0" text="0" />
-                                        <TextField id="div_axis_z_param" fx:id="dFluxAxisZ" alignment="CENTER" layoutX="231.0" layoutY="45.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+                                        <Label id="div_coord" fx:id="dFluxCoordinateLabel" layoutX="15.0" layoutY="15.0"
+                                               text="Flux's front coordinate: "/>
+                                        <TextField id="div_coord_x_param" fx:id="dFluxX" alignment="CENTER"
+                                                   layoutX="140.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0"
+                                                   text="0"/>
+                                        <TextField id="div_coord_y_param" fx:id="dFluxY" alignment="CENTER"
+                                                   layoutX="186.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0"
+                                                   text="0"/>
+                                        <TextField id="div_coord_z_param" fx:id="dFluxZ" alignment="CENTER"
+                                                   layoutX="231.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0"
+                                                   text="0"/>
 
-                                        <Label id="div_amount" fx:id="dFluxParticlesAmountLabel" layoutX="15.0" layoutY="85.0" text="Total amount of particles: " />
-                                        <TextField id="div_amount_param" fx:id="dFluxParticlesAmount" alignment="CENTER" layoutX="176.0" layoutY="80.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="div_axis" fx:id="dFluxAxisLabel" layoutX="15.0" layoutY="50.0"
+                                               text="Flux's axis: "/>
+                                        <TextField id="div_axis_x_param" fx:id="dFluxAxisX" alignment="CENTER"
+                                                   layoutX="140.0" layoutY="45.0" prefHeight="25.0" prefWidth="35.0"
+                                                   text="0"/>
+                                        <TextField id="div_axis_y_param" fx:id="dFluxAxisY" alignment="CENTER"
+                                                   layoutX="186.0" layoutY="45.0" prefHeight="25.0" prefWidth="35.0"
+                                                   text="0"/>
+                                        <TextField id="div_axis_z_param" fx:id="dFluxAxisZ" alignment="CENTER"
+                                                   layoutX="231.0" layoutY="45.0" prefHeight="25.0" prefWidth="35.0"
+                                                   text="0"/>
 
-                                        <Label id="div_angle" fx:id="dFluxAngleLabel" layoutX="15.0" layoutY="120.0" text="Angle of divergency (deg): " />
-                                        <TextField id="div_layers_param" fx:id="dFluxAngle" alignment="CENTER" layoutX="176.0" layoutY="115.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="div_amount" fx:id="dFluxParticlesAmountLabel" layoutX="15.0"
+                                               layoutY="85.0" text="Total amount of particles: "/>
+                                        <TextField id="div_amount_param" fx:id="dFluxParticlesAmount" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="80.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="div_min_i" fx:id="dFluxMinIntensityLabel" layoutX="15.0" layoutY="155.0" text="Minimal intensity: " />
-                                        <TextField id="div_min_i_param" fx:id="dFluxMinIntensity" alignment="CENTER" layoutX="176.0" layoutY="150.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="div_angle" fx:id="dFluxAngleLabel" layoutX="15.0" layoutY="120.0"
+                                               text="Angle of divergency (deg): "/>
+                                        <TextField id="div_layers_param" fx:id="dFluxAngle" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="115.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
+
+                                        <Label id="div_min_i" fx:id="dFluxMinIntensityLabel" layoutX="15.0"
+                                               layoutY="155.0" text="Minimal intensity: "/>
+                                        <TextField id="div_min_i_param" fx:id="dFluxMinIntensity" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="150.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
                                     </children>
                                 </AnchorPane>
+
                             </content>
                         </Tab>
+
                     </tabs>
 
                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="20.0" left="30.0" right="30.0" top="30.0"/>
                     </VBox.margin>
                 </TabPane>
 
@@ -98,28 +143,50 @@
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="201.0" prefWidth="299.0">
                                     <children>
-                                        <Label id="cyl_coord" fx:id="cylCoordinateLabel" layoutX="15.0" layoutY="15.0" text="Front coordinate: " />
-                                        <TextField id="cyl_x_param" fx:id="cylX" alignment="CENTER" layoutX="140.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
-                                        <TextField id="cyl_y_param" fx:id="cylY" alignment="CENTER" layoutX="186.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
-                                        <TextField id="cyl_z_param" fx:id="cylZ" alignment="CENTER" layoutX="231.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+                                        <Label id="cyl_coord" fx:id="cylCoordinateLabel" layoutX="15.0" layoutY="15.0"
+                                               text="Front coordinate: "/>
+                                        <TextField id="cyl_x_param" fx:id="cylX" alignment="CENTER" layoutX="140.0"
+                                                   layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0"/>
+                                        <TextField id="cyl_y_param" fx:id="cylY" alignment="CENTER" layoutX="186.0"
+                                                   layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0"/>
+                                        <TextField id="cyl_z_param" fx:id="cylZ" alignment="CENTER" layoutX="231.0"
+                                                   layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0"/>
 
-                                        <Label id="cyl_radius" fx:id="cylRadiusLabel" layoutX="15.0" layoutY="50.0" text="Cylinder's radius: " />
-                                        <TextField id="cyl_radius_param" fx:id="cylRadius" alignment="CENTER" layoutX="176.0" layoutY="45.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="cyl_radius" fx:id="cylRadiusLabel" layoutX="15.0" layoutY="50.0"
+                                               text="Cylinder's radius: "/>
+                                        <TextField id="cyl_radius_param" fx:id="cylRadius" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="45.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="cyl_length" fx:id="cylLengthLabel" layoutX="15.0" layoutY="85.0" text="Cylinder's length: " />
-                                        <TextField id="cyl_length_param" fx:id="cylLength" alignment="CENTER" layoutX="176.0" layoutY="80.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="cyl_length" fx:id="cylLengthLabel" layoutX="15.0" layoutY="85.0"
+                                               text="Cylinder's length: "/>
+                                        <TextField id="cyl_length_param" fx:id="cylLength" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="80.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="cyl_rough_size" fx:id="cylRoughSizeLabel" layoutX="15.0" layoutY="120.0" text="Roughnesses max size: " />
-                                        <TextField id="cyl_rough_size_param" fx:id="cylRoughSize" alignment="CENTER" layoutX="176.0" layoutY="115.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="cyl_rough_size" fx:id="cylRoughSizeLabel" layoutX="15.0"
+                                               layoutY="120.0" text="Roughnesses max size: "/>
+                                        <TextField id="cyl_rough_size_param" fx:id="cylRoughSize" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="115.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="cyl_rough_angle" fx:id="cylRoughAngleLabel" layoutX="15.0" layoutY="155.0" text="Roughnesses max angle: " />
-                                        <TextField id="cyl_rough_angle_param" fx:id="cylRoughAngle" alignment="CENTER" layoutX="176.0" layoutY="150.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="cyl_rough_angle" fx:id="cylRoughAngleLabel" layoutX="15.0"
+                                               layoutY="155.0" text="Roughnesses max angle: "/>
+                                        <TextField id="cyl_rough_angle_param" fx:id="cylRoughAngle" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="150.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="cyl_refl" fx:id="cylReflectLabel" layoutX="15.0" layoutY="190.0" text="Reflectivity coefficient: " />
-                                        <TextField id="cyl_refl_param" fx:id="cylReflect" alignment="CENTER" layoutX="176.0" layoutY="185.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="cyl_refl" fx:id="cylReflectLabel" layoutX="15.0" layoutY="190.0"
+                                               text="Reflectivity coefficient: "/>
+                                        <TextField id="cyl_refl_param" fx:id="cylReflect" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="185.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="cyl_slide" fx:id="cylSlideAngleLabel" layoutX="15.0" layoutY="225.0" text="Slide angle: " />
-                                        <TextField id="cyl_slide_param" fx:id="cylSlideAngle" alignment="CENTER" layoutX="176.0" layoutY="220.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="cyl_slide" fx:id="cylSlideAngleLabel" layoutX="15.0" layoutY="225.0"
+                                               text="Slide angle: "/>
+                                        <TextField id="cyl_slide_param" fx:id="cylSlideAngle" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="220.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
                                     </children>
                                 </AnchorPane>
                             </content>
@@ -129,31 +196,56 @@
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
-                                        <Label id="tor_coord" fx:id="torCoordinateLabel" layoutX="15.0" layoutY="15.0" text="Front coordinate: " />
-                                        <TextField id="tor_x_param" fx:id="torX" alignment="CENTER" layoutX="140.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
-                                        <TextField id="tor_y_param" fx:id="torY" alignment="CENTER" layoutX="186.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
-                                        <TextField id="tor_z_param" fx:id="torZ" alignment="CENTER" layoutX="231.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+                                        <Label id="tor_coord" fx:id="torCoordinateLabel" layoutX="15.0" layoutY="15.0"
+                                               text="Front coordinate: "/>
+                                        <TextField id="tor_x_param" fx:id="torX" alignment="CENTER" layoutX="140.0"
+                                                   layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0"/>
+                                        <TextField id="tor_y_param" fx:id="torY" alignment="CENTER" layoutX="186.0"
+                                                   layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0"/>
+                                        <TextField id="tor_z_param" fx:id="torZ" alignment="CENTER" layoutX="231.0"
+                                                   layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0"/>
 
-                                        <Label id="tor_radius" fx:id="torRadiusLabel" layoutX="15.0" layoutY="50.0" text="Torus's small radius: " />
-                                        <TextField id="tor_radius_param" fx:id="torRadius" alignment="CENTER" layoutX="176.0" layoutY="45.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="tor_radius" fx:id="torRadiusLabel" layoutX="15.0" layoutY="50.0"
+                                               text="Torus's small radius: "/>
+                                        <TextField id="tor_radius_param" fx:id="torRadius" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="45.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="tor_big_radius" fx:id="torBigRadiusLabel" layoutX="15.0" layoutY="85.0" text="Torus's big radius: " />
-                                        <TextField id="tor_big_radius_param" fx:id="torBigRadius" alignment="CENTER" layoutX="176.0" layoutY="80.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="tor_big_radius" fx:id="torBigRadiusLabel" layoutX="15.0"
+                                               layoutY="85.0" text="Torus's big radius: "/>
+                                        <TextField id="tor_big_radius_param" fx:id="torBigRadius" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="80.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="tor_angle" fx:id="torAngleLabel" layoutX="15.0" layoutY="120.0" text="Torus's angle: " />
-                                        <TextField id="tor_angle_param" fx:id="torAngle" alignment="CENTER" layoutX="176.0" layoutY="115.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="tor_angle" fx:id="torAngleLabel" layoutX="15.0" layoutY="120.0"
+                                               text="Torus's angle: "/>
+                                        <TextField id="tor_angle_param" fx:id="torAngle" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="115.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="tor_rough_size" fx:id="torRoughSizeLabel" layoutX="15.0" layoutY="155.0" text="Roughnesses max size: " />
-                                        <TextField id="tor_rough_size_param" fx:id="torRoughSize" alignment="CENTER" layoutX="176.0" layoutY="150.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="tor_rough_size" fx:id="torRoughSizeLabel" layoutX="15.0"
+                                               layoutY="155.0" text="Roughnesses max size: "/>
+                                        <TextField id="tor_rough_size_param" fx:id="torRoughSize" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="150.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="tor_rough_angle" fx:id="torRoughAngleLabel" layoutX="15.0" layoutY="190.0" text="Roughnesses max angle: " />
-                                        <TextField id="tor_rough_angle_param" fx:id="torRoughAngle" alignment="CENTER" layoutX="176.0" layoutY="185.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="tor_rough_angle" fx:id="torRoughAngleLabel" layoutX="15.0"
+                                               layoutY="190.0" text="Roughnesses max angle: "/>
+                                        <TextField id="tor_rough_angle_param" fx:id="torRoughAngle" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="185.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="tor_refl" fx:id="torReflectLabel" layoutX="15.0" layoutY="225.0" text="Reflectivity coefficient: " />
-                                        <TextField id="tor_refl_param" fx:id="torReflect" alignment="CENTER" layoutX="176.0" layoutY="220.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="tor_refl" fx:id="torReflectLabel" layoutX="15.0" layoutY="225.0"
+                                               text="Reflectivity coefficient: "/>
+                                        <TextField id="tor_refl_param" fx:id="torReflect" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="220.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="tor_slide" fx:id="torSlideAngleLabel" layoutX="15.0" layoutY="260.0" text="Slide angle: " />
-                                        <TextField id="tor_slide_param" fx:id="torSlideAngle" alignment="CENTER" layoutX="176.0" layoutY="255.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="tor_slide" fx:id="torSlideAngleLabel" layoutX="15.0" layoutY="260.0"
+                                               text="Slide angle: "/>
+                                        <TextField id="tor_slide_param" fx:id="torSlideAngle" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="255.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
                                     </children>
                                 </AnchorPane>
                             </content>
@@ -163,31 +255,56 @@
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
-                                        <Label id="cone_coord" fx:id="coneCoordinateLabel" layoutX="15.0" layoutY="15.0" text="Front coordinate: " />
-                                        <TextField id="cone_x_param" fx:id="coneX" alignment="CENTER" layoutX="140.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
-                                        <TextField id="cone_y_param" fx:id="coneY" alignment="CENTER" layoutX="186.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
-                                        <TextField id="cone_z_param" fx:id="coneZ" alignment="CENTER" layoutX="231.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+                                        <Label id="cone_coord" fx:id="coneCoordinateLabel" layoutX="15.0" layoutY="15.0"
+                                               text="Front coordinate: "/>
+                                        <TextField id="cone_x_param" fx:id="coneX" alignment="CENTER" layoutX="140.0"
+                                                   layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0"/>
+                                        <TextField id="cone_y_param" fx:id="coneY" alignment="CENTER" layoutX="186.0"
+                                                   layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0"/>
+                                        <TextField id="cone_z_param" fx:id="coneZ" alignment="CENTER" layoutX="231.0"
+                                                   layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0"/>
 
-                                        <Label id="cone_radius" fx:id="coneRadiusLabel" layoutX="15.0" layoutY="50.0" text="Cone's radius: " />
-                                        <TextField id="cone_radius_param" fx:id="coneRadius" alignment="CENTER" layoutX="176.0" layoutY="45.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="cone_radius" fx:id="coneRadiusLabel" layoutX="15.0" layoutY="50.0"
+                                               text="Cone's radius: "/>
+                                        <TextField id="cone_radius_param" fx:id="coneRadius" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="45.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="cone_angle" fx:id="coneAngleLabel" layoutX="15.0" layoutY="85.0" text="Cone's angle of divergency: " />
-                                        <TextField id="cone_angle_param" fx:id="coneAngle" alignment="CENTER" layoutX="176.0" layoutY="80.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="cone_angle" fx:id="coneAngleLabel" layoutX="15.0" layoutY="85.0"
+                                               text="Cone's angle of divergency: "/>
+                                        <TextField id="cone_angle_param" fx:id="coneAngle" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="80.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="cone_coef" fx:id="coneCoefficientLabel" layoutX="15.0" layoutY="120.0" text="Cone's coefficient: " />
-                                        <TextField id="cone_coef_param" fx:id="coneCoefficient" alignment="CENTER" layoutX="176.0" layoutY="115.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="cone_coef" fx:id="coneCoefficientLabel" layoutX="15.0"
+                                               layoutY="120.0" text="Cone's coefficient: "/>
+                                        <TextField id="cone_coef_param" fx:id="coneCoefficient" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="115.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="cone_rough_size" fx:id="coneRoughSizeLabel" layoutX="15.0" layoutY="155.0" text="Roughnesses max size: " />
-                                        <TextField id="tor_rough_size_param" fx:id="coneRoughSize" alignment="CENTER" layoutX="176.0" layoutY="150.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="cone_rough_size" fx:id="coneRoughSizeLabel" layoutX="15.0"
+                                               layoutY="155.0" text="Roughnesses max size: "/>
+                                        <TextField id="tor_rough_size_param" fx:id="coneRoughSize" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="150.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="cone_rough_angle" fx:id="coneRoughAngleLabel" layoutX="15.0" layoutY="190.0" text="Roughnesses max angle: " />
-                                        <TextField id="cone_rough_angle_param" fx:id="coneRoughAngle" alignment="CENTER" layoutX="176.0" layoutY="185.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="cone_rough_angle" fx:id="coneRoughAngleLabel" layoutX="15.0"
+                                               layoutY="190.0" text="Roughnesses max angle: "/>
+                                        <TextField id="cone_rough_angle_param" fx:id="coneRoughAngle" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="185.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="cone_refl" fx:id="coneReflectLabel" layoutX="15.0" layoutY="225.0" text="Reflectivity coefficient: " />
-                                        <TextField id="cone_refl_param" fx:id="coneReflect" alignment="CENTER" layoutX="176.0" layoutY="220.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="cone_refl" fx:id="coneReflectLabel" layoutX="15.0" layoutY="225.0"
+                                               text="Reflectivity coefficient: "/>
+                                        <TextField id="cone_refl_param" fx:id="coneReflect" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="220.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="tor_slide" fx:id="coneSlideAngleLabel" layoutX="15.0" layoutY="260.0" text="Slide angle: " />
-                                        <TextField id="tor_slide_param" fx:id="coneSlideAngle" alignment="CENTER" layoutX="176.0" layoutY="255.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="tor_slide" fx:id="coneSlideAngleLabel" layoutX="15.0" layoutY="260.0"
+                                               text="Slide angle: "/>
+                                        <TextField id="tor_slide_param" fx:id="coneSlideAngle" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="255.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
                                     </children>
                                 </AnchorPane>
                             </content>
@@ -197,19 +314,32 @@
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
-                                        <Label id="plane_coord" fx:id="planeCoordinateLabel" layoutX="15.0" layoutY="15.0" text="Front coordinate: " />
-                                        <TextField id="plane_x_param" fx:id="planeX" alignment="CENTER" layoutX="140.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
-                                        <TextField id="plane_y_param" fx:id="planeY" alignment="CENTER" layoutX="186.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
-                                        <TextField id="plane_z_param" fx:id="planeZ" alignment="CENTER" layoutX="231.0" layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0" />
+                                        <Label id="plane_coord" fx:id="planeCoordinateLabel" layoutX="15.0"
+                                               layoutY="15.0" text="Front coordinate: "/>
+                                        <TextField id="plane_x_param" fx:id="planeX" alignment="CENTER" layoutX="140.0"
+                                                   layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0"/>
+                                        <TextField id="plane_y_param" fx:id="planeY" alignment="CENTER" layoutX="186.0"
+                                                   layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0"/>
+                                        <TextField id="plane_z_param" fx:id="planeZ" alignment="CENTER" layoutX="231.0"
+                                                   layoutY="10.0" prefHeight="25.0" prefWidth="35.0" text="0"/>
 
-                                        <Label id="plane_period" fx:id="planePeriodLabel" layoutX="15.0" layoutY="50.0" text="Plane's period: " />
-                                        <TextField id="plane_period_param" fx:id="planePeriod" alignment="CENTER" layoutX="176.0" layoutY="45.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="plane_period" fx:id="planePeriodLabel" layoutX="15.0" layoutY="50.0"
+                                               text="Plane's period: "/>
+                                        <TextField id="plane_period_param" fx:id="planePeriod" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="45.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="plane_charge_num" fx:id="planeChargeNumLabel" layoutX="15.0" layoutY="85.0" text="Plane's atoms charge number: " />
-                                        <TextField id="plane_charge_num_param" fx:id="planeChargeNum" alignment="CENTER" layoutX="176.0" layoutY="80.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="plane_charge_num" fx:id="planeChargeNumLabel" layoutX="15.0"
+                                               layoutY="85.0" text="Plane's atoms charge number: "/>
+                                        <TextField id="plane_charge_num_param" fx:id="planeChargeNum" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="80.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
 
-                                        <Label id="plane_size" fx:id="planeSizeLabel" layoutX="15.0" layoutY="120.0" text="Plane's size: " />
-                                        <TextField id="plane_size_param" fx:id="planeSize" alignment="CENTER" layoutX="176.0" layoutY="115.0" prefHeight="25.0" prefWidth="90.0" text="0" />
+                                        <Label id="plane_size" fx:id="planeSizeLabel" layoutX="15.0" layoutY="120.0"
+                                               text="Plane's size: "/>
+                                        <TextField id="plane_size_param" fx:id="planeSize" alignment="CENTER"
+                                                   layoutX="176.0" layoutY="115.0" prefHeight="25.0" prefWidth="90.0"
+                                                   text="0"/>
                                     </children>
                                 </AnchorPane>
                             </content>
@@ -217,45 +347,50 @@
                     </tabs>
 
                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="20.0" left="30.0" right="30.0" top="10.0"/>
                     </VBox.margin>
                 </TabPane>
-                <Button id="start_btn" fx:id="start_btn" onAction="#startBtnClick" mnemonicParsing="false" prefHeight="43.0" prefWidth="280.0" text="START">
-                <VBox.margin>
-                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                </VBox.margin></Button>
+
+                <Button id="start_btn" fx:id="start_btn" onAction="#startBtnClick" mnemonicParsing="false"
+                        prefHeight="45.0" prefWidth="280.0" text="START">
+                    <VBox.margin>
+                        <Insets bottom="30.0" left="30.0" right="30.0"/>
+                    </VBox.margin>
+                </Button>
 
             </children>
-      </VBox>
-      <VBox prefHeight="200.0" prefWidth="100.0">
-         <children>
-      
-             <ScatterChart id="chart" fx:id="chart" minHeight="600.0" minWidth="600.0" prefHeight="600.0" prefWidth="600.0" title="Result distribution">
-                 <xAxis>
-                     <NumberAxis fx:id="xAxis" side="BOTTOM" lowerBound="-25" upperBound="25" tickUnit="1" label="Z"/>
-                 </xAxis>
-                 <yAxis>
-                     <NumberAxis fx:id="yAxis" side="LEFT" lowerBound="-25" upperBound="25" tickUnit="1" label="Y"/>
-                 </yAxis>
-             </ScatterChart>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-               <children>
-                   <Label id="i_on" fx:id="detectedAmountLabel" layoutX="60.0" layoutY="42.0" text="Total particles on detector: " />
-                   <Label id="i_on_param" fx:id="detectedAmount" layoutX="214.0" layoutY="42.0" text="0" />
-                   <Label id="i_abs" fx:id="absorbedAmountLabel" layoutX="60.0" layoutY="67.0" text="Total particles absorbed: " />
-                   <Label id="i_abs_param" fx:id="absorbedAmount" layoutX="214.0" layoutY="67.0" text="0" />
-                   <Label id="i_out_cap" fx:id="outOfCapillarsLabel" layoutX="344.0" layoutY="42.0" text="Total particles out of capillars: " />
-                   <Label id="i_out_cap_param" fx:id="outOfCapillarsAmount" layoutX="523.0" layoutY="42.0" text="0" />
-                   <Label id="i_out" fx:id="outOfDetectorAmountLabel" layoutX="344.0" layoutY="67.0" text="Total particles out of detector: " />
-                   <Label id="i_out_param" fx:id="outOfDetectorAmount" layoutX="523.0" layoutY="67.0" text="0" />
-                   <Label id="success" fx:id="successLabel" layoutX="246.0" layoutY="2.0" text="SUCCESSFULLY" textAlignment="CENTER" visible="false">
-                     <font>
-                        <Font size="16.0" />
-                     </font></Label>
+        </VBox>
 
-               </children>
-            </AnchorPane>
-         </children>
-      </VBox>
-   </children>
+        <ScatterChart id="chart" fx:id="chart" minHeight="700.0" minWidth="700.0" prefHeight="700.0" prefWidth="700.0">
+            <xAxis>
+                <NumberAxis fx:id="xAxis" side="BOTTOM" lowerBound="-25" upperBound="25" tickUnit="1" label="Z"/>
+            </xAxis>
+
+            <yAxis>
+                <NumberAxis fx:id="yAxis" side="LEFT" lowerBound="-25" upperBound="25" tickUnit="1" label="Y"/>
+            </yAxis>
+        </ScatterChart>
+
+        <!--<AnchorPane prefHeight="800.0" prefWidth="280.0">-->
+            <!--<children>-->
+
+                <!--<Label id="i_on" fx:id="detectedAmountLabel" layoutX="20.0" layoutY="50.0"-->
+                       <!--text="Total particles on detector: "/>-->
+                <!--<Label id="i_on_param" fx:id="detectedAmount" layoutX="250.0" layoutY="50.0" text="0"/>-->
+
+                <!--<Label id="i_abs" fx:id="absorbedAmountLabel" layoutX="20.0" layoutY="75.0"-->
+                       <!--text="Total particles absorbed: "/>-->
+                <!--<Label id="i_abs_param" fx:id="absorbedAmount" layoutX="250.0" layoutY="75.0" text="0"/>-->
+
+                <!--<Label id="i_out_cap" fx:id="outOfCapillarsLabel" layoutX="20.0" layoutY="100.0"-->
+                       <!--text="Total particles out of capillars: "/>-->
+                <!--<Label id="i_out_cap_param" fx:id="outOfCapillarsAmount" layoutX="250.0" layoutY="100.0" text="0"/>-->
+
+                <!--<Label id="i_out" fx:id="outOfDetectorAmountLabel" layoutX="20.0" layoutY="125.0"-->
+                       <!--text="Total particles out of detector: "/>-->
+                <!--<Label id="i_out_param" fx:id="outOfDetectorAmount" layoutX="250.0" layoutY="125.0" text="0"/>-->
+
+            <!--</children>-->
+        <!--</AnchorPane>-->
+    </children>
 </HBox>

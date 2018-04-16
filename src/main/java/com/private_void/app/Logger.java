@@ -95,4 +95,24 @@ public class Logger {
                 + (System.nanoTime() - renderingTimer) / 1_000_000 + " ms\n");
         renderingTimer = 0L;
     }
+
+    public static void totalDetectedAmount(int amount)  {
+        log().info("TOTAL PARTICLES ON DETECTOR = " + amount);
+    }
+
+    public static void totalAbsorbededAmount(int amount) {
+        log().info("TOTAL ABSORBED PARTICLES = " + amount);
+    }
+
+    public static void totalOutOfCapillarsAmount(int amount) {
+        log().info("TOTAL PARTICLES OUT OF CAPILLARS = " + amount);
+    }
+
+    public static void totalOutOfDetector(int amount) {
+        log().info("TOTAL PARTICLES OUT OF DETECTOR = " + amount);
+    }
+
+    public static void totalDeletedAmount(int amount) {
+        log().info("TOTAL DELETED PARTICLES = " + amount);
+    }
 }

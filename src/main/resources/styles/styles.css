@@ -1,5 +1,5 @@
-.chart-content {
-    //-fx-background: #000000
+.chart {
+    -fx-padding: 1px;
 }
 
 .chart-plot-background {
@@ -9,9 +9,10 @@
 .chart-symbol {
     -fx-background-radius: 10px;
     -fx-padding: 1px;
+    -fx-background-color: #000000;
 }
 
-.default-color0.chart-series-line {
+/*.default-color0.chart-series-line {
     -fx-stroke: #e9967a;
 }
 .default-color0.chart-line-symbol {
@@ -30,4 +31,4 @@
 }
 .default-color2.chart-line-symbol {
     -fx-background-color: #dda0dd, white;
-}
+}*/
