@@ -63,14 +63,26 @@ public class CurvedPlate extends Plate {
             for (int i = 0; i < pool; i++) {
                 for (int j = 0; j < pool; j++) {
 
-                    SphericalPoint capillarsEndCenter = initialPoint.shift(
+                    SphericalPoint cellCenter = initialPoint.shift(
                             0.0, i * capillarsCellSideLengthR, j * capillarsCellSideLengthR);
 
-                    if (      (capillarsEndCenter.getTheta() - sphericalCenter.getTheta())
-                            * (capillarsEndCenter.getTheta() - sphericalCenter.getTheta())
-                            + (capillarsEndCenter.getPhi() - sphericalCenter.getPhi())
-                            * (capillarsEndCenter.getPhi() - sphericalCenter.getPhi())
+                    if (      (cellCenter.getTheta() - sphericalCenter.getTheta())
+                            * (cellCenter.getTheta() - sphericalCenter.getTheta())
+                            + (cellCenter.getPhi() - sphericalCenter.getPhi())
+                            * (cellCenter.getPhi() - sphericalCenter.getPhi())
                             < plateEffectiveRadiusR * plateEffectiveRadiusR) {
+
+                        SphericalPoint capillarsEndCenter;
+                        if (capillarsDensity >= maxCapillarDensity) {
+                            capillarsEndCenter = cellCenter;
+                        } else {
+                            capillarsEndCenter = generator().getSphericalUniformDistribution(
+                                    new SphericalPoint(0.0, cellCenter.getTheta(), cellCenter.getPhi()),
+                                    endSurfaceRadius,
+                                    capillarsCellSideLengthR / 2.0 - capillarRadiusR,
+                                    capillarsCellSideLengthR / 2.0 - capillarRadiusR)
+                                    .getCoordinate();
+                        }
 
                         CartesianPoint capillarsFrontCenter = capillarsEndCenter
                                 .shift(capillarFactory.getLength(), PI / 2.0, PI)

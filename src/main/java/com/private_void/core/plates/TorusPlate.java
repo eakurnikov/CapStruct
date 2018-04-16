@@ -61,14 +61,24 @@ public class TorusPlate extends Plate {
             CartesianPoint initialPoint = center.shift(width, -plateEffectiveRadius, -plateEffectiveRadius);
 
             for (int i = 0; i < pool + 1; i++) {
-                for (int j = 0; j < pool; j++) {
+                for (int j = 0; j < pool + 1; j++) {
 
-                    CartesianPoint capillarsEndCenter = initialPoint.shift(
+                    CartesianPoint cellCenter = initialPoint.shift(
                             0.0, i * capillarsCellSideLength, j * capillarsCellSideLength);
 
-                    if (      (capillarsEndCenter.getY() - center.getY()) * (capillarsEndCenter.getY() - center.getY())
-                            + (capillarsEndCenter.getZ() - center.getZ()) * (capillarsEndCenter.getZ() - center.getZ())
+                    if (      (cellCenter.getY() - center.getY()) * (cellCenter.getY() - center.getY())
+                            + (cellCenter.getZ() - center.getZ()) * (cellCenter.getZ() - center.getZ())
                             < plateEffectiveRadius * plateEffectiveRadius) {
+
+                        CartesianPoint capillarsEndCenter;
+                        if (capillarsDensity >= maxCapillarDensity) {
+                            capillarsEndCenter = cellCenter;
+                        } else {
+                            capillarsEndCenter = generator().getXFlatUniformDistribution(cellCenter,
+                                    capillarsCellSideLength / 2.0 - capillarRadius,
+                                    capillarsCellSideLength / 2.0 - capillarRadius)
+                                    .getCoordinate();
+                        }
 
                         capillars.add(createCapillarAtPoint(capillarsEndCenter, capillarsEndCenter.convertToCylindrical()));
 

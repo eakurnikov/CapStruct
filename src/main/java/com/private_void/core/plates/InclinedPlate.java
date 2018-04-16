@@ -28,12 +28,13 @@ public class InclinedPlate extends Plate {
     protected void createCapillars() {
         Logger.creatingCapillarsStart();
 
-        double frontSquare = Math.PI * sideLength * sideLength / 4.0;
+        double frontSquare = sideLength * sideLength;
         double minCapillarSquare = (2.0 * capillarRadius) * (2.0 * capillarRadius);
         double maxCapillarDensity = 1.0 / minCapillarSquare;
 
         if (capillarsDensity > 0.67 * maxCapillarDensity) {
             double capillarsCellSideLength;
+
             if (capillarsDensity >= maxCapillarDensity) {
                 Logger.capillarsDensityTooBig(maxCapillarDensity);
                 capillarsAmount = (int) (frontSquare / minCapillarSquare);
@@ -50,27 +51,33 @@ public class InclinedPlate extends Plate {
             CartesianPoint initialPoint = center.shift(0.0, -plateRadius + capillarRadius, -plateRadius + capillarRadius);
 
             for (int i = 0; i < pool + 1; i++) {
-                for (int j = 0; j < pool; j++) {
+                for (int j = 0; j < pool + 1; j++) {
 
-                    CartesianPoint coordinate = initialPoint.shift(
-                            0.0, i * 2.0 * capillarRadius, j * 2.0 * capillarRadius);
+                    CartesianPoint cellCenter = initialPoint.shift(
+                            0.0, i * capillarsCellSideLength, j * capillarsCellSideLength);
 
-                    if (      (coordinate.getY() - center.getY()) * (coordinate.getY() - center.getY())
-                            + (coordinate.getZ() - center.getZ()) * (coordinate.getZ() - center.getZ())
-                            < (plateRadius - capillarRadius) * (plateRadius - capillarRadius)) {
-
-                        capillars.add(capillarFactory.getNewCapillar(
-                                coordinate,
-                                ReferenceFrame.builder()
-                                        .atPoint(coordinate)
-                                        .setAngleAroundOY(Math.toRadians(15.0))
-                                        .setAngleAroundOZ(Math.toRadians(15.0))
-                                        .build()));
-
-                        if (++capillarsCounter % (capillarsAmount / 10) == 0.0) {
-                            Logger.createdCapillarsPercent(i * 100 / capillarsAmount);
-                        }
+                    CartesianPoint capillarsFrontCoordinate;
+                    if (capillarsDensity >= maxCapillarDensity) {
+                        capillarsFrontCoordinate = cellCenter;
+                    } else {
+                        capillarsFrontCoordinate = generator().getXFlatUniformDistribution(cellCenter,
+                                capillarsCellSideLength / 2.0 - capillarRadius,
+                                capillarsCellSideLength / 2.0 - capillarRadius)
+                                .getCoordinate();
                     }
+
+                    capillars.add(capillarFactory.getNewCapillar(
+                            capillarsFrontCoordinate,
+                            ReferenceFrame.builder()
+                                    .atPoint(capillarsFrontCoordinate)
+                                    .setAngleAroundOY(Math.toRadians(15.0))
+                                    .setAngleAroundOZ(Math.toRadians(15.0))
+                                    .build()));
+
+                    if (++capillarsCounter % (capillarsAmount / 10) == 0.0) {
+                        Logger.createdCapillarsPercent(i * 100 / capillarsAmount);
+                    }
+
                 }
             }
         } else {

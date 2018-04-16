@@ -57,8 +57,7 @@ public class Logger {
     }
 
     public static void particleDeleted() {
-        log().warning("Finding the point of entry of the particle into the capillary failed.\n" +
-                " Particle has beend deleted.");
+        log().warning("Finding the point of entry of the particle into the capillary failed. Particle has been deleted.");
     }
 
     public static void processedParticlesPercent(int percent) {

@@ -33,6 +33,7 @@ public class FlatPlate extends Plate {
 
         if (capillarsDensity > 0.67 * maxCapillarDensity) {
             double capillarsCellSideLength;
+
             if (capillarsDensity >= maxCapillarDensity) {
                 Logger.capillarsDensityTooBig(maxCapillarDensity);
                 capillarsAmount = (int) (frontSquare / minCapillarSquare);
@@ -48,13 +49,23 @@ public class FlatPlate extends Plate {
 
             CartesianPoint initialPoint = center.shift(0.0, -plateRadius + capillarRadius, -plateRadius + capillarRadius);
 
-            for (int i = 0; i < pool; i++) {
-                for (int j = 0; j < pool; j++) {
+            for (int i = 0; i < pool + 1; i++) {
+                for (int j = 0; j < pool + 1; j++) {
 
-                    CartesianPoint coordinate = initialPoint.shift(
+                    CartesianPoint cellCenter = initialPoint.shift(
                             0.0, i * capillarsCellSideLength, j * capillarsCellSideLength);
 
-                    capillars.add(capillarFactory.getNewCapillar(coordinate));
+                    CartesianPoint capillarsFrontCoordinate;
+                    if (capillarsDensity >= maxCapillarDensity) {
+                        capillarsFrontCoordinate = cellCenter;
+                    } else {
+                        capillarsFrontCoordinate = generator().getXFlatUniformDistribution(cellCenter,
+                                capillarsCellSideLength / 2.0 - capillarRadius,
+                                capillarsCellSideLength / 2.0 - capillarRadius)
+                                .getCoordinate();
+                    }
+
+                    capillars.add(capillarFactory.getNewCapillar(capillarsFrontCoordinate));
 
                     if (++capillarsCounter % (capillarsAmount / 10) == 0.0) {
                         Logger.createdCapillarsPercent(i * 100 / capillarsAmount);
