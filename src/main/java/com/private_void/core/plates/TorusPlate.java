@@ -16,9 +16,9 @@ public class TorusPlate extends Plate {
     private static final double DETECTORS_DISTANCE_COEFFICIENT = 5.0;
 
     private final RotatedTorusFactory capillarFactory;
-    private final double sideLength;
-    private final double width;
     private final double maxAngleR;
+    private final double plateRadius;
+    private final double width;
     private final CartesianPoint focus;
 
     public TorusPlate(final RotatedTorusFactory capillarFactory, final CartesianPoint center, double capillarsDensity,
@@ -28,9 +28,9 @@ public class TorusPlate extends Plate {
         this.maxAngleR = maxAngleR;
         this.width = capillarFactory.getLength();
         this.focus = center.shift(DETECTORS_DISTANCE_COEFFICIENT * width, 0.0, 0.0);
-        this.sideLength = (focus.getX() - width) * Math.tan(maxAngleR);
+        this.plateRadius = (focus.getX() - width) * Math.tan(maxAngleR);
 
-        this.detector = new Detector(getDetectorsCoordinate(), sideLength);
+        this.detector = new Detector(getDetectorsCoordinate(), 2.0 * plateRadius);
         createCapillars();
     }
 
@@ -38,9 +38,10 @@ public class TorusPlate extends Plate {
     protected void createCapillars() {
         Logger.creatingCapillarsStart();
 
-        double frontSquare = Math.PI * sideLength * sideLength / 4.0;
+        double frontSquare = Math.PI * plateRadius * plateRadius;
         double minCapillarSquare = (2.0 * capillarRadius) * (2.0 * capillarRadius);
         double maxCapillarDensity = 1.0 / minCapillarSquare;
+        double plateEffectiveRadius = plateRadius - capillarRadius;
 
         if (capillarsDensity > 0.67 * maxCapillarDensity) {
             double capillarsCellSideLength;
@@ -55,10 +56,9 @@ public class TorusPlate extends Plate {
             }
 
             int capillarsCounter = 0;
-            int pool = (int) (sideLength / capillarsCellSideLength);
-            double plateRadius = sideLength / 2.0;
+            int pool = (int) (2.0 * plateRadius / capillarsCellSideLength);
 
-            CartesianPoint initialPoint = center.shift(width, -plateRadius + capillarRadius, -plateRadius + capillarRadius);
+            CartesianPoint initialPoint = center.shift(width, -plateEffectiveRadius, -plateEffectiveRadius);
 
             for (int i = 0; i < pool + 1; i++) {
                 for (int j = 0; j < pool; j++) {
@@ -68,7 +68,7 @@ public class TorusPlate extends Plate {
 
                     if (      (capillarsEndCenter.getY() - center.getY()) * (capillarsEndCenter.getY() - center.getY())
                             + (capillarsEndCenter.getZ() - center.getZ()) * (capillarsEndCenter.getZ() - center.getZ())
-                            < (plateRadius - capillarRadius) * (plateRadius - capillarRadius)) {
+                            < plateEffectiveRadius * plateEffectiveRadius) {
 
                         capillars.add(createCapillarAtPoint(capillarsEndCenter, capillarsEndCenter.convertToCylindrical()));
 
@@ -82,8 +82,7 @@ public class TorusPlate extends Plate {
             capillarsAmount = (int) (capillarsDensity * frontSquare);
 
             CylindricalPoint.Factory coordinateFactory = generator().getRadialUniformDistribution(
-                    new CylindricalPoint(0.0, 0.0, width),
-                    sideLength / 2.0 - capillarRadius);
+                    new CylindricalPoint(0.0, 0.0, width), plateEffectiveRadius);
 
             CartesianPoint[] capillarsEndCenters = new CartesianPoint[capillarsAmount];
             CartesianPoint capillarsEndCenter;
