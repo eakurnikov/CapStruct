@@ -7,7 +7,7 @@ import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
-import com.private_void.core.plates.InclinedPlate;
+import com.private_void.core.plates.CurvedPlate;
 import com.private_void.core.plates.Plate;
 import com.private_void.core.plates.TorusPlate;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
@@ -215,7 +215,7 @@ public class MainController {
 
             CartesianPoint.Factory uniformDistribution = generator().getXFlatUniformDistribution(250.0, 250.0);
 
-            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(150.0);
+            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(350.0);
 
             return new ParallelFlux(
                     neutralParticleFactory,
@@ -268,7 +268,7 @@ public class MainController {
             double capillarCriticalAngleD = Double.parseDouble(cylSlideAngle.getText());
             double capillarCriticalAngleR = Math.toRadians(capillarCriticalAngleD);
 
-            double plateCapillarsDensity = 0.0032;
+            double plateCapillarsDensity = 0.0045;
 //            double plateCapillarsDensity = 0.0043; //for curved radius = 7
 //            double plateCapillarsDensity = 0.0034; //for flat radius = 7
 //            double plateCapillarsDensity = 0.0003; //for radius = 20, count apr 20
@@ -299,18 +299,18 @@ public class MainController {
 //                    plateCapillarsDensity,
 //                    plateSideLength);
 
-            return new InclinedPlate(
-                    rotatedSmoothCylinderFactory,
-                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
-                    plateCapillarsDensity,
-                    plateSideLength);
-
-//            return new CurvedPlate(
+//            return new InclinedPlate(
 //                    rotatedSmoothCylinderFactory,
 //                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
 //                    plateCapillarsDensity,
-//                    Math.toRadians(1.0),
-//                    capillarLength * 50);
+//                    plateSideLength);
+
+            return new CurvedPlate(
+                    rotatedSmoothCylinderFactory,
+                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
+                    plateCapillarsDensity,
+                    Math.toRadians(3.0),
+                    capillarLength * 10);
         }
 
         if (torusTab.isSelected()) {
@@ -330,7 +330,7 @@ public class MainController {
             double capillarCriticalAngleR = Math.toRadians(capillarCriticalAngleD);
 
             // 0.0034 is critical 0.67 value for random or cell generation
-            double plateCapillarsDensity = 0.0034; //for radius = 7
+            double plateCapillarsDensity = 0.0035; //for radius = 7
 //          double plateCapillarsDensity = 0.0025; //for radius < 10 for domains
 
             double plateSideLength = 300.0;
@@ -532,3 +532,12 @@ public class MainController {
         Logger.renderingFinish();
     }
 }
+
+// Так можно для каждой точки отдельно задавать стиль
+//for (int index = 0; index < series.getData().size(); index++) {
+//        XYChart.Data dataPoint = series.getData().get(index);
+//        Node lineSymbol = dataPoint.getNode().lookup(".chart-line-symbol");
+//        lineSymbol.setStyle("-fx-background-color: #00ff00, #000000; -fx-background-insets: 0, 2;\n" +
+//        "    -fx-background-radius: 3px;\n" +
+//        "    -fx-padding: 3px;");
+//}
