@@ -42,15 +42,12 @@ public class Detector {
         List<Particle> detectedParticles = new ArrayList<>();
 
         for (Particle particle : flux.getParticles()) {
+            particle.setCoordinate(getCoordinateOnDetector(particle));
 
             if (!particle.isOut()) {
-
                 if (!particle.isAbsorbed()) {
-                    particle.setCoordinate(getCoordinateOnDetector(particle));
-
                     if (isParticleWithinBorders(particle)) {
                         detectedAmount++;
-                        detectedParticles.add(particle);
                     } else {
                         outOfDetectorAmount++;
                     }
@@ -60,6 +57,8 @@ public class Detector {
             } else {
                 outOfCapillarsAmount++;
             }
+
+            detectedParticles.add(particle);
         }
 
         computeScatter(detectedParticles);

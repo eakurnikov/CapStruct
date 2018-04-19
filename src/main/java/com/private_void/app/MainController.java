@@ -1,15 +1,14 @@
 package com.private_void.app;
 
 import com.private_void.core.detectors.Detector;
-import com.private_void.core.detectors.RotatedDetector;
 import com.private_void.core.fluxes.DivergentFlux;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.fluxes.ParallelFlux;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.vectors.Vector;
-import com.private_void.core.particles.*;
+import com.private_void.core.particles.NeutralParticle;
+import com.private_void.core.particles.Particle;
 import com.private_void.core.plates.CurvedPlate;
-import com.private_void.core.plates.InclinedPlate;
 import com.private_void.core.plates.Plate;
 import com.private_void.core.plates.TorusPlate;
 import com.private_void.core.surfaces.Capillar;
@@ -17,11 +16,11 @@ import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothCylinder;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothTorus;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedCapillar;
+import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedSmoothCylinder;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCapillar;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCylinder;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothTorus;
-import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedSmoothCylinder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.NumberAxis;
@@ -494,24 +493,24 @@ public class MainController {
     }
 
     private void showResult(Flux flux, Detector detector) {
-        XYChart.Series series = new XYChart.Series();
-        series.setName("Particles");
-        if (detector instanceof RotatedDetector) {
-            double angle = -((RotatedDetector) detector).getAngle();
-            for (Particle p : flux.getParticles()) {
-                CartesianPoint rotatedCoordinate = p.rotateCoordinateAroundOY(angle);
-                series.getData().add(new XYChart.Data(detector.getCenter().getZ() + rotatedCoordinate.getZ(), rotatedCoordinate.getY()));
-            }
-        } else {
-            for (Particle p : flux.getParticles()) {
-                series.getData().add(new XYChart.Data(p.getCoordinate().getZ(), p.getCoordinate().getY()));
+        XYChart.Series series1 = new XYChart.Series();
+        series1.setName("Particles");
+
+        XYChart.Series series2 = new XYChart.Series();
+        series2.setName("Particles");
+
+        for (Particle p : flux.getParticles()) {
+            if (!p.isAbsorbed()) {
+//                series1.getData().add(new XYChart.Data(p.getCoordinate().getZ(), p.getCoordinate().getY()));
+            } else {
+                series2.getData().add(new XYChart.Data(p.getCoordinate().getZ(), p.getCoordinate().getY()));
             }
         }
 
         //TODO прикрутить зум по сколлу колесика мыши
         //TODO как-то разукрашивать точки в зависимости от их интенсивности. Тогда детектор как счетчик интенсивности со своими ячейками ваще не нужен, нужна будет тупо его плоскость
-        chart.getData().addAll(series);
-        setChartScale(detector.getUpperBound(), detector.getLowerBound());
+//        chart.getData().addAll(series1);
+        chart.getData().addAll(series2);
 
         detectedAmount.setText(String.valueOf(detector.getDetectedAmount()));
         absorbedAmount.setText(String.valueOf(detector.getAbsorbedAmount()));
