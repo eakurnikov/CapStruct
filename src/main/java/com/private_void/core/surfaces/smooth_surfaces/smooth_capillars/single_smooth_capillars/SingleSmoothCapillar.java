@@ -29,7 +29,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
     }
 
     @Override
-    public void interact(Flux flux) {
+    public Flux interact(Flux flux) {
         Logger.interactionStart();
 
         NeutralParticle particle;
@@ -69,9 +69,11 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         }
 
         Logger.interactionFinish();
+
+        return detector.detect(flux);
     }
 
-    public void interactParallel(Flux flux) {
+    public Flux interactParallel(Flux flux) {
         Logger.interactionStart();
 
         ExecutorService exec = Executors.newFixedThreadPool(4);
@@ -131,9 +133,11 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         }
 
         Logger.interactionFinish();
+
+        return detector.detect(flux);
     }
 
-    public void interactStream(Flux flux) {
+    public Flux interactStream(Flux flux) {
         Logger.interactionStart();
 
         flux.getParticles().forEach(p -> {
@@ -169,9 +173,11 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         });
 
         Logger.interactionFinish();
+
+        return detector.detect(flux);
     }
 
-    public void interactFork(Flux flux) {
+    public Flux interactFork(Flux flux) {
         Logger.interactionStart();
 
         class Interaction extends RecursiveAction {
@@ -238,6 +244,8 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         pool.invoke(interaction);
 
         Logger.interactionFinish();
+
+        return detector.detect(flux);
     }
 
     @Override

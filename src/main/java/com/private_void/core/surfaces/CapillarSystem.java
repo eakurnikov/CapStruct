@@ -5,7 +5,7 @@ import com.private_void.core.fluxes.Flux;
 
 public interface CapillarSystem {
 
-    void interact(Flux flux);
+    Flux interact(Flux flux);
 
     Detector getDetector();
 }

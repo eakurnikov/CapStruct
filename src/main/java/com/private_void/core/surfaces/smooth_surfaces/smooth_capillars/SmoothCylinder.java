@@ -34,7 +34,8 @@ public class SmoothCylinder extends SmoothCapillar {
     @Override
     protected CartesianPoint getHitPoint(final NeutralParticle p) {
         if (p.getSpeed().getX() <= 0.0) {
-            p.setAbsorbed(true);
+            Logger.particleDeleted();
+            p.delete();
             return p.getCoordinate();
         }
 

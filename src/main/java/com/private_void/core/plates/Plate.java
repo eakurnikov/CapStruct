@@ -6,6 +6,7 @@ import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.coordinates.Point3D;
 import com.private_void.core.geometry.reference_frames.ReferenceFrame;
+import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarSystem;
@@ -32,7 +33,7 @@ public abstract class Plate implements CapillarSystem {
     }
 
     @Override
-    public void interact(Flux flux) {
+    public Flux interact(Flux flux) {
         Logger.interactionStart();
 
         ReferenceFrame.Converter converter;
@@ -52,6 +53,9 @@ public abstract class Plate implements CapillarSystem {
                     continue;
                 }
 
+                CartesianPoint coordinateInGlobalRefFrame = new CartesianPoint(particle.getCoordinate());
+                Vector speedInGlobalRefFrame = Vector.set(particle.getSpeed());
+
                 converter.convert(particle);
 
                 if (capillar.willParticleGetInside(particle)) {
@@ -61,11 +65,14 @@ public abstract class Plate implements CapillarSystem {
                     continue;
                 }
 
-                converter.convertBack(particle);
+                particle.setCoordinate(coordinateInGlobalRefFrame);
+                particle.setSpeed(speedInGlobalRefFrame);
             }
         }
 
         Logger.interactionFinish();
+
+        return detector.detect(flux);
     }
 
     @Override

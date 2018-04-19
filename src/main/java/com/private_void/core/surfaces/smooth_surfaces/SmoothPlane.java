@@ -26,7 +26,7 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
     }
 
     @Override
-    public void interact(Flux flux) {
+    public Flux interact(Flux flux) {
         NeutralParticle particle;
         CartesianPoint hitPoint;
         double angleWithSurface;
@@ -55,7 +55,8 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
                 particle.setInteracted();
             }
         }
-        detector.detect(flux);
+
+        return detector.detect(flux);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package com.private_void.app;
 
-import com.private_void.core.detectors.Detector;
-import com.private_void.core.detectors.RotatedDetector;
 import com.private_void.core.fluxes.DivergentFlux;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.fluxes.ParallelFlux;
@@ -9,10 +7,9 @@ import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
-import com.private_void.core.plates.CurvedPlate;
+import com.private_void.core.plates.InclinedPlate;
 import com.private_void.core.plates.Plate;
 import com.private_void.core.plates.TorusPlate;
-import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
 import com.private_void.core.surfaces.capillar_factories.RotatedTorusFactory;
@@ -22,6 +19,7 @@ import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_sm
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCylinder;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothTorus;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.NumberAxis;
@@ -110,13 +108,7 @@ public class MainController {
     public TextField planeSize;
 
     @FXML
-    public ScatterChart chart;
-
-//    @FXML
-//    public Label detectedAmount;
-//    public Label absorbedAmount;
-//    public Label outOfCapillarsAmount;
-//    public Label outOfDetectorAmount;
+    public ScatterChart<Double, Double> chart;
 
     public NumberAxis yAxis;
     public NumberAxis xAxis;
@@ -144,7 +136,7 @@ public class MainController {
         cylRoughSize.setText("0");
         cylRoughAngle.setText("0");
         cylReflect.setText("1");
-        cylSlideAngle.setText("90");
+        cylSlideAngle.setText("1");
 
         torRadius.setText("7");
         torBigRadius.setText("1000");
@@ -152,7 +144,7 @@ public class MainController {
         torRoughSize.setText("0");
         torRoughAngle.setText("0");
         torReflect.setText("1");
-        torSlideAngle.setText("90");
+        torSlideAngle.setText("1");
 
         coneRadius.setText("20");
         coneAngle.setText("30");
@@ -199,21 +191,7 @@ public class MainController {
     }
 
     public void startBtnClick(ActionEvent actionEvent) {
-        Flux flux = createFlux();
-        CapillarSystem system = createPlate();
-//        CapillarSystem system = createCapillar();
-        Detector detector = system.getDetector();
-
-        system.interact(flux);
-//        if (system instanceof Plate) {
-//            ((Plate) system).testInteract(flux);
-//        }
-//        system.interactStream(flux);
-//        system.interactParallel(flux);
-//        system.interactFork(flux);
-
-        detector.detect(flux);
-        showResult(flux, detector);
+        showResult(createPlate().interact(createFlux()));
     }
 
     private Flux createFlux() {
@@ -290,7 +268,9 @@ public class MainController {
             double capillarCriticalAngleD = Double.parseDouble(cylSlideAngle.getText());
             double capillarCriticalAngleR = Math.toRadians(capillarCriticalAngleD);
 
-            double plateCapillarsDensity = 0.0043; //for radius = 7
+            double plateCapillarsDensity = 0.0032;
+//            double plateCapillarsDensity = 0.0043; //for curved radius = 7
+//            double plateCapillarsDensity = 0.0034; //for flat radius = 7
 //            double plateCapillarsDensity = 0.0003; //for radius = 20, count apr 20
 //          double plateCapillarsDensity = 0.0025d; //for radius < 10 for domains
 
@@ -319,18 +299,18 @@ public class MainController {
 //                    plateCapillarsDensity,
 //                    plateSideLength);
 
-//            return new InclinedPlate(
-//                    rotatedSmoothCylinderFactory,
-//                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
-//                    plateCapillarsDensity,
-//                    plateSideLength);
-
-            return new CurvedPlate(
+            return new InclinedPlate(
                     rotatedSmoothCylinderFactory,
                     new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
                     plateCapillarsDensity,
-                    Math.toRadians(1.0),
-                    50_000.0);
+                    plateSideLength);
+
+//            return new CurvedPlate(
+//                    rotatedSmoothCylinderFactory,
+//                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
+//                    plateCapillarsDensity,
+//                    Math.toRadians(1.0),
+//                    capillarLength * 50);
         }
 
         if (torusTab.isSelected()) {
@@ -523,50 +503,32 @@ public class MainController {
         return null;
     }
 
-    private void showResult(Flux flux, Detector detector) {
+    private void showResult(Flux flux) {
         Logger.renderingStart();
 
-        XYChart.Series series = new XYChart.Series();
-        series.setName("Particles");
-        if (detector instanceof RotatedDetector) {
-            double angle = -((RotatedDetector) detector).getAngle();
-            for (Particle p : flux.getParticles()) {
-                CartesianPoint rotatedCoordinate = p.rotateCoordinateAroundOY(angle);
-                series.getData().add(new XYChart.Data(detector.getCenter().getZ() + rotatedCoordinate.getZ(), rotatedCoordinate.getY()));
-            }
-        } else {
-            for (Particle p : flux.getParticles()) {
-                series.getData().add(new XYChart.Data(p.getCoordinate().getZ(), p.getCoordinate().getY()));
+        XYChart.Series<Double, Double> channeledParticles = new XYChart.Series<>();
+        XYChart.Series<Double, Double> absorbedParticles = new XYChart.Series<>();
+
+        for (Particle p : flux.getParticles()) {
+            if (p.isInteracted()) {
+                channeledParticles
+                        .getData()
+                        .add(new XYChart.Data<>(
+                                p.getCoordinate().getZ(),
+                                p.getCoordinate().getY()));
+            } else {
+                absorbedParticles
+                        .getData()
+                        .add(new XYChart.Data<>(
+                                p.getCoordinate().getZ(),
+                                p.getCoordinate().getY()));
             }
         }
 
-        //TODO прикрутить зум по сколлу колесика мыши
-        //TODO как-то разукрашивать точки в зависимости от их интенсивности. Тогда детектор как счетчик интенсивности со своими ячейками ваще не нужен, нужна будет тупо его плоскость
-        chart.getData().addAll(series);
-        setChartScale(detector.getUpperBound(), detector.getLowerBound());
-
-//        detectedAmount.setText(String.valueOf(detector.getDetectedAmount()));
-//        absorbedAmount.setText(String.valueOf(detector.getAbsorbedAmount()));
-//        outOfCapillarsAmount.setText(String.valueOf(detector.getOutOfCapillarsAmount()));
-//        outOfDetectorAmount.setText(String.valueOf(detector.getOutOfDetectorAmount()));
+        ObservableList<XYChart.Series<Double,Double>> chartData = chart.getData();
+        chartData.addAll(channeledParticles);
+//        chartData.addAll(absorbedParticles);
 
         Logger.renderingFinish();
-
-        Logger.totalDetectedAmount(detector.getDetectedAmount());
-        Logger.totalAbsorbededAmount(detector.getAbsorbedAmount());
-        Logger.totalOutOfCapillarsAmount(detector.getOutOfCapillarsAmount());
-        Logger.totalOutOfDetector(detector.getOutOfDetectorAmount());
-        Logger.totalDeletedAmount(detector.getDeletedAmount());
-    }
-
-    private void setChartScale(double upperBound, double lowerBound) {
-        xAxis.setAutoRanging(false);
-        yAxis.setAutoRanging(false);
-
-        xAxis.setUpperBound(1.2 * upperBound);
-        yAxis.setUpperBound(1.2 * upperBound);
-
-        xAxis.setLowerBound(1.2 * lowerBound);
-        yAxis.setLowerBound(1.2 * lowerBound);
     }
 }

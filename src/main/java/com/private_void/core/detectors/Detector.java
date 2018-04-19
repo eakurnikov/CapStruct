@@ -11,8 +11,6 @@ import java.util.List;
 public class Detector {
     protected final CartesianPoint center;
     protected final double width;
-    protected double upperBound;
-    protected double lowerBound;
 
     protected int detectedAmount;
     protected int absorbedAmount;
@@ -26,8 +24,6 @@ public class Detector {
         this.center = center;
         this.L = center.getX();
         this.width = width;
-        this.upperBound = width / 2;
-        this.lowerBound = -width / 2;
     }
 
     private void init() {
@@ -38,41 +34,47 @@ public class Detector {
         deletedAmount = 0;
     }
 
-    public void detect(Flux flux) {
+    public Flux detect(Flux flux) {
         Logger.detectingParticlesStart();
 
         init();
         List<Particle> detectedParticles = new ArrayList<>();
 
         for (Particle particle : flux.getParticles()) {
-
             if (!particle.isDeleted()) {
-                if (particle.isInteracted()) {
-                    if (!particle.isAbsorbed()) {
+                if (!particle.isAbsorbed()) {
 
-                        particle.setCoordinate(getCoordinateOnDetector(particle));
+                    particle.setCoordinate(getCoordinateOnDetector(particle));
 
+                    if (particle.isInteracted()) {
                         if (isParticleWithinBorders(particle)) {
                             detectedAmount++;
-                            detectedParticles.add(particle);
                         } else {
                             outOfDetectorAmount++;
                         }
                     } else {
-                        absorbedAmount++;
+                        outOfCapillarsAmount++;
                     }
+                    detectedParticles.add(particle);
                 } else {
-                    outOfCapillarsAmount++;
+                    absorbedAmount++;
                 }
             } else {
                 deletedAmount++;
             }
         }
 
-        computeScatter(detectedParticles);
         flux.setParticles(detectedParticles);
 
         Logger.detectingParticlesFinish();
+
+        Logger.totalDetectedAmount(detectedAmount);
+        Logger.totalAbsorbededAmount(absorbedAmount);
+        Logger.totalOutOfCapillarsAmount(outOfCapillarsAmount);
+        Logger.totalOutOfDetector(outOfDetectorAmount);
+        Logger.totalDeletedAmount(deletedAmount);
+
+        return flux;
     }
 
     protected CartesianPoint getCoordinateOnDetector(Particle p) {
@@ -94,41 +96,9 @@ public class Detector {
                 p.getCoordinate().getZ() < center.getZ() + width / 2;
     }
 
-    protected void computeScatter(List<? extends Particle> particles) {
-        for (Particle p : particles) {
-            if (p.getCoordinate().getY() > upperBound) {
-                upperBound = p.getCoordinate().getY();
-            }
-            if (p.getCoordinate().getZ() > upperBound) {
-                upperBound = p.getCoordinate().getZ();
-            }
-            if (p.getCoordinate().getY() < lowerBound) {
-                lowerBound = p.getCoordinate().getY();
-            }
-            if (p.getCoordinate().getZ() < lowerBound) {
-                lowerBound = p.getCoordinate().getZ();
-            }
-        }
-//        if (upperBound > width / 2) {
-//            upperBound = width / 2;
-//        }
-//        if (lowerBound < -width / 2) {
-//            lowerBound = -width / 2;
-//        }
-    }
-
     public CartesianPoint getCenter() {
         return center;
     }
-
-    public double getUpperBound() {
-        return upperBound;
-    }
-
-    public double getLowerBound() {
-        return lowerBound;
-    }
-
 
     public int getDetectedAmount() {
         return detectedAmount;

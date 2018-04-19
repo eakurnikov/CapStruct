@@ -30,7 +30,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
     }
 
     @Override
-    public void interact(Flux flux) {
+    public Flux interact(Flux flux) {
         ChargedParticle particle;
         CartesianPoint newCoordinate;
         double angleWithSurface;
@@ -60,7 +60,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
             }
         }
 
-        detector.detect(flux);
+        return detector.detect(flux);
     }
 
     @Override
