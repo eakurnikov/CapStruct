@@ -500,8 +500,8 @@ public class MainController {
         series2.setName("Particles");
 
         for (Particle p : flux.getParticles()) {
-            if (!p.isAbsorbed()) {
-//                series1.getData().add(new XYChart.Data(p.getCoordinate().getZ(), p.getCoordinate().getY()));
+            if (!p.isOut()) {
+                series1.getData().add(new XYChart.Data(p.getCoordinate().getZ(), p.getCoordinate().getY()));
             } else {
                 series2.getData().add(new XYChart.Data(p.getCoordinate().getZ(), p.getCoordinate().getY()));
             }
@@ -509,7 +509,7 @@ public class MainController {
 
         //TODO прикрутить зум по сколлу колесика мыши
         //TODO как-то разукрашивать точки в зависимости от их интенсивности. Тогда детектор как счетчик интенсивности со своими ячейками ваще не нужен, нужна будет тупо его плоскость
-//        chart.getData().addAll(series1);
+        chart.getData().addAll(series1);
         chart.getData().addAll(series2);
 
         detectedAmount.setText(String.valueOf(detector.getDetectedAmount()));
