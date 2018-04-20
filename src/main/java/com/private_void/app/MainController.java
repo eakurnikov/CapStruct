@@ -503,7 +503,7 @@ public class MainController {
         return null;
     }
 
-    private void showResult(Flux flux) {
+    private void showResult(final Flux flux) {
         Logger.renderingStart();
 
         XYChart.Series<Double, Double> channeledParticles = new XYChart.Series<>();

@@ -96,16 +96,16 @@ public class Logger {
         renderingTimer = 0L;
     }
 
-    public static void totalDetectedAmount(int amount)  {
-        log().info("TOTAL PARTICLES ON DETECTOR = " + amount);
+    public static void totalChanneleddAmount(int amount)  {
+        log().info("TOTAL PARTICLES CHANNELED = " + amount);
     }
 
     public static void totalAbsorbededAmount(int amount) {
         log().info("TOTAL ABSORBED PARTICLES = " + amount);
     }
 
-    public static void totalOutOfCapillarsAmount(int amount) {
-        log().info("TOTAL PARTICLES OUT OF CAPILLARS = " + amount);
+    public static void totalStuckAmount(int amount) {
+        log().info("TOTAL STUCK PARTICLES = " + amount);
     }
 
     public static void totalOutOfDetector(int amount) {
@@ -114,5 +114,9 @@ public class Logger {
 
     public static void totalDeletedAmount(int amount) {
         log().info("TOTAL DELETED PARTICLES = " + amount);
+    }
+
+    public static void convertingDistributionToFile() {
+        log().info("Converting distribution to file ...\n");
     }
 }

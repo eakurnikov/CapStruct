@@ -376,7 +376,7 @@
 
                 <!--<Label id="i_on" fx:id="detectedAmountLabel" layoutX="20.0" layoutY="50.0"-->
                        <!--text="Total particles on detector: "/>-->
-                <!--<Label id="i_on_param" fx:id="detectedAmount" layoutX="250.0" layoutY="50.0" text="0"/>-->
+                <!--<Label id="i_on_param" fx:id="channeledAmount" layoutX="250.0" layoutY="50.0" text="0"/>-->
 
                 <!--<Label id="i_abs" fx:id="absorbedAmountLabel" layoutX="20.0" layoutY="75.0"-->
                        <!--text="Total particles absorbed: "/>-->
@@ -384,7 +384,7 @@
 
                 <!--<Label id="i_out_cap" fx:id="outOfCapillarsLabel" layoutX="20.0" layoutY="100.0"-->
                        <!--text="Total particles out of capillars: "/>-->
-                <!--<Label id="i_out_cap_param" fx:id="outOfCapillarsAmount" layoutX="250.0" layoutY="100.0" text="0"/>-->
+                <!--<Label id="i_out_cap_param" fx:id="stuckAmount" layoutX="250.0" layoutY="100.0" text="0"/>-->
 
                 <!--<Label id="i_out" fx:id="outOfDetectorAmountLabel" layoutX="20.0" layoutY="125.0"-->
                        <!--text="Total particles out of detector: "/>-->

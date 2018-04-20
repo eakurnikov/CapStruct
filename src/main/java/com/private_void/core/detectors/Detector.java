@@ -5,57 +5,106 @@ import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.particles.Particle;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Detector {
-    protected final CartesianPoint center;
+    public static final double CELL_WIDTH = 10;
+
+    protected final CartesianPoint leftBottomPoint;
     protected final double width;
 
-    protected int detectedAmount;
-    protected int absorbedAmount;
-    protected int outOfCapillarsAmount;
+    protected ArrayList<Cell> cellsZ;
+    protected ArrayList<Cell> cellsY;
+    protected ArrayList<ArrayList<Cell>> cells;
+
+    protected ArrayList<Cell> stuckCellsZ;
+    protected ArrayList<Cell> stuckCellsY;
+    protected ArrayList<ArrayList<Cell>> stuckCells;
+
+    protected final double cellWidth;
+    protected final int cellsAmount;
+
+    protected int channeledAmount;
+    protected int stuckAmount;
     protected int outOfDetectorAmount;
+    protected int absorbedAmount;
     protected int deletedAmount;
 
-    private double L;
-
     public Detector(final CartesianPoint center, double width) {
-        this.center = center;
-        this.L = center.getX();
+        this.leftBottomPoint = center.shift(0.0, -width / 2.0, -width / 2.0);
         this.width = width;
+
+        this.cellWidth = CELL_WIDTH;
+        this.cellsAmount = (int) (width / cellWidth);
+
+        this.cellsZ = new ArrayList<>(cellsAmount);
+        this.cellsY = new ArrayList<>(cellsAmount);
+        this.cells = new ArrayList<>(cellsAmount);
+
+        createCells();
     }
 
     private void init() {
-        detectedAmount = 0;
+        channeledAmount = 0;
+        stuckAmount = 0;
         outOfDetectorAmount = 0;
         absorbedAmount = 0;
-        outOfCapillarsAmount = 0;
         deletedAmount = 0;
+    }
+
+    private void createCells() {
+        for (int i = 0; i < cellsAmount; i++) {
+            CartesianPoint z = leftBottomPoint.shift(0.0, 0.0, i * cellWidth);
+            CartesianPoint y = leftBottomPoint.shift(0.0, i * cellWidth, 0.0);
+
+            cellsZ.add(new Cell(z));
+            cellsY.add(new Cell(y));
+
+            stuckCellsZ.add(new Cell(z));
+            stuckCellsY.add(new Cell(y));
+
+            ArrayList<Cell> yStripe = new ArrayList<>(cellsAmount);
+
+            for (int j = 0; j < cellsAmount; j++) {
+                CartesianPoint coordinate = z.shift(0.0, j * cellWidth, 0.0);
+                yStripe.add(new Cell(coordinate));
+            }
+
+            cells.add(yStripe);
+            stuckCells.add(yStripe);
+        }
     }
 
     public Flux detect(Flux flux) {
         Logger.detectingParticlesStart();
 
+        CartesianPoint point;
         init();
-        List<Particle> detectedParticles = new ArrayList<>();
+        List<Particle> filteredParticles = new ArrayList<>();
 
         for (Particle particle : flux.getParticles()) {
             if (!particle.isDeleted()) {
                 if (!particle.isAbsorbed()) {
 
-                    particle.setCoordinate(getCoordinateOnDetector(particle));
+                    point = getCoordinateOnDetector(particle);
+                    particle.setCoordinate(point);
 
                     if (particle.isInteracted()) {
                         if (isParticleWithinBorders(particle)) {
-                            detectedAmount++;
+                            channeledAmount++;
+                            dispatchChanneled(point);
                         } else {
                             outOfDetectorAmount++;
                         }
                     } else {
-                        outOfCapillarsAmount++;
+                        stuckAmount++;
+                        dispatchStuck(point);
                     }
-                    detectedParticles.add(particle);
+
+                    filteredParticles.add(particle);
                 } else {
                     absorbedAmount++;
                 }
@@ -64,20 +113,41 @@ public class Detector {
             }
         }
 
-        flux.setParticles(detectedParticles);
+        flux.setParticles(filteredParticles);
 
         Logger.detectingParticlesFinish();
 
-        Logger.totalDetectedAmount(detectedAmount);
+        Logger.totalChanneleddAmount(channeledAmount);
         Logger.totalAbsorbededAmount(absorbedAmount);
-        Logger.totalOutOfCapillarsAmount(outOfCapillarsAmount);
+        Logger.totalStuckAmount(stuckAmount);
         Logger.totalOutOfDetector(outOfDetectorAmount);
         Logger.totalDeletedAmount(deletedAmount);
+
+        Logger.convertingDistributionToFile();
+        contvertDistributionToFile();
 
         return flux;
     }
 
-    protected CartesianPoint getCoordinateOnDetector(Particle p) {
+    private void dispatchChanneled(final CartesianPoint point) {
+        int zCellNumber = (int) ((point.getZ() - leftBottomPoint.getZ()) / cellWidth);
+        int yCellNumber = (int) ((point.getY() - leftBottomPoint.getY()) / cellWidth);
+
+        cellsZ.get(zCellNumber).register();
+        cellsY.get(yCellNumber).register();
+        cells.get(zCellNumber).get(yCellNumber).register();
+    }
+
+    private void dispatchStuck(final CartesianPoint point) {
+        int zCellNumber = (int) ((point.getZ() - leftBottomPoint.getZ()) / cellWidth);
+        int yCellNumber = (int) ((point.getY() - leftBottomPoint.getY()) / cellWidth);
+
+        stuckCellsZ.get(zCellNumber).register();
+        stuckCellsY.get(yCellNumber).register();
+        stuckCells.get(zCellNumber).get(yCellNumber).register();
+    }
+
+    protected CartesianPoint getCoordinateOnDetector(final Particle p) {
         double x = p.getCoordinate().getX();
         double y = p.getCoordinate().getY();
         double z = p.getCoordinate().getZ();
@@ -86,37 +156,89 @@ public class Detector {
         double Vy = p.getSpeed().getY();
         double Vz = p.getSpeed().getZ();
 
+        double L = leftBottomPoint.getX();
+
         return new CartesianPoint(L, (Vy / Vx) * (L - x) + y, (Vz / Vx) * (L - x) + z);
     }
 
-    protected boolean isParticleWithinBorders(Particle p) {
-        return  p.getCoordinate().getY() > center.getY() - width / 2 &&
-                p.getCoordinate().getY() < center.getY() + width / 2 &&
-                p.getCoordinate().getZ() > center.getZ() - width / 2 &&
-                p.getCoordinate().getZ() < center.getZ() + width / 2;
+    protected boolean isParticleWithinBorders(final Particle p) {
+        return  p.getCoordinate().getY() > leftBottomPoint.getY() &&
+                p.getCoordinate().getY() < leftBottomPoint.getY() + width &&
+                p.getCoordinate().getZ() > leftBottomPoint.getZ() &&
+                p.getCoordinate().getZ() < leftBottomPoint.getZ() + width;
     }
 
-    public CartesianPoint getCenter() {
-        return center;
+    public void contvertDistributionToFile() {
+        convertChanneledToFile();
+        convertChanneledStripeZToFile();
+        convertChanneledStripeYToFile();
+
+        convertStuckToFile();
+        convertStuckStripeZToFile();
+        convertStuckStripeYToFile();
     }
 
-    public int getDetectedAmount() {
-        return detectedAmount;
+    public void convertChanneledToFile() {
+        try (FileWriter writer = new FileWriter("channeled_ZY.txt")) {
+            for (ArrayList<Cell> stripe : cells) {
+                for (Cell cell : stripe) {
+                    writer.write(cell.getZ() + " " + cell.getY() + " " + cell.getParticlesAmount() + "\n");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public int getAbsorbedAmount() {
-        return absorbedAmount;
+    public void convertChanneledStripeZToFile() {
+        try (FileWriter writer = new FileWriter("channeled_Z.txt")) {
+            for (Cell cell : cellsZ) {
+                writer.write(cell.getZ() + " " + cell.getParticlesAmount() + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public int getOutOfCapillarsAmount() {
-        return outOfCapillarsAmount;
+    public void convertChanneledStripeYToFile() {
+        try (FileWriter writer = new FileWriter("channeled_Y.txt")) {
+            for (Cell cell : cellsY) {
+                writer.write(cell.getZ() + " " + cell.getParticlesAmount() + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public int getOutOfDetectorAmount() {
-        return outOfDetectorAmount;
+    public void convertStuckToFile() {
+        try (FileWriter writer = new FileWriter("stuck_ZY.txt")) {
+            for (ArrayList<Cell> stripe : stuckCells) {
+                for (Cell cell : stripe) {
+                    writer.write(cell.getZ() + " " + cell.getY() + " " + cell.getParticlesAmount() + "\n");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public int getDeletedAmount() {
-        return deletedAmount;
+    public void convertStuckStripeZToFile() {
+        try (FileWriter writer = new FileWriter("stuck_Z.txt")) {
+            for (Cell cell : stuckCellsZ) {
+                writer.write(cell.getZ() + " " + cell.getParticlesAmount() + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void convertStuckStripeYToFile() {
+        try (FileWriter writer = new FileWriter("stuck_Y.txt")) {
+            for (Cell cell : cellsZ) {
+                writer.write(cell.getZ() + " " + cell.getParticlesAmount() + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
