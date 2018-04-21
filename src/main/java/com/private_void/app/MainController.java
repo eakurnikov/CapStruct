@@ -268,7 +268,7 @@ public class MainController {
             double capillarCriticalAngleD = Double.parseDouble(cylSlideAngle.getText());
             double capillarCriticalAngleR = Math.toRadians(capillarCriticalAngleD);
 
-            double plateCapillarsDensity = 0.0045;
+            double plateCapillarsDensity = 0.0033;
 //            double plateCapillarsDensity = 0.0043; //for curved radius = 7
 //            double plateCapillarsDensity = 0.0034; //for flat radius = 7
 //            double plateCapillarsDensity = 0.0003; //for radius = 20, count apr 20

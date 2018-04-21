@@ -10,10 +10,13 @@ import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.capillar_factories.RotatedTorusFactory;
 import com.private_void.utils.Utils;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 import static com.private_void.utils.Generator.generator;
 
 public class TorusPlate extends Plate {
-    private static final double DETECTORS_DISTANCE_COEFFICIENT = 5.0;
+    private static final double DETECTORS_DISTANCE_COEFFICIENT = 20.0;
 
     private final RotatedTorusFactory capillarFactory;
     private final double maxAngleR;
@@ -32,6 +35,7 @@ public class TorusPlate extends Plate {
 
         this.detector = new Detector(getDetectorsCoordinate(), 2.0 * plateRadius);
         createCapillars();
+        writeDataInFile();
     }
 
     @Override
@@ -159,5 +163,21 @@ public class TorusPlate extends Plate {
                 .build();
 
         return capillarFactory.getNewCapillar(capillarsFrontCenter, curvAngleR, capillarsFrontRefFrame);
+    }
+
+    private void writeDataInFile() {
+        try (FileWriter writer = new FileWriter("capillar_plate_info.txt")) {
+            writer.write("Torus plate\n");
+            writer.write("Front center coordinate = ("
+                    + center.getX() + ", " + center.getY() + ", " + center.getZ() + ")\n");
+            writer.write("Plate's radius = " + this.plateRadius + "\n");
+            writer.write("Plate's curv angle = " + this.maxAngleR + "\n");
+            writer.write("Plate's focus point = " + this.focus + "\n");
+            writer.write("Capillars amount = " + this.capillarsAmount + "\n");
+            writer.write("Capillars radius = " + this.capillarRadius + "\n");
+            writer.write("Capillars density = " + this.capillarsDensity + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

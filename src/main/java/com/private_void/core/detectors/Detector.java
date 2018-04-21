@@ -12,6 +12,7 @@ import java.util.List;
 
 public class Detector {
     public static final double CELL_WIDTH = 10;
+    public static final int CELLS_AMOUNT = 500;
 
     protected final CartesianPoint leftBottomPoint;
     protected final double width;
@@ -37,12 +38,11 @@ public class Detector {
         this.leftBottomPoint = center.shift(0.0, -width / 2.0, -width / 2.0);
         this.width = width;
 
-        this.cellWidth = CELL_WIDTH;
-        this.cellsAmount = (int) (width / cellWidth);
+//        this.cellWidth = CELL_WIDTH;
+//        this.cellsAmount = (int) (width / cellWidth);
 
-        this.cellsZ = new ArrayList<>(cellsAmount);
-        this.cellsY = new ArrayList<>(cellsAmount);
-        this.cells = new ArrayList<>(cellsAmount);
+        this.cellsAmount = CELLS_AMOUNT;
+        this.cellWidth = width / cellsAmount;
 
         createCells();
     }
@@ -56,6 +56,14 @@ public class Detector {
     }
 
     private void createCells() {
+        this.cellsZ = new ArrayList<>(cellsAmount);
+        this.cellsY = new ArrayList<>(cellsAmount);
+        this.cells = new ArrayList<>(cellsAmount);
+
+        this.stuckCellsZ = new ArrayList<>(cellsAmount);
+        this.stuckCellsY = new ArrayList<>(cellsAmount);
+        this.stuckCells = new ArrayList<>(cellsAmount);
+
         for (int i = 0; i < cellsAmount; i++) {
             CartesianPoint z = leftBottomPoint.shift(0.0, 0.0, i * cellWidth);
             CartesianPoint y = leftBottomPoint.shift(0.0, i * cellWidth, 0.0);
@@ -92,16 +100,16 @@ public class Detector {
                     point = getCoordinateOnDetector(particle);
                     particle.setCoordinate(point);
 
-                    if (particle.isInteracted()) {
-                        if (isParticleWithinBorders(particle)) {
+                    if (isParticleWithinBorders(particle)) {
+                        if (particle.isInteracted()) {
                             channeledAmount++;
                             dispatchChanneled(point);
                         } else {
-                            outOfDetectorAmount++;
+                            stuckAmount++;
+                            dispatchStuck(point);
                         }
                     } else {
-                        stuckAmount++;
-                        dispatchStuck(point);
+                        outOfDetectorAmount++;
                     }
 
                     filteredParticles.add(particle);

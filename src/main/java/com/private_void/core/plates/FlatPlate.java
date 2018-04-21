@@ -6,6 +6,9 @@ import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.coordinates.Point3D;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 import static com.private_void.utils.Generator.generator;
 
 public class FlatPlate extends Plate {
@@ -21,6 +24,7 @@ public class FlatPlate extends Plate {
         this.width = capillarFactory.getLength();
         this.detector = new Detector(getDetectorsCoordinate(), sideLength);
         createCapillars();
+        writeDataInFile();
     }
 
     @Override
@@ -166,5 +170,20 @@ public class FlatPlate extends Plate {
             i++;
         }
         return true;
+    }
+
+    private void writeDataInFile() {
+        try (FileWriter writer = new FileWriter("capillar_plate_info.txt")) {
+            writer.write("Flat plate\n");
+            writer.write("Front center coordinate = ("
+                    + center.getX() + ", " + center.getY() + ", " + center.getZ() + ")\n");
+            writer.write("Plate's side length = " + this.sideLength + "\n");
+            writer.write("Plate's width = " + this.width + "\n");
+            writer.write("Capillars amount = " + this.capillarsAmount + "\n");
+            writer.write("Capillars radius = " + this.capillarRadius + "\n");
+            writer.write("Capillars density = " + this.capillarsDensity + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

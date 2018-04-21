@@ -8,6 +8,9 @@ import com.private_void.core.geometry.coordinates.SphericalPoint;
 import com.private_void.core.geometry.reference_frames.ReferenceFrame;
 import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
@@ -28,6 +31,7 @@ public class CurvedPlate extends Plate {
         this.capillarRadiusR = Math.asin(capillarRadius / endSurfaceRadius);
         this.detector = new Detector(getDetectorsCoordinate(), 2.0 / 2.0 * endSurfaceRadius * Math.sin(maxAngleR));
         createCapillars();
+        writeDataInFile();
     }
 
     @Override
@@ -159,5 +163,20 @@ public class CurvedPlate extends Plate {
             i++;
         }
         return true;
+    }
+
+    private void writeDataInFile() {
+        try (FileWriter writer = new FileWriter("capillar_plate_info.txt")) {
+            writer.write("Curved plate\n");
+            writer.write("Front center coordinate = ("
+                    + center.getX() + ", " + center.getY() + ", " + center.getZ() + ")\n");
+            writer.write("Plate's curv radius = " + this.frontSurfaceRadius + "\n");
+            writer.write("Plate's curv angle = " + this.maxAngleR + "\n");
+            writer.write("Capillars amount = " + this.capillarsAmount + "\n");
+            writer.write("Capillars radius = " + this.capillarRadius + "\n");
+            writer.write("Capillars density = " + this.capillarsDensity + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
