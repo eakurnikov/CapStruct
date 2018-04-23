@@ -1,9 +1,9 @@
 //package coordinate_conversion_tests;
 //
-//import com.private_void.core.geometry.coordinates.CartesianPoint;
+//import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 //
-//import com.private_void.core.geometry.coordinates.SphericalPoint;
-//import com.private_void.core.geometry.vectors.Vector;
+//import com.private_void.core.geometry.space_3D.coordinates.SphericalPoint;
+//import Vector;
 //import com.private_void.core.particles.NeutralParticle;
 //import com.private_void.core.particles.Particle;
 //import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedCapillar;

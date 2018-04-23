@@ -1,6 +1,6 @@
 package com.private_void.core.detectors;
 
-import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 
 public class Cell {
     private final double x;

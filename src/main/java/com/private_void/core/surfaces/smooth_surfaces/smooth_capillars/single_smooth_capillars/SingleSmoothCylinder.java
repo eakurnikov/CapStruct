@@ -2,8 +2,8 @@ package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_s
 
 import com.private_void.app.Logger;
 import com.private_void.core.detectors.Detector;
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.utils.Utils;
 

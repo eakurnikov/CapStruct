@@ -1,8 +1,8 @@
 package com.private_void.core.plates;
 
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.coordinates.Point3D;
-import com.private_void.core.geometry.coordinates.SphericalPoint;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.coordinates.Point3D;
+import com.private_void.core.geometry.space_3D.coordinates.SphericalPoint;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;

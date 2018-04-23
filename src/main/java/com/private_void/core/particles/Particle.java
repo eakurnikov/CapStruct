@@ -1,8 +1,8 @@
 package com.private_void.core.particles;
 
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.rotation_matrix.RotationMatrix;
-import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.rotation_matrix.RotationMatrix;
+import com.private_void.core.geometry.space_3D.vectors.Vector;
 
 public abstract class Particle {
     protected CartesianPoint coordinate;

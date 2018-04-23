@@ -1,40 +1,40 @@
-package com.private_void.core.geometry.coordinates;
+package com.private_void.core.geometry.space_3D.coordinates;
 
 public class SphericalPoint implements Point3D {
-    private final double radius;
+    private final double r;
     private final double theta;
     private final double phi;
 
     public SphericalPoint(double radius, double theta, double phi) {
-        this.radius = Math.abs(radius);
+        this.r = Math.abs(radius);
         this.theta = theta;
         this.phi = phi;
     }
 
     public SphericalPoint(final SphericalPoint point) {
-        this.radius = point.radius;
+        this.r = point.r;
         this.theta = point.theta;
         this.phi = point.phi;
     }
 
     public CartesianPoint convertToCartesian() {
-        double x = radius * Math.sin(theta) * Math.cos(phi);
-        double y = radius * Math.sin(theta) * Math.sin(phi);
-        double z = radius * Math.cos(theta);
+        double x = r * Math.sin(theta) * Math.cos(phi);
+        double y = r * Math.sin(theta) * Math.sin(phi);
+        double z = r * Math.cos(theta);
 
         return new CartesianPoint(x, y, z);
     }
 
-    public SphericalPoint shift(double radius, double theta, double phi) {
-        return new SphericalPoint(this.radius + radius, this.theta + theta, this.phi + phi);
+    public SphericalPoint shift(double r, double theta, double phi) {
+        return new SphericalPoint(this.r + r, this.theta + theta, this.phi + phi);
     }
 
     public SphericalPoint shift(final SphericalPoint point) {
-        return new SphericalPoint(this.radius + point.radius, this.theta + point.theta, this.phi + point.phi);
+        return new SphericalPoint(this.r + point.r, this.theta + point.theta, this.phi + point.phi);
     }
 
-    public double getRadius() {
-        return radius;
+    public double getR() {
+        return r;
     }
 
     public double getTheta() {
@@ -47,7 +47,7 @@ public class SphericalPoint implements Point3D {
 
     @Override
     public double getQ1() {
-        return radius;
+        return r;
     }
 
     @Override

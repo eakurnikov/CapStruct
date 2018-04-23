@@ -2,10 +2,10 @@ package com.private_void.core.plates;
 
 import com.private_void.app.Logger;
 import com.private_void.core.detectors.Detector;
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.coordinates.CylindricalPoint;
-import com.private_void.core.geometry.coordinates.Point3D;
-import com.private_void.core.geometry.reference_frames.ReferenceFrame;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.coordinates.CylindricalPoint;
+import com.private_void.core.geometry.space_3D.coordinates.Point3D;
+import com.private_void.core.geometry.space_3D.reference_frames.ReferenceFrame;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.capillar_factories.RotatedTorusFactory;
 import com.private_void.utils.Utils;

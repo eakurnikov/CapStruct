@@ -4,9 +4,9 @@ import com.private_void.core.detectors.Distribution;
 import com.private_void.core.fluxes.DivergentFlux;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.fluxes.ParallelFlux;
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.coordinates.Point2D;
-import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_2D.CartesianPoint2D;
+import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.plates.CurvedPlate;
@@ -521,16 +521,16 @@ public class MainController {
 
     private void showChanneledImage(final Distribution distribution) {
         XYChart.Series<Double, Double> channeledImage = new XYChart.Series<>();
-        for (Point2D point : distribution.getChanneledImage()) {
-            channeledImage.getData().add(new XYChart.Data<>(point.getQ1(), point.getQ2()));
+        for (CartesianPoint2D point : distribution.getChanneledImage()) {
+            channeledImage.getData().add(new XYChart.Data<>(point.getX(), point.getY()));
         }
         chart.getData().addAll(channeledImage);
     }
 
     private void showPiercedImage(final Distribution distribution) {
         XYChart.Series<Double, Double> piercedImage = new XYChart.Series<>();
-        for (Point2D point : distribution.getPiercedImage()) {
-            piercedImage.getData().add(new XYChart.Data<>(point.getQ1(), point.getQ2()));
+        for (CartesianPoint2D point : distribution.getPiercedImage()) {
+            piercedImage.getData().add(new XYChart.Data<>(point.getX(), point.getY()));
         }
         chart.getData().addAll(piercedImage);
     }

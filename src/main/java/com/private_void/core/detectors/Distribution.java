@@ -2,15 +2,15 @@ package com.private_void.core.detectors;
 
 
 
-import com.private_void.core.geometry.coordinates.Point2D;
+import com.private_void.core.geometry.space_2D.CartesianPoint2D;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class Distribution {
-    private final ArrayList<Point2D> channeledImage;
-    private final ArrayList<Point2D> piercedImage;
+    private final ArrayList<CartesianPoint2D> channeledImage;
+    private final ArrayList<CartesianPoint2D> piercedImage;
 
     private final ArrayList<ArrayList<Cell>> channeledCells;
     private final ArrayList<ArrayList<Cell>> piercedCells;
@@ -28,8 +28,8 @@ public class Distribution {
     private final int absorbedAmount;
     private final int deletedAmount;
 
-    private Distribution(final ArrayList<Point2D> channeledImage,
-                         final ArrayList<Point2D> piercedImage,
+    private Distribution(final ArrayList<CartesianPoint2D> channeledImage,
+                         final ArrayList<CartesianPoint2D> piercedImage,
 
                          final ArrayList<ArrayList<Cell>> channeledCells,
                          final ArrayList<ArrayList<Cell>> piercedCells,
@@ -67,11 +67,11 @@ public class Distribution {
         this.deletedAmount = deletedAmount;
     }
 
-    public ArrayList<Point2D> getChanneledImage() {
+    public ArrayList<CartesianPoint2D> getChanneledImage() {
         return channeledImage;
     }
 
-    public ArrayList<Point2D> getPiercedImage() {
+    public ArrayList<CartesianPoint2D> getPiercedImage() {
         return piercedImage;
     }
 
@@ -199,8 +199,8 @@ public class Distribution {
     }
 
     public static class Builder {
-        private ArrayList<Point2D> channeledImage;
-        private ArrayList<Point2D> piercedImage;
+        private ArrayList<CartesianPoint2D> channeledImage;
+        private ArrayList<CartesianPoint2D> piercedImage;
 
         private ArrayList<ArrayList<Cell>> channeledCells;
         private ArrayList<ArrayList<Cell>> piercedCells;
@@ -220,12 +220,12 @@ public class Distribution {
 
         private Builder() {}
 
-        public Builder setChanneledImage(final ArrayList<Point2D> channeledImage) {
+        public Builder setChanneledImage(final ArrayList<CartesianPoint2D> channeledImage) {
             this.channeledImage = channeledImage;
             return this;
         }
 
-        public Builder setPiercedImage(final ArrayList<Point2D> piercedImage) {
+        public Builder setPiercedImage(final ArrayList<CartesianPoint2D> piercedImage) {
             this.piercedImage = piercedImage;
             return this;
         }

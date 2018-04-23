@@ -1,7 +1,7 @@
 package com.private_void.core.surfaces.smooth_surfaces;
 
 import com.private_void.core.surfaces.Surface;
-import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.particles.NeutralParticle;
 
 public abstract class SmoothSurface extends Surface {

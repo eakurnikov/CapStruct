@@ -2,8 +2,8 @@ package com.private_void.core.detectors;
 
 import com.private_void.app.Logger;
 import com.private_void.core.fluxes.Flux;
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.coordinates.Point2D;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_2D.CartesianPoint2D;
 import com.private_void.core.particles.Particle;
 
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ public class Detector {
     protected final CartesianPoint leftBottomPoint;
     protected final double width;
 
-    ArrayList<Point2D> channeledImage = new ArrayList<>();
-    ArrayList<Point2D> piercedImage = new ArrayList<>();
+    ArrayList<CartesianPoint2D> channeledImage = new ArrayList<>();
+    ArrayList<CartesianPoint2D> piercedImage = new ArrayList<>();
 
     protected ArrayList<ArrayList<Cell>> channeledCells;
     protected ArrayList<ArrayList<Cell>> piercedCells;
@@ -106,12 +106,12 @@ public class Detector {
             int yCellNumber = (int) ((point.getY() - leftBottomPoint.getY()) / cellWidth);
 
             if (particle.isInteracted()) {
-                channeledImage.add(new Point2D(point.getZ(), point.getY()));
+                channeledImage.add(new CartesianPoint2D(point.getZ(), point.getY()));
                 channeledCells.get(zCellNumber).get(yCellNumber).register();
                 channeledCellsZ.get(zCellNumber).register();
                 channeledCellsY.get(yCellNumber).register();
             } else {
-                piercedImage.add(new Point2D(point.getZ(), point.getY()));
+                piercedImage.add(new CartesianPoint2D(point.getZ(), point.getY()));
                 piercedCells.get(zCellNumber).get(yCellNumber).register();
                 piercedCellsZ.get(zCellNumber).register();
                 piercedCellsY.get(yCellNumber).register();

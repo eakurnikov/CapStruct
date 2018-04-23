@@ -1,17 +1,7 @@
 package coordinate_conversion_tests;
 
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.coordinates.SphericalPoint;
-import com.private_void.core.plates.CurvedPlate;
-import com.private_void.core.surfaces.Capillar;
-
-import com.private_void.utils.Utils;
-import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.List;
-
-import static java.lang.Math.*;
 import static junit.framework.TestCase.assertTrue;
 
 public class CapillarsPositioningTest {

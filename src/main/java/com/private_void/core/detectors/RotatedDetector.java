@@ -1,7 +1,7 @@
 //package com.private_void.core.detectors;
 //
-//import com.private_void.core.geometry.coordinates.CartesianPoint;
-//import com.private_void.core.geometry.vectors.Vector;
+//import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+//import Vector;
 //import com.private_void.core.particles.Particle;
 //
 //public class RotatedDetector extends Detector {

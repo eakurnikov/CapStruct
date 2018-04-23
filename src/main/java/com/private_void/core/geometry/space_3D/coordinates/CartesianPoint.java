@@ -1,7 +1,7 @@
-package com.private_void.core.geometry.coordinates;
+package com.private_void.core.geometry.space_3D.coordinates;
 
-import com.private_void.core.geometry.rotation_matrix.RotationMatrix;
-import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.geometry.space_3D.rotation_matrix.RotationMatrix;
+import com.private_void.core.geometry.space_3D.vectors.Vector;
 
 import static com.private_void.utils.Constants.POINT_AMBIT;
 

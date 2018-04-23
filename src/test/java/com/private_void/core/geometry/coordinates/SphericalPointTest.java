@@ -1,5 +1,7 @@
 package com.private_void.core.geometry.coordinates;
 
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.coordinates.SphericalPoint;
 import com.private_void.utils.Utils;
 import org.junit.Test;
 

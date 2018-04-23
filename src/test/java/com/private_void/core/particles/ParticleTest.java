@@ -1,9 +1,5 @@
 package com.private_void.core.particles;
 
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.vectors.Vector;
-import org.junit.Test;
-
 import static junit.framework.TestCase.assertTrue;
 
 public class ParticleTest {
