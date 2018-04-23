@@ -29,7 +29,7 @@ public class CurvedPlate extends Plate {
         this.frontSurfaceRadius = frontSurfaceRadius;
         this.endSurfaceRadius = frontSurfaceRadius - capillarFactory.getLength();
         this.capillarRadiusR = Math.asin(capillarRadius / endSurfaceRadius);
-        this.detector = new Detector(getDetectorsCoordinate(), 2.0 / 2.0 * endSurfaceRadius * Math.sin(maxAngleR));
+        this.detector = new Detector(getDetectorsCoordinate(), 2.0 * endSurfaceRadius * Math.sin(maxAngleR));
         createCapillars();
         writeDataInFile();
     }

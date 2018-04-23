@@ -44,7 +44,7 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
 //        double[] solution = {
 //                p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),
 //                p.getCoordinate().getY() + radius * Math.signum(p.getSpeed().getY()),
-//                p.getCoordinate().getZ() + radius * Math.signum(p.getSpeed().getZ())};
+//                p.getCoordinate().getX() + radius * Math.signum(p.getSpeed().getX())};
 
         double[] delta = {1.0, 1.0, 1.0};
         double[] F  = new double[3];

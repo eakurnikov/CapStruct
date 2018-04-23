@@ -120,7 +120,7 @@ public class FlatPlate extends Plate {
 //
 //        double initialX = center.getX();
 //        double initialY = center.getY() - sideLength / 2;
-//        double initialZ = center.getZ() - sideLength / 2;
+//        double initialZ = center.getX() - sideLength / 2;
 //
 //        CartesianPoint coordinate;
 //        CartesianPoint[] capillarsCenters;

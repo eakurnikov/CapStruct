@@ -9,7 +9,7 @@ import java.util.Random;
 import static com.private_void.utils.Constants.SEED;
 
 public class Generator {
-    private Random rand;
+    private final Random rand;
 
     private Generator(int seed) {
         rand = new Random(seed);

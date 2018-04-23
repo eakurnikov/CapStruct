@@ -32,7 +32,7 @@ public class AtomicCylinder extends AtomicCapillar {
 
         double x = front.getX();
         //double y = front.getY();
-        //double z = front.getZ() - size / 2;
+        //double z = front.getX() - size / 2;
 
         while (x <= front.getX() + length) {
             x += period;

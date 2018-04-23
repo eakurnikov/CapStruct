@@ -15,7 +15,7 @@ import java.io.IOException;
 
 import static com.private_void.utils.Generator.generator;
 
-public class TorusPlate extends Plate {
+public class TorusFlatPlate extends Plate {
     private static final double DETECTORS_DISTANCE_COEFFICIENT = 20.0;
 
     private final RotatedTorusFactory capillarFactory;
@@ -24,8 +24,8 @@ public class TorusPlate extends Plate {
     private final double width;
     private final CartesianPoint focus;
 
-    public TorusPlate(final RotatedTorusFactory capillarFactory, final CartesianPoint center, double capillarsDensity,
-                      double maxAngleR) {
+    public TorusFlatPlate(final RotatedTorusFactory capillarFactory, final CartesianPoint center, double capillarsDensity,
+                          double maxAngleR) {
         super(center, capillarFactory.getRadius(), capillarsDensity);
         this.capillarFactory = capillarFactory;
         this.maxAngleR = maxAngleR;

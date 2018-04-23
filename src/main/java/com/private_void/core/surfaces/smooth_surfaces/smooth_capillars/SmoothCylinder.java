@@ -41,7 +41,7 @@ public class SmoothCylinder extends SmoothCapillar {
 
 //        double[] solution = {p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
 //                             p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
-//                             p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()};
+//                             p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount()};
 
         double[] solution = {
                 p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),

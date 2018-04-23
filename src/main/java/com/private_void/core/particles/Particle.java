@@ -94,7 +94,7 @@ public abstract class Particle {
 //    @Override
 //    public void toInnerRefFrame(Particle particle) {
 //        particle
-//                .shiftCoordinate(-front.getX(), -front.getY(), -front.getZ())
+//                .shiftCoordinate(-front.getX(), -front.getY(), -front.getX())
 //                .rotateRefFrameAroundOY(position.getTheta())
 //                .rotateRefFrameAroundOZ(-position.getPhi());
 //    }
@@ -104,5 +104,5 @@ public abstract class Particle {
 //        particle
 //                .rotateRefFrameAroundOZ(position.getPhi())
 //                .rotateRefFrameAroundOY(-position.getTheta())
-//                .shiftCoordinate(front.getX(), front.getY(), front.getZ());
+//                .shiftCoordinate(front.getX(), front.getY(), front.getX());
 //    }

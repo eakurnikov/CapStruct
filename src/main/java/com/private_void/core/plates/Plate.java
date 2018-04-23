@@ -2,6 +2,7 @@ package com.private_void.core.plates;
 
 import com.private_void.app.Logger;
 import com.private_void.core.detectors.Detector;
+import com.private_void.core.detectors.Distribution;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.coordinates.Point3D;
@@ -33,7 +34,7 @@ public abstract class Plate implements CapillarSystem {
     }
 
     @Override
-    public Flux interact(Flux flux) {
+    public Distribution interact(Flux flux) {
         Logger.interactionStart();
 
         ReferenceFrame.Converter converter;

@@ -32,7 +32,7 @@ public class CapillarsPositioningTest {
 //
 //        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
-//        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+//        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //
 //        // Theta = 0, Phi = 0
 //        s = new SphericalPoint(1_000.0, toRadians(0.0) + PI / 2.0, toRadians(0.0) + PI)
@@ -41,7 +41,7 @@ public class CapillarsPositioningTest {
 //
 //        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
-//        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+//        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        //---
 //
 //        // Theta = 0, Phi = 1
@@ -51,7 +51,7 @@ public class CapillarsPositioningTest {
 //
 //        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
-//        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+//        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        //---
 //
 //        // Theta = 0, Phi = -1
@@ -61,7 +61,7 @@ public class CapillarsPositioningTest {
 //
 //        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
-//        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+//        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        //---
 //
 //        // Theta = 1, Phi = 0
@@ -71,7 +71,7 @@ public class CapillarsPositioningTest {
 //
 //        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
-//        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+//        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        //---
 //
 //        // Theta = -1, Phi = 0
@@ -81,7 +81,7 @@ public class CapillarsPositioningTest {
 //
 //        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
-//        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+//        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        //---
 //
 //        // Theta = 1, Phi = 1
@@ -91,7 +91,7 @@ public class CapillarsPositioningTest {
 //
 //        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
-//        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+//        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        //---
 //
 //        // Theta = -1, Phi = -1
@@ -101,7 +101,7 @@ public class CapillarsPositioningTest {
 //
 //        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
-//        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+//        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        //---
 //
 //        // Theta = 1, Phi = -1
@@ -111,7 +111,7 @@ public class CapillarsPositioningTest {
 //
 //        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
-//        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+//        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        //---
 //
 //        // Theta = -1, Phi = 1
@@ -121,7 +121,7 @@ public class CapillarsPositioningTest {
 //
 //        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        Assert.assertTrue(Utils.compareToZero(s.getY() - c.getY()));
-//        Assert.assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+//        Assert.assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        //---
 //    }
 //
@@ -162,13 +162,13 @@ public class CapillarsPositioningTest {
 //            assertTrue(Utils.compareToZero(
 //                    c.getX() * c.getX() +
 //                            c.getY() * c.getY() +
-//                            c.getZ() * c.getZ() -
+//                            c.getX() * c.getX() -
 //                            2000.0 * 2000.0));
 //
 //            assertTrue(Utils.compareToZero(
 //                    (cylinder.getFront().getX() - 2000.0) * (cylinder.getFront().getX() - 2000.0) +
 //                            cylinder.getFront().getY() * cylinder.getFront().getY() +
-//                            cylinder.getFront().getZ() * cylinder.getFront().getZ() -
+//                            cylinder.getFront().getX() * cylinder.getFront().getX() -
 //                            2000.0 * 2000.0));
 //        }
 //    }

@@ -3,43 +3,35 @@ package com.private_void.core.detectors;
 import com.private_void.app.Logger;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
+import com.private_void.core.geometry.coordinates.Point2D;
 import com.private_void.core.particles.Particle;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Detector {
-    public static final double CELL_WIDTH = 10;
     public static final int CELLS_AMOUNT = 500;
 
     protected final CartesianPoint leftBottomPoint;
     protected final double width;
 
-    protected ArrayList<Cell> cellsZ;
-    protected ArrayList<Cell> cellsY;
-    protected ArrayList<ArrayList<Cell>> cells;
+    ArrayList<Point2D> channeledImage = new ArrayList<>();
+    ArrayList<Point2D> piercedImage = new ArrayList<>();
 
-    protected ArrayList<Cell> stuckCellsZ;
-    protected ArrayList<Cell> stuckCellsY;
-    protected ArrayList<ArrayList<Cell>> stuckCells;
+    protected ArrayList<ArrayList<Cell>> channeledCells;
+    protected ArrayList<ArrayList<Cell>> piercedCells;
+
+    protected ArrayList<Cell> channeledCellsZ;
+    protected ArrayList<Cell> piercedCellsZ;
+
+    protected ArrayList<Cell> channeledCellsY;
+    protected ArrayList<Cell> piercedCellsY;
 
     protected final double cellWidth;
     protected final int cellsAmount;
 
-    protected int channeledAmount;
-    protected int stuckAmount;
-    protected int outOfDetectorAmount;
-    protected int absorbedAmount;
-    protected int deletedAmount;
-
     public Detector(final CartesianPoint center, double width) {
         this.leftBottomPoint = center.shift(0.0, -width / 2.0, -width / 2.0);
         this.width = width;
-
-//        this.cellWidth = CELL_WIDTH;
-//        this.cellsAmount = (int) (width / cellWidth);
 
         this.cellsAmount = CELLS_AMOUNT;
         this.cellWidth = width / cellsAmount;
@@ -47,32 +39,25 @@ public class Detector {
         createCells();
     }
 
-    private void init() {
-        channeledAmount = 0;
-        stuckAmount = 0;
-        outOfDetectorAmount = 0;
-        absorbedAmount = 0;
-        deletedAmount = 0;
-    }
-
     private void createCells() {
-        this.cellsZ = new ArrayList<>(cellsAmount);
-        this.cellsY = new ArrayList<>(cellsAmount);
-        this.cells = new ArrayList<>(cellsAmount);
+        this.channeledCells = new ArrayList<>(cellsAmount);
+        this.piercedCells = new ArrayList<>(cellsAmount);
 
-        this.stuckCellsZ = new ArrayList<>(cellsAmount);
-        this.stuckCellsY = new ArrayList<>(cellsAmount);
-        this.stuckCells = new ArrayList<>(cellsAmount);
+        this.channeledCellsZ = new ArrayList<>(cellsAmount);
+        this.piercedCellsZ = new ArrayList<>(cellsAmount);
+
+        this.channeledCellsY = new ArrayList<>(cellsAmount);
+        this.piercedCellsY = new ArrayList<>(cellsAmount);
 
         for (int i = 0; i < cellsAmount; i++) {
             CartesianPoint z = leftBottomPoint.shift(0.0, 0.0, i * cellWidth);
             CartesianPoint y = leftBottomPoint.shift(0.0, i * cellWidth, 0.0);
 
-            cellsZ.add(new Cell(z));
-            cellsY.add(new Cell(y));
+            channeledCellsZ.add(new Cell(z));
+            piercedCellsZ.add(new Cell(z));
 
-            stuckCellsZ.add(new Cell(z));
-            stuckCellsY.add(new Cell(y));
+            channeledCellsY.add(new Cell(y));
+            piercedCellsY.add(new Cell(y));
 
             ArrayList<Cell> yStripe = new ArrayList<>(cellsAmount);
 
@@ -81,78 +66,75 @@ public class Detector {
                 yStripe.add(new Cell(coordinate));
             }
 
-            cells.add(yStripe);
-            stuckCells.add(yStripe);
+            channeledCells.add(yStripe);
+            piercedCells.add(yStripe);
         }
     }
 
-    public Flux detect(Flux flux) {
+    public Distribution detect(Flux flux) {
         Logger.detectingParticlesStart();
 
         CartesianPoint point;
-        init();
-        List<Particle> filteredParticles = new ArrayList<>();
+
+        int channeledAmount = 0;
+        int piercedAmount = 0;
+        int outOfDetectorAmount = 0;
+        int absorbedAmount = 0;
+        int deletedAmount = 0;
 
         for (Particle particle : flux.getParticles()) {
-            if (!particle.isDeleted()) {
-                if (!particle.isAbsorbed()) {
 
-                    point = getCoordinateOnDetector(particle);
-                    particle.setCoordinate(point);
-
-                    if (isParticleWithinBorders(particle)) {
-                        if (particle.isInteracted()) {
-                            channeledAmount++;
-                            dispatchChanneled(point);
-                        } else {
-                            stuckAmount++;
-                            dispatchStuck(point);
-                        }
-                    } else {
-                        outOfDetectorAmount++;
-                    }
-
-                    filteredParticles.add(particle);
-                } else {
-                    absorbedAmount++;
-                }
-            } else {
+            if (particle.isDeleted()) {
                 deletedAmount++;
+                continue;
+            }
+
+            if (particle.isAbsorbed()) {
+                absorbedAmount++;
+                continue;
+            }
+
+            point = getCoordinateOnDetector(particle);
+            particle.setCoordinate(point);
+
+            if (!isParticleWithinBorders(particle)) {
+                outOfDetectorAmount++;
+                continue;
+            }
+
+            int zCellNumber = (int) ((point.getZ() - leftBottomPoint.getZ()) / cellWidth);
+            int yCellNumber = (int) ((point.getY() - leftBottomPoint.getY()) / cellWidth);
+
+            if (particle.isInteracted()) {
+                channeledImage.add(new Point2D(point.getZ(), point.getY()));
+                channeledCells.get(zCellNumber).get(yCellNumber).register();
+                channeledCellsZ.get(zCellNumber).register();
+                channeledCellsY.get(yCellNumber).register();
+            } else {
+                piercedImage.add(new Point2D(point.getZ(), point.getY()));
+                piercedCells.get(zCellNumber).get(yCellNumber).register();
+                piercedCellsZ.get(zCellNumber).register();
+                piercedCellsY.get(yCellNumber).register();
             }
         }
 
-        flux.setParticles(filteredParticles);
-
         Logger.detectingParticlesFinish();
 
-        Logger.totalChanneleddAmount(channeledAmount);
-        Logger.totalAbsorbededAmount(absorbedAmount);
-        Logger.totalStuckAmount(stuckAmount);
-        Logger.totalOutOfDetector(outOfDetectorAmount);
-        Logger.totalDeletedAmount(deletedAmount);
-
-        Logger.convertingDistributionToFile();
-        contvertDistributionToFile();
-
-        return flux;
-    }
-
-    private void dispatchChanneled(final CartesianPoint point) {
-        int zCellNumber = (int) ((point.getZ() - leftBottomPoint.getZ()) / cellWidth);
-        int yCellNumber = (int) ((point.getY() - leftBottomPoint.getY()) / cellWidth);
-
-        cellsZ.get(zCellNumber).register();
-        cellsY.get(yCellNumber).register();
-        cells.get(zCellNumber).get(yCellNumber).register();
-    }
-
-    private void dispatchStuck(final CartesianPoint point) {
-        int zCellNumber = (int) ((point.getZ() - leftBottomPoint.getZ()) / cellWidth);
-        int yCellNumber = (int) ((point.getY() - leftBottomPoint.getY()) / cellWidth);
-
-        stuckCellsZ.get(zCellNumber).register();
-        stuckCellsY.get(yCellNumber).register();
-        stuckCells.get(zCellNumber).get(yCellNumber).register();
+        return Distribution.builder()
+                .setChanneledImage(channeledImage)
+                .setPiercedImage(piercedImage)
+                .setChanneledCells(channeledCells)
+                .setPiercedCells(piercedCells)
+                .setChanneledCellsX(channeledCellsZ)
+                .setPiercedCellsX(piercedCellsZ)
+                .setChanneledCellsY(channeledCellsY)
+                .setPiercedCellsY(piercedCellsY)
+                .setChanneledAmount(channeledAmount)
+                .setPiercedAmount(piercedAmount)
+                .setOutOfDetectorAmount(outOfDetectorAmount)
+                .setAbsorbedAmount(absorbedAmount)
+                .setDeletedAmount(deletedAmount)
+                .build();
     }
 
     protected CartesianPoint getCoordinateOnDetector(final Particle p) {
@@ -174,79 +156,5 @@ public class Detector {
                 p.getCoordinate().getY() < leftBottomPoint.getY() + width &&
                 p.getCoordinate().getZ() > leftBottomPoint.getZ() &&
                 p.getCoordinate().getZ() < leftBottomPoint.getZ() + width;
-    }
-
-    public void contvertDistributionToFile() {
-        convertChanneledToFile();
-        convertChanneledStripeZToFile();
-        convertChanneledStripeYToFile();
-
-        convertStuckToFile();
-        convertStuckStripeZToFile();
-        convertStuckStripeYToFile();
-    }
-
-    public void convertChanneledToFile() {
-        try (FileWriter writer = new FileWriter("channeled_ZY.txt")) {
-            for (ArrayList<Cell> stripe : cells) {
-                for (Cell cell : stripe) {
-                    writer.write(cell.getZ() + " " + cell.getY() + " " + cell.getParticlesAmount() + "\n");
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void convertChanneledStripeZToFile() {
-        try (FileWriter writer = new FileWriter("channeled_Z.txt")) {
-            for (Cell cell : cellsZ) {
-                writer.write(cell.getZ() + " " + cell.getParticlesAmount() + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void convertChanneledStripeYToFile() {
-        try (FileWriter writer = new FileWriter("channeled_Y.txt")) {
-            for (Cell cell : cellsY) {
-                writer.write(cell.getZ() + " " + cell.getParticlesAmount() + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void convertStuckToFile() {
-        try (FileWriter writer = new FileWriter("stuck_ZY.txt")) {
-            for (ArrayList<Cell> stripe : stuckCells) {
-                for (Cell cell : stripe) {
-                    writer.write(cell.getZ() + " " + cell.getY() + " " + cell.getParticlesAmount() + "\n");
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void convertStuckStripeZToFile() {
-        try (FileWriter writer = new FileWriter("stuck_Z.txt")) {
-            for (Cell cell : stuckCellsZ) {
-                writer.write(cell.getZ() + " " + cell.getParticlesAmount() + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void convertStuckStripeYToFile() {
-        try (FileWriter writer = new FileWriter("stuck_Y.txt")) {
-            for (Cell cell : cellsZ) {
-                writer.write(cell.getZ() + " " + cell.getParticlesAmount() + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

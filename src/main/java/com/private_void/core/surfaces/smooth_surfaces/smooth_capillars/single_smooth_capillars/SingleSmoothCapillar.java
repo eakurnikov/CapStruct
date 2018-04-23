@@ -2,6 +2,7 @@ package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_s
 
 import com.private_void.app.Logger;
 import com.private_void.core.detectors.Detector;
+import com.private_void.core.detectors.Distribution;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 import com.private_void.core.geometry.vectors.Vector;
@@ -29,7 +30,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
     }
 
     @Override
-    public Flux interact(Flux flux) {
+    public Distribution interact(Flux flux) {
         Logger.interactionStart();
 
         NeutralParticle particle;
@@ -73,7 +74,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         return detector.detect(flux);
     }
 
-    public Flux interactParallel(Flux flux) {
+    public Distribution interactParallel(Flux flux) {
         Logger.interactionStart();
 
         ExecutorService exec = Executors.newFixedThreadPool(4);
@@ -137,7 +138,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         return detector.detect(flux);
     }
 
-    public Flux interactStream(Flux flux) {
+    public Distribution interactStream(Flux flux) {
         Logger.interactionStart();
 
         flux.getParticles().forEach(p -> {
@@ -177,7 +178,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         return detector.detect(flux);
     }
 
-    public Flux interactFork(Flux flux) {
+    public Distribution interactFork(Flux flux) {
         Logger.interactionStart();
 
         class Interaction extends RecursiveAction {

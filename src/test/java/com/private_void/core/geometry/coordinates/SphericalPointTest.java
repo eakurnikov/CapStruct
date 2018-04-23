@@ -183,7 +183,7 @@ public class SphericalPointTest {
 //
 //        assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        assertTrue(Utils.compareToZero(s.getY() - c.getY()));
-//        assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+//        assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 
     }
 

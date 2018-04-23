@@ -104,8 +104,8 @@ public class Logger {
         log().info("TOTAL ABSORBED PARTICLES = " + amount);
     }
 
-    public static void totalStuckAmount(int amount) {
-        log().info("TOTAL STUCK PARTICLES = " + amount);
+    public static void totalPiercedAmount(int amount) {
+        log().info("TOTAL PARTICLES PIERCED= " + amount);
     }
 
     public static void totalOutOfDetector(int amount) {

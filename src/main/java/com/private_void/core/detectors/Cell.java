@@ -3,12 +3,12 @@ package com.private_void.core.detectors;
 import com.private_void.core.geometry.coordinates.CartesianPoint;
 
 public class Cell {
-    private final double z;
+    private final double x;
     private final double y;
     private int particlesAmount;
 
     public Cell(final CartesianPoint coordinate) {
-        this.z = coordinate.getZ();
+        this.x = coordinate.getZ();
         this.y = coordinate.getY();
         this.particlesAmount = 0;
     }
@@ -17,8 +17,8 @@ public class Cell {
         particlesAmount++;
     }
 
-    public double getZ() {
-        return z;
+    public double getX() {
+        return x;
     }
 
     public double getY() {
