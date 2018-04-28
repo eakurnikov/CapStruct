@@ -1,7 +1,5 @@
 package com.private_void.core.detectors;
 
-
-
 import com.private_void.core.geometry.space_2D.CartesianPoint2D;
 
 import java.io.FileWriter;

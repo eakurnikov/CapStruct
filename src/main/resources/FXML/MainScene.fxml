@@ -8,13 +8,13 @@
 <HBox xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.private_void.app.MainController"
       maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      prefHeight="700.0" prefWidth="1070.0">
+      prefHeight="780.0" prefWidth="1150.0">
 
     <children>
-        <VBox prefHeight="700.0" prefWidth="330.0">
+        <VBox prefHeight="780.0" prefWidth="400.0">
             <children>
 
-                <TabPane fx:id="fluxTabs" prefHeight="250.0" prefWidth="280.0" tabClosingPolicy="UNAVAILABLE">
+                <TabPane fx:id="fluxTabs" prefHeight="280.0" prefWidth="280.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
 
                         <Tab id="parallelFlux_tab" fx:id="pFluxTab" closable="false" text="Parallel flux">
@@ -137,7 +137,7 @@
                     </VBox.margin>
                 </TabPane>
 
-                <TabPane prefHeight="310.0" prefWidth="278.0" tabClosingPolicy="UNAVAILABLE">
+                <TabPane prefHeight="350.0" prefWidth="278.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
                         <Tab id="cylinder_tab" fx:id="cylTab" closable="false" text="Cylinder">
                             <content>
@@ -352,7 +352,7 @@
                 </TabPane>
 
                 <Button id="start_btn" fx:id="start_btn" onAction="#startBtnClick" mnemonicParsing="false"
-                        prefHeight="45.0" prefWidth="280.0" text="START">
+                        prefHeight="45.0" prefWidth="300.0" text="START">
                     <VBox.margin>
                         <Insets bottom="30.0" left="30.0" right="30.0"/>
                     </VBox.margin>
@@ -361,7 +361,7 @@
             </children>
         </VBox>
 
-        <ScatterChart id="chart" fx:id="chart" minHeight="700.0" minWidth="700.0" prefHeight="700.0" prefWidth="700.0">
+        <ScatterChart id="chart" fx:id="chart" minHeight="780.0" minWidth="780.0" prefHeight="780.0" prefWidth="780.0">
             <xAxis>
                 <NumberAxis fx:id="xAxis" side="BOTTOM" lowerBound="-25" upperBound="25" tickUnit="1" label="Z"/>
             </xAxis>

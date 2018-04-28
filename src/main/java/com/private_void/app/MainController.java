@@ -4,8 +4,8 @@ import com.private_void.core.detectors.Distribution;
 import com.private_void.core.fluxes.DivergentFlux;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.fluxes.ParallelFlux;
-import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_2D.CartesianPoint2D;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
@@ -216,7 +216,7 @@ public class MainController {
 
             CartesianPoint.Factory uniformDistribution = generator().getXFlatUniformDistribution(250.0, 250.0);
 
-            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(350.0);
+            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(370.0);
 
             return new ParallelFlux(
                     neutralParticleFactory,
@@ -508,7 +508,7 @@ public class MainController {
         Logger.renderingStart();
 
         showChanneledImage(distribution);
-//        showPiercedImage(distribution);
+        showPiercedImage(distribution);
 
         Logger.renderingFinish();
 
