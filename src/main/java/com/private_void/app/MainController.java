@@ -215,7 +215,7 @@ public class MainController {
 
             CartesianPoint.Factory uniformDistribution = generator().getXFlatUniformDistribution(250.0, 250.0);
 
-            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(350.0);
+            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(650.0);
 
             return new ParallelFlux(
                     neutralParticleFactory,
@@ -268,7 +268,7 @@ public class MainController {
             double capillarCriticalAngleD = Double.parseDouble(cylSlideAngle.getText());
             double capillarCriticalAngleR = Math.toRadians(capillarCriticalAngleD);
 
-            double plateCapillarsDensity = 0.0033;
+            double plateCapillarsDensity = 0.0045;
 //            double plateCapillarsDensity = 0.0043; //for curved radius = 7
 //            double plateCapillarsDensity = 0.0034; //for flat radius = 7
 //            double plateCapillarsDensity = 0.0003; //for radius = 20, count apr 20
@@ -309,8 +309,8 @@ public class MainController {
                     rotatedSmoothCylinderFactory,
                     new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
                     plateCapillarsDensity,
-                    Math.toRadians(3.0),
-                    capillarLength * 10);
+                    Math.toRadians(4.0),
+                    capillarLength * 20);
         }
 
         if (torusTab.isSelected()) {
@@ -330,7 +330,7 @@ public class MainController {
             double capillarCriticalAngleR = Math.toRadians(capillarCriticalAngleD);
 
             // 0.0034 is critical 0.67 value for random or cell generation
-            double plateCapillarsDensity = 0.0035; //for radius = 7
+            double plateCapillarsDensity = 0.0045; //for radius = 7
 //          double plateCapillarsDensity = 0.0025; //for radius < 10 for domains
 
             double plateSideLength = 300.0;

@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Detector {
     public static final double CELL_WIDTH = 10;
-    public static final int CELLS_AMOUNT = 500;
+    public static final int CELLS_AMOUNT = 150;
 
     protected final CartesianPoint leftBottomPoint;
     protected final double width;
@@ -211,7 +211,7 @@ public class Detector {
     public void convertChanneledStripeYToFile() {
         try (FileWriter writer = new FileWriter("channeled_Y.txt")) {
             for (Cell cell : cellsY) {
-                writer.write(cell.getZ() + " " + cell.getParticlesAmount() + "\n");
+                writer.write(cell.getY() + " " + cell.getParticlesAmount() + "\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -242,8 +242,8 @@ public class Detector {
 
     public void convertStuckStripeYToFile() {
         try (FileWriter writer = new FileWriter("stuck_Y.txt")) {
-            for (Cell cell : cellsZ) {
-                writer.write(cell.getZ() + " " + cell.getParticlesAmount() + "\n");
+            for (Cell cell : stuckCellsY) {
+                writer.write(cell.getY() + " " + cell.getParticlesAmount() + "\n");
             }
         } catch (IOException e) {
             e.printStackTrace();

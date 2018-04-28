@@ -59,20 +59,27 @@ public class FlatPlate extends Plate {
                     CartesianPoint cellCenter = initialPoint.shift(
                             0.0, i * capillarsCellSideLength, j * capillarsCellSideLength);
 
-                    CartesianPoint capillarsFrontCoordinate;
-                    if (capillarsDensity >= maxCapillarDensity) {
-                        capillarsFrontCoordinate = cellCenter;
-                    } else {
-                        capillarsFrontCoordinate = generator().getXFlatUniformDistribution(cellCenter,
-                                capillarsCellSideLength / 2.0 - capillarRadius,
-                                capillarsCellSideLength / 2.0 - capillarRadius)
-                                .getCoordinate();
-                    }
+                    if ((cellCenter.getY() - center.getY())
+                            * (cellCenter.getY() - center.getY())
+                            + (cellCenter.getZ() - center.getZ())
+                            * (cellCenter.getZ() - center.getZ())
+                            < (plateRadius - capillarRadius) * (plateRadius - capillarRadius)) {
 
-                    capillars.add(capillarFactory.getNewCapillar(capillarsFrontCoordinate));
+                        CartesianPoint capillarsFrontCoordinate;
+                        if (capillarsDensity >= maxCapillarDensity) {
+                            capillarsFrontCoordinate = cellCenter;
+                        } else {
+                            capillarsFrontCoordinate = generator().getXFlatUniformDistribution(cellCenter,
+                                    capillarsCellSideLength / 2.0 - capillarRadius,
+                                    capillarsCellSideLength / 2.0 - capillarRadius)
+                                    .getCoordinate();
+                        }
 
-                    if (++capillarsCounter % (capillarsAmount / 10) == 0.0) {
-                        Logger.createdCapillarsPercent(i * 100 / capillarsAmount);
+                        capillars.add(capillarFactory.getNewCapillar(capillarsFrontCoordinate));
+
+                        if (++capillarsCounter % (capillarsAmount / 10) == 0.0) {
+                            Logger.createdCapillarsPercent(i * 100 / capillarsAmount);
+                        }
                     }
                 }
             }
