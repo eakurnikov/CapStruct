@@ -1,15 +1,15 @@
 package com.private_void.utils;
 
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.coordinates.CylindricalPoint;
-import com.private_void.core.geometry.coordinates.SphericalPoint;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.coordinates.CylindricalPoint;
+import com.private_void.core.geometry.space_3D.coordinates.SphericalPoint;
 
 import java.util.Random;
 
 import static com.private_void.utils.Constants.SEED;
 
 public class Generator {
-    private Random rand;
+    private final Random rand;
 
     private Generator(int seed) {
         rand = new Random(seed);

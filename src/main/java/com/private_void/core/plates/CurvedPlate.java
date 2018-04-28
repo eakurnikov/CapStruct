@@ -2,10 +2,10 @@ package com.private_void.core.plates;
 
 import com.private_void.app.Logger;
 import com.private_void.core.detectors.Detector;
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.coordinates.Point3D;
-import com.private_void.core.geometry.coordinates.SphericalPoint;
-import com.private_void.core.geometry.reference_frames.ReferenceFrame;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.coordinates.Point3D;
+import com.private_void.core.geometry.space_3D.coordinates.SphericalPoint;
+import com.private_void.core.geometry.space_3D.reference_frames.ReferenceFrame;
 import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
 
 import java.io.FileWriter;
@@ -29,7 +29,7 @@ public class CurvedPlate extends Plate {
         this.frontSurfaceRadius = frontSurfaceRadius;
         this.endSurfaceRadius = frontSurfaceRadius - capillarFactory.getLength();
         this.capillarRadiusR = Math.asin(capillarRadius / endSurfaceRadius);
-        this.detector = new Detector(getDetectorsCoordinate(), 2.0 / 4.0 * endSurfaceRadius * Math.sin(maxAngleR));
+        this.detector = new Detector(getDetectorsCoordinate(), 2.0 * endSurfaceRadius * Math.sin(maxAngleR));
         createCapillars();
         writeDataInFile();
     }
@@ -74,7 +74,7 @@ public class CurvedPlate extends Plate {
                             * (cellCenter.getTheta() - sphericalCenter.getTheta())
                             + (cellCenter.getPhi() - sphericalCenter.getPhi())
                             * (cellCenter.getPhi() - sphericalCenter.getPhi())
-                            <= plateEffectiveRadiusR * plateEffectiveRadiusR) {
+                            < plateEffectiveRadiusR * plateEffectiveRadiusR) {
 
                         SphericalPoint capillarsEndCenter;
                         if (capillarsDensity >= maxCapillarDensity) {

@@ -1,5 +1,7 @@
 package com.private_void.core.geometry.coordinates;
 
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.coordinates.SphericalPoint;
 import com.private_void.utils.Utils;
 import org.junit.Test;
 
@@ -183,7 +185,7 @@ public class SphericalPointTest {
 //
 //        assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 //        assertTrue(Utils.compareToZero(s.getY() - c.getY()));
-//        assertTrue(Utils.compareToZero(s.getZ() - c.getZ()));
+//        assertTrue(Utils.compareToZero(s.getX() - c.getX()));
 
     }
 

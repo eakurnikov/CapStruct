@@ -1,7 +1,7 @@
-package com.private_void.core.geometry.vectors;
+package com.private_void.core.geometry.space_3D.vectors;
 
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.rotation_matrix.RotationMatrix;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.rotation_matrix.RotationMatrix;
 
 public class Vector extends CartesianPoint {
     public static final Vector E_X = new Vector(1.0, 0.0, 0.0);

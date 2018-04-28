@@ -1,9 +1,10 @@
 package com.private_void.core.surfaces.atomic_surfaces;
 
 import com.private_void.core.detectors.Detector;
+import com.private_void.core.detectors.Distribution;
 import com.private_void.core.fluxes.Flux;
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.Atom;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.particles.Particle;
@@ -30,7 +31,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
     }
 
     @Override
-    public Flux interact(Flux flux) {
+    public Distribution interact(Flux flux) {
         ChargedParticle particle;
         CartesianPoint newCoordinate;
         double angleWithSurface;
@@ -119,7 +120,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
         double dVy = (Fy / particle.getMass()) * timeInterval;
 
         return Vector.set(particle.getSpeed().getX(), particle.getSpeed().getY() + 0.009, particle.getSpeed().getZ());
-//        return new Vector(particle.getSpeed().getX(), particle.getSpeed().getY() + dVy, particle.getSpeed().getZ());
+//        return new Vector(particle.getSpeed().getX(), particle.getSpeed().getY() + dVy, particle.getSpeed().getX());
     }
 
     @Override

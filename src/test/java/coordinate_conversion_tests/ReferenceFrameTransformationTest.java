@@ -1,9 +1,9 @@
 //package coordinate_conversion_tests;
 //
-//import com.private_void.core.geometry.coordinates.CartesianPoint;
+//import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 //
-//import com.private_void.core.geometry.coordinates.SphericalPoint;
-//import com.private_void.core.geometry.vectors.Vector;
+//import com.private_void.core.geometry.space_3D.coordinates.SphericalPoint;
+//import Vector;
 //import com.private_void.core.particles.NeutralParticle;
 //import com.private_void.core.particles.Particle;
 //import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedCapillar;
@@ -52,11 +52,11 @@
 //
 //        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 //        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
-//        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+//        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 //
 //        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 //        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
-//        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
+//        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 //    }
 //
 //    @Test
@@ -96,11 +96,11 @@
 //
 //        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 //        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
-//        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+//        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 //
 //        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 //        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
-//        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
+//        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 //    }
 //
 ////    @Test
@@ -141,11 +141,11 @@
 ////
 ////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 ////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
-////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 ////
 ////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
-////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////    }
 ////
 ////    @Test
@@ -199,11 +199,11 @@
 ////
 ////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 ////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
-////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 ////
 ////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
-////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////    }
 ////
 ////    @Test
@@ -244,11 +244,11 @@
 ////
 ////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 ////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
-////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 ////
 ////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
-////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////    }
 ////
 ////    @Test
@@ -288,11 +288,11 @@
 ////
 ////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 ////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
-////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 ////
 ////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
-////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////    }
 ////
 ////    @Test
@@ -346,11 +346,11 @@
 ////
 ////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 ////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
-////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 ////
 ////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
-////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////    }
 ////
 ////    @Test
@@ -391,11 +391,11 @@
 //////
 //////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 //////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
-//////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+//////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 //////
 //////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 //////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
-//////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
+//////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////    }
 ////
 ////    @Test
@@ -435,11 +435,11 @@
 ////
 ////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 ////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
-////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 ////
 ////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
-////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////    }
 ////
 ////    @Test
@@ -493,11 +493,11 @@
 ////
 ////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 ////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
-////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 ////
 ////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
-////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////    }
 ////
 ////    @Test
@@ -552,11 +552,11 @@
 ////
 ////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 ////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
-////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 ////
 ////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
-////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////    }
 ////
 ////    @Test
@@ -611,10 +611,10 @@
 ////
 ////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 ////        assertTrue(Utils.compareToZero(from.getCoordinate().getY() - particle.getCoordinate().getY()));
-////        assertTrue(Utils.compareToZero(from.getCoordinate().getZ() - particle.getCoordinate().getZ()));
+////        assertTrue(Utils.compareToZero(from.getCoordinate().getX() - particle.getCoordinate().getX()));
 ////
 ////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////        assertTrue(Utils.compareToZero(from.getSpeed().getY() - particle.getSpeed().getY()));
-////        assertTrue(Utils.compareToZero(from.getSpeed().getZ() - particle.getSpeed().getZ()));
+////        assertTrue(Utils.compareToZero(from.getSpeed().getX() - particle.getSpeed().getX()));
 ////    }
 //}

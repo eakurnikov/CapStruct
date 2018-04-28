@@ -1,7 +1,7 @@
 package com.private_void.core.fluxes;
 
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.Particle;
 
 import java.util.List;

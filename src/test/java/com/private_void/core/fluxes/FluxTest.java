@@ -1,7 +1,7 @@
 package com.private_void.core.fluxes;
 
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCylinder;
@@ -41,8 +41,8 @@ public class FluxTest {
                 CartesianPoint p1 = interactedParticles1.get(i).getCoordinate();
                 CartesianPoint p2 = interactedParticles2.get(i).getCoordinate();
 
-//                System.out.println(p1.getX() + " " + p1.getY() + " " + p1.getZ());
-//                System.out.println(p2.getX() + " " + p2.getY() + " " + p2.getZ());
+//                System.out.println(p1.getX() + " " + p1.getY() + " " + p1.getX());
+//                System.out.println(p2.getX() + " " + p2.getY() + " " + p2.getX());
 //                System.out.println();
 
                 assertTrue(p1.getX() == p2.getX());

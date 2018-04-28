@@ -1,8 +1,8 @@
-package com.private_void.core.geometry.reference_frames;
+package com.private_void.core.geometry.space_3D.reference_frames;
 
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.rotation_matrix.RotationMatrix;
-import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.rotation_matrix.RotationMatrix;
+import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.Particle;
 
 public class ReferenceFrame {

@@ -1,9 +1,10 @@
 package com.private_void.core.surfaces.smooth_surfaces;
 
 import com.private_void.core.detectors.Detector;
+import com.private_void.core.detectors.Distribution;
 import com.private_void.core.fluxes.Flux;
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.CapillarSystem;
@@ -16,8 +17,8 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
     private final double size;
     private final Detector detector;
 
-    public SmoothPlane(final CartesianPoint front, double size, double roughnessSize, double roughnessAngleR, double reflectivity,
-                       double criticalAngleR) {
+    public SmoothPlane(final CartesianPoint front, double size, double roughnessSize, double roughnessAngleR,
+                       double reflectivity, double criticalAngleR) {
         super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.size = size;
         this.detector = new Detector(
@@ -26,7 +27,7 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
     }
 
     @Override
-    public Flux interact(Flux flux) {
+    public Distribution interact(Flux flux) {
         NeutralParticle particle;
         CartesianPoint hitPoint;
         double angleWithSurface;

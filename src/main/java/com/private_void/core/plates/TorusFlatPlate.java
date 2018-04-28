@@ -2,10 +2,10 @@ package com.private_void.core.plates;
 
 import com.private_void.app.Logger;
 import com.private_void.core.detectors.Detector;
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.coordinates.CylindricalPoint;
-import com.private_void.core.geometry.coordinates.Point3D;
-import com.private_void.core.geometry.reference_frames.ReferenceFrame;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.coordinates.CylindricalPoint;
+import com.private_void.core.geometry.space_3D.coordinates.Point3D;
+import com.private_void.core.geometry.space_3D.reference_frames.ReferenceFrame;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.capillar_factories.RotatedTorusFactory;
 import com.private_void.utils.Utils;
@@ -15,7 +15,7 @@ import java.io.IOException;
 
 import static com.private_void.utils.Generator.generator;
 
-public class TorusPlate extends Plate {
+public class TorusFlatPlate extends Plate {
     private static final double DETECTORS_DISTANCE_COEFFICIENT = 20.0;
 
     private final RotatedTorusFactory capillarFactory;
@@ -24,8 +24,8 @@ public class TorusPlate extends Plate {
     private final double width;
     private final CartesianPoint focus;
 
-    public TorusPlate(final RotatedTorusFactory capillarFactory, final CartesianPoint center, double capillarsDensity,
-                      double maxAngleR) {
+    public TorusFlatPlate(final RotatedTorusFactory capillarFactory, final CartesianPoint center, double capillarsDensity,
+                          double maxAngleR) {
         super(center, capillarFactory.getRadius(), capillarsDensity);
         this.capillarFactory = capillarFactory;
         this.maxAngleR = maxAngleR;

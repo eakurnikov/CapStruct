@@ -1,7 +1,7 @@
-package com.private_void.core.geometry.rotation_matrix;
+package com.private_void.core.geometry.space_3D.rotation_matrix;
 
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.vectors.Vector;
 
 // Положительным углам соответствует вращение вектора против часовой стрелки в правой системе координат,
 // и по часовой стрелке в левой системе координат, если смотреть против направления соответствующей оси

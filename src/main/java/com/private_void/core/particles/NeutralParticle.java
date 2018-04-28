@@ -1,7 +1,7 @@
 package com.private_void.core.particles;
 
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.vectors.Vector;
 
 import static com.private_void.utils.Constants.RECURSIVE_ITERATIONS_MAX;
 

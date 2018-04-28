@@ -1,8 +1,8 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.reference_frames.ReferenceFrame;
-import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.reference_frames.ReferenceFrame;
+import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;

@@ -1,15 +1,17 @@
 package com.private_void.app;
 
+import com.private_void.core.detectors.Distribution;
 import com.private_void.core.fluxes.DivergentFlux;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.fluxes.ParallelFlux;
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_2D.CartesianPoint2D;
+import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.plates.CurvedPlate;
 import com.private_void.core.plates.Plate;
-import com.private_void.core.plates.TorusPlate;
+import com.private_void.core.plates.TorusFlatPlate;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
 import com.private_void.core.surfaces.capillar_factories.RotatedTorusFactory;
@@ -19,7 +21,6 @@ import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_sm
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCylinder;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothTorus;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.NumberAxis;
@@ -191,7 +192,7 @@ public class MainController {
     }
 
     public void startBtnClick(ActionEvent actionEvent) {
-        showResult(createPlate().interact(createFlux()));
+        showImage(createPlate().interact(createFlux()));
     }
 
     private Flux createFlux() {
@@ -215,7 +216,7 @@ public class MainController {
 
             CartesianPoint.Factory uniformDistribution = generator().getXFlatUniformDistribution(250.0, 250.0);
 
-            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(650.0);
+            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(350.0);
 
             return new ParallelFlux(
                     neutralParticleFactory,
@@ -309,7 +310,7 @@ public class MainController {
                     rotatedSmoothCylinderFactory,
                     new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
                     plateCapillarsDensity,
-                    Math.toRadians(4.0),
+                    Math.toRadians(1.0),
                     capillarLength * 20);
         }
 
@@ -364,7 +365,7 @@ public class MainController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
-            return new TorusPlate(
+            return new TorusFlatPlate(
                     rotatedSmoothTorusFactoryWithRadius,
                     new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
                     plateCapillarsDensity,
@@ -503,33 +504,35 @@ public class MainController {
         return null;
     }
 
-    private void showResult(final Flux flux) {
+    private void showImage(final Distribution distribution) {
         Logger.renderingStart();
 
-        XYChart.Series<Double, Double> channeledParticles = new XYChart.Series<>();
-        XYChart.Series<Double, Double> absorbedParticles = new XYChart.Series<>();
-
-        for (Particle p : flux.getParticles()) {
-            if (p.isInteracted()) {
-                channeledParticles
-                        .getData()
-                        .add(new XYChart.Data<>(
-                                p.getCoordinate().getZ(),
-                                p.getCoordinate().getY()));
-            } else {
-                absorbedParticles
-                        .getData()
-                        .add(new XYChart.Data<>(
-                                p.getCoordinate().getZ(),
-                                p.getCoordinate().getY()));
-            }
-        }
-
-        ObservableList<XYChart.Series<Double,Double>> chartData = chart.getData();
-        chartData.addAll(channeledParticles);
-//        chartData.addAll(absorbedParticles);
+        showChanneledImage(distribution);
+//        showPiercedImage(distribution);
 
         Logger.renderingFinish();
+
+        Logger.totalChanneleddAmount(distribution.getChanneledAmount());
+        Logger.totalPiercedAmount(distribution.getPiercedAmount());
+        Logger.totalOutOfDetector(distribution.getOutOfDetectorAmount());
+        Logger.totalAbsorbededAmount(distribution.getAbsorbedAmount());
+        Logger.totalDeletedAmount(distribution.getDeletedAmount());
+    }
+
+    private void showChanneledImage(final Distribution distribution) {
+        XYChart.Series<Double, Double> channeledImage = new XYChart.Series<>();
+        for (CartesianPoint2D point : distribution.getChanneledImage()) {
+            channeledImage.getData().add(new XYChart.Data<>(point.getX(), point.getY()));
+        }
+        chart.getData().addAll(channeledImage);
+    }
+
+    private void showPiercedImage(final Distribution distribution) {
+        XYChart.Series<Double, Double> piercedImage = new XYChart.Series<>();
+        for (CartesianPoint2D point : distribution.getPiercedImage()) {
+            piercedImage.getData().add(new XYChart.Data<>(point.getX(), point.getY()));
+        }
+        chart.getData().addAll(piercedImage);
     }
 }
 

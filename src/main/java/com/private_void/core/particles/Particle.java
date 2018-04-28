@@ -1,8 +1,8 @@
 package com.private_void.core.particles;
 
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.rotation_matrix.RotationMatrix;
-import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.rotation_matrix.RotationMatrix;
+import com.private_void.core.geometry.space_3D.vectors.Vector;
 
 public abstract class Particle {
     protected CartesianPoint coordinate;
@@ -94,7 +94,7 @@ public abstract class Particle {
 //    @Override
 //    public void toInnerRefFrame(Particle particle) {
 //        particle
-//                .shiftCoordinate(-front.getX(), -front.getY(), -front.getZ())
+//                .shiftCoordinate(-front.getX(), -front.getY(), -front.getX())
 //                .rotateRefFrameAroundOY(position.getTheta())
 //                .rotateRefFrameAroundOZ(-position.getPhi());
 //    }
@@ -104,5 +104,5 @@ public abstract class Particle {
 //        particle
 //                .rotateRefFrameAroundOZ(position.getPhi())
 //                .rotateRefFrameAroundOY(-position.getTheta())
-//                .shiftCoordinate(front.getX(), front.getY(), front.getZ());
+//                .shiftCoordinate(front.getX(), front.getY(), front.getX());
 //    }

@@ -1,9 +1,9 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars;
 
 import com.private_void.app.Logger;
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.reference_frames.ReferenceFrame;
-import com.private_void.core.geometry.vectors.Vector;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.reference_frames.ReferenceFrame;
+import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
@@ -41,7 +41,7 @@ public class SmoothCylinder extends SmoothCapillar {
 
 //        double[] solution = {p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
 //                             p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
-//                             p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()};
+//                             p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount()};
 
         double[] solution = {
                 p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),

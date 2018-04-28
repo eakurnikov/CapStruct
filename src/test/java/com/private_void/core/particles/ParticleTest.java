@@ -1,9 +1,5 @@
 package com.private_void.core.particles;
 
-import com.private_void.core.geometry.coordinates.CartesianPoint;
-import com.private_void.core.geometry.vectors.Vector;
-import org.junit.Test;
-
 import static junit.framework.TestCase.assertTrue;
 
 public class ParticleTest {
@@ -29,6 +25,6 @@ public class ParticleTest {
 //
 //        assertTrue(p1.getSpeed().getX() - p2.getSpeed().getX() == 0.0);
 //        assertTrue(p1.getSpeed().getY() - p2.getSpeed().getY() == 0.0);
-//        assertTrue(p1.getSpeed().getZ() - p2.getSpeed().getZ() == 0.0);
+//        assertTrue(p1.getSpeed().getX() - p2.getSpeed().getX() == 0.0);
 //    }
 }
