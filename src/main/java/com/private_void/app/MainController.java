@@ -7,11 +7,14 @@ import com.private_void.core.fluxes.ParallelFlux;
 import com.private_void.core.geometry.space_2D.CartesianPoint2D;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
+import com.private_void.core.particles.Atom;
+import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.plates.CurvedPlate;
-import com.private_void.core.plates.Plate;
 import com.private_void.core.plates.TorusFlatPlate;
+import com.private_void.core.surfaces.CapillarSystem;
+import com.private_void.core.surfaces.atomic_surfaces.AtomicPlane;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
 import com.private_void.core.surfaces.capillar_factories.RotatedTorusFactory;
@@ -197,6 +200,7 @@ public class MainController {
 
     private Flux createFlux() {
         Particle.Factory neutralParticleFactory = NeutralParticle.getFactory(1.0);
+        Particle.Factory chargedParticleFactory = ChargedParticle.getFactory(1.0, 1.0, 1.0);
 
         if (pFluxTab.isSelected()) {
             double x = Double.parseDouble(pFluxX.getText());
@@ -253,7 +257,7 @@ public class MainController {
         }
     }
 
-    private Plate createPlate() {
+    private CapillarSystem createPlate() {
 
         if (cylTab.isSelected()) {
             double plateCenterX = Double.parseDouble(cylX.getText());
@@ -372,6 +376,38 @@ public class MainController {
                     capillarCurvAngleR);
         }
 
+//        if (planeTab.isSelected()) {
+//            double frontX = Double.parseDouble(planeX.getText());
+//            double frontY = Double.parseDouble(planeY.getText());
+//            double frontZ = Double.parseDouble(planeZ.getText());
+//            double size = Double.parseDouble(planeSize.getText());
+//
+//            return new SmoothPlane(
+//                    new CartesianPoint(frontX, frontY, frontZ),
+//                    size,
+//                    0.0,
+//                    0.0,
+//                    1,
+//                    90);
+//        }
+
+        if (planeTab.isSelected()) {
+            Atom.Factory atomFactory = Atom.getFactory();
+            double frontX = Double.parseDouble(planeX.getText());
+            double frontY = Double.parseDouble(planeY.getText());
+            double frontZ = Double.parseDouble(planeZ.getText());
+            double size = Double.parseDouble(planeSize.getText());
+
+            double period = Double.parseDouble(planePeriod.getText());
+            double chargeNumber = Double.parseDouble(planeChargeNum.getText());
+            return new AtomicPlane(
+                    atomFactory,
+                    new CartesianPoint(frontX, frontY, frontZ),
+                    period,
+                    chargeNumber,
+                    size);
+        }
+
         return null;
     }
 
@@ -468,38 +504,6 @@ public class MainController {
                         criticalAngleR);
             }
         }
-
-//        if (planeTab.isSelected()) {
-//            double frontX = Double.parseDouble(planeX.getText());
-//            double frontY = Double.parseDouble(planeY.getText());
-//            double frontZ = Double.parseDouble(planeZ.getText());
-//            double size = Double.parseDouble(planeSize.getText());
-//
-//            return new SmoothPlane(
-//                    new CartesianPoint(frontX, frontY, frontZ),
-//                    size,
-//                    0.2,
-//                    5,
-//                    1,
-//                    90);
-//        }
-
-//        if (planeTab.isSelected()) {
-//            AtomFactory atomFactory = Atom.getFactory();
-//            double frontX = Double.parseDouble(planeX.getText());
-//            double frontY = Double.parseDouble(planeY.getText());
-//            double frontZ = Double.parseDouble(planeZ.getText());
-//            double size = Double.parseDouble(planeSize.getText());
-//
-//            double period = Double.parseDouble(planePeriod.getText());
-//            double chargeNumber = Double.parseDouble(planeChargeNum.getText());
-//            return new AtomicPlane(
-//                    atomFactory,
-//                    new CartesianPoint(frontX, frontY, frontZ),
-//                    period,
-//                    chargeNumber,
-//                    size);
-//        }
 
         return null;
     }

@@ -21,9 +21,7 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
                        double reflectivity, double criticalAngleR) {
         super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.size = size;
-        this.detector = new Detector(
-                new CartesianPoint(front.getX() + size, front.getY(), front.getZ()),
-                size);
+        this.detector = new Detector(new CartesianPoint(front.getX() + size, front.getY(), front.getZ()), size);
     }
 
     @Override
@@ -31,10 +29,9 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
         NeutralParticle particle;
         CartesianPoint hitPoint;
         double angleWithSurface;
-        Iterator<? extends Particle> iterator = flux.getParticles().iterator();
         Vector normal = Vector.E_Y;
 
-        while (iterator.hasNext()) {
+        for (Iterator<? extends Particle> iterator = flux.getParticles().iterator(); iterator.hasNext(); ) {
             particle = (NeutralParticle) iterator.next();
             hitPoint = getHitPoint(particle);
 
@@ -53,6 +50,7 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
                     particle.setAbsorbed(true);
                     break;
                 }
+
                 particle.setInteracted();
             }
         }

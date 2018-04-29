@@ -112,6 +112,31 @@
     -fx-scale-x: 0.97;
 }
 
+.context-menu {
+    -fx-background-color: #7F7F7F;
+    -fx-background-radius: 0 6 6 6, 0 5 5 5, 0 4 4 4;
+}
+
+.menu-item {
+    -fx-background-radius: 5px;
+}
+
+.menu-item >.label {
+    -fx-text-fill: #262626;
+}
+
+.menu-item:focused > .label {
+    -fx-text-fill: #7F7F7F;
+}
+
+.menu-item:hover, .menu-item:focused {
+    -fx-background-color: #262626;
+}
+
+.context-menu .separator {
+    -fx-padding: 0.0em 0.333333em 0.0em 0.333333em;
+}
+
 /*dark-dark-gray: #0d0d0d */
 /*orange-red: #ff3300 */
 /*blue: #00baff; */

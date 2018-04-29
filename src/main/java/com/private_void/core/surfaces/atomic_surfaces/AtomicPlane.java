@@ -35,30 +35,27 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
         ChargedParticle particle;
         CartesianPoint newCoordinate;
         double angleWithSurface;
-        Iterator<? extends Particle> iterator = flux.getParticles().iterator();
 
         setShieldingDistance(((ChargedParticle) flux.getParticles().get(0)).getChargeNumber());
 
-        while (iterator.hasNext()) {
-            try {
-                particle = (ChargedParticle) iterator.next();
-                angleWithSurface = particle.getSpeed().getAngle(getNormal(particle.getCoordinate())) - PI / 2.0;
+        for (Iterator<? extends Particle> iterator = flux.getParticles().iterator(); iterator.hasNext(); ) {
+            particle = (ChargedParticle) iterator.next();
+            angleWithSurface = particle.getSpeed().getAngle(getNormal(particle.getCoordinate())) - PI / 2.0;
 
-                if (angleWithSurface <= getCriticalAngle(particle)) {
-                    newCoordinate = particle.getCoordinate();
+            if (angleWithSurface <= getCriticalAngle(particle)) {
+                newCoordinate = particle.getCoordinate();
 
-                    while (newCoordinate.getX() <= front.getX() + size) {
-                        particle
-                                .setCoordinate(newCoordinate)
-                                .setSpeed(getNewSpeed(particle));
-                        newCoordinate = getNewCoordinate(particle);
-                    }
-                } else {
-                    iterator.remove();
+                while (newCoordinate.getX() <= front.getX() + size) {
+                    particle
+                            .setCoordinate(newCoordinate)
+                            .setSpeed(getNewSpeed(particle));
+                    newCoordinate = getNewCoordinate(particle);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } else {
+                particle.setAbsorbed(true);
+                break;
             }
+            particle.setInteracted();
         }
 
         return detector.detect(flux);
