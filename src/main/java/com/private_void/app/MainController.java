@@ -195,6 +195,7 @@ public class MainController {
     }
 
     public void startBtnClick(ActionEvent actionEvent) {
+//        showImage(createCapillar().interact(createFlux()));
         showImage(createPlate().interact(createFlux()));
     }
 
@@ -223,8 +224,8 @@ public class MainController {
             CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(370.0);
 
             return new ParallelFlux(
-                    neutralParticleFactory,
-                    circleUniformDistribution,
+                    chargedParticleFactory,
+                    gaussDistribution,
                     new CartesianPoint(x, y, z),
                     Vector.set(axisX, axisY, axisZ),
                     layersAmount,

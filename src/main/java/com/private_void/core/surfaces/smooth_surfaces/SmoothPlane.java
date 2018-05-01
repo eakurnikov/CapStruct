@@ -59,11 +59,6 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
     }
 
     @Override
-    public Detector getDetector() {
-        return detector;
-    }
-
-    @Override
     protected Vector getNormal(final CartesianPoint point) {
         return Vector.E_Y;
     }

@@ -249,11 +249,6 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         return detector.detect(flux);
     }
 
-    @Override
-    public Detector getDetector() {
-        return detector;
-    }
-
     protected boolean willParticleGetInside(final Particle p) {
         double x0 = front.getX();
 

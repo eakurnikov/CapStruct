@@ -43,12 +43,7 @@ public class AtomicCone extends AtomicCapillar {
     }
 
     @Override
-    protected Vector getNewSpeed(final ChargedParticle particle) {
-        return null;
-    }
-
-    @Override
-    protected CartesianPoint getNewCoordinate(final ChargedParticle p) {
+    protected Vector rotateParticleSpeed(final ChargedParticle particle) {
         return null;
     }
 

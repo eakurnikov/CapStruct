@@ -36,9 +36,7 @@ public abstract class AtomicSurface extends Surface {
 
     protected abstract double getCriticalAngle(final ChargedParticle particle);
 
-    protected abstract Vector getNewSpeed(final ChargedParticle particle);
-
-    protected abstract CartesianPoint getNewCoordinate(final ChargedParticle p);
+    protected abstract Vector rotateParticleSpeed(final ChargedParticle particle);
 
     //protected abstract double getPotential(final ChargedParticle particle);
 }

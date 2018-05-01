@@ -76,11 +76,6 @@ public abstract class Plate implements CapillarSystem {
         return detector.detect(flux);
     }
 
-    @Override
-    public Detector getDetector() {
-        return detector;
-    }
-
     protected abstract CartesianPoint getDetectorsCoordinate();
 
     protected abstract void createCapillars();

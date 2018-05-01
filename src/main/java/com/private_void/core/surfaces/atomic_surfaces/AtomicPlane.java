@@ -48,8 +48,8 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
                 while (newCoordinate.getX() <= front.getX() + size) {
                     particle
                             .setCoordinate(newCoordinate)
-                            .setSpeed(getNewSpeed(particle));
-                    newCoordinate = getNewCoordinate(particle);
+                            .setSpeed(rotateParticleSpeed(particle));
+                    newCoordinate.shift(particle.getSpeed());
                 }
             } else {
                 particle.setAbsorbed(true);
@@ -101,13 +101,18 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
         // a - расстояние экранировки (0.885  * а боровский ((Z1)^(1/2) + (Z2)^(1/2)) ^ -(2/3)), а боровский = 0.529 ангстрем
         // E - энергия налетающей частицы (10 КэВ - 1 МэВ)
 
-        return Math.toRadians(45);
+        double angle = Math.sqrt((2 * PI * particle.getChargeNumber() * chargeNumber *
+                (ELECTRON_CHARGE * ELECTRON_CHARGE) * shieldingDistance * chargePlanarDensity) / particle.getEnergy());
+        double temp = Math.toRadians(1.0);
+
+        return temp;
+
 //        return Math.sqrt((2 * PI * particle.getChargeNumber() * chargeNumber *
 //                (ELECTRON_CHARGE * ELECTRON_CHARGE) * shieldingDistance * chargePlanarDensity) / particle.getEnergy());
     }
 
     @Override
-    protected Vector getNewSpeed(final ChargedParticle particle) {
+    protected Vector rotateParticleSpeed(final ChargedParticle particle) {
         double y = particle.getCoordinate().getY() - front.getY();
         double C2 = 3.0;
         double timeInterval = 1.0;
@@ -116,21 +121,12 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
                 * chargePlanarDensity * (1.0 - y / Math.sqrt((y / shieldingDistance) * (y / shieldingDistance) + C2));
         double dVy = (Fy / particle.getMass()) * timeInterval;
 
-        return Vector.set(particle.getSpeed().getX(), particle.getSpeed().getY() + 0.009, particle.getSpeed().getZ());
+        Vector newSpeed = Vector.set(particle.getSpeed().getX(), particle.getSpeed().getY() + dVy, particle.getSpeed().getZ());
+        Vector temp = Vector.set(particle.getSpeed().getX(), particle.getSpeed().getY() + 0.009, particle.getSpeed().getZ());
+
+        return temp;
+
 //        return new Vector(particle.getSpeed().getX(), particle.getSpeed().getY() + dVy, particle.getSpeed().getX());
-    }
-
-    @Override
-    protected CartesianPoint getNewCoordinate(final ChargedParticle p) {
-        double x = p.getCoordinate().getX();
-        double y = p.getCoordinate().getY();
-        double z = p.getCoordinate().getZ();
-
-        double Vx = p.getSpeed().getX();
-        double Vy = p.getSpeed().getY();
-        double Vz = p.getSpeed().getZ();
-
-        return new CartesianPoint(x + Vx, y + Vy, z + Vz);
     }
 
 //    @Override
@@ -142,8 +138,4 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
 //                (ELECTRON_CHARGE * ELECTRON_CHARGE) * shieldingDistance * chargePlanarDensity *
 //                Math.sqrt(y * y + C2) - y);
 //    }
-
-    public Detector getDetector() {
-        return detector;
-    }
 }
