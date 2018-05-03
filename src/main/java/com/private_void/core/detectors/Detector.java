@@ -2,8 +2,8 @@ package com.private_void.core.detectors;
 
 import com.private_void.app.Logger;
 import com.private_void.core.fluxes.Flux;
-import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_2D.CartesianPoint2D;
+import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.particles.Particle;
 
 import java.util.ArrayList;
@@ -106,16 +106,18 @@ public class Detector {
             int zCellNumber = (int) ((point.getZ() - leftBottomPoint.getZ()) / cellWidth);
             int yCellNumber = (int) ((point.getY() - leftBottomPoint.getY()) / cellWidth);
 
-            if (particle.isInteracted()) {
+            if (particle.isChanneled()) {
                 channeledImage.add(new CartesianPoint2D(point.getZ(), point.getY()));
                 channeledCells.get(zCellNumber).get(yCellNumber).register();
                 channeledCellsZ.get(zCellNumber).register();
                 channeledCellsY.get(yCellNumber).register();
+                channeledAmount++;
             } else {
                 piercedImage.add(new CartesianPoint2D(point.getZ(), point.getY()));
                 piercedCells.get(zCellNumber).get(yCellNumber).register();
                 piercedCellsZ.get(zCellNumber).register();
                 piercedCellsY.get(yCellNumber).register();
+                piercedAmount++;
             }
         }
 

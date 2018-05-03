@@ -10,7 +10,7 @@ public abstract class Particle {
     protected double trace;
 
     protected boolean absorbed;
-    protected boolean interacted;
+    protected boolean channeled;
     protected boolean deleted;
 
     protected Particle(final CartesianPoint coordinate, final Vector speed) {
@@ -19,7 +19,7 @@ public abstract class Particle {
         this.trace = 0.0;
 
         this.absorbed = false;
-        this.interacted = false;
+        this.channeled = false;
         this.deleted = false;
     }
 
@@ -51,16 +51,16 @@ public abstract class Particle {
         return absorbed;
     }
 
-    public void setAbsorbed(boolean absorbed) {
-        this.absorbed = absorbed;
+    public void absorb() {
+        this.absorbed = true;
     }
 
-    public boolean isInteracted() {
-        return interacted;
+    public boolean isChanneled() {
+        return channeled;
     }
 
-    public void setInteracted() {
-        this.interacted = true;
+    public void setChanneled() {
+        this.channeled = true;
     }
 
     public boolean isDeleted() {

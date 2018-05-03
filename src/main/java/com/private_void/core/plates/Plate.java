@@ -50,7 +50,7 @@ public abstract class Plate implements CapillarSystem {
             }
 
             for (Particle particle : flux.getParticles()) {
-                if (particle.isInteracted()) {
+                if (particle.isChanneled()) {
                     continue;
                 }
 
@@ -62,7 +62,7 @@ public abstract class Plate implements CapillarSystem {
                 if (capillar.willParticleGetInside(particle)) {
                     capillar.interact(particle);
                     converter.convertBack(particle);
-                    particle.setInteracted();
+                    particle.setChanneled();
                     continue;
                 }
 

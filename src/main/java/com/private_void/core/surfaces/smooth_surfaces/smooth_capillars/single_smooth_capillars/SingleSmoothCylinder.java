@@ -127,7 +127,7 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
 //        CartesianPoint newCoordinate = new CartesianPoint(solution[0], solution[1], solution[2]);
 //        if (newCoordinate.isNear(p.getCoordinate())) {
 //            if (p.isRecursiveIterationsLimitReached()) {
-//                p.setAbsorbed(true);
+//                p.absorb(true);
 //                return newCoordinate;
 //            } else {
 //                p.recursiveIteration();

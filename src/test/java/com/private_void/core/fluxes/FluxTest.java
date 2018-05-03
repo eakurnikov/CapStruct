@@ -33,13 +33,13 @@ public class FluxTest {
                 0.5);
 
         List<? extends Particle> particles = particlesDonor.getParticles();
-        List<? extends Particle> interactedParticles1 = interactionWithGetNewByTurningTest(particles);
-        List<? extends Particle> interactedParticles2 = interactionWithGetNewByTurningTest(particles);
+        List<? extends Particle> channeledParticles1 = interactionWithGetNewByTurningTest(particles);
+        List<? extends Particle> channeledParticles2 = interactionWithGetNewByTurningTest(particles);
 
-        for (int i = 0; i < interactedParticles1.size(); i++) {
-            if (!interactedParticles1.get(i).isAbsorbed() && !interactedParticles2.get(i).isAbsorbed()) {
-                CartesianPoint p1 = interactedParticles1.get(i).getCoordinate();
-                CartesianPoint p2 = interactedParticles2.get(i).getCoordinate();
+        for (int i = 0; i < channeledParticles1.size(); i++) {
+            if (!channeledParticles1.get(i).isAbsorbed() && !channeledParticles2.get(i).isAbsorbed()) {
+                CartesianPoint p1 = channeledParticles1.get(i).getCoordinate();
+                CartesianPoint p2 = channeledParticles2.get(i).getCoordinate();
 
 //                System.out.println(p1.getX() + " " + p1.getY() + " " + p1.getX());
 //                System.out.println(p2.getX() + " " + p2.getY() + " " + p2.getX());

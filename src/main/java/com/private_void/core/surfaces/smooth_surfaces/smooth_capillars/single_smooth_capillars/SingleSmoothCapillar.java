@@ -61,11 +61,11 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                                         2.0 * Math.abs(angleWithSurface));
                         newCoordinate = getHitPoint(particle);
                     } else {
-                        particle.setAbsorbed(true);
+                        particle.absorb();
                         break;
                     }
                 }
-                particle.setInteracted();
+                particle.setChanneled();
             }
         }
 
@@ -111,11 +111,11 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                                             2.0 * Math.abs(angleWithSurface));
                             newCoordinate = getHitPoint(particle);
                         } else {
-                            particle.setAbsorbed(true);
+                            particle.absorb();
                             break;
                         }
                     }
-                    particle.setInteracted();
+                    particle.setChanneled();
                 }
                 Thread.yield();
             }
@@ -165,11 +165,11 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                                         2.0 * Math.abs(angleWithSurface));
                         newCoordinate = getHitPoint(particle);
                     } else {
-                        particle.setAbsorbed(true);
+                        particle.absorb();
                         break;
                     }
                 }
-                particle.setInteracted();
+                particle.setChanneled();
             }
         });
 
@@ -217,11 +217,11 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                                                 2.0 * Math.abs(angleWithSurface));
                                 newCoordinate = getHitPoint(particle);
                             } else {
-                                particle.setAbsorbed(true);
+                                particle.absorb();
                                 break;
                             }
                         }
-                        particle.setInteracted();
+                        particle.setChanneled();
                     }
                 }
             }

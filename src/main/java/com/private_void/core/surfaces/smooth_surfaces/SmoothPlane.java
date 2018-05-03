@@ -47,11 +47,11 @@ public class SmoothPlane extends SmoothSurface implements CapillarSystem {
                                     2.0 * Math.abs(angleWithSurface));
 
                 } else {
-                    particle.setAbsorbed(true);
+                    particle.absorb();
                     break;
                 }
 
-                particle.setInteracted();
+                particle.setChanneled();
             }
         }
 

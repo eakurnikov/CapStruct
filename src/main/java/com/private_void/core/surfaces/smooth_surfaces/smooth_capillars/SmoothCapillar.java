@@ -47,10 +47,10 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
                                 2.0 * Math.abs(angleWithSurface));
                 newCoordinate = getHitPoint(particle);
             } else {
-                particle.setAbsorbed(true);
+                particle.absorb();
                 break;
             }
-            particle.setInteracted();
+            particle.setChanneled();
         }
     }
 

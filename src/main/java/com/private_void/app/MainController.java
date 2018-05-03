@@ -123,7 +123,7 @@ public class MainController {
     @FXML
     private void initialize() {
         pFluxAxisX.setText("1.0");
-        pFluxAxisY.setText("-0.0");
+        pFluxAxisY.setText("-0.01");
 
         pFluxParticlesAmount.setText("1000");
         pFluxLayersAmount.setText("10");
@@ -158,7 +158,7 @@ public class MainController {
         coneReflect.setText("1");
         coneSlideAngle.setText("90");
 
-        planePeriod.setText("1");
+        planePeriod.setText("0.1");
         planeChargeNum.setText("1");
         planeSize.setText("50");
 
@@ -201,7 +201,7 @@ public class MainController {
 
     private Flux createFlux() {
         Particle.Factory neutralParticleFactory = NeutralParticle.getFactory(1.0);
-        Particle.Factory chargedParticleFactory = ChargedParticle.getFactory(1.0, 1.0, 1.0);
+        Particle.Factory chargedParticleFactory = ChargedParticle.getFactory(1.0, 0.1, 4.0);
 
         if (pFluxTab.isSelected()) {
             double x = Double.parseDouble(pFluxX.getText());
