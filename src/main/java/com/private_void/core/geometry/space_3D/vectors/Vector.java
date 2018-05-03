@@ -64,4 +64,9 @@ public class Vector extends CartesianPoint {
         return Math.acos((x * vec.x + y * vec.y + z * vec.z)
                 / (Math.sqrt(x * x + y * y + z * z) * Math.sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z)));
     }
+
+    @Override
+    public Vector inverse() {
+        return new Vector(-x, -y, -z);
+    }
 }

@@ -65,6 +65,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                         break;
                     }
                 }
+
                 particle.setChanneled();
             }
         }

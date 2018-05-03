@@ -14,7 +14,7 @@ import com.private_void.core.particles.Particle;
 import com.private_void.core.plates.CurvedPlate;
 import com.private_void.core.plates.TorusFlatPlate;
 import com.private_void.core.surfaces.CapillarSystem;
-import com.private_void.core.surfaces.atomic_surfaces.AtomicPlane;
+import com.private_void.core.surfaces.atomic_surfaces.AtomicTwoParallelPlanes;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
 import com.private_void.core.surfaces.capillar_factories.RotatedTorusFactory;
@@ -383,9 +383,18 @@ public class MainController {
 //            double frontZ = Double.parseDouble(planeZ.getText());
 //            double size = Double.parseDouble(planeSize.getText());
 //
-//            return new SmoothPlane(
+////            return new SmoothPlane(
+////                    new CartesianPoint(frontX, frontY, frontZ),
+////                    size,
+////                    0.0,
+////                    0.0,
+////                    1,
+////                    90);
+//
+//            return new SmoothTwoParallelPlanes(
 //                    new CartesianPoint(frontX, frontY, frontZ),
 //                    size,
+//                    10.0,
 //                    0.0,
 //                    0.0,
 //                    1,
@@ -401,10 +410,19 @@ public class MainController {
 
             double period = Double.parseDouble(planePeriod.getText());
             double chargeNumber = Double.parseDouble(planeChargeNum.getText());
-            return new AtomicPlane(
+
+//            return new AtomicPlane(
+//                    atomFactory,
+//                    new CartesianPoint(frontX, frontY, frontZ),
+//                    period,
+//                    chargeNumber,
+//                    size);
+
+            return new AtomicTwoParallelPlanes(
                     atomFactory,
                     new CartesianPoint(frontX, frontY, frontZ),
                     period,
+                    10.0,
                     chargeNumber,
                     size);
         }
