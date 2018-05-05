@@ -43,18 +43,21 @@ public class SingleAtomicCylinder extends SingleAtomicCapillar {
         double dVy = 0.0;
         double dVz = 0.0;
 
+//        particle.setCoordinate(new CartesianPoint(0.0, 0.0, 0.0));
+//        particle.setSpeed(Vector.E_X);
+
         for (AtomicChain chain : atomicChains) {
             y = particle.getCoordinate().getY() - chain.getCoordinate().getY();
             z = particle.getCoordinate().getZ() - chain.getCoordinate().getZ();
 
-            Fy = particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
-                    (chain.getPeriod() * (C_SQUARE * (shieldingDistance / y) + 1.0));
+            Fy = - particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
+                    (chain.getPeriod() * (C_SQUARE * (shieldingDistance / y) * (shieldingDistance / y) + 1.0));
 
-            Fz = particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
-                    (chain.getPeriod() * (C_SQUARE * (shieldingDistance / z) + 1.0));
+            Fz = - particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
+                    (chain.getPeriod() * (C_SQUARE * (shieldingDistance / z) * (shieldingDistance / z) + 1.0));
 
-            dVy += (Fy / particle.getMass()) * TIME_STEP;
-            dVz += (Fz / particle.getMass()) * TIME_STEP;
+            dVy += (Fy * Math.signum(chain.getCoordinate().getY()) / particle.getMass()) * TIME_STEP;
+            dVz += (Fz * Math.signum(chain.getCoordinate().getZ()) / particle.getMass()) * TIME_STEP;
         }
 
         return Vector.set(

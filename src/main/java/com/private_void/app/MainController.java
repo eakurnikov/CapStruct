@@ -14,7 +14,7 @@ import com.private_void.core.particles.Particle;
 import com.private_void.core.plates.CurvedPlate;
 import com.private_void.core.plates.TorusFlatPlate;
 import com.private_void.core.surfaces.CapillarSystem;
-import com.private_void.core.surfaces.atomic_surfaces.AtomicTwoParallelPlanes;
+import com.private_void.core.surfaces.atomic_surfaces.AtomicPlane;
 import com.private_void.core.surfaces.atomic_surfaces.single_atomic_capillars.SingleAtomicCylinder;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
@@ -409,18 +409,18 @@ public class MainController {
             double period = Double.parseDouble(planePeriod.getText());
             double chargeNumber = Double.parseDouble(planeChargeNum.getText());
 
-//            return new AtomicPlane(
-//                    new CartesianPoint(frontX, frontY, frontZ),
-//                    period,
-//                    chargeNumber,
-//                    size);
-
-            return new AtomicTwoParallelPlanes(
+            return new AtomicPlane(
                     new CartesianPoint(frontX, frontY, frontZ),
                     period,
-                    10.0,
                     chargeNumber,
                     size);
+
+//            return new AtomicTwoParallelPlanes(
+//                    new CartesianPoint(frontX, frontY, frontZ),
+//                    period,
+//                    10.0,
+//                    chargeNumber,
+//                    size);
         }
 
         return null;
