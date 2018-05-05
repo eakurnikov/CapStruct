@@ -250,7 +250,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         return detector.detect(flux);
     }
 
-    protected boolean willParticleGetInside(final Particle p) {
+    protected boolean willParticleGetInside(final NeutralParticle p) {
         double x0 = front.getX();
 
         double x = p.getCoordinate().getX();
@@ -270,5 +270,5 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
 
     protected abstract boolean isPointInside(final CartesianPoint point);
 
-    protected abstract CartesianPoint getDetectorsCoordinate();
+    protected abstract Detector createDetector();
 }

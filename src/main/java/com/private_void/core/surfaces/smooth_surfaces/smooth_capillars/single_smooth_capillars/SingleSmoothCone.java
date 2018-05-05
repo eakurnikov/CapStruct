@@ -24,7 +24,7 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
             throw new IllegalArgumentException();
         }
         this.divergentAngleR = divergentAngleR;
-        this.detector = new Detector(getDetectorsCoordinate(), 2.0 * radius);
+        this.detector = createDetector();
     }
 
     public SingleSmoothCone(final CartesianPoint front, double radius, double length, double coneCoefficient,
@@ -36,7 +36,7 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
             throw new IllegalArgumentException();
         }
         this.divergentAngleR = Utils.getConeDivergentAngle(radius, length, coneCoefficient);
-        this.detector = new Detector(getDetectorsCoordinate(), 2.0 * radius);
+        this.detector = createDetector();
     }
 
     @Override
@@ -167,11 +167,13 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
 
     @Override
     protected boolean isPointInside(final CartesianPoint point) {
-        return point.getX() < front.getX() + length;
+        return point.getX() <= front.getX() + length;
     }
 
     @Override
-    protected CartesianPoint getDetectorsCoordinate() {
-        return new CartesianPoint(front.getX() + length, front.getY(), front.getZ());
+    protected Detector createDetector() {
+        return new Detector(
+                new CartesianPoint(front.getX() + length, front.getY(), front.getZ()),
+                2.0 * radius);
     }
 }

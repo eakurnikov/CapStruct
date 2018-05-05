@@ -16,4 +16,6 @@ public class Constants {
 
     public static final double ELECTRON_CHARGE = 1.60217662e-3;
     public static final double BOHR_RADIUS = 0.53;
+
+    public static final double TIME_STEP = 1.0;
 }

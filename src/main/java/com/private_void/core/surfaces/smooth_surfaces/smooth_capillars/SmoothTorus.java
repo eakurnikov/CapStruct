@@ -18,7 +18,7 @@ public class SmoothTorus extends SmoothCapillar {
     private final double curvRadius;
     private final double curvAngleR;
 
-    public SmoothTorus(final CartesianPoint front, double radius, double curvRadius, double curvAngleR, double roughnessSize,
+    private SmoothTorus(final CartesianPoint front, double radius, double curvRadius, double curvAngleR, double roughnessSize,
                        double roughnessAngleR, double reflectivity, double criticalAngleR) {
         super(front, ReferenceFrame.builder().atPoint(front).build(), radius, Utils.getTorusLength(curvRadius, curvAngleR),
                 roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
@@ -180,7 +180,7 @@ public class SmoothTorus extends SmoothCapillar {
 
     @Override
     protected boolean isPointInside(final CartesianPoint point) {
-        return point.getX() < length;
+        return point.getX() <= length;
     }
 
     private double getPointsAngle(final CartesianPoint point) {

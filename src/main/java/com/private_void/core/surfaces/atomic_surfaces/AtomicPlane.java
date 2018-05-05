@@ -6,29 +6,25 @@ import com.private_void.core.detectors.Distribution;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
-import com.private_void.core.particles.Atom;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.CapillarSystem;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 
-import static com.private_void.utils.Constants.ELECTRON_CHARGE;
-import static com.private_void.utils.Constants.PI;
+import static com.private_void.core.particles.AtomicChain.C_SQUARE;
+import static com.private_void.utils.Constants.*;
 
 public class AtomicPlane extends AtomicSurface implements CapillarSystem {
     private final double size;
     private final double chargePlanarDensity;
     private final Detector detector;
 
-    public AtomicPlane(final Atom.Factory atomFactory, final CartesianPoint front, double period, double chargeNumber,
-                       double size) {
-        super(atomFactory, front, period, chargeNumber);
+    public AtomicPlane(final CartesianPoint front, double period, double chargeNumber, double size) {
+        super(front, period, chargeNumber);
         this.size = size;
         this.chargePlanarDensity = 1 / (period * period);
         this.detector = new Detector(new CartesianPoint(front.getX() + size, front.getY(), front.getZ()), size);
-        createAtoms();
     }
 
     @Override
@@ -38,6 +34,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
         ChargedParticle particle;
         CartesianPoint newCoordinate;
         double angleWithSurface;
+        Vector normal = Vector.E_Y;
 
         int particlesCounter = 0;
         int tenPercentOfParticlesAmount = flux.getParticles().size() / 10;
@@ -50,12 +47,12 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
             }
 
             particle = (ChargedParticle) iterator.next();
-            angleWithSurface = particle.getSpeed().getAngle(getNormal(particle.getCoordinate())) - PI / 2.0;
+            angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
 
             if (angleWithSurface <= getCriticalAngle(particle)) {
                 newCoordinate = particle.getCoordinate();
 
-                while (newCoordinate.getX() <= front.getX() + size) {
+                while (isPointInside(newCoordinate)) {
                     particle
                             .setCoordinate(newCoordinate)
                             .setSpeed(rotateParticleSpeed(particle));
@@ -75,31 +72,8 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
     }
 
     @Override
-    protected Vector getNormal(final CartesianPoint point) {
-        return Vector.E_Y;
-    }
-
-    @Override
-    protected Vector getParticleSpeedRotationAxis(final CartesianPoint point, final Vector normal) {
-        return Vector.E_Z;
-    }
-
-    @Override
-    protected void createAtoms() {
-        atoms = new ArrayList<>();
-
-        double x = front.getX();
-        double y = front.getY();
-        double z = front.getZ() - size / 2.0;
-
-        while (x <= front.getX() + size) {
-            while (z <= front.getZ() + size / 2.0) {
-                atoms.add(atomFactory.getNewAtom(new CartesianPoint(x, y, z), chargeNumber));
-                z += period;
-            }
-            x += period;
-            z = front.getZ() - size / 2;
-        }
+    protected Vector getAxis(CartesianPoint point) {
+        return Vector.E_X;
     }
 
     @Override
@@ -122,16 +96,37 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
     @Override
     protected Vector rotateParticleSpeed(final ChargedParticle particle) {
         double y = particle.getCoordinate().getY() - front.getY();
-        double C2 = 3.0;
-        double timeInterval = 1.0;
 
         double Fy = 2.0 * PI *  particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE)
-                * chargePlanarDensity * (1.0 - y / Math.sqrt((y / shieldingDistance) * (y / shieldingDistance) + C2));
-        double dVy = (Fy / particle.getMass()) * timeInterval;
+                * chargePlanarDensity * (1.0 - y / Math.sqrt((y / shieldingDistance) * (y / shieldingDistance) + C_SQUARE));
+        double dVy = (Fy / particle.getMass()) * TIME_STEP;
 
 //        Vector temp = Vector.set(particle.getSpeed().getX(), particle.getSpeed().getY() + 0.009, particle.getSpeed().getZ());
         return Vector.set(particle.getSpeed().getX(), particle.getSpeed().getY() + dVy, particle.getSpeed().getZ());
     }
+
+    private boolean isPointInside(final CartesianPoint point) {
+        return point.getX() <= front.getX() + size;
+    }
+}
+
+//    @Override
+//    protected void createAtoms() {
+//        atoms = new ArrayList<>();
+//
+//        double x = front.getX();
+//        double y = front.getY();
+//        double z = front.getZ() - size / 2.0;
+//
+//        while (x <= front.getX() + size) {
+//            while (z <= front.getZ() + size / 2.0) {
+//                atoms.add(atomFactory.getNewAtom(new CartesianPoint(x, y, z), chargeNumber));
+//                z += period;
+//            }
+//            x += period;
+//            z = front.getZ() - size / 2;
+//        }
+//    }
 
 //    @Override
 //    protected double getPotential(final ChargedParticle particle) {
@@ -142,4 +137,3 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
 //                (ELECTRON_CHARGE * ELECTRON_CHARGE) * shieldingDistance * chargePlanarDensity *
 //                Math.sqrt(y * y + C2) - y);
 //    }
-}

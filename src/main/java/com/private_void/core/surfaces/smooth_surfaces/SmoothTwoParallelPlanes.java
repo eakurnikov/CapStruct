@@ -135,6 +135,6 @@ public class SmoothTwoParallelPlanes extends SmoothSurface implements CapillarSy
     }
 
     private boolean isPointInside(final CartesianPoint point) {
-        return point.getX() < front.getX() + size;
+        return point.getX() <= front.getX() + size;
     }
 }

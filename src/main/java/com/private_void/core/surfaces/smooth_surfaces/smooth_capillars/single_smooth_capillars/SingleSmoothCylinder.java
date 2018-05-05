@@ -16,7 +16,7 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
     public SingleSmoothCylinder(final CartesianPoint front, double radius, double length, double roughnessSize,
                                 double roughnessAngleR, double reflectivity, double criticalAngleR) {
         super(front, radius, length, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
-        this.detector = new Detector(getDetectorsCoordinate(), 2.0 * radius);
+        this.detector = createDetector();
     }
 
     @Override
@@ -155,11 +155,13 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
 
     @Override
     protected boolean isPointInside(final CartesianPoint point) {
-        return point.getX() < front.getX() + length;
+        return point.getX() <= front.getX() + length;
     }
 
     @Override
-    protected CartesianPoint getDetectorsCoordinate() {
-        return new CartesianPoint(front.getX() + length, front.getY(), front.getZ());
+    protected Detector createDetector() {
+        return new Detector(
+                new CartesianPoint(front.getX() + length, front.getY(), front.getZ()),
+                2.0 * radius);
     }
 }

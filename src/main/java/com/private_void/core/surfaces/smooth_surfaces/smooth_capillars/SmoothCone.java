@@ -16,7 +16,7 @@ import static com.private_void.utils.Generator.generator;
 public class SmoothCone extends SmoothCapillar {
     private final double divergentAngleR;
 
-    public SmoothCone(final CartesianPoint front, double radius, int divergentAngleR, double coneCoefficient, double roughnessSize,
+    private SmoothCone(final CartesianPoint front, double radius, int divergentAngleR, double coneCoefficient, double roughnessSize,
                       double roughnessAngleR, double reflectivity, double criticalAngleR)
             throws IllegalArgumentException {
 
@@ -177,7 +177,7 @@ public class SmoothCone extends SmoothCapillar {
 
     @Override
     protected boolean isPointInside(final CartesianPoint point) {
-        return point.getX() < length;
+        return point.getX() <= length;
     }
 
     public static CapillarFactory getFactory(double radius, double length, double coneCoefficient, double roughnessSize,

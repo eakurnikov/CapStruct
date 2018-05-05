@@ -6,32 +6,27 @@ import com.private_void.core.detectors.Distribution;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
-import com.private_void.core.particles.Atom;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.CapillarSystem;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 
-import static com.private_void.utils.Constants.ELECTRON_CHARGE;
-import static com.private_void.utils.Constants.PI;
+import static com.private_void.core.particles.AtomicChain.C_SQUARE;
+import static com.private_void.utils.Constants.*;
 
 public class AtomicTwoParallelPlanes extends AtomicSurface implements CapillarSystem {
     private final double size;
     private final double chargePlanarDensity;
     private final double width;
-    private ArrayList<Atom> secondPlaneAtoms;
     private final Detector detector;
 
-    public AtomicTwoParallelPlanes(final Atom.Factory atomFactory, final CartesianPoint front,
-                                   double period, double width, double chargeNumber, double size) {
-        super(atomFactory, front, period, chargeNumber);
+    public AtomicTwoParallelPlanes(final CartesianPoint front, double period, double width, double chargeNumber, double size) {
+        super(front, period, chargeNumber);
         this.size = size;
         this.chargePlanarDensity = 1 / (period * period);
         this.width = width;
         this.detector = new Detector(new CartesianPoint(front.getX() + size, front.getY(), front.getZ()), size);
-        createAtoms();
     }
 
     @Override
@@ -41,6 +36,7 @@ public class AtomicTwoParallelPlanes extends AtomicSurface implements CapillarSy
         ChargedParticle particle;
         CartesianPoint newCoordinate;
         double angleWithSurface;
+        Vector normal = Vector.E_Y;
 
         int particlesCounter = 0;
         int tenPercentOfParticlesAmount = flux.getParticles().size() / 10;
@@ -53,12 +49,12 @@ public class AtomicTwoParallelPlanes extends AtomicSurface implements CapillarSy
             }
 
             particle = (ChargedParticle) iterator.next();
-            angleWithSurface = particle.getSpeed().getAngle(getNormal(particle.getCoordinate())) - PI / 2.0;
+            angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
 
             if (angleWithSurface <= getCriticalAngle(particle)) {
                 newCoordinate = particle.getCoordinate();
 
-                while (newCoordinate.getX() <= front.getX() + size) {
+                while (isPointInside(newCoordinate)) {
                     particle
                             .setCoordinate(newCoordinate)
                             .setSpeed(rotateParticleSpeed(particle));
@@ -78,33 +74,8 @@ public class AtomicTwoParallelPlanes extends AtomicSurface implements CapillarSy
     }
 
     @Override
-    protected Vector getNormal(final CartesianPoint point) {
-        return Vector.E_Y;
-    }
-
-    @Override
-    protected Vector getParticleSpeedRotationAxis(final CartesianPoint point, final Vector normal) {
-        return Vector.E_Z;
-    }
-
-    @Override
-    protected void createAtoms() {
-        atoms = new ArrayList<>();
-        secondPlaneAtoms = new ArrayList<>();
-
-        double x = front.getX();
-        double y = front.getY();
-        double z = front.getZ() - size / 2.0;
-
-        while (x <= front.getX() + size) {
-            while (z <= front.getZ() + size / 2.0) {
-                atoms.add(atomFactory.getNewAtom(new CartesianPoint(x, y, z), chargeNumber));
-                secondPlaneAtoms.add(atomFactory.getNewAtom(new CartesianPoint(x, y + width, z), chargeNumber));
-                z += period;
-            }
-            x += period;
-            z = front.getZ() - size / 2;
-        }
+    protected Vector getAxis(CartesianPoint point) {
+        return Vector.E_X;
     }
 
     @Override
@@ -126,20 +97,42 @@ public class AtomicTwoParallelPlanes extends AtomicSurface implements CapillarSy
 
     @Override
     protected Vector rotateParticleSpeed(final ChargedParticle particle) {
-        double C2 = 3.0;
-        double timeInterval = 1.0;
-
         double y1 = particle.getCoordinate().getY() - front.getY();
-        double Fy1 = 2.0 * PI *  particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE)
-                * chargePlanarDensity * (1.0 - y1 / Math.sqrt((y1 / shieldingDistance) * (y1 / shieldingDistance) + C2));
-
         double y2 = front.getY() + width - particle.getCoordinate().getY();
-        double Fy2 = 2.0 * PI *  particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE)
-                * chargePlanarDensity * (1.0 - y2 / Math.sqrt((y2 / shieldingDistance) * (y2 / shieldingDistance) + C2));
 
-        double dVy = ((Fy1 - Fy2) / particle.getMass()) * timeInterval;
+        double Fy1 = 2.0 * PI *  particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE)
+                * chargePlanarDensity * (1.0 - y1 / Math.sqrt((y1 / shieldingDistance) * (y1 / shieldingDistance) + C_SQUARE));
+
+        double Fy2 = 2.0 * PI *  particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE)
+                * chargePlanarDensity * (1.0 - y2 / Math.sqrt((y2 / shieldingDistance) * (y2 / shieldingDistance) + C_SQUARE));
+
+        double dVy = ((Fy1 - Fy2) / particle.getMass()) * TIME_STEP;
 
 //        Vector temp = Vector.set(particle.getSpeed().getX(), particle.getSpeed().getY() + 0.009, particle.getSpeed().getZ());
         return Vector.set(particle.getSpeed().getX(), particle.getSpeed().getY() + dVy, particle.getSpeed().getZ());
     }
+
+    private boolean isPointInside(final CartesianPoint point) {
+        return point.getX() <= front.getX() + size;
+    }
 }
+
+//    @Override
+//    protected void createAtoms() {
+//        atoms = new ArrayList<>();
+//        secondPlaneAtoms = new ArrayList<>();
+//
+//        double x = front.getX();
+//        double y = front.getY();
+//        double z = front.getZ() - size / 2.0;
+//
+//        while (x <= front.getX() + size) {
+//            while (z <= front.getZ() + size / 2.0) {
+//                atoms.add(atomFactory.getNewAtom(new CartesianPoint(x, y, z), chargeNumber));
+//                secondPlaneAtoms.add(atomFactory.getNewAtom(new CartesianPoint(x, y + width, z), chargeNumber));
+//                z += period;
+//            }
+//            x += period;
+//            z = front.getZ() - size / 2;
+//        }
+//    }

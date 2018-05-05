@@ -2,20 +2,27 @@ package com.private_void.core.surfaces.atomic_surfaces.atomic_capillars;
 
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.reference_frames.ReferenceFrame;
-import com.private_void.core.particles.Atom;
+import com.private_void.core.particles.AtomicChain;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.atomic_surfaces.AtomicSurface;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
     protected final ReferenceFrame refFrame;
+    protected final AtomicChain.Factory factory;
+    protected final List<AtomicChain> atomicChains;
     protected final double length;
     protected final double radius;
 
-    public AtomicCapillar(final Atom.Factory atomFactory, final CartesianPoint front, double period, double chargeNumber,
-                          double radius, double length) {
-        super(atomFactory, front, period, chargeNumber);
+    public AtomicCapillar(final AtomicChain.Factory factory, final CartesianPoint front, double period,
+                          double chargeNumber, double radius, double length) {
+        super(front, period, chargeNumber);
         this.refFrame = ReferenceFrame.builder().atPoint(front).build();
+        this.factory = factory;
+        this.atomicChains = new ArrayList<>();
         this.radius = radius;
         this.length = length;
     }
@@ -47,6 +54,8 @@ public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
     public ReferenceFrame getReferenceFrame() {
         return refFrame;
     }
+
+    protected abstract void createAtomicChains(final AtomicChain.Factory factory);
 
     protected abstract boolean isPointInside(CartesianPoint point);
 }

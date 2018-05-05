@@ -7,7 +7,7 @@ import com.private_void.core.fluxes.ParallelFlux;
 import com.private_void.core.geometry.space_2D.CartesianPoint2D;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
-import com.private_void.core.particles.Atom;
+import com.private_void.core.particles.AtomicChain;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
@@ -15,14 +15,13 @@ import com.private_void.core.plates.CurvedPlate;
 import com.private_void.core.plates.TorusFlatPlate;
 import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.core.surfaces.atomic_surfaces.AtomicTwoParallelPlanes;
+import com.private_void.core.surfaces.atomic_surfaces.single_atomic_capillars.SingleAtomicCylinder;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
 import com.private_void.core.surfaces.capillar_factories.RotatedTorusFactory;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothCylinder;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothTorus;
-import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCapillar;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone;
-import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCylinder;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothTorus;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -195,8 +194,8 @@ public class MainController {
     }
 
     public void startBtnClick(ActionEvent actionEvent) {
-//        showImage(createCapillar().interact(createFlux()));
-        showImage(createPlate().interact(createFlux()));
+        showImage(createCapillar().interact(createFlux()));
+//        showImage(createPlate().interact(createFlux()));
     }
 
     private Flux createFlux() {
@@ -402,7 +401,6 @@ public class MainController {
 //        }
 
         if (planeTab.isSelected()) {
-            Atom.Factory atomFactory = Atom.getFactory();
             double frontX = Double.parseDouble(planeX.getText());
             double frontY = Double.parseDouble(planeY.getText());
             double frontZ = Double.parseDouble(planeZ.getText());
@@ -412,14 +410,12 @@ public class MainController {
             double chargeNumber = Double.parseDouble(planeChargeNum.getText());
 
 //            return new AtomicPlane(
-//                    atomFactory,
 //                    new CartesianPoint(frontX, frontY, frontZ),
 //                    period,
 //                    chargeNumber,
 //                    size);
 
             return new AtomicTwoParallelPlanes(
-                    atomFactory,
                     new CartesianPoint(frontX, frontY, frontZ),
                     period,
                     10.0,
@@ -430,7 +426,7 @@ public class MainController {
         return null;
     }
 
-    private SingleSmoothCapillar createCapillar() {
+    private CapillarSystem createCapillar() {
 
         if (cylTab.isSelected()) {
             double frontX = Double.parseDouble(cylX.getText());
@@ -446,14 +442,24 @@ public class MainController {
             double criticalAngleD = Double.parseDouble(cylSlideAngle.getText());
             double criticalAngleR = Math.toRadians(criticalAngleD);
 
-            return new SingleSmoothCylinder(
+//            return new SingleSmoothCylinder(
+//                    new CartesianPoint(frontX, frontY, frontZ),
+//                    radius,
+//                    length,
+//                    roughnessSize,
+//                    roughnessAngleR,
+//                    reflectivity,
+//                    criticalAngleR);
+
+            AtomicChain.Factory factory = AtomicChain.getFactory(0.1);
+
+            return new SingleAtomicCylinder(
+                    factory,
                     new CartesianPoint(frontX, frontY, frontZ),
+                    0.1,
+                    1.0,
                     radius,
-                    length,
-                    roughnessSize,
-                    roughnessAngleR,
-                    reflectivity,
-                    criticalAngleR);
+                    length);
         }
 
         if (torusTab.isSelected()) {

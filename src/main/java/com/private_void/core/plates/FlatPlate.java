@@ -24,7 +24,6 @@ public class FlatPlate extends Plate {
         this.width = capillarFactory.getLength();
         this.detector = new Detector(getDetectorsCoordinate(), sideLength);
         createCapillars();
-        writeDataInFile();
     }
 
     @Override

@@ -2,41 +2,21 @@ package com.private_void.core.surfaces.atomic_surfaces.atomic_capillars;
 
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
-import com.private_void.core.particles.Atom;
+import com.private_void.core.particles.AtomicChain;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 
-import java.util.ArrayList;
-
 public class AtomicCylinder extends AtomicCapillar {
 
-    public AtomicCylinder(final Atom.Factory atomFactory, final CartesianPoint front, double period, double chargeNumber,
-                          double radius, double length) {
-        super(atomFactory, front, period, chargeNumber, radius, length);
+    public AtomicCylinder(final AtomicChain.Factory factory, final CartesianPoint front, double period,
+                          double chargeNumber, double radius, double length) {
+        super(factory, front, period, chargeNumber, radius, length);
     }
 
     @Override
-    protected Vector getNormal(final CartesianPoint point) {
-        return null;
-    }
-
-    @Override
-    protected Vector getParticleSpeedRotationAxis(final CartesianPoint point, final Vector normal) {
-        return null;
-    }
-
-    @Override
-    protected void createAtoms() {
-        atoms = new ArrayList<>();
-
-        double x = front.getX();
-        //double y = front.getY();
-        //double z = front.getX() - size / 2;
-
-        while (x <= front.getX() + length) {
-            x += period;
-        }
+    protected Vector getAxis(final CartesianPoint point) {
+        return Vector.E_X;
     }
 
     @Override
@@ -50,17 +30,22 @@ public class AtomicCylinder extends AtomicCapillar {
     }
 
     @Override
+    protected void createAtomicChains(AtomicChain.Factory factory) {
+
+    }
+
+    @Override
     protected boolean isPointInside(CartesianPoint point) {
         return false;
     }
 
-    public static CapillarFactory getFactory(final Atom.Factory atomFactory, double period, double chargeNumber,
+    public static CapillarFactory getFactory(final AtomicChain.Factory factory, double period, double chargeNumber,
                                              double radius, double length) {
         return new CapillarFactory() {
 
             @Override
             public Capillar getNewCapillar(final CartesianPoint coordinate) {
-                return new AtomicCylinder(atomFactory, coordinate, period, chargeNumber, radius, length);
+                return new AtomicCylinder(factory, coordinate, period, chargeNumber, radius, length);
             }
 
             @Override
@@ -75,3 +60,16 @@ public class AtomicCylinder extends AtomicCapillar {
         };
     }
 }
+
+//    @Override
+//    protected void createAtoms() {
+//        atoms = new ArrayList<>();
+//
+//        double x = front.getX();
+//        //double y = front.getY();
+//        //double z = front.getX() - size / 2;
+//
+//        while (x <= front.getX() + length) {
+//            x += period;
+//        }
+//    }

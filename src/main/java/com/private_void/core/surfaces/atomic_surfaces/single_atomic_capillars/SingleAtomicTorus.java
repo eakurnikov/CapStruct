@@ -1,22 +1,24 @@
-package com.private_void.core.surfaces.atomic_surfaces.atomic_capillars;
+package com.private_void.core.surfaces.atomic_surfaces.single_atomic_capillars;
 
+import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.AtomicChain;
 import com.private_void.core.particles.ChargedParticle;
-import com.private_void.core.surfaces.Capillar;
-import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.utils.Utils;
 
-public class AtomicTorus extends AtomicCapillar {
+import java.util.List;
+
+public class SingleAtomicTorus extends SingleAtomicCapillar {
     private final double curvRadius;
     private final double curvAngleR;
 
-    public AtomicTorus(final AtomicChain.Factory factory, final CartesianPoint front, double period, double chargeNumber,
+    public SingleAtomicTorus(final AtomicChain.Factory factory, final CartesianPoint front, double period, double chargeNumber,
                        double radius, double curvRadius, double curvAngleR) {
         super(factory, front, period, chargeNumber, radius, Utils.getTorusLength(curvRadius, curvAngleR));
         this.curvRadius = curvRadius;
         this.curvAngleR = curvAngleR;
+        this.detector = createDetector();
     }
 
     @Override
@@ -35,8 +37,8 @@ public class AtomicTorus extends AtomicCapillar {
     }
 
     @Override
-    protected void createAtomicChains(AtomicChain.Factory factory) {
-
+    protected List<AtomicChain> createAtomicChains(AtomicChain.Factory factory) {
+        return null;
     }
 
     @Override
@@ -44,26 +46,14 @@ public class AtomicTorus extends AtomicCapillar {
         return false;
     }
 
-    public static CapillarFactory getFactory(final AtomicChain.Factory factory, double period, double chargeNumber,
-                                             double radius, double curvRadius, double curvAngleR) {
-        return new CapillarFactory() {
-
-            @Override
-            public Capillar getNewCapillar(final CartesianPoint coordinate) {
-                return new AtomicTorus(factory, coordinate, period, chargeNumber, radius, curvRadius,
-                        curvAngleR);
-            }
-
-            @Override
-            public double getRadius() {
-                return radius;
-            }
-
-            @Override
-            public double getLength() {
-                return Utils.getTorusLength(curvRadius, curvAngleR);
-            }
-        };
+    @Override
+    protected Detector createDetector() {
+        return new Detector(
+                new CartesianPoint(
+                        front.getX() + curvRadius * Math.sin(curvAngleR),
+                        front.getY(),
+                        front.getZ() + curvRadius * (1 - Math.cos(curvAngleR))),
+                2.0 * radius);
     }
 
     private double getPointsAngle(final CartesianPoint point) {

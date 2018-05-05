@@ -16,7 +16,7 @@ import static com.private_void.utils.Generator.generator;
 
 public class SmoothCylinder extends SmoothCapillar {
 
-    public SmoothCylinder(final CartesianPoint front, final ReferenceFrame refFrame, double radius, double length,
+    private SmoothCylinder(final CartesianPoint front, final ReferenceFrame refFrame, double radius, double length,
                                  double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
         super(front, refFrame, radius, length, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
     }
@@ -143,7 +143,7 @@ public class SmoothCylinder extends SmoothCapillar {
 
     @Override
     protected boolean isPointInside(final CartesianPoint point) {
-        return point.getX() < length;
+        return point.getX() <= length;
     }
 
     public static CapillarFactory getCapillarFactory(double radius, double length, double roughnessSize,

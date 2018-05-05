@@ -21,8 +21,7 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
                 roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.curvRadius = curvRadius;
         this.curvAngleR = curvAngleR;
-//        this.detector = new RotatedDetector(getDetectorsCoordinate(), 2.0 * radius, curvAngleR);
-        this.detector = new Detector(getDetectorsCoordinate(), 2.0 * radius);
+        this.detector = createDetector();
     }
 
     @Override
@@ -164,15 +163,17 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
 //        double angle = getPointsAngle(point);
 //        return angle >= 0 && angle <= curvAngleR;
 
-        return point.getX() < front.getX() + length;
+        return point.getX() <= front.getX() + length;
     }
 
     @Override
-    protected CartesianPoint getDetectorsCoordinate() {
-        return new CartesianPoint(
-                front.getX() + curvRadius * Math.sin(curvAngleR),
-                front.getY(),
-                front.getZ() + curvRadius * (1 - Math.cos(curvAngleR)));
+    protected Detector createDetector() {
+        return new Detector(
+                new CartesianPoint(
+                        front.getX() + curvRadius * Math.sin(curvAngleR),
+                        front.getY(),
+                        front.getZ() + curvRadius * (1 - Math.cos(curvAngleR))),
+                2.0 * radius);
     }
 
     private double getPointsAngle(final CartesianPoint point) {
