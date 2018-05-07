@@ -137,6 +137,7 @@ public class Detector {
                 .setOutOfDetectorAmount(outOfDetectorAmount)
                 .setAbsorbedAmount(absorbedAmount)
                 .setDeletedAmount(deletedAmount)
+                .setWidth(width)
                 .build();
     }
 

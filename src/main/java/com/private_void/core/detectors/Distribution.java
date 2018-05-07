@@ -26,6 +26,8 @@ public class Distribution {
     private final int absorbedAmount;
     private final int deletedAmount;
 
+    private final double width;
+
     private Distribution(final ArrayList<CartesianPoint2D> channeledImage,
                          final ArrayList<CartesianPoint2D> piercedImage,
 
@@ -43,7 +45,9 @@ public class Distribution {
 
                          int outOfDetectorAmount,
                          int absorbedAmount,
-                         int deletedAmount) {
+                         int deletedAmount,
+
+                         double width) {
 
         this.channeledImage = channeledImage;
         this.piercedImage = piercedImage;
@@ -63,6 +67,8 @@ public class Distribution {
         this.outOfDetectorAmount = outOfDetectorAmount;
         this.absorbedAmount = absorbedAmount;
         this.deletedAmount = deletedAmount;
+
+        this.width = width;
     }
 
     public ArrayList<CartesianPoint2D> getChanneledImage() {
@@ -115,6 +121,10 @@ public class Distribution {
 
     public int getDeletedAmount() {
         return deletedAmount;
+    }
+
+    public double getWidth() {
+        return width;
     }
 
     public void contvertToFile() {
@@ -216,6 +226,8 @@ public class Distribution {
         private int absorbedAmount;
         private int deletedAmount;
 
+        private double width;
+
         private Builder() {}
 
         public Builder setChanneledImage(final ArrayList<CartesianPoint2D> channeledImage) {
@@ -283,6 +295,11 @@ public class Distribution {
             return this;
         }
 
+        public Builder setWidth(double width) {
+            this.width = width;
+            return this;
+        }
+
         public Distribution build() {
             return new Distribution(
                     channeledImage, piercedImage,
@@ -290,7 +307,10 @@ public class Distribution {
                     channeledCellsX, piercedCellsX,
                     channeledCellsY, piercedCellsY,
                     channeledAmount, piercedAmount,
-                    outOfDetectorAmount, absorbedAmount, deletedAmount);
+                    outOfDetectorAmount, absorbedAmount, deletedAmount,
+                    width);
         }
+
+
     }
 }

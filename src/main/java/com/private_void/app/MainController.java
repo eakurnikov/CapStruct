@@ -451,12 +451,12 @@ public class MainController {
 //                    reflectivity,
 //                    criticalAngleR);
 
-            AtomicChain.Factory factory = AtomicChain.getFactory(0.1);
+            AtomicChain.Factory factory = AtomicChain.getFactory(2.0 * Math.PI / 100);
 
             return new SingleAtomicCylinder(
                     factory,
                     new CartesianPoint(frontX, frontY, frontZ),
-                    0.1,
+                    100,
                     1.0,
                     radius,
                     length);
@@ -538,6 +538,7 @@ public class MainController {
 
         showChanneledImage(distribution);
         showPiercedImage(distribution);
+        setChartScale(distribution.getWidth());
 
         Logger.renderingFinish();
 
@@ -562,6 +563,17 @@ public class MainController {
             piercedImage.getData().add(new XYChart.Data<>(point.getX(), point.getY()));
         }
         chart.getData().addAll(piercedImage);
+    }
+
+    private void setChartScale(double width) {
+        xAxis.setAutoRanging(false);
+        yAxis.setAutoRanging(false);
+
+        xAxis.setUpperBound(width);
+        yAxis.setUpperBound(width);
+
+        xAxis.setLowerBound(-width);
+        yAxis.setLowerBound(-width);
     }
 }
 

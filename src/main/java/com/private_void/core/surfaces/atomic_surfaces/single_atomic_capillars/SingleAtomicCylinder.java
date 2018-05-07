@@ -2,6 +2,7 @@ package com.private_void.core.surfaces.atomic_surfaces.single_atomic_capillars;
 
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.coordinates.CylindricalPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.AtomicChain;
 import com.private_void.core.particles.ChargedParticle;
@@ -15,9 +16,9 @@ import static com.private_void.utils.Constants.TIME_STEP;
 
 public class SingleAtomicCylinder extends SingleAtomicCapillar {
 
-    public SingleAtomicCylinder(final AtomicChain.Factory factory, final CartesianPoint front, double period,
+    public SingleAtomicCylinder(final AtomicChain.Factory factory, final CartesianPoint front, int atomicChainsAmount,
                                 double chargeNumber, double radius, double length) {
-        super(factory, front, period, chargeNumber, radius, length);
+        super(factory, front, atomicChainsAmount, chargeNumber, radius, length);
         this.detector = createDetector();
     }
 
@@ -62,18 +63,18 @@ public class SingleAtomicCylinder extends SingleAtomicCapillar {
 
         return Vector.set(
                 particle.getSpeed().getX(),
-                particle.getSpeed().getY() + dVy,
-                particle.getSpeed().getZ() + dVz);
+                particle.getSpeed().getY() + dVy / 1000,
+                particle.getSpeed().getZ() + dVz / 1000);
     }
 
     @Override
     protected List<AtomicChain> createAtomicChains(final AtomicChain.Factory factory) {
         List<AtomicChain> atomicChains = new ArrayList<>();
 
-        atomicChains.add(factory.getNewAtomicChain(new CartesianPoint(0.0, radius, 0.0)));
-        atomicChains.add(factory.getNewAtomicChain(new CartesianPoint(0.0, 0.0, radius)));
-        atomicChains.add(factory.getNewAtomicChain(new CartesianPoint(0.0, 0.0, -radius)));
-        atomicChains.add(factory.getNewAtomicChain(new CartesianPoint(0.0, -radius, 0.0)));
+        double phi = 0.0;
+        for (int i = 0; i < atomicChainsAmount; i++) {
+            atomicChains.add(factory.getNewAtomicChain(new CylindricalPoint(radius, phi+=period, 0.0).convertToCartesian()));
+        }
 
         return atomicChains;
     }
