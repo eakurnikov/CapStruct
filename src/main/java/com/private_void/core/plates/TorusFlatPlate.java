@@ -32,7 +32,7 @@ public class TorusFlatPlate extends Plate {
         this.width = capillarFactory.getLength();
         this.focus = center.shift(DETECTORS_DISTANCE_COEFFICIENT * width, 0.0, 0.0);
         this.plateRadius = (focus.getX() - width) * Math.tan(maxAngleR);
-        this.detector = new Detector(getDetectorsCoordinate(), 2.0 / 2.0 * plateRadius);
+        this.detector = new Detector(getDetectorsCoordinate(), 2.0 * plateRadius);
         createCapillars();
     }
 

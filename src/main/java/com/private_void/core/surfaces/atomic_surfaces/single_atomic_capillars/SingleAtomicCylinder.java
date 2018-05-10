@@ -57,23 +57,24 @@ public class SingleAtomicCylinder extends SingleAtomicCapillar {
             Fz = - particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
                     (chain.getPeriod() * (C_SQUARE * (shieldingDistance / z) * (shieldingDistance / z) + 1.0));
 
-            dVy += (Fy * Math.signum(chain.getCoordinate().getY()) / particle.getMass()) * TIME_STEP;
-            dVz += (Fz * Math.signum(chain.getCoordinate().getZ()) / particle.getMass()) * TIME_STEP;
+            dVy += (Fy * Math.signum(y) / particle.getMass()) * TIME_STEP;
+            dVz += (Fz * Math.signum(z) / particle.getMass()) * TIME_STEP;
         }
 
         return Vector.set(
                 particle.getSpeed().getX(),
-                particle.getSpeed().getY() + dVy / 1000,
-                particle.getSpeed().getZ() + dVz / 1000);
+                particle.getSpeed().getY() + dVy / 3_000,
+                particle.getSpeed().getZ() + dVz / 3_000);
     }
 
     @Override
     protected List<AtomicChain> createAtomicChains(final AtomicChain.Factory factory) {
         List<AtomicChain> atomicChains = new ArrayList<>();
 
+//        double phi = Math.PI;
         double phi = 0.0;
         for (int i = 0; i < atomicChainsAmount; i++) {
-            atomicChains.add(factory.getNewAtomicChain(new CylindricalPoint(radius, phi+=period, 0.0).convertToCartesian()));
+            atomicChains.add(factory.getNewAtomicChain(new CylindricalPoint(radius, phi += period, 0.0).convertToCartesian()));
         }
 
         return atomicChains;
