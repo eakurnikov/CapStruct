@@ -8,13 +8,15 @@ import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.utils.Utils;
 
+import java.util.List;
+
 public class AtomicTorus extends AtomicCapillar {
     private final double curvRadius;
     private final double curvAngleR;
 
-    public AtomicTorus(final AtomicChain.Factory factory, final CartesianPoint front, double period, double chargeNumber,
-                       double radius, double curvRadius, double curvAngleR) {
-        super(factory, front, period, chargeNumber, radius, Utils.getTorusLength(curvRadius, curvAngleR));
+    public AtomicTorus(final AtomicChain.Factory factory, final CartesianPoint front, int atomicChainsAmount,
+                       double chargeNumber, double radius, double curvRadius, double curvAngleR) {
+        super(factory, front, atomicChainsAmount, chargeNumber, radius, Utils.getTorusLength(curvRadius, curvAngleR));
         this.curvRadius = curvRadius;
         this.curvAngleR = curvAngleR;
     }
@@ -35,8 +37,8 @@ public class AtomicTorus extends AtomicCapillar {
     }
 
     @Override
-    protected void createAtomicChains(AtomicChain.Factory factory) {
-
+    protected List<AtomicChain> createAtomicChains(AtomicChain.Factory factory) {
+        return null;
     }
 
     @Override
@@ -44,13 +46,13 @@ public class AtomicTorus extends AtomicCapillar {
         return false;
     }
 
-    public static CapillarFactory getFactory(final AtomicChain.Factory factory, double period, double chargeNumber,
+    public static CapillarFactory getFactory(final AtomicChain.Factory factory, int atomicChainsAmount, double chargeNumber,
                                              double radius, double curvRadius, double curvAngleR) {
         return new CapillarFactory() {
 
             @Override
             public Capillar getNewCapillar(final CartesianPoint coordinate) {
-                return new AtomicTorus(factory, coordinate, period, chargeNumber, radius, curvRadius,
+                return new AtomicTorus(factory, coordinate, atomicChainsAmount, chargeNumber, radius, curvRadius,
                         curvAngleR);
             }
 

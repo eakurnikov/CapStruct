@@ -25,7 +25,7 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
 
     public SingleAtomicCapillar(final AtomicChain.Factory factory, final CartesianPoint front, int atomicChainsAmount,
                                 double chargeNumber, double radius, double length) {
-        super(front, 2.0 * Math.PI / atomicChainsAmount, chargeNumber);
+        super(front, factory.getPeriod(), chargeNumber);
         this.atomicChainsAmount = atomicChainsAmount;
         this.radius = radius;
         this.length = length;

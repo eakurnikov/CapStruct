@@ -30,7 +30,7 @@ public class SingleAtomicCylinder extends SingleAtomicCapillar {
     @Override
     protected double getCriticalAngle(final ChargedParticle particle) {
         return Math.sqrt(2.0 * particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
-                particle.getEnergy() * atomicChains.get(0).getPeriod()) * 100;
+                particle.getEnergy() * atomicChains.get(0).getPeriod()) * 1000;
     }
 
     @Override
@@ -63,16 +63,16 @@ public class SingleAtomicCylinder extends SingleAtomicCapillar {
 
         return Vector.set(
                 particle.getSpeed().getX(),
-                particle.getSpeed().getY() + dVy / 3_000,
-                particle.getSpeed().getZ() + dVz / 3_000);
+                particle.getSpeed().getY() + dVy / 300_000,
+                particle.getSpeed().getZ() + dVz / 300_000);
     }
 
     @Override
     protected List<AtomicChain> createAtomicChains(final AtomicChain.Factory factory) {
         List<AtomicChain> atomicChains = new ArrayList<>();
 
-//        double phi = Math.PI;
-        double phi = 0.0;
+        double phi = Math.PI / 0.928;
+//        double phi = 0.0;
         for (int i = 0; i < atomicChainsAmount; i++) {
             atomicChains.add(factory.getNewAtomicChain(new CylindricalPoint(radius, phi += period, 0.0).convertToCartesian()));
         }

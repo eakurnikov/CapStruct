@@ -12,9 +12,11 @@ import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.plates.CurvedPlate;
+import com.private_void.core.plates.FlatPlate;
 import com.private_void.core.plates.TorusFlatPlate;
 import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.core.surfaces.atomic_surfaces.AtomicPlane;
+import com.private_void.core.surfaces.atomic_surfaces.atomic_capillars.AtomicCylinder;
 import com.private_void.core.surfaces.atomic_surfaces.single_atomic_capillars.SingleAtomicCylinder;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
@@ -290,6 +292,15 @@ public class MainController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
+            int atomicChainsAmount = 1000;
+            AtomicChain.Factory atomicChainFactory = AtomicChain.getFactory(2.0 * Math.PI / atomicChainsAmount);
+            CapillarFactory atomicCylinderFactory = AtomicCylinder.getCapillarFactory(
+                    atomicChainFactory,
+                    atomicChainsAmount,
+                    1.0,
+                    capillarRadius,
+                    capillarLength);
+
             RotatedCapillarFactory rotatedSmoothCylinderFactory = SmoothCylinder.getRotatedCapillarFactory(
                     capillarRadius,
                     capillarLength,
@@ -298,11 +309,11 @@ public class MainController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
-//            return new FlatPlate(
-//                    smoothCylinderFactory,
-//                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
-//                    plateCapillarsDensity,
-//                    plateSideLength);
+            return new FlatPlate(
+                    atomicCylinderFactory,
+                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
+                    plateCapillarsDensity,
+                    plateSideLength);
 
 //            return new InclinedPlate(
 //                    rotatedSmoothCylinderFactory,
@@ -310,12 +321,12 @@ public class MainController {
 //                    plateCapillarsDensity,
 //                    plateSideLength);
 
-            return new CurvedPlate(
-                    rotatedSmoothCylinderFactory,
-                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
-                    plateCapillarsDensity,
-                    Math.toRadians(1.0),
-                    capillarLength * 20);
+//            return new CurvedPlate(
+//                    rotatedSmoothCylinderFactory,
+//                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
+//                    plateCapillarsDensity,
+//                    Math.toRadians(1.0),
+//                    capillarLength * 20);
         }
 
         if (torusTab.isSelected()) {
@@ -451,12 +462,13 @@ public class MainController {
 //                    reflectivity,
 //                    criticalAngleR);
 
-            AtomicChain.Factory factory = AtomicChain.getFactory(2.0 * Math.PI / 100);
+            int atomicChainsAmount = 1000;
+            AtomicChain.Factory factory = AtomicChain.getFactory(2.0 * Math.PI / atomicChainsAmount);
 
             return new SingleAtomicCylinder(
                     factory,
                     new CartesianPoint(frontX, frontY, frontZ),
-                    100,
+                    atomicChainsAmount,
                     1.0,
                     radius,
                     length);
