@@ -24,6 +24,7 @@ import com.private_void.core.surfaces.capillar_factories.RotatedTorusFactory;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothCylinder;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothTorus;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone;
+import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCylinder;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothTorus;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -196,8 +197,8 @@ public class MainController {
     }
 
     public void startBtnClick(ActionEvent actionEvent) {
-        showImage(createCapillar().interact(createFlux()));
-//        showImage(createPlate().interact(createFlux()));
+//        showImage(createCapillar().interact(createFlux()));
+        showImage(createPlate().interact(createFlux()));
     }
 
     private Flux createFlux() {
@@ -225,8 +226,8 @@ public class MainController {
             CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(370.0);
 
             return new ParallelFlux(
-                    chargedParticleFactory,
-                    gaussDistribution,
+                    neutralParticleFactory,
+                    circleUniformDistribution,
                     new CartesianPoint(x, y, z),
                     Vector.set(axisX, axisY, axisZ),
                     layersAmount,
@@ -309,11 +310,11 @@ public class MainController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
-            return new FlatPlate(
-                    atomicCylinderFactory,
-                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
-                    plateCapillarsDensity,
-                    plateSideLength);
+//            return new FlatPlate(
+//                    atomicCylinderFactory,
+//                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
+//                    plateCapillarsDensity,
+//                    plateSideLength);
 
 //            return new InclinedPlate(
 //                    rotatedSmoothCylinderFactory,
@@ -321,12 +322,12 @@ public class MainController {
 //                    plateCapillarsDensity,
 //                    plateSideLength);
 
-//            return new CurvedPlate(
-//                    rotatedSmoothCylinderFactory,
-//                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
-//                    plateCapillarsDensity,
-//                    Math.toRadians(1.0),
-//                    capillarLength * 20);
+            return new CurvedPlate(
+                    rotatedSmoothCylinderFactory,
+                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
+                    plateCapillarsDensity,
+                    Math.toRadians(1.0),
+                    capillarLength * 20);
         }
 
         if (torusTab.isSelected()) {
@@ -453,25 +454,25 @@ public class MainController {
             double criticalAngleD = Double.parseDouble(cylSlideAngle.getText());
             double criticalAngleR = Math.toRadians(criticalAngleD);
 
-//            return new SingleSmoothCylinder(
-//                    new CartesianPoint(frontX, frontY, frontZ),
-//                    radius,
-//                    length,
-//                    roughnessSize,
-//                    roughnessAngleR,
-//                    reflectivity,
-//                    criticalAngleR);
-
-            int atomicChainsAmount = 1000;
-            AtomicChain.Factory factory = AtomicChain.getFactory(2.0 * Math.PI / atomicChainsAmount);
-
-            return new SingleAtomicCylinder(
-                    factory,
+            return new SingleSmoothCylinder(
                     new CartesianPoint(frontX, frontY, frontZ),
-                    atomicChainsAmount,
-                    1.0,
                     radius,
-                    length);
+                    length,
+                    roughnessSize,
+                    roughnessAngleR,
+                    reflectivity,
+                    criticalAngleR);
+
+//            int atomicChainsAmount = 1000;
+//            AtomicChain.Factory factory = AtomicChain.getFactory(2.0 * Math.PI / atomicChainsAmount);
+//
+//            return new SingleAtomicCylinder(
+//                    factory,
+//                    new CartesianPoint(frontX, frontY, frontZ),
+//                    atomicChainsAmount,
+//                    1.0,
+//                    radius,
+//                    length);
         }
 
         if (torusTab.isSelected()) {
@@ -550,7 +551,7 @@ public class MainController {
 
         showChanneledImage(distribution);
         showPiercedImage(distribution);
-        setChartScale(distribution.getWidth());
+//        setChartScale(distribution.getWidth());
 
         Logger.renderingFinish();
 

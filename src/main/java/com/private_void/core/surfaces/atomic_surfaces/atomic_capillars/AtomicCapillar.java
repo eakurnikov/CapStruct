@@ -12,7 +12,8 @@ import com.private_void.core.surfaces.atomic_surfaces.AtomicSurface;
 import java.util.List;
 
 public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
-    protected final ReferenceFrame refFrame;
+    private final ReferenceFrame refFrame;
+    private final ReferenceFrame.Converter refFrameConverter;
     protected final AtomicChain.Factory factory;
     protected final List<AtomicChain> atomicChains;
     protected final int atomicChainsAmount;
@@ -23,6 +24,7 @@ public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
                           double chargeNumber, double radius, double length) {
         super(front, factory.getPeriod(), chargeNumber);
         this.refFrame = ReferenceFrame.builder().atPoint(front).build();
+        this.refFrameConverter = new ReferenceFrame.Converter(refFrame);
         this.factory = factory;
         this.atomicChainsAmount = atomicChainsAmount;
         this.atomicChains = createAtomicChains(factory);
@@ -83,6 +85,11 @@ public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
     @Override
     public ReferenceFrame getReferenceFrame() {
         return refFrame;
+    }
+
+    @Override
+    public ReferenceFrame.Converter getReferenceFrameConverter() {
+        return refFrameConverter;
     }
 
     protected abstract List<AtomicChain> createAtomicChains(final AtomicChain.Factory factory);

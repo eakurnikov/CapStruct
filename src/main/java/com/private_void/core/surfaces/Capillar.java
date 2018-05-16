@@ -10,4 +10,6 @@ public interface Capillar {
     boolean willParticleGetInside(final Particle p);
 
     ReferenceFrame getReferenceFrame();
+
+    ReferenceFrame.Converter getReferenceFrameConverter();
 }

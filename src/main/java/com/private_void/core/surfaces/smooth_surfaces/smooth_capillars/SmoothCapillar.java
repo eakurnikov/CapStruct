@@ -12,7 +12,8 @@ import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
 public abstract  class SmoothCapillar extends SmoothSurface implements Capillar {
-    protected final ReferenceFrame refFrame;
+    private final ReferenceFrame refFrame;
+    private final ReferenceFrame.Converter refFrameConverter;
     protected final double radius;
     protected final double length;
 
@@ -20,6 +21,7 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
                              double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
         super(front, roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
         this.refFrame = refFrame;
+        this.refFrameConverter = new ReferenceFrame.Converter(refFrame);
         this.radius = radius;
         this.length = length;
     }
@@ -73,6 +75,11 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
     @Override
     public ReferenceFrame getReferenceFrame() {
         return refFrame;
+    }
+
+    @Override
+    public ReferenceFrame.Converter getReferenceFrameConverter() {
+        return refFrameConverter;
     }
 
     protected abstract boolean isPointInside(final CartesianPoint point);
