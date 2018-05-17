@@ -1,6 +1,7 @@
 package com.private_void.core.plates;
 
 import com.private_void.app.Logger;
+import com.private_void.app.ProgressProvider;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.detectors.Distribution;
 import com.private_void.core.fluxes.Flux;
@@ -26,6 +27,9 @@ public abstract class Plate implements CapillarSystem {
     protected List<Capillar> capillars;
     protected Detector detector;
 
+    private volatile int particleCounter;
+    private final Object lock = new Object();
+
     public Plate(final CartesianPoint center, double radius, double capillarsDensity) {
         this.center = center;
         this.capillarRadius = radius;
@@ -36,12 +40,23 @@ public abstract class Plate implements CapillarSystem {
     public Distribution interact(Flux flux) {
         Logger.interactionStart();
 
+        particleCounter = 0;
+        final int tenPercentOfParticlesAmount = flux.getParticles().size() / 10;
+
         new Interaction(
                 flux.getParticles(),
                 0,
                 flux.getParticles().size(),
                 (particles, startIndex, length) -> {
                     for (int i = startIndex; i < startIndex + length; i++) {
+                        synchronized (lock) {
+                            if (++particleCounter % tenPercentOfParticlesAmount == 0.0) {
+                                int progress = particleCounter * 10 / tenPercentOfParticlesAmount;
+                                Logger.processedCapillarsPercent(progress);
+                                ProgressProvider.getInstance().setProgress(progress);
+                            }
+                        }
+
                         Particle particle = particles.get(i);
 
                         for (Capillar capillar : capillars) {

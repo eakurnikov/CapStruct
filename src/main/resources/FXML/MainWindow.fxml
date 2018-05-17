@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <HBox xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.private_void.app.MainController"
+      fx:controller="com.private_void.app.MainWindow.Controller"
       maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       prefHeight="780.0" prefWidth="1220.0">
 
@@ -373,15 +373,21 @@
             </children>
         </VBox>
 
-        <ScatterChart id="chart" fx:id="chart" minHeight="780.0" minWidth="780.0" prefHeight="780.0" prefWidth="780.0">
-            <xAxis>
-                <NumberAxis fx:id="xAxis" side="BOTTOM" lowerBound="-25" upperBound="25" tickUnit="1" label="Z"/>
-            </xAxis>
+        <VBox minHeight="780.0" minWidth="780.0" prefHeight="780.0" prefWidth="780.0">
+            <ScatterChart id="chart" fx:id="chart"
+                          minHeight="750.0" minWidth="750.0"
+                          prefHeight="750.0" prefWidth="750.0">
+                <xAxis>
+                    <NumberAxis fx:id="xAxis" side="BOTTOM" lowerBound="-25" upperBound="25" tickUnit="1" label="Z"/>
+                </xAxis>
 
-            <yAxis>
-                <NumberAxis fx:id="yAxis" side="LEFT" lowerBound="-25" upperBound="25" tickUnit="1" label="Y"/>
-            </yAxis>
-        </ScatterChart>
+                <yAxis>
+                    <NumberAxis fx:id="yAxis" side="LEFT" lowerBound="-25" upperBound="25" tickUnit="1" label="Y"/>
+                </yAxis>
+            </ScatterChart>
+
+            <ProgressBar id="progress_bar" fx:id="progressBar" minWidth="250.0" prefWidth="250.0" visible="false"/>
+        </VBox>
 
         <!--<AnchorPane prefHeight="800.0" prefWidth="280.0">-->
             <!--<children>-->

@@ -1,5 +1,7 @@
-package com.private_void.app;
+package com.private_void.app.MainWindow;
 
+import com.private_void.app.Logger;
+import com.private_void.app.ProgressProvider;
 import com.private_void.core.detectors.Distribution;
 import com.private_void.core.fluxes.DivergentFlux;
 import com.private_void.core.fluxes.Flux;
@@ -26,21 +28,20 @@ import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothTor
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCylinder;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothTorus;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 
 import static com.private_void.utils.Constants.CONE_COEFFICIENT;
 import static com.private_void.utils.Generator.generator;
 
-public class MainController {
+public class Controller {
     @FXML
     public Tab pFluxTab;
     public TextField pFluxX;
@@ -118,6 +119,9 @@ public class MainController {
 
     public NumberAxis yAxis;
     public NumberAxis xAxis;
+
+    @FXML
+    public ProgressBar progressBar;
 
     public ContextMenu menu;
     public MenuItem clearChartItem;
@@ -197,8 +201,34 @@ public class MainController {
     }
 
     public void startBtnClick(ActionEvent actionEvent) {
-//        showImage(createCapillar().interact(createFlux()));
-        showImage(createPlate().interact(createFlux()));
+        Service<Distribution> service = new Service<Distribution>() {
+            @Override
+            protected Task<Distribution> createTask() {
+                return new Task<Distribution>() {
+                    @Override
+                    protected Distribution call() throws Exception {
+                        ProgressProvider
+                                .getInstance()
+                                .setProgressListener(progress -> updateProgress(progress,100.0));
+
+//                      return createCapillar().interact(createFlux());
+                        return createPlate().interact(createFlux());
+                    }
+                };
+            }
+        };
+
+        progressBar.progressProperty().bind(service.progressProperty());
+        progressBar.setVisible(true);
+
+        service.setOnSucceeded(event -> {
+            progressBar.progressProperty().unbind();
+            progressBar.setVisible(false);
+
+            showImage(service.getValue());
+        });
+
+        service.start();
     }
 
     private Flux createFlux() {
