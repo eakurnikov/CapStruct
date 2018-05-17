@@ -7,14 +7,13 @@ import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.coordinates.Point3D;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
+import com.private_void.utils.Interaction;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarSystem;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.RecursiveAction;
 
 public abstract class Plate implements CapillarSystem {
     protected static final int CAPILLARS_PER_DOMAIN_AMOUNT = 4;
@@ -37,8 +36,32 @@ public abstract class Plate implements CapillarSystem {
     public Distribution interact(Flux flux) {
         Logger.interactionStart();
 
-        new ForkJoinPool().invoke(
-                new Interaction(flux.getParticles(), 0, flux.getParticles().size()));
+        new Interaction(
+                flux.getParticles(),
+                0,
+                flux.getParticles().size(),
+                (particles, startIndex, length) -> {
+                    for (int i = startIndex; i < startIndex + length; i++) {
+                        Particle particle = particles.get(i);
+
+                        for (Capillar capillar : capillars) {
+                            CartesianPoint coordinateInGlobalRefFrame = new CartesianPoint(particle.getCoordinate());
+                            Vector speedInGlobalRefFrame = Vector.set(particle.getSpeed());
+
+                            capillar.getReferenceFrameConverter().convert(particle);
+
+                            if (capillar.willParticleGetInside(particle)) {
+                                capillar.interact(particle);
+                                capillar.getReferenceFrameConverter().convertBack(particle);
+                                particle.setChanneled();
+                                break;
+                            }
+
+                            particle.setCoordinate(coordinateInGlobalRefFrame);
+                            particle.setSpeed(speedInGlobalRefFrame);
+                        }
+                    }
+                }).start();
 
         Logger.interactionFinish();
 
@@ -50,53 +73,6 @@ public abstract class Plate implements CapillarSystem {
     protected abstract void createCapillars();
 
     protected abstract boolean isCapillarCoordinateValid(final Point3D[] coordinates, Point3D coordinate);
-
-    private class Interaction extends RecursiveAction {
-        private List<? extends Particle> particles;
-        private int startIndex;
-        private int length;
-
-        private Interaction(List<? extends Particle> particles, int startIndex, int length) {
-            this.particles = particles;
-            this.startIndex = startIndex;
-            this.length = length;
-        }
-
-        @Override
-        protected void compute() {
-            if (length < particles.size() / 100.0) {
-                interact();
-            } else {
-                int newLength = length / 2;
-                invokeAll(
-                        new Interaction(particles, startIndex, newLength),
-                        new Interaction(particles,startIndex + newLength, length - newLength));
-            }
-        }
-
-        private void interact() {
-            for (int i = startIndex; i < startIndex + length; i++) {
-                Particle particle = particles.get(i);
-
-                for (Capillar capillar : capillars) {
-                    CartesianPoint coordinateInGlobalRefFrame = new CartesianPoint(particle.getCoordinate());
-                    Vector speedInGlobalRefFrame = Vector.set(particle.getSpeed());
-
-                    capillar.getReferenceFrameConverter().convert(particle);
-
-                    if (capillar.willParticleGetInside(particle)) {
-                        capillar.interact(particle);
-                        capillar.getReferenceFrameConverter().convertBack(particle);
-                        particle.setChanneled();
-                        break;
-                    }
-
-                    particle.setCoordinate(coordinateInGlobalRefFrame);
-                    particle.setSpeed(speedInGlobalRefFrame);
-                }
-            }
-        }
-    }
 }
 
 /*
