@@ -1,7 +1,9 @@
-package com.private_void.app.MainWindow;
+package com.private_void.app.main_window;
 
+import com.private_void.app.CapStructController;
 import com.private_void.app.Logger;
 import com.private_void.app.ProgressProvider;
+import com.private_void.app.progress_dialog.ProgressDialogController;
 import com.private_void.core.detectors.Distribution;
 import com.private_void.core.fluxes.DivergentFlux;
 import com.private_void.core.fluxes.Flux;
@@ -14,12 +16,10 @@ import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.plates.CurvedPlate;
-import com.private_void.core.plates.FlatPlate;
 import com.private_void.core.plates.TorusFlatPlate;
 import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.core.surfaces.atomic_surfaces.AtomicPlane;
 import com.private_void.core.surfaces.atomic_surfaces.atomic_capillars.AtomicCylinder;
-import com.private_void.core.surfaces.atomic_surfaces.single_atomic_capillars.SingleAtomicCylinder;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
 import com.private_void.core.surfaces.capillar_factories.RotatedTorusFactory;
@@ -41,7 +41,8 @@ import javafx.scene.input.MouseButton;
 import static com.private_void.utils.Constants.CONE_COEFFICIENT;
 import static com.private_void.utils.Generator.generator;
 
-public class Controller {
+public class MainWindowController extends CapStructController {
+
     @FXML
     public Tab pFluxTab;
     public TextField pFluxX;
@@ -119,9 +120,6 @@ public class Controller {
 
     public NumberAxis yAxis;
     public NumberAxis xAxis;
-
-    @FXML
-    public ProgressBar progressBar;
 
     public ContextMenu menu;
     public MenuItem clearChartItem;
@@ -207,9 +205,17 @@ public class Controller {
                 return new Task<Distribution>() {
                     @Override
                     protected Distribution call() throws Exception {
-                        ProgressProvider
-                                .getInstance()
-                                .setProgressListener(progress -> updateProgress(progress,100.0));
+                        ProgressProvider.getInstance().setProgressListener(new ProgressProvider.ProgressListener() {
+                            @Override
+                            public void onProgressUpdated(double progress) {
+                                updateProgress(progress,100.0);
+                            }
+
+                            @Override
+                            public void onProgressUpdated(String message) {
+                                updateMessage(message);
+                            }
+                        });
 
 //                      return createCapillar().interact(createFlux());
                         return createPlate().interact(createFlux());
@@ -218,14 +224,14 @@ public class Controller {
             }
         };
 
-        progressBar.progressProperty().bind(service.progressProperty());
-        progressBar.setVisible(true);
+        ProgressDialogController progressDialogController = app.showProgressDialog();
+        progressDialogController.bind(service);
 
         service.setOnSucceeded(event -> {
-            progressBar.progressProperty().unbind();
-            progressBar.setVisible(false);
-
             showImage(service.getValue());
+
+            progressDialogController.unbind();
+            app.closeProgressDialog();
         });
 
         service.start();

@@ -54,6 +54,7 @@ public abstract class Plate implements CapillarSystem {
                                 int progress = particleCounter * 10 / tenPercentOfParticlesAmount;
                                 Logger.processedCapillarsPercent(progress);
                                 ProgressProvider.getInstance().setProgress(progress);
+                                ProgressProvider.getInstance().setProgress("" + progress);
                             }
                         }
 

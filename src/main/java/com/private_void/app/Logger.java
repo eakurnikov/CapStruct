@@ -2,6 +2,7 @@ package com.private_void.app;
 
 public class Logger {
     private static java.util.logging.Logger logger;
+    private static final ProgressProvider progressProvider = ProgressProvider.getInstance();
 
     private static long creatingFluxTimer;
     private static long creatingCapillarsTimer;

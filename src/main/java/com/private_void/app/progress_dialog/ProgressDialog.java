@@ -1,8 +1,8 @@
-//package com.private_void.app.ProgressDialog;
+//package com.private_void.app.progress_dialog;
 //
 //import javafx.stage.Stage;
 //
-//public class ProgressDialog {
+//public class progress_dialog {
 //    private final Stage stage;
 //    private final ProgressBar pb = new ProgressBar();
 //    private final ProgressIndicator pin = new ProgressIndicator();

@@ -1,7 +1,8 @@
 package com.private_void.app;
 
 public class ProgressProvider {
-    private final Object lock = new Object();
+    private final Object progressLock = new Object();
+    private final Object messageLock = new Object();
     private ProgressListener progressListener;
 
     private ProgressProvider() {}
@@ -11,8 +12,14 @@ public class ProgressProvider {
     }
 
     public void setProgress(double progress) {
-        synchronized (lock) {
+        synchronized (progressLock) {
             progressListener.onProgressUpdated(progress);
+        }
+    }
+
+    public void setProgress(String message) {
+        synchronized (messageLock) {
+            progressListener.onProgressUpdated(message);
         }
     }
 
@@ -26,5 +33,6 @@ public class ProgressProvider {
 
     public interface ProgressListener {
         void onProgressUpdated(double progress);
+        void onProgressUpdated(String message);
     }
 }

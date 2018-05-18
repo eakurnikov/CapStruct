@@ -8,9 +8,15 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="FXML.ProgressDialog"
+            fx:controller="com.private_void.app.progress_dialog.ProgressDialogController"
             prefHeight="400.0" prefWidth="600.0">
 
-    <ProgressBar id="progress_bar" fx:id="progressBar" minWidth="250.0" prefWidth="250.0" />
+    <VBox prefHeight="400.0" prefWidth="600.0">
+
+        <ProgressBar id="progress_bar" fx:id="progressBar" minWidth="550.0" prefWidth="550.0" />
+
+        <Label id="progress_events" fx:id="progressLabel" minWidth="550.0" prefWidth="550.0" />
+
+    </VBox>
 
 </AnchorPane>
