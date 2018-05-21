@@ -1,6 +1,7 @@
 package com.private_void.core.surfaces.atomic_surfaces;
 
 import com.private_void.app.Logger;
+import com.private_void.app.MessagePool;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.detectors.Distribution;
 import com.private_void.core.fluxes.Flux;
@@ -29,7 +30,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
 
     @Override
     public Distribution interact(Flux flux) {
-        Logger.interactionStart();
+        Logger.info(MessagePool.interactionStart());
 
         ChargedParticle particle;
         CartesianPoint newCoordinate;
@@ -43,7 +44,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
 
         for (Iterator<? extends Particle> iterator = flux.getParticles().iterator(); iterator.hasNext(); particlesCounter++) {
             if (particlesCounter % tenPercentOfParticlesAmount == 0.0) {
-                Logger.processedParticlesPercent(particlesCounter * 10 / tenPercentOfParticlesAmount);
+                Logger.info(MessagePool.processedParticlesPercent(particlesCounter * 10 / tenPercentOfParticlesAmount));
             }
 
             particle = (ChargedParticle) iterator.next();
@@ -66,7 +67,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
             particle.setChanneled();
         }
 
-        Logger.interactionFinish();
+        Logger.info(MessagePool.interactionFinish());
 
         return detector.detect(flux);
     }

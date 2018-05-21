@@ -1,6 +1,7 @@
 package com.private_void.core.detectors;
 
 import com.private_void.app.Logger;
+import com.private_void.app.MessagePool;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.space_2D.CartesianPoint2D;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
@@ -73,7 +74,7 @@ public class Detector {
     }
 
     public Distribution detect(Flux flux) {
-        Logger.detectingParticlesStart();
+        Logger.info(MessagePool.detectingParticlesStart());
 
         CartesianPoint point;
 
@@ -121,7 +122,7 @@ public class Detector {
             }
         }
 
-        Logger.detectingParticlesFinish();
+        Logger.info(MessagePool.detectingParticlesFinish());
 
         return Distribution.builder()
                 .setChanneledImage(channeledImage)

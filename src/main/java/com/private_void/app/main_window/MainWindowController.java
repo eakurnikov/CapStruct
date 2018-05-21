@@ -2,6 +2,7 @@ package com.private_void.app.main_window;
 
 import com.private_void.app.CapStructController;
 import com.private_void.app.Logger;
+import com.private_void.app.MessagePool;
 import com.private_void.app.ProgressProvider;
 import com.private_void.app.progress_dialog.ProgressDialogController;
 import com.private_void.core.detectors.Distribution;
@@ -199,7 +200,7 @@ public class MainWindowController extends CapStructController {
     }
 
     public void startBtnClick(ActionEvent actionEvent) {
-        Service<Distribution> service = new Service<Distribution>() {
+        Service<Distribution> calculationService = new Service<Distribution>() {
             @Override
             protected Task<Distribution> createTask() {
                 return new Task<Distribution>() {
@@ -225,16 +226,23 @@ public class MainWindowController extends CapStructController {
         };
 
         ProgressDialogController progressDialogController = app.showProgressDialog();
-        progressDialogController.bind(service);
 
-        service.setOnSucceeded(event -> {
-            showImage(service.getValue());
+        ProgressBar progressBar = progressDialogController.getProgressBar();
+        progressBar.progressProperty().bind(calculationService.progressProperty());
 
-            progressDialogController.unbind();
+        calculationService.messageProperty().addListener((observable, oldValue, newValue) -> {
+            Label progressLabel = progressDialogController.getProgressLabel();
+            progressLabel.setText(progressLabel.getText() + "\n" + newValue);
+        });
+
+        calculationService.setOnSucceeded(event -> {
+            showImage(calculationService.getValue());
+
+            progressBar.progressProperty().unbind();
             app.closeProgressDialog();
         });
 
-        service.start();
+        calculationService.start();
     }
 
     private Flux createFlux() {
@@ -583,19 +591,19 @@ public class MainWindowController extends CapStructController {
     }
 
     private void showImage(final Distribution distribution) {
-        Logger.renderingStart();
+        Logger.info(MessagePool.renderingStart());
 
         showChanneledImage(distribution);
         showPiercedImage(distribution);
 //        setChartScale(distribution.getWidth());
 
-        Logger.renderingFinish();
+        Logger.info(MessagePool.renderingFinish());
 
-        Logger.totalChanneleddAmount(distribution.getChanneledAmount());
-        Logger.totalPiercedAmount(distribution.getPiercedAmount());
-        Logger.totalOutOfDetector(distribution.getOutOfDetectorAmount());
-        Logger.totalAbsorbededAmount(distribution.getAbsorbedAmount());
-        Logger.totalDeletedAmount(distribution.getDeletedAmount());
+        Logger.info(MessagePool.totalChanneleddAmount(distribution.getChanneledAmount()));
+        Logger.info(MessagePool.totalPiercedAmount(distribution.getPiercedAmount()));
+        Logger.info(MessagePool.totalOutOfDetector(distribution.getOutOfDetectorAmount()));
+        Logger.info(MessagePool.totalAbsorbededAmount(distribution.getAbsorbedAmount()));
+        Logger.info(MessagePool.totalDeletedAmount(distribution.getDeletedAmount()));
     }
 
     private void showChanneledImage(final Distribution distribution) {

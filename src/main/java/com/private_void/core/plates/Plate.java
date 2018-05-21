@@ -1,6 +1,7 @@
 package com.private_void.core.plates;
 
 import com.private_void.app.Logger;
+import com.private_void.app.MessagePool;
 import com.private_void.app.ProgressProvider;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.detectors.Distribution;
@@ -8,10 +9,10 @@ import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.coordinates.Point3D;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
-import com.private_void.utils.Interaction;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarSystem;
+import com.private_void.utils.Interaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public abstract class Plate implements CapillarSystem {
     }
 
     public Distribution interact(Flux flux) {
-        Logger.interactionStart();
+        ProgressProvider.getInstance().setProgress(MessagePool.interactionStart());
 
         particleCounter = 0;
         final int tenPercentOfParticlesAmount = flux.getParticles().size() / 10;
@@ -52,9 +53,9 @@ public abstract class Plate implements CapillarSystem {
                         synchronized (lock) {
                             if (++particleCounter % tenPercentOfParticlesAmount == 0.0) {
                                 int progress = particleCounter * 10 / tenPercentOfParticlesAmount;
-                                Logger.processedCapillarsPercent(progress);
+                                Logger.info(MessagePool.processedCapillarsPercent(progress));
                                 ProgressProvider.getInstance().setProgress(progress);
-                                ProgressProvider.getInstance().setProgress("" + progress);
+                                ProgressProvider.getInstance().setProgress(MessagePool.processedCapillarsPercent(progress));
                             }
                         }
 
@@ -79,7 +80,7 @@ public abstract class Plate implements CapillarSystem {
                     }
                 }).start();
 
-        Logger.interactionFinish();
+        Logger.info(MessagePool.interactionFinish());
 
         return detector.detect(flux);
     }

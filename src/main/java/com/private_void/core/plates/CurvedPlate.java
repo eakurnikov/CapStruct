@@ -1,6 +1,7 @@
 package com.private_void.core.plates;
 
 import com.private_void.app.Logger;
+import com.private_void.app.MessagePool;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.coordinates.Point3D;
@@ -35,7 +36,7 @@ public class CurvedPlate extends Plate {
 
     @Override
     protected void createCapillars() {
-        Logger.creatingCapillarsStart();
+        Logger.info(MessagePool.creatingCapillarsStart());
 
         double frontSquare = 2.0 * PI * endSurfaceRadius * endSurfaceRadius * (1.0 -  Math.cos(maxAngleR));
         double minCapillarSquare = 2.0 * PI * endSurfaceRadius * endSurfaceRadius * (1.0 - Math.cos(capillarRadiusR));
@@ -47,7 +48,7 @@ public class CurvedPlate extends Plate {
             double capillarsCellSideLengthR;
 
             if (capillarsDensity >= maxCapillarDensity) {
-                Logger.capillarsDensityTooBig(maxCapillarDensity);
+                Logger.info(MessagePool.capillarsDensityTooBig(maxCapillarDensity));
                 capillarsAmount = (int) (frontSquare / minCapillarSquare);
                 capillarsCellSideLengthR = 2.0 * capillarRadiusR;
             } else {
@@ -101,7 +102,7 @@ public class CurvedPlate extends Plate {
                                         .build()));
 
                         if (++capillarsCounter % (capillarsAmount / 10) == 0.0) {
-                            Logger.createdCapillarsPercent(i * 100 / capillarsAmount);
+                            Logger.info(MessagePool.createdCapillarsPercent(i * 100 / capillarsAmount));
                         }
                     }
                 }
@@ -137,12 +138,12 @@ public class CurvedPlate extends Plate {
                                 .build()));
 
                 if (i % (capillarsAmount / 10) == 0.0) {
-                    Logger.createdCapillarsPercent(i * 100 / capillarsAmount);
+                    Logger.info(MessagePool.createdCapillarsPercent(i * 100 / capillarsAmount));
                 }
             }
         }
 
-        Logger.creatingCapillarsFinish();
+        Logger.info(MessagePool.creatingCapillarsFinish());
     }
 
     @Override

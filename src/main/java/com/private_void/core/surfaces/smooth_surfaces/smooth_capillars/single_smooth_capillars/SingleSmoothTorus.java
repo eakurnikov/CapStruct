@@ -1,6 +1,7 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars;
 
 import com.private_void.app.Logger;
+import com.private_void.app.MessagePool;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
@@ -50,7 +51,7 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
     @Override
     protected CartesianPoint getHitPoint(final NeutralParticle p) {
         if (p.getSpeed().getX() <= 0.0) {
-            Logger.particleDeleted();
+            Logger.info(MessagePool.particleDeleted());
             p.delete();
             return p.getCoordinate();
         }
@@ -76,7 +77,7 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
                 iterationsAmount++;
                 if (iterationsAmount > ITERATIONS_MAX) {
                     if (p.isRecursiveIterationsLimitReached()) {
-                        Logger.particleDeleted();
+                        Logger.info(MessagePool.particleDeleted());
                         p.delete();
                         return p.getCoordinate();
                     } else {
@@ -150,7 +151,7 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
             return getHitPoint(p);
         } else {
             if (p.isRecursiveIterationsLimitReached()) {
-                Logger.particleDeleted();
+                Logger.info(MessagePool.particleDeleted());
                 p.delete();
             }
             p.stopRecursiveIterations();

@@ -1,6 +1,7 @@
 package com.private_void.core.surfaces.atomic_surfaces.single_atomic_capillars;
 
 import com.private_void.app.Logger;
+import com.private_void.app.MessagePool;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.detectors.Distribution;
 import com.private_void.core.fluxes.Flux;
@@ -34,7 +35,7 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
 
     @Override
     public Distribution interact(Flux flux) {
-        Logger.interactionStart();
+        Logger.info(MessagePool.interactionStart());
 
         class Interaction extends RecursiveAction {
             private List<? extends Particle> particles;
@@ -97,7 +98,7 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
         ForkJoinPool pool = new ForkJoinPool();
         pool.invoke(interaction);
 
-        Logger.interactionFinish();
+        Logger.info(MessagePool.interactionFinish());
 
         return detector.detect(flux);
     }
