@@ -1,4 +1,6 @@
-package com.private_void.app;
+package com.private_void.app.controllers;
+
+import com.private_void.app.CapStructApp;
 
 public abstract class CapStructController {
     protected CapStructApp app;

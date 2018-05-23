@@ -1,9 +1,7 @@
 package com.private_void.core.surfaces.atomic_surfaces.single_atomic_capillars;
 
-import com.private_void.app.MessagePool;
-import com.private_void.app.ProgressProvider;
-import com.private_void.core.detectors.Detector;
-import com.private_void.core.detectors.Distribution;
+import com.private_void.core.detection.Detector;
+import com.private_void.core.detection.Distribution;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
@@ -12,6 +10,8 @@ import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.core.surfaces.atomic_surfaces.AtomicSurface;
+import com.private_void.utils.notifiers.Logger;
+import com.private_void.utils.notifiers.MessagePool;
 
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
@@ -35,7 +35,7 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
 
     @Override
     public Distribution interact(Flux flux) {
-        ProgressProvider.getInstance().setProgress(MessagePool.interactionStart());
+        Logger.info(MessagePool.interactionStart());
 
         class Interaction extends RecursiveAction {
             private List<? extends Particle> particles;
@@ -98,7 +98,7 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
         ForkJoinPool pool = new ForkJoinPool();
         pool.invoke(interaction);
 
-        ProgressProvider.getInstance().setProgress(MessagePool.interactionFinish());
+        Logger.info(MessagePool.interactionFinish());
 
         return detector.detect(flux);
     }

@@ -1,4 +1,4 @@
-package com.private_void.app;
+package com.private_void.utils.notifiers;
 
 public class MessagePool {
     private static long creatingFluxTimer;

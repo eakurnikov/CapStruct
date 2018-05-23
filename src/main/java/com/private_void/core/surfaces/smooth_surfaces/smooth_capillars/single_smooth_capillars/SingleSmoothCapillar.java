@@ -1,9 +1,7 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars;
 
-import com.private_void.app.MessagePool;
-import com.private_void.app.ProgressProvider;
-import com.private_void.core.detectors.Detector;
-import com.private_void.core.detectors.Distribution;
+import com.private_void.core.detection.Detector;
+import com.private_void.core.detection.Distribution;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
@@ -12,6 +10,8 @@ import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.core.surfaces.smooth_surfaces.SmoothSurface;
 import com.private_void.utils.Interaction;
+import com.private_void.utils.notifiers.Logger;
+import com.private_void.utils.notifiers.MessagePool;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,7 +33,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
     }
 
     public Distribution interactSingle(Flux flux) {
-        ProgressProvider.getInstance().setProgress(MessagePool.interactionStart());
+        Logger.info(MessagePool.interactionStart());
 
         NeutralParticle particle;
         CartesianPoint newCoordinate;
@@ -72,13 +72,13 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
             }
         }
 
-        ProgressProvider.getInstance().setProgress(MessagePool.interactionFinish());
+        Logger.info(MessagePool.interactionFinish());
 
         return detector.detect(flux);
     }
 
     public Distribution interactParallel(Flux flux) {
-        ProgressProvider.getInstance().setProgress(MessagePool.interactionStart());
+        Logger.info(MessagePool.interactionStart());
 
         ExecutorService exec = Executors.newFixedThreadPool(4);
 
@@ -136,13 +136,13 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
             e.printStackTrace();
         }
 
-        ProgressProvider.getInstance().setProgress(MessagePool.interactionFinish());
+        Logger.info(MessagePool.interactionFinish());
 
         return detector.detect(flux);
     }
 
     public Distribution interactStream(Flux flux) {
-        ProgressProvider.getInstance().setProgress(MessagePool.interactionStart());
+        Logger.info(MessagePool.interactionStart());
 
         flux.getParticles().forEach(p -> {
             NeutralParticle particle = (NeutralParticle) p;
@@ -176,14 +176,14 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
             }
         });
 
-        ProgressProvider.getInstance().setProgress(MessagePool.interactionFinish());
+        Logger.info(MessagePool.interactionFinish());
 
         return detector.detect(flux);
     }
 
     @Override
     public Distribution interact(Flux flux) {
-        ProgressProvider.getInstance().setProgress(MessagePool.interactionStart());
+        Logger.info(MessagePool.interactionStart());
 
         new Interaction(
                 flux.getParticles(),
@@ -224,7 +224,7 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                     }
                 }).start();
 
-        ProgressProvider.getInstance().setProgress(MessagePool.interactionFinish());
+        Logger.info(MessagePool.interactionFinish());
 
         return detector.detect(flux);
     }

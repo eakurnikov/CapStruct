@@ -1,6 +1,6 @@
 package com.private_void.core.surfaces.atomic_surfaces.single_atomic_capillars;
 
-import com.private_void.core.detectors.Detector;
+import com.private_void.core.detection.Detector;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.AtomicChain;

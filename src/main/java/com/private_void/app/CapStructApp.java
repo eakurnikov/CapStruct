@@ -1,7 +1,8 @@
 package com.private_void.app;
 
-import com.private_void.app.main_window.MainWindowController;
-import com.private_void.app.progress_dialog.ProgressDialogController;
+import com.private_void.app.controllers.CapStructController;
+import com.private_void.app.controllers.MainWindowController;
+import com.private_void.app.controllers.ProgressDialogController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

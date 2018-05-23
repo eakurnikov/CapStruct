@@ -1,11 +1,12 @@
 package com.private_void.core.plates;
 
-import com.private_void.app.MessagePool;
-import com.private_void.app.ProgressProvider;
-import com.private_void.core.detectors.Detector;
+import com.private_void.core.detection.Detector;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.coordinates.Point3D;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
+import com.private_void.utils.notifiers.Logger;
+import com.private_void.utils.notifiers.MessagePool;
+import com.private_void.utils.notifiers.ProgressProvider;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -29,7 +30,7 @@ public class FlatPlate extends Plate {
 
     @Override
     protected void createCapillars() {
-        ProgressProvider.getInstance().setProgress(MessagePool.creatingCapillarsStart());
+        Logger.info(MessagePool.creatingCapillarsStart());
 
         double frontSquare = sideLength * sideLength;
         double minCapillarSquare = (2.0 * capillarRadius) * (2.0 * capillarRadius);
@@ -39,7 +40,7 @@ public class FlatPlate extends Plate {
             double capillarsCellSideLength;
 
             if (capillarsDensity >= maxCapillarDensity) {
-                ProgressProvider.getInstance().setProgress(MessagePool.capillarsDensityTooBig(maxCapillarDensity));
+                Logger.warning(MessagePool.capillarsDensityTooBig(maxCapillarDensity));
                 capillarsAmount = (int) (frontSquare / minCapillarSquare);
                 capillarsCellSideLength = 2.0 * capillarRadius;
             } else {
@@ -107,7 +108,7 @@ public class FlatPlate extends Plate {
             }
         }
 
-        ProgressProvider.getInstance().setProgress(MessagePool.creatingCapillarsFinish());
+        Logger.info(MessagePool.creatingCapillarsFinish());
     }
 
 //    @Override

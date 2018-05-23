@@ -1,12 +1,12 @@
 package com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars;
 
-import com.private_void.app.MessagePool;
-import com.private_void.app.ProgressProvider;
-import com.private_void.core.detectors.Detector;
+import com.private_void.core.detection.Detector;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.utils.Utils;
+import com.private_void.utils.notifiers.Logger;
+import com.private_void.utils.notifiers.MessagePool;
 
 import static com.private_void.utils.Constants.ITERATIONS_MAX;
 import static com.private_void.utils.Constants.PI;
@@ -33,7 +33,7 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
     @Override
     protected CartesianPoint getHitPoint(final NeutralParticle p) {
         if (p.getSpeed().getX() <= 0.0) {
-            ProgressProvider.getInstance().setProgress(MessagePool.particleDeleted());
+            Logger.warning(MessagePool.particleDeleted());
             p.delete();
             return p.getCoordinate();
         }
@@ -64,7 +64,7 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
                 iterationsAmount++;
                 if (iterationsAmount > ITERATIONS_MAX) {
                     if (p.isRecursiveIterationsLimitReached()) {
-                        ProgressProvider.getInstance().setProgress(MessagePool.particleDeleted());
+                        Logger.warning(MessagePool.particleDeleted());
                         p.delete();
                         return p.getCoordinate();
                     } else {
@@ -146,7 +146,7 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
             return getHitPoint(p);
         } else {
             if (p.isRecursiveIterationsLimitReached()) {
-                ProgressProvider.getInstance().setProgress(MessagePool.particleDeleted());
+                Logger.warning(MessagePool.particleDeleted());
                 p.delete();
             }
             p.stopRecursiveIterations();

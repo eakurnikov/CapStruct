@@ -1,13 +1,14 @@
 package com.private_void.core.plates;
 
-import com.private_void.app.MessagePool;
-import com.private_void.app.ProgressProvider;
-import com.private_void.core.detectors.Detector;
+import com.private_void.core.detection.Detector;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.coordinates.Point3D;
 import com.private_void.core.geometry.space_3D.coordinates.SphericalPoint;
 import com.private_void.core.geometry.space_3D.reference_frames.ReferenceFrame;
 import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
+import com.private_void.utils.notifiers.Logger;
+import com.private_void.utils.notifiers.MessagePool;
+import com.private_void.utils.notifiers.ProgressProvider;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class CurvedPlate extends Plate {
 
     @Override
     protected void createCapillars() {
-        ProgressProvider.getInstance().setProgress(MessagePool.creatingCapillarsStart());
+        Logger.info(MessagePool.creatingCapillarsStart());
 
         double frontSquare = 2.0 * PI * endSurfaceRadius * endSurfaceRadius * (1.0 -  Math.cos(maxAngleR));
         double minCapillarSquare = 2.0 * PI * endSurfaceRadius * endSurfaceRadius * (1.0 - Math.cos(capillarRadiusR));
@@ -48,7 +49,7 @@ public class CurvedPlate extends Plate {
             double capillarsCellSideLengthR;
 
             if (capillarsDensity >= maxCapillarDensity) {
-                ProgressProvider.getInstance().setProgress(MessagePool.capillarsDensityTooBig(maxCapillarDensity));
+                Logger.warning(MessagePool.capillarsDensityTooBig(maxCapillarDensity));
                 capillarsAmount = (int) (frontSquare / minCapillarSquare);
                 capillarsCellSideLengthR = 2.0 * capillarRadiusR;
             } else {
@@ -143,7 +144,7 @@ public class CurvedPlate extends Plate {
             }
         }
 
-        ProgressProvider.getInstance().setProgress(MessagePool.creatingCapillarsFinish());
+        Logger.info(MessagePool.creatingCapillarsFinish());
     }
 
     @Override

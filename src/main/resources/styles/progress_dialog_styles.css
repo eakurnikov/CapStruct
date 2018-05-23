@@ -5,13 +5,25 @@
 }
 
 .progress-bar {
-    -fx-accent: #ff3300;
-    -fx-padding: 15px;
+    -fx-accent: ff0000;
+    -fx-padding: 20px;
 }
 
-.label {
+.text-area {
+    -fx-background-color: #262626;
     -fx-text-fill: #7F7F7F;
-    -fx-padding: 15px;
+}
+
+.text-area .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .content{
+    -fx-background-color: transparent;
 }
 
 .tab {
@@ -35,7 +47,6 @@
 }
 
 .tab:selected {
-
     -fx-background-color: #4d4d4d;
 }
 

@@ -1,11 +1,6 @@
-package com.private_void.app.main_window;
+package com.private_void.app.controllers;
 
-import com.private_void.app.CapStructController;
-import com.private_void.app.Logger;
-import com.private_void.app.MessagePool;
-import com.private_void.app.ProgressProvider;
-import com.private_void.app.progress_dialog.ProgressDialogController;
-import com.private_void.core.detectors.Distribution;
+import com.private_void.core.detection.Distribution;
 import com.private_void.core.fluxes.DivergentFlux;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.fluxes.ParallelFlux;
@@ -29,7 +24,9 @@ import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothTor
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCylinder;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothTorus;
-import javafx.beans.value.ChangeListener;
+import com.private_void.utils.notifiers.Logger;
+import com.private_void.utils.notifiers.MessagePool;
+import com.private_void.utils.notifiers.ProgressProvider;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -37,7 +34,10 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 
 import static com.private_void.utils.Constants.CONE_COEFFICIENT;
@@ -207,18 +207,9 @@ public class MainWindowController extends CapStructController {
                 return new Task<Distribution>() {
                     @Override
                     protected Distribution call() throws Exception {
-                        ProgressProvider.getInstance().setProgressListener(new ProgressProvider.ProgressListener() {
-                            @Override
-                            public void onProgressUpdated(double progress) {
-                                updateProgress(progress,100.0);
-                            }
-
-                            @Override
-                            public void onProgressUpdated(String message) {
-                                updateMessage(message);
-                                Logger.info(message);
-                            }
-                        });
+                        ProgressProvider.getInstance()
+                                .setProgressListener(progress -> updateProgress(progress,100.0))
+                                .setProgress(-1.0);
 
 //                      return createCapillar().interact(createFlux());
                         return createPlate().interact(createFlux());
@@ -228,22 +219,11 @@ public class MainWindowController extends CapStructController {
         };
 
         ProgressDialogController progressDialogController = app.showProgressDialog();
-
-        ProgressBar progressBar = progressDialogController.getProgressBar();
-        progressBar.progressProperty().bind(calculationService.progressProperty());
-
-        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
-            Label progressLabel = progressDialogController.getProgressLabel();
-            progressLabel.setText(progressLabel.getText() + "\n" + newValue);
-        };
-        calculationService.messageProperty().addListener(changeListener);
+        progressDialogController.bindProgressBar(calculationService);
 
         calculationService.setOnSucceeded(event -> {
             showImage(calculationService.getValue());
-
-            progressBar.progressProperty().unbind();
-            calculationService.messageProperty().removeListener(changeListener);
-//            app.closeProgressDialog();
+            progressDialogController.unbindProgressBar();
         });
 
         calculationService.start();
@@ -595,20 +575,20 @@ public class MainWindowController extends CapStructController {
     }
 
     private void showImage(final Distribution distribution) {
-        ProgressProvider progressProvider = ProgressProvider.getInstance();
-        progressProvider.setProgress(MessagePool.renderingStart());
+        Logger.info(MessagePool.renderingStart());
 
         showChanneledImage(distribution);
         showPiercedImage(distribution);
 //        setChartScale(distribution.getWidth());
 
-        progressProvider.setProgress(MessagePool.renderingFinish());
+        Logger.info(MessagePool.renderingFinish());
+        ProgressProvider.getInstance().setProgress(100.0);
 
-        progressProvider.setProgress(MessagePool.totalChanneleddAmount(distribution.getChanneledAmount()));
-        progressProvider.setProgress(MessagePool.totalPiercedAmount(distribution.getPiercedAmount()));
-        progressProvider.setProgress(MessagePool.totalOutOfDetector(distribution.getOutOfDetectorAmount()));
-        progressProvider.setProgress(MessagePool.totalAbsorbededAmount(distribution.getAbsorbedAmount()));
-        progressProvider.setProgress(MessagePool.totalDeletedAmount(distribution.getDeletedAmount()));
+        Logger.info(MessagePool.totalChanneleddAmount(distribution.getChanneledAmount()));
+        Logger.info(MessagePool.totalPiercedAmount(distribution.getPiercedAmount()));
+        Logger.info(MessagePool.totalOutOfDetector(distribution.getOutOfDetectorAmount()));
+        Logger.info(MessagePool.totalAbsorbededAmount(distribution.getAbsorbedAmount()));
+        Logger.info(MessagePool.totalDeletedAmount(distribution.getDeletedAmount()));
     }
 
     private void showChanneledImage(final Distribution distribution) {

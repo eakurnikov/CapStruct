@@ -1,4 +1,4 @@
-package com.private_void.core.detectors;
+package com.private_void.core.detection;
 
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 

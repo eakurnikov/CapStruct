@@ -1,9 +1,8 @@
-package com.private_void.app;
+package com.private_void.utils.notifiers;
 
 public class ProgressProvider {
     private final Object progressLock = new Object();
-    private final Object messageLock = new Object();
-    private volatile ProgressListener progressListener;
+    private ProgressListener progressListener;
 
     private ProgressProvider() {}
 
@@ -17,14 +16,9 @@ public class ProgressProvider {
         }
     }
 
-    public void setProgress(String message) {
-        synchronized (messageLock) {
-            progressListener.onProgressUpdated(message);
-        }
-    }
-
-    public void setProgressListener(ProgressListener progressListener) {
+    public ProgressProvider setProgressListener(ProgressListener progressListener) {
         this.progressListener = progressListener;
+        return this;
     }
 
     private static class Holder {
@@ -33,6 +27,5 @@ public class ProgressProvider {
 
     public interface ProgressListener {
         void onProgressUpdated(double progress);
-        void onProgressUpdated(String message);
     }
 }

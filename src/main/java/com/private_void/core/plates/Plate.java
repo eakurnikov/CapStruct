@@ -1,9 +1,7 @@
 package com.private_void.core.plates;
 
-import com.private_void.app.MessagePool;
-import com.private_void.app.ProgressProvider;
-import com.private_void.core.detectors.Detector;
-import com.private_void.core.detectors.Distribution;
+import com.private_void.core.detection.Detector;
+import com.private_void.core.detection.Distribution;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.coordinates.Point3D;
@@ -12,6 +10,9 @@ import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.utils.Interaction;
+import com.private_void.utils.notifiers.Logger;
+import com.private_void.utils.notifiers.MessagePool;
+import com.private_void.utils.notifiers.ProgressProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public abstract class Plate implements CapillarSystem {
     }
 
     public Distribution interact(Flux flux) {
-        ProgressProvider.getInstance().setProgress(MessagePool.interactionStart());
+        Logger.info(MessagePool.interactionStart());
 
         particleCounter = 0;
         final int tenPercentOfParticlesAmount = flux.getParticles().size() / 10;
@@ -77,7 +78,7 @@ public abstract class Plate implements CapillarSystem {
                     }
                 }).start();
 
-        ProgressProvider.getInstance().setProgress(MessagePool.interactionFinish());
+        Logger.info(MessagePool.interactionFinish());
 
         return detector.detect(flux);
     }

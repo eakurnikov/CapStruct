@@ -1,7 +1,7 @@
 package com.private_void.core.surfaces.smooth_surfaces;
 
-import com.private_void.core.detectors.Detector;
-import com.private_void.core.detectors.Distribution;
+import com.private_void.core.detection.Detector;
+import com.private_void.core.detection.Distribution;
 import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
