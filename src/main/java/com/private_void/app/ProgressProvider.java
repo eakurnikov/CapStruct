@@ -3,7 +3,7 @@ package com.private_void.app;
 public class ProgressProvider {
     private final Object progressLock = new Object();
     private final Object messageLock = new Object();
-    private ProgressListener progressListener;
+    private volatile ProgressListener progressListener;
 
     private ProgressProvider() {}
 

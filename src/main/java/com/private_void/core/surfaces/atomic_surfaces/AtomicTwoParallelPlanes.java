@@ -1,7 +1,7 @@
 package com.private_void.core.surfaces.atomic_surfaces;
 
-import com.private_void.app.Logger;
 import com.private_void.app.MessagePool;
+import com.private_void.app.ProgressProvider;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.detectors.Distribution;
 import com.private_void.core.fluxes.Flux;
@@ -32,7 +32,7 @@ public class AtomicTwoParallelPlanes extends AtomicSurface implements CapillarSy
 
     @Override
     public Distribution interact(Flux flux) {
-        Logger.info(MessagePool.interactionStart());
+        ProgressProvider.getInstance().setProgress(MessagePool.interactionStart());
 
         ChargedParticle particle;
         CartesianPoint newCoordinate;
@@ -46,7 +46,7 @@ public class AtomicTwoParallelPlanes extends AtomicSurface implements CapillarSy
 
         for (Iterator<? extends Particle> iterator = flux.getParticles().iterator(); iterator.hasNext(); particlesCounter++) {
             if (particlesCounter % tenPercentOfParticlesAmount == 0.0) {
-                Logger.info(MessagePool.processedParticlesPercent(particlesCounter * 10 / tenPercentOfParticlesAmount));
+                ProgressProvider.getInstance().setProgress(particlesCounter * 10 / tenPercentOfParticlesAmount);
             }
 
             particle = (ChargedParticle) iterator.next();
@@ -69,7 +69,7 @@ public class AtomicTwoParallelPlanes extends AtomicSurface implements CapillarSy
             particle.setChanneled();
         }
 
-        Logger.info(MessagePool.interactionFinish());
+        ProgressProvider.getInstance().setProgress(MessagePool.interactionFinish());
 
         return detector.detect(flux);
     }

@@ -1,7 +1,7 @@
 package com.private_void.core.plates;
 
-import com.private_void.app.Logger;
 import com.private_void.app.MessagePool;
+import com.private_void.app.ProgressProvider;
 import com.private_void.core.detectors.Detector;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.coordinates.CylindricalPoint;
@@ -39,7 +39,7 @@ public class TorusFlatPlate extends Plate {
 
     @Override
     protected void createCapillars() {
-        Logger.info(MessagePool.creatingCapillarsStart());
+        ProgressProvider.getInstance().setProgress(MessagePool.creatingCapillarsStart());
 
         double frontSquare = Math.PI * plateRadius * plateRadius;
         double minCapillarSquare = (2.0 * capillarRadius) * (2.0 * capillarRadius);
@@ -50,7 +50,7 @@ public class TorusFlatPlate extends Plate {
             double capillarsCellSideLength;
 
             if (capillarsDensity >= maxCapillarDensity) {
-                Logger.info(MessagePool.capillarsDensityTooBig(maxCapillarDensity));
+                ProgressProvider.getInstance().setProgress(MessagePool.capillarsDensityTooBig(maxCapillarDensity));
                 capillarsAmount = (int) (frontSquare / minCapillarSquare);
                 capillarsCellSideLength = 2.0 * capillarRadius;
             } else {
@@ -86,7 +86,7 @@ public class TorusFlatPlate extends Plate {
                         capillars.add(createCapillarAtPoint(capillarsEndCenter, capillarsEndCenter.convertToCylindrical()));
 
                         if (++capillarsCounter % (capillarsAmount / 10) == 0.0) {
-                            Logger.info(MessagePool.createdCapillarsPercent(i * 100 / capillarsAmount));
+                            ProgressProvider.getInstance().setProgress(i * 100 / capillarsAmount);
                         }
                     }
                 }
@@ -112,12 +112,12 @@ public class TorusFlatPlate extends Plate {
                 capillars.add(createCapillarAtPoint(capillarsEndCenter, cylindricalRandomPoint));
 
                 if (i % (capillarsAmount / 10) == 0.0) {
-                    Logger.info(MessagePool.createdCapillarsPercent(i * 100 / capillarsAmount));
+                    ProgressProvider.getInstance().setProgress(i * 100 / capillarsAmount);
                 }
             }
         }
 
-        Logger.info(MessagePool.creatingCapillarsFinish());
+        ProgressProvider.getInstance().setProgress(MessagePool.creatingCapillarsFinish());
     }
 
     @Override

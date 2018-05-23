@@ -1,7 +1,7 @@
 package com.private_void.core.fluxes;
 
-import com.private_void.app.Logger;
 import com.private_void.app.MessagePool;
+import com.private_void.app.ProgressProvider;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.Particle;
@@ -25,7 +25,7 @@ public class ParallelFlux extends Flux {
 
     @Override
     protected void createParticles() {
-        Logger.info(MessagePool.fluxCreationStart());
+        ProgressProvider.getInstance().setProgress(MessagePool.fluxCreationStart());
 
         List<Particle> newParticles = new ArrayList<>();
 
@@ -44,6 +44,6 @@ public class ParallelFlux extends Flux {
 
         particles = newParticles;
 
-        Logger.info(MessagePool.fluxCreationFinish());
+        ProgressProvider.getInstance().setProgress(MessagePool.fluxCreationFinish());
     }
 }

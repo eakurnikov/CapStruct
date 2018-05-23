@@ -46,6 +46,7 @@ public class CapStructApp extends Application {
             progressDialogStage = new Stage();
             progressDialogStage.initModality(Modality.WINDOW_MODAL);
             progressDialogStage.initOwner(mainWindowStage);
+            progressDialogStage.setResizable(false);
 
             FXMLLoader loader = new FXMLLoader();
             Parent dialog = loader.load(getClass().getResourceAsStream(PROGRESS_DIALOG_FXML_PATH));

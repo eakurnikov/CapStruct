@@ -29,6 +29,7 @@ import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothTor
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCylinder;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothTorus;
+import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -215,6 +216,7 @@ public class MainWindowController extends CapStructController {
                             @Override
                             public void onProgressUpdated(String message) {
                                 updateMessage(message);
+                                Logger.info(message);
                             }
                         });
 
@@ -230,16 +232,18 @@ public class MainWindowController extends CapStructController {
         ProgressBar progressBar = progressDialogController.getProgressBar();
         progressBar.progressProperty().bind(calculationService.progressProperty());
 
-        calculationService.messageProperty().addListener((observable, oldValue, newValue) -> {
+        ChangeListener<String> changeListener = (observable, oldValue, newValue) -> {
             Label progressLabel = progressDialogController.getProgressLabel();
             progressLabel.setText(progressLabel.getText() + "\n" + newValue);
-        });
+        };
+        calculationService.messageProperty().addListener(changeListener);
 
         calculationService.setOnSucceeded(event -> {
             showImage(calculationService.getValue());
 
             progressBar.progressProperty().unbind();
-            app.closeProgressDialog();
+            calculationService.messageProperty().removeListener(changeListener);
+//            app.closeProgressDialog();
         });
 
         calculationService.start();
@@ -591,19 +595,20 @@ public class MainWindowController extends CapStructController {
     }
 
     private void showImage(final Distribution distribution) {
-        Logger.info(MessagePool.renderingStart());
+        ProgressProvider progressProvider = ProgressProvider.getInstance();
+        progressProvider.setProgress(MessagePool.renderingStart());
 
         showChanneledImage(distribution);
         showPiercedImage(distribution);
 //        setChartScale(distribution.getWidth());
 
-        Logger.info(MessagePool.renderingFinish());
+        progressProvider.setProgress(MessagePool.renderingFinish());
 
-        Logger.info(MessagePool.totalChanneleddAmount(distribution.getChanneledAmount()));
-        Logger.info(MessagePool.totalPiercedAmount(distribution.getPiercedAmount()));
-        Logger.info(MessagePool.totalOutOfDetector(distribution.getOutOfDetectorAmount()));
-        Logger.info(MessagePool.totalAbsorbededAmount(distribution.getAbsorbedAmount()));
-        Logger.info(MessagePool.totalDeletedAmount(distribution.getDeletedAmount()));
+        progressProvider.setProgress(MessagePool.totalChanneleddAmount(distribution.getChanneledAmount()));
+        progressProvider.setProgress(MessagePool.totalPiercedAmount(distribution.getPiercedAmount()));
+        progressProvider.setProgress(MessagePool.totalOutOfDetector(distribution.getOutOfDetectorAmount()));
+        progressProvider.setProgress(MessagePool.totalAbsorbededAmount(distribution.getAbsorbedAmount()));
+        progressProvider.setProgress(MessagePool.totalDeletedAmount(distribution.getDeletedAmount()));
     }
 
     private void showChanneledImage(final Distribution distribution) {

@@ -4,8 +4,14 @@
     -fx-background-color: #333333;
 }
 
+.progress-bar {
+    -fx-accent: #ff3300;
+    -fx-padding: 15px;
+}
+
 .label {
     -fx-text-fill: #7F7F7F;
+    -fx-padding: 15px;
 }
 
 .tab {

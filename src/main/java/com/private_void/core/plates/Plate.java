@@ -1,6 +1,5 @@
 package com.private_void.core.plates;
 
-import com.private_void.app.Logger;
 import com.private_void.app.MessagePool;
 import com.private_void.app.ProgressProvider;
 import com.private_void.core.detectors.Detector;
@@ -52,10 +51,8 @@ public abstract class Plate implements CapillarSystem {
                     for (int i = startIndex; i < startIndex + length; i++) {
                         synchronized (lock) {
                             if (++particleCounter % tenPercentOfParticlesAmount == 0.0) {
-                                int progress = particleCounter * 10 / tenPercentOfParticlesAmount;
-                                Logger.info(MessagePool.processedCapillarsPercent(progress));
-                                ProgressProvider.getInstance().setProgress(progress);
-                                ProgressProvider.getInstance().setProgress(MessagePool.processedCapillarsPercent(progress));
+                                ProgressProvider.getInstance().setProgress(
+                                        particleCounter * 10 / tenPercentOfParticlesAmount);
                             }
                         }
 
@@ -80,7 +77,7 @@ public abstract class Plate implements CapillarSystem {
                     }
                 }).start();
 
-        Logger.info(MessagePool.interactionFinish());
+        ProgressProvider.getInstance().setProgress(MessagePool.interactionFinish());
 
         return detector.detect(flux);
     }
