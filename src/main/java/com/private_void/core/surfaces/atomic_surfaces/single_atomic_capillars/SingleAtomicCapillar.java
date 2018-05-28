@@ -12,6 +12,7 @@ import com.private_void.core.surfaces.atomic_surfaces.AtomicSurface;
 import com.private_void.utils.Interaction;
 import com.private_void.utils.notifiers.Logger;
 import com.private_void.utils.notifiers.MessagePool;
+import com.private_void.utils.notifiers.ProgressProvider;
 
 import java.util.List;
 
@@ -22,6 +23,9 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
     protected final double radius;
     protected Detector detector;
 
+    private volatile int particleCounter;
+    private final Object lock = new Object();
+
     public SingleAtomicCapillar(final AtomicChain.Factory factory, final CartesianPoint front, int atomicChainsAmount,
                                 double chargeNumber, double radius, double length) {
         super(front, factory.getPeriod(), chargeNumber);
@@ -31,9 +35,54 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
         this.atomicChains = createAtomicChains(factory);
     }
 
+//    public Distribution interact(Flux flux) {
+//        Logger.info(MessagePool.interactionStart());
+//
+//        ChargedParticle particle;
+//        CartesianPoint newCoordinate;
+//        Vector newSpeed;
+//        double angleWithAxis;
+//
+//        setShieldingDistance(((ChargedParticle) flux.getParticles().get(0)).getChargeNumber());
+//
+//        for (Iterator<? extends Particle> iterator = flux.getParticles().iterator(); iterator.hasNext();) {
+//            particle = (ChargedParticle) iterator.next();
+//
+//            if (willParticleGetInside(particle)) {
+//                newCoordinate = particle.getCoordinate();
+//                newSpeed = particle.getSpeed();
+//
+//                while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
+//                    angleWithAxis = newSpeed.getAngle(getAxis(newCoordinate));
+//
+//                    if (angleWithAxis <= getCriticalAngle(particle)) {
+//                        particle
+//                                .setCoordinate(newCoordinate)
+//                                .setSpeed(newSpeed);
+//
+//                        newSpeed = rotateParticleSpeed(particle);
+//                        newCoordinate = newCoordinate.shift(newSpeed);
+//                    } else {
+//                        particle.absorb();
+//                        break;
+//                    }
+//                }
+//
+//                particle.setChanneled();
+//            }
+//        }
+//
+//        Logger.info(MessagePool.interactionFinish());
+//
+//        return detector.detect(flux);
+//    }
+
     @Override
     public Distribution interact(Flux flux) {
         Logger.info(MessagePool.interactionStart());
+
+        particleCounter = 0;
+        final int tenPercentOfParticlesAmount = flux.getParticles().size() / 10;
 
         new Interaction(
                 flux.getParticles(),
@@ -41,6 +90,13 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
                 flux.getParticles().size(),
                 (particles, startIndex, length) -> {
                     for (int i = startIndex; i < startIndex + length; i++) {
+                        synchronized (lock) {
+                            if (++particleCounter % tenPercentOfParticlesAmount == 0.0) {
+                                ProgressProvider.getInstance().setProgress(
+                                        particleCounter * 10 / tenPercentOfParticlesAmount);
+                            }
+                        }
+
                         ChargedParticle particle = (ChargedParticle) particles.get(i);
                         CartesianPoint newCoordinate;
                         Vector newSpeed;

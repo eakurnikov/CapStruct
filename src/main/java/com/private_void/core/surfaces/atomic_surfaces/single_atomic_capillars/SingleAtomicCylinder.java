@@ -44,9 +44,6 @@ public class SingleAtomicCylinder extends SingleAtomicCapillar {
         double dVy = 0.0;
         double dVz = 0.0;
 
-//        particle.setCoordinate(new CartesianPoint(0.0, 0.0, 0.0));
-//        particle.setSpeed(Vector.E_X);
-
         for (AtomicChain chain : atomicChains) {
             y = particle.getCoordinate().getY() - chain.getCoordinate().getY();
             z = particle.getCoordinate().getZ() - chain.getCoordinate().getZ();
@@ -71,10 +68,12 @@ public class SingleAtomicCylinder extends SingleAtomicCapillar {
     protected List<AtomicChain> createAtomicChains(final AtomicChain.Factory factory) {
         List<AtomicChain> atomicChains = new ArrayList<>();
 
-        double phi = Math.PI / 0.928;
-//        double phi = 0.0;
+//        double phi = Math.PI / 0.928;
+        double phi = 0.0;
         for (int i = 0; i < atomicChainsAmount; i++) {
-            atomicChains.add(factory.getNewAtomicChain(new CylindricalPoint(radius, phi += period, 0.0).convertToCartesian()));
+            atomicChains.add(
+                    factory.getNewAtomicChain(
+                            new CylindricalPoint(radius, phi += period, 0.0).convertToCartesian()));
         }
 
         return atomicChains;
