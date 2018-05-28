@@ -7,15 +7,13 @@ import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.AtomicChain;
 import com.private_void.core.particles.ChargedParticle;
-import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.core.surfaces.atomic_surfaces.AtomicSurface;
+import com.private_void.utils.Interaction;
 import com.private_void.utils.notifiers.Logger;
 import com.private_void.utils.notifiers.MessagePool;
 
 import java.util.List;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.RecursiveAction;
 
 public abstract class SingleAtomicCapillar extends AtomicSurface implements CapillarSystem {
     protected final List<AtomicChain> atomicChains;
@@ -37,66 +35,40 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
     public Distribution interact(Flux flux) {
         Logger.info(MessagePool.interactionStart());
 
-        class Interaction extends RecursiveAction {
-            private List<? extends Particle> particles;
-            private int startIndex;
-            private int length;
+        new Interaction(
+                flux.getParticles(),
+                0,
+                flux.getParticles().size(),
+                (particles, startIndex, length) -> {
+                    for (int i = startIndex; i < startIndex + length; i++) {
+                        ChargedParticle particle = (ChargedParticle) particles.get(i);
+                        CartesianPoint newCoordinate;
+                        Vector newSpeed;
 
-            public Interaction(List<? extends Particle> particles, int startIndex, int length) {
-                this.particles = particles;
-                this.startIndex = startIndex;
-                this.length = length;
-            }
+                        if (willParticleGetInside(particle)) {
+                            newCoordinate = particle.getCoordinate();
+                            newSpeed = particle.getSpeed();
 
-            private void interact() {
-                for (int i = startIndex; i < startIndex + length; i++) {
-                    ChargedParticle particle = (ChargedParticle) particles.get(i);
-                    CartesianPoint newCoordinate;
-                    Vector newSpeed;
-                    double angleWithAxis;
+                            while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
+                                double angleWithAxis = newSpeed.getAngle(getAxis(newCoordinate));
 
-                    if (willParticleGetInside(particle)) {
-                        newCoordinate = particle.getCoordinate();
-                        newSpeed = particle.getSpeed();
+                                if (angleWithAxis <= getCriticalAngle(particle)) {
+                                    particle
+                                            .setCoordinate(newCoordinate)
+                                            .setSpeed(newSpeed);
 
-                        while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
-                            angleWithAxis = newSpeed.getAngle(getAxis(newCoordinate));
-
-                            if (angleWithAxis <= getCriticalAngle(particle)) {
-                                particle
-                                        .setCoordinate(newCoordinate)
-                                        .setSpeed(newSpeed);
-
-                                newSpeed = rotateParticleSpeed(particle);
-                                newCoordinate = newCoordinate.shift(newSpeed);
-                            } else {
-                                particle.absorb();
-                                break;
+                                    newSpeed = rotateParticleSpeed(particle);
+                                    newCoordinate = newCoordinate.shift(newSpeed);
+                                } else {
+                                    particle.absorb();
+                                    break;
+                                }
                             }
+
+                            particle.setChanneled();
                         }
-
-                        particle.setChanneled();
                     }
-                }
-            }
-
-            @Override
-            protected void compute() {
-                if (length < particles.size() / 64.0) {
-                    interact();
-                } else {
-                    int newLength = length / 2;
-                    invokeAll(
-                            new Interaction(particles, startIndex, newLength),
-                            new Interaction(particles,startIndex + newLength, length - newLength));
-                }
-            }
-        }
-
-        List<? extends Particle> particles = flux.getParticles();
-        Interaction interaction = new Interaction(particles, 0, particles.size());
-        ForkJoinPool pool = new ForkJoinPool();
-        pool.invoke(interaction);
+                }).start();
 
         Logger.info(MessagePool.interactionFinish());
 
