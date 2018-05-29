@@ -26,13 +26,13 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
     private volatile int particleCounter;
     private final Object lock = new Object();
 
-    public SingleAtomicCapillar(final AtomicChain.Factory factory, final CartesianPoint front, int atomicChainsAmount,
-                                double chargeNumber, double radius, double length) {
-        super(front, factory.getPeriod(), chargeNumber);
+    public SingleAtomicCapillar(final CartesianPoint front, final AtomicChain.Factory chainFactory,
+                                int atomicChainsAmount, double chargeNumber, double radius, double length) {
+        super(front, chainFactory.getPeriod(), chargeNumber);
         this.atomicChainsAmount = atomicChainsAmount;
         this.radius = radius;
         this.length = length;
-        this.atomicChains = createAtomicChains(factory);
+        this.atomicChains = createAtomicChains(chainFactory);
     }
 
 //    public Distribution interact(Flux flux) {
@@ -148,7 +148,7 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
         return newY * newY + newZ * newZ < radius * radius;
     }
 
-    protected abstract List<AtomicChain> createAtomicChains(final AtomicChain.Factory factory);
+    protected abstract List<AtomicChain> createAtomicChains(final AtomicChain.Factory chainFactory);
 
     protected abstract boolean isPointInside(final CartesianPoint point);
 

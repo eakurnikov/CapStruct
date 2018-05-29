@@ -17,9 +17,9 @@ import static com.private_void.utils.Constants.TIME_STEP;
 
 public class AtomicCylinder extends AtomicCapillar {
 
-    public AtomicCylinder(final AtomicChain.Factory factory, final CartesianPoint front, int atomicChainsAmount,
+    public AtomicCylinder(final CartesianPoint front, final AtomicChain.Factory chainFactory, int atomicChainsAmount,
                           double chargeNumber, double radius, double length) {
-        super(factory, front, atomicChainsAmount, chargeNumber, radius, length);
+        super(front, chainFactory, atomicChainsAmount, chargeNumber, radius, length);
     }
 
     @Override
@@ -37,61 +37,56 @@ public class AtomicCylinder extends AtomicCapillar {
     protected Vector rotateParticleSpeed(final ChargedParticle particle) {
         double y;
         double z;
-
-        double Fy;
-        double Fz;
+        double r;
+        double F;
 
         double dVy = 0.0;
         double dVz = 0.0;
 
-//        particle.setCoordinate(new CartesianPoint(0.0, 0.0, 0.0));
-//        particle.setSpeed(Vector.E_X);
-
         for (AtomicChain chain : atomicChains) {
             y = particle.getCoordinate().getY() - chain.getCoordinate().getY();
             z = particle.getCoordinate().getZ() - chain.getCoordinate().getZ();
+            r = Math.sqrt(y * y + z * z);
 
-            Fy = - particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
-                    (chain.getPeriod() * (C_SQUARE * (shieldingDistance / y) * (shieldingDistance / y) + 1.0));
+            F = 2.0 * particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
+                    (chain.getPeriod() * (r + (r * r * r) / C_SQUARE));
 
-            Fz = - particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
-                    (chain.getPeriod() * (C_SQUARE * (shieldingDistance / z) * (shieldingDistance / z) + 1.0));
-
-            dVy += (Fy * Math.signum(y) / particle.getMass()) * TIME_STEP;
-            dVz += (Fz * Math.signum(z) / particle.getMass()) * TIME_STEP;
+            dVy += (F * (y / r) / particle.getMass()) * TIME_STEP;
+            dVz += (F * (z / r) / particle.getMass()) * TIME_STEP;
         }
 
         return Vector.set(
                 particle.getSpeed().getX(),
-                particle.getSpeed().getY() + dVy / 300_000,
-                particle.getSpeed().getZ() + dVz / 300_000);
+                particle.getSpeed().getY() + dVy / 800,
+                particle.getSpeed().getZ() + dVz / 800);
     }
 
     @Override
-    protected List<AtomicChain> createAtomicChains(AtomicChain.Factory factory) {
+    protected List<AtomicChain> createAtomicChains(final AtomicChain.Factory chainFactory) {
         List<AtomicChain> atomicChains = new ArrayList<>();
 
-//      double phi = Math.PI;
         double phi = 0.0;
         for (int i = 0; i < atomicChainsAmount; i++) {
-            atomicChains.add(factory.getNewAtomicChain(new CylindricalPoint(radius, phi += period, 0.0).convertToCartesian()));
+            atomicChains.add(
+                    chainFactory.getNewAtomicChain(
+                            new CylindricalPoint(radius, phi += period, 0.0).convertToCartesian()));
         }
 
         return atomicChains;
     }
 
     @Override
-    protected boolean isPointInside(CartesianPoint point) {
+    protected boolean isPointInside(final CartesianPoint point) {
         return point.getX() <= front.getX() + length;
     }
 
-    public static CapillarFactory getCapillarFactory(final AtomicChain.Factory factory, int atomicChainsAmount,
+    public static CapillarFactory getCapillarFactory(final AtomicChain.Factory chainFactory, int atomicChainsAmount,
                                                      double chargeNumber, double radius, double length) {
         return new CapillarFactory() {
 
             @Override
             public Capillar getNewCapillar(final CartesianPoint coordinate) {
-                return new AtomicCylinder(factory, coordinate, atomicChainsAmount, chargeNumber, radius, length);
+                return new AtomicCylinder(coordinate, chainFactory, atomicChainsAmount, chargeNumber, radius, length);
             }
 
             @Override

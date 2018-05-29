@@ -13,9 +13,9 @@ public class SingleAtomicTorus extends SingleAtomicCapillar {
     private final double curvRadius;
     private final double curvAngleR;
 
-    public SingleAtomicTorus(final AtomicChain.Factory factory, final CartesianPoint front, int atomicChainsAmount,
+    public SingleAtomicTorus(final CartesianPoint front, final AtomicChain.Factory chainFactory, int atomicChainsAmount,
                              double chargeNumber, double radius, double curvRadius, double curvAngleR) {
-        super(factory, front, atomicChainsAmount, chargeNumber, radius, Utils.getTorusLength(curvRadius, curvAngleR));
+        super(front, chainFactory, atomicChainsAmount, chargeNumber, radius, Utils.getTorusLength(curvRadius, curvAngleR));
         this.curvRadius = curvRadius;
         this.curvAngleR = curvAngleR;
         this.detector = createDetector();

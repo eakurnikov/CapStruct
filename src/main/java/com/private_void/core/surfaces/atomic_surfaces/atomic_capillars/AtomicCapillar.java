@@ -13,21 +13,21 @@ import java.util.List;
 
 public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
     private final ReferenceFrame.Converter refFrameConverter;
-    protected final AtomicChain.Factory factory;
+    protected final AtomicChain.Factory chainFactory;
     protected final List<AtomicChain> atomicChains;
     protected final int atomicChainsAmount;
-    protected final double length;
     protected final double radius;
+    protected final double length;
 
-    public AtomicCapillar(final AtomicChain.Factory factory, final CartesianPoint front, int atomicChainsAmount,
+    public AtomicCapillar(final CartesianPoint front, final AtomicChain.Factory chainFactory, int atomicChainsAmount,
                           double chargeNumber, double radius, double length) {
-        super(front, factory.getPeriod(), chargeNumber);
+        super(front, chainFactory.getPeriod(), chargeNumber);
         this.refFrameConverter = new ReferenceFrame.Converter(ReferenceFrame.builder().atPoint(front).build());
-        this.factory = factory;
+        this.chainFactory = chainFactory;
         this.atomicChainsAmount = atomicChainsAmount;
-        this.atomicChains = createAtomicChains(factory);
         this.radius = radius;
         this.length = length;
+        this.atomicChains = createAtomicChains(chainFactory);
     }
 
     @Override
@@ -85,7 +85,7 @@ public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
         return refFrameConverter;
     }
 
-    protected abstract List<AtomicChain> createAtomicChains(final AtomicChain.Factory factory);
+    protected abstract List<AtomicChain> createAtomicChains(final AtomicChain.Factory chainFactory);
 
-    protected abstract boolean isPointInside(CartesianPoint point);
+    protected abstract boolean isPointInside(final CartesianPoint point);
 }

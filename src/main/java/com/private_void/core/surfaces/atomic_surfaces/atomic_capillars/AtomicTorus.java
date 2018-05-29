@@ -14,9 +14,9 @@ public class AtomicTorus extends AtomicCapillar {
     private final double curvRadius;
     private final double curvAngleR;
 
-    public AtomicTorus(final AtomicChain.Factory factory, final CartesianPoint front, int atomicChainsAmount,
+    public AtomicTorus(final CartesianPoint front, final AtomicChain.Factory chainFactory, int atomicChainsAmount,
                        double chargeNumber, double radius, double curvRadius, double curvAngleR) {
-        super(factory, front, atomicChainsAmount, chargeNumber, radius, Utils.getTorusLength(curvRadius, curvAngleR));
+        super(front, chainFactory, atomicChainsAmount, chargeNumber, radius, Utils.getTorusLength(curvRadius, curvAngleR));
         this.curvRadius = curvRadius;
         this.curvAngleR = curvAngleR;
     }
@@ -37,22 +37,22 @@ public class AtomicTorus extends AtomicCapillar {
     }
 
     @Override
-    protected List<AtomicChain> createAtomicChains(AtomicChain.Factory factory) {
+    protected List<AtomicChain> createAtomicChains(final AtomicChain.Factory chainFactory) {
         return null;
     }
 
     @Override
-    protected boolean isPointInside(CartesianPoint point) {
+    protected boolean isPointInside(final CartesianPoint point) {
         return false;
     }
 
-    public static CapillarFactory getFactory(final AtomicChain.Factory factory, int atomicChainsAmount, double chargeNumber,
-                                             double radius, double curvRadius, double curvAngleR) {
+    public static CapillarFactory getFactory(final AtomicChain.Factory chainFactory, int atomicChainsAmount,
+                                             double chargeNumber, double radius, double curvRadius, double curvAngleR) {
         return new CapillarFactory() {
 
             @Override
             public Capillar getNewCapillar(final CartesianPoint coordinate) {
-                return new AtomicTorus(factory, coordinate, atomicChainsAmount, chargeNumber, radius, curvRadius,
+                return new AtomicTorus(coordinate, chainFactory, atomicChainsAmount, chargeNumber, radius, curvRadius,
                         curvAngleR);
             }
 

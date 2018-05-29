@@ -211,8 +211,8 @@ public class MainWindowController extends CapStructController {
                                 .setProgressListener(progress -> updateProgress(progress,100.0))
                                 .setProgress(-1.0);
 
-                      return createCapillar().interact(createFlux());
-//                        return createPlate().interact(createFlux());
+//                      return createCapillar().interact(createFlux());
+                        return createPlate().interact(createFlux());
                     }
                 };
             }
@@ -251,7 +251,7 @@ public class MainWindowController extends CapStructController {
 
             CartesianPoint.Factory uniformDistribution = generator().getXFlatUniformDistribution(250.0, 250.0);
 
-            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(20.0);
+            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(150.0);
 //            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(370.0);
 
             return new ParallelFlux(
@@ -492,7 +492,7 @@ public class MainWindowController extends CapStructController {
 //                    reflectivity,
 //                    criticalAngleR);
 
-            int atomicChainsAmount = 1001;
+            int atomicChainsAmount = 1000;
             AtomicChain.Factory factory = AtomicChain.getFactory(2.0 * Math.PI / atomicChainsAmount);
 
             return new SingleAtomicCylinder(
