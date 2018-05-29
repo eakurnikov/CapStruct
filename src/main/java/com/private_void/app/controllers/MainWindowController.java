@@ -496,8 +496,8 @@ public class MainWindowController extends CapStructController {
             AtomicChain.Factory factory = AtomicChain.getFactory(2.0 * Math.PI / atomicChainsAmount);
 
             return new SingleAtomicCylinder(
-                    factory,
                     new CartesianPoint(frontX, frontY, frontZ),
+                    factory,
                     atomicChainsAmount,
                     1.0,
                     radius,
