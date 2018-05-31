@@ -2,12 +2,16 @@ package com.private_void.core.surfaces.atomic_surfaces.single_atomic_capillars;
 
 import com.private_void.core.detection.Detector;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.coordinates.CylindricalPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.AtomicChain;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.private_void.utils.Constants.ELECTRON_CHARGE;
 
 public class SingleAtomicTorus extends SingleAtomicCapillar {
     private final double curvRadius;
@@ -28,7 +32,8 @@ public class SingleAtomicTorus extends SingleAtomicCapillar {
 
     @Override
     protected double getCriticalAngle(final ChargedParticle particle) {
-        return 0;
+        return Math.sqrt(2.0 * particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
+                particle.getEnergy() * atomicChains.get(0).getPeriod()) * 1000;
     }
 
     @Override
@@ -37,13 +42,22 @@ public class SingleAtomicTorus extends SingleAtomicCapillar {
     }
 
     @Override
-    protected List<AtomicChain> createAtomicChains(AtomicChain.Factory factory) {
-        return null;
+    protected List<AtomicChain> createAtomicChains(final AtomicChain.Factory chainFactory) {
+        List<AtomicChain> atomicChains = new ArrayList<>();
+
+        double phi = 0.0;
+        for (int i = 0; i < atomicChainsAmount; i++) {
+            atomicChains.add(
+                    chainFactory.getNewAtomicChain(
+                            new CylindricalPoint(radius, phi += period, 0.0).convertToCartesian()));
+        }
+
+        return atomicChains;
     }
 
     @Override
-    protected boolean isPointInside(CartesianPoint point) {
-        return false;
+    protected boolean isPointInside(final CartesianPoint point) {
+        return point.getX() <= front.getX() + length;
     }
 
     @Override

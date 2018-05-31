@@ -128,16 +128,3 @@ public class AtomicCylinder extends AtomicCapillar {
         };
     }
 }
-
-//    @Override
-//    protected void createAtoms() {
-//        atoms = new ArrayList<>();
-//
-//        double x = front.getX();
-//        //double y = front.getY();
-//        //double z = front.getX() - size / 2;
-//
-//        while (x <= front.getX() + length) {
-//            x += period;
-//        }
-//    }
