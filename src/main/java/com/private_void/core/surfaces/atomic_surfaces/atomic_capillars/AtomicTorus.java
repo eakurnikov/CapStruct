@@ -1,6 +1,7 @@
 package com.private_void.core.surfaces.atomic_surfaces.atomic_capillars;
 
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.geometry.space_3D.reference_frames.ReferenceFrame;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.AtomicChain;
 import com.private_void.core.particles.ChargedParticle;
@@ -14,9 +15,11 @@ public class AtomicTorus extends AtomicCapillar {
     private final double curvRadius;
     private final double curvAngleR;
 
-    public AtomicTorus(final CartesianPoint front, final AtomicChain.Factory chainFactory, int atomicChainsAmount,
-                       double chargeNumber, double radius, double curvRadius, double curvAngleR) {
-        super(front, chainFactory, atomicChainsAmount, chargeNumber, radius, Utils.getTorusLength(curvRadius, curvAngleR));
+    public AtomicTorus(final CartesianPoint front, final ReferenceFrame refFrame,
+                       final AtomicChain.Factory chainFactory, int atomicChainsAmount, double chargeNumber,
+                       double radius, double curvRadius, double curvAngleR) {
+        super(front, refFrame, chainFactory, atomicChainsAmount, chargeNumber, radius,
+                Utils.getTorusLength(curvRadius, curvAngleR));
         this.curvRadius = curvRadius;
         this.curvAngleR = curvAngleR;
     }
@@ -52,8 +55,8 @@ public class AtomicTorus extends AtomicCapillar {
 
             @Override
             public Capillar getNewCapillar(final CartesianPoint coordinate) {
-                return new AtomicTorus(coordinate, chainFactory, atomicChainsAmount, chargeNumber, radius, curvRadius,
-                        curvAngleR);
+                return new AtomicTorus(coordinate, ReferenceFrame.builder().atPoint(coordinate).build(), chainFactory,
+                        atomicChainsAmount, chargeNumber, radius, curvRadius, curvAngleR);
             }
 
             @Override

@@ -2,11 +2,13 @@ package com.private_void.core.surfaces.atomic_surfaces.atomic_capillars;
 
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.coordinates.CylindricalPoint;
+import com.private_void.core.geometry.space_3D.reference_frames.ReferenceFrame;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.AtomicChain;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
+import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +19,10 @@ import static com.private_void.utils.Constants.TIME_STEP;
 
 public class AtomicCylinder extends AtomicCapillar {
 
-    public AtomicCylinder(final CartesianPoint front, final AtomicChain.Factory chainFactory, int atomicChainsAmount,
-                          double chargeNumber, double radius, double length) {
-        super(front, chainFactory, atomicChainsAmount, chargeNumber, radius, length);
+    public AtomicCylinder(final CartesianPoint front, final ReferenceFrame refFrame,
+                          final AtomicChain.Factory chainFactory, int atomicChainsAmount, double chargeNumber,
+                          double radius, double length) {
+        super(front, refFrame, chainFactory, atomicChainsAmount, chargeNumber, radius, length);
     }
 
     @Override
@@ -80,13 +83,37 @@ public class AtomicCylinder extends AtomicCapillar {
         return point.getX() <= front.getX() + length;
     }
 
-    public static CapillarFactory getCapillarFactory(final AtomicChain.Factory chainFactory, int atomicChainsAmount,
+    public static CapillarFactory getCapillarFactory(final AtomicChain.Factory chainFactory, int chainsAmount,
                                                      double chargeNumber, double radius, double length) {
         return new CapillarFactory() {
 
             @Override
             public Capillar getNewCapillar(final CartesianPoint coordinate) {
-                return new AtomicCylinder(coordinate, chainFactory, atomicChainsAmount, chargeNumber, radius, length);
+                return new AtomicCylinder(coordinate, ReferenceFrame.builder().atPoint(coordinate).build(),
+                        chainFactory, chainsAmount, chargeNumber, radius, length);
+            }
+
+            @Override
+            public double getRadius() {
+                return radius;
+            }
+
+            @Override
+            public double getLength() {
+                return length;
+            }
+        };
+    }
+
+    public static RotatedCapillarFactory getRotatedCapillarFactory(final AtomicChain.Factory chainFactory,
+                                                                   int chainsAmount, double chargeNumber, double radius,
+                                                                   double length) {
+        return new RotatedCapillarFactory() {
+
+            @Override
+            public Capillar getNewCapillar(final CartesianPoint coordinate, final ReferenceFrame refFrame) {
+                return new AtomicCylinder(coordinate, refFrame, chainFactory, chainsAmount, chargeNumber, radius,
+                        length);
             }
 
             @Override

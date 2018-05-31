@@ -11,7 +11,7 @@ import com.private_void.core.particles.AtomicChain;
 import com.private_void.core.particles.ChargedParticle;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
-import com.private_void.core.plates.FlatPlate;
+import com.private_void.core.plates.CurvedPlate;
 import com.private_void.core.plates.TorusFlatPlate;
 import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.core.surfaces.atomic_surfaces.AtomicPlane;
@@ -251,8 +251,9 @@ public class MainWindowController extends CapStructController {
 
             CartesianPoint.Factory uniformDistribution = generator().getXFlatUniformDistribution(250.0, 250.0);
 
-            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(150.0);
-//            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(370.0);
+//            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(7.0);
+//            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(150.0);
+            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(370.0);
 
             return new ParallelFlux(
                     chargedParticleFactory,
@@ -322,6 +323,14 @@ public class MainWindowController extends CapStructController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
+            RotatedCapillarFactory rotatedSmoothCylinderFactory = SmoothCylinder.getRotatedCapillarFactory(
+                    capillarRadius,
+                    capillarLength,
+                    capillarRoughnessSize,
+                    capillarRougnessAngleR,
+                    capillarReflectivity,
+                    capillarCriticalAngleR);
+
             int atomicChainsAmount = 1000;
             AtomicChain.Factory atomicChainFactory = AtomicChain.getFactory(2.0 * Math.PI / atomicChainsAmount);
             CapillarFactory atomicCylinderFactory = AtomicCylinder.getCapillarFactory(
@@ -331,32 +340,32 @@ public class MainWindowController extends CapStructController {
                     capillarRadius,
                     capillarLength);
 
-            RotatedCapillarFactory rotatedSmoothCylinderFactory = SmoothCylinder.getRotatedCapillarFactory(
+            RotatedCapillarFactory rotatedAtomicCylinderFactory = AtomicCylinder.getRotatedCapillarFactory(
+                    atomicChainFactory,
+                    atomicChainsAmount,
+                    1.0,
                     capillarRadius,
-                    capillarLength,
-                    capillarRoughnessSize,
-                    capillarRougnessAngleR,
-                    capillarReflectivity,
-                    capillarCriticalAngleR);
+                    capillarLength
+            );
 
-            return new FlatPlate(
-                    atomicCylinderFactory,
-                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
-                    plateCapillarsDensity,
-                    plateSideLength);
-
-//            return new InclinedPlate(
-//                    rotatedSmoothCylinderFactory,
+//            return new FlatPlate(
+//                    atomicCylinderFactory,
 //                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
 //                    plateCapillarsDensity,
 //                    plateSideLength);
 
-//            return new CurvedPlate(
-//                    rotatedSmoothCylinderFactory,
+//            return new InclinedPlate(
+//                    rotatedAtomicCylinderFactory,
 //                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
 //                    plateCapillarsDensity,
-//                    Math.toRadians(1.0),
-//                    capillarLength * 20);
+//                    plateSideLength);
+
+            return new CurvedPlate(
+                    rotatedAtomicCylinderFactory,
+                    new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
+                    plateCapillarsDensity,
+                    Math.toRadians(1.0),
+                    capillarLength * 20);
         }
 
         if (torusTab.isSelected()) {

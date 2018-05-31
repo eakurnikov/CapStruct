@@ -80,6 +80,14 @@ public abstract class Plate implements CapillarSystem {
 
         Logger.info(MessagePool.interactionFinish());
 
+        flux.getParticles().forEach((p) -> {
+            if (p.getCoordinate().getY() > 150 || p.getCoordinate().getZ() > 150) {
+                System.out.println(p.getCoordinate().getX() + ", " +
+                        p.getCoordinate().getY() + ", " +
+                        p.getCoordinate().getZ());
+            }
+        });
+
         return detector.detect(flux);
     }
 

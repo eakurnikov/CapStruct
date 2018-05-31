@@ -16,8 +16,8 @@ public class InclinedPlate extends Plate {
     private final double sideLength;
     private final double width;
 
-    public InclinedPlate(final RotatedCapillarFactory capillarFactory, final CartesianPoint center, double capillarsDensity,
-                     double sideLength) {
+    public InclinedPlate(final RotatedCapillarFactory capillarFactory, final CartesianPoint center,
+                         double capillarsDensity, double sideLength) {
         super(center, capillarFactory.getRadius(), capillarsDensity);
         this.capillarFactory = capillarFactory;
         this.sideLength = sideLength;
