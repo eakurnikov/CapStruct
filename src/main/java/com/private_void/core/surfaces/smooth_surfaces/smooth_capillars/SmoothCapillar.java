@@ -7,6 +7,9 @@ import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.smooth_surfaces.SmoothSurface;
+import com.private_void.utils.newtons_method.NewtonsMethod;
+import com.private_void.utils.notifiers.Logger;
+import com.private_void.utils.notifiers.MessagePool;
 
 import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
@@ -45,11 +48,19 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
                         .rotateSpeed(
                                 getParticleSpeedRotationAxis(newCoordinate, normal),
                                 2.0 * Math.abs(angleWithSurface));
+
                 newCoordinate = getHitPoint(particle);
+
+                if (newCoordinate == null) {
+                    Logger.warning(MessagePool.particleDeleted());
+                    particle.delete();
+                    break;
+                }
             } else {
                 particle.absorb();
                 break;
             }
+
             particle.setChanneled();
         }
     }
@@ -76,4 +87,6 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
     }
 
     protected abstract boolean isPointInside(final CartesianPoint point);
+
+    protected abstract NewtonsMethod.Equation getEquation(final NeutralParticle particle);
 }

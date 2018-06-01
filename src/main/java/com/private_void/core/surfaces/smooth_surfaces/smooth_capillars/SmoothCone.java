@@ -7,6 +7,7 @@ import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.utils.Utils;
+import com.private_void.utils.newtons_method.NewtonsMethod;
 import com.private_void.utils.notifiers.Logger;
 import com.private_void.utils.notifiers.MessagePool;
 
@@ -174,6 +175,11 @@ public class SmoothCone extends SmoothCapillar {
             p.stopRecursiveIterations();
             return newCoordinate;
         }
+    }
+
+    @Override
+    protected NewtonsMethod.Equation getEquation(final NeutralParticle particle) {
+        return null;
     }
 
     @Override

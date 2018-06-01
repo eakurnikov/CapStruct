@@ -5,6 +5,7 @@ import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.utils.Utils;
+import com.private_void.utils.newtons_method.NewtonsMethod;
 import com.private_void.utils.notifiers.Logger;
 import com.private_void.utils.notifiers.MessagePool;
 
@@ -176,5 +177,10 @@ public class SingleSmoothCone extends SingleSmoothCapillar {
         return new Detector(
                 new CartesianPoint(front.getX() + length, front.getY(), front.getZ()),
                 2.0 * radius);
+    }
+
+    @Override
+    protected NewtonsMethod.Equation getEquation(final NeutralParticle particle) {
+        return null;
     }
 }

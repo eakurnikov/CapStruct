@@ -16,13 +16,13 @@ import com.private_void.core.plates.TorusFlatPlate;
 import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.core.surfaces.atomic_surfaces.AtomicPlane;
 import com.private_void.core.surfaces.atomic_surfaces.atomic_capillars.AtomicCylinder;
-import com.private_void.core.surfaces.atomic_surfaces.single_atomic_capillars.SingleAtomicCylinder;
 import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
 import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
 import com.private_void.core.surfaces.capillar_factories.RotatedTorusFactory;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothCylinder;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothTorus;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone;
+import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCylinder;
 import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothTorus;
 import com.private_void.utils.notifiers.Logger;
 import com.private_void.utils.notifiers.MessagePool;
@@ -211,8 +211,8 @@ public class MainWindowController extends CapStructController {
                                 .setProgressListener(progress -> updateProgress(progress,100.0))
                                 .setProgress(-1.0);
 
-                      return createCapillar().interact(createFlux());
-//                        return createPlate().interact(createFlux());
+//                      return createCapillar().interact(createFlux());
+                        return createPlate().interact(createFlux());
                     }
                 };
             }
@@ -256,8 +256,8 @@ public class MainWindowController extends CapStructController {
             CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(370.0);
 
             return new ParallelFlux(
-                    chargedParticleFactory,
-                    gaussDistribution,
+                    neutralParticleFactory,
+                    circleUniformDistribution,
                     new CartesianPoint(x, y, z),
                     Vector.set(axisX, axisY, axisZ),
                     layersAmount,
@@ -361,7 +361,7 @@ public class MainWindowController extends CapStructController {
 //                    plateSideLength);
 
             return new CurvedPlate(
-                    rotatedAtomicCylinderFactory,
+                    rotatedSmoothCylinderFactory,
                     new CartesianPoint(plateCenterX, plateCenterY, plateCenterZ),
                     plateCapillarsDensity,
                     Math.toRadians(1.0),
@@ -492,25 +492,25 @@ public class MainWindowController extends CapStructController {
             double criticalAngleD = Double.parseDouble(cylSlideAngle.getText());
             double criticalAngleR = Math.toRadians(criticalAngleD);
 
-//            return new SingleSmoothCylinder(
-//                    new CartesianPoint(frontX, frontY, frontZ),
-//                    radius,
-//                    length,
-//                    roughnessSize,
-//                    roughnessAngleR,
-//                    reflectivity,
-//                    criticalAngleR);
-
-            int atomicChainsAmount = 1000;
-            AtomicChain.Factory factory = AtomicChain.getFactory(2.0 * Math.PI / atomicChainsAmount);
-
-            return new SingleAtomicCylinder(
+            return new SingleSmoothCylinder(
                     new CartesianPoint(frontX, frontY, frontZ),
-                    factory,
-                    atomicChainsAmount,
-                    1.0,
                     radius,
-                    length);
+                    length,
+                    roughnessSize,
+                    roughnessAngleR,
+                    reflectivity,
+                    criticalAngleR);
+
+//            int atomicChainsAmount = 1000;
+//            AtomicChain.Factory factory = AtomicChain.getFactory(2.0 * Math.PI / atomicChainsAmount);
+//
+//            return new SingleAtomicCylinder(
+//                    new CartesianPoint(frontX, frontY, frontZ),
+//                    factory,
+//                    atomicChainsAmount,
+//                    1.0,
+//                    radius,
+//                    length);
         }
 
         if (torusTab.isSelected()) {

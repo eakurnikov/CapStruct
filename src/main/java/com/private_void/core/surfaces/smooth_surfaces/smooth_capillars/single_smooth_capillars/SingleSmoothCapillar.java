@@ -10,6 +10,7 @@ import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.core.surfaces.smooth_surfaces.SmoothSurface;
 import com.private_void.utils.Interaction;
+import com.private_void.utils.newtons_method.NewtonsMethod;
 import com.private_void.utils.notifiers.Logger;
 import com.private_void.utils.notifiers.MessagePool;
 
@@ -61,7 +62,14 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                                 .rotateSpeed(
                                         getParticleSpeedRotationAxis(newCoordinate, normal),
                                         2.0 * Math.abs(angleWithSurface));
+
                         newCoordinate = getHitPoint(particle);
+
+                        if (newCoordinate == null) {
+                            Logger.warning(MessagePool.particleDeleted());
+                            particle.delete();
+                            break;
+                        }
                     } else {
                         particle.absorb();
                         break;
@@ -213,7 +221,14 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                                             .rotateSpeed(
                                                     getParticleSpeedRotationAxis(newCoordinate, normal),
                                                     2.0 * Math.abs(angleWithSurface));
+
                                     newCoordinate = getHitPoint(particle);
+
+                                    if (newCoordinate == null) {
+                                        Logger.warning(MessagePool.particleDeleted());
+                                        particle.delete();
+                                        break;
+                                    }
                                 } else {
                                     particle.absorb();
                                     break;
@@ -250,4 +265,6 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
     protected abstract boolean isPointInside(final CartesianPoint point);
 
     protected abstract Detector createDetector();
+
+    protected abstract NewtonsMethod.Equation getEquation(final NeutralParticle particle);
 }
