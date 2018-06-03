@@ -47,15 +47,6 @@ public class SingleSmoothTorus extends SingleSmoothCapillar {
     }
 
     @Override
-    protected CartesianPoint getHitPoint(final NeutralParticle particle) {
-        if (particle.getSpeed().getX() <= 0.0) {
-            return null;
-        }
-
-        return new NewtonsMethod(getEquation(particle)).getSolution();
-    }
-
-    @Override
     protected boolean isPointInside(final CartesianPoint point) {
 //        double angle = getPointsAngle(point);
 //        return angle >= 0 && angle <= curvAngleR;

@@ -18,7 +18,7 @@ public class SmoothTorus extends SmoothCapillar {
     private final double curvAngleR;
 
     private SmoothTorus(final CartesianPoint front, double radius, double curvRadius, double curvAngleR, double roughnessSize,
-                       double roughnessAngleR, double reflectivity, double criticalAngleR) {
+                        double roughnessAngleR, double reflectivity, double criticalAngleR) {
         super(front, ReferenceFrame.builder().atPoint(front).build(), radius, Utils.getTorusLength(curvRadius, curvAngleR),
                 roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
 
@@ -67,15 +67,6 @@ public class SmoothTorus extends SmoothCapillar {
     }
 
     @Override
-    protected CartesianPoint getHitPoint(final NeutralParticle particle) {
-        if (particle.getSpeed().getX() <= 0.0) {
-            return null;
-        }
-
-        return new NewtonsMethod(getEquation(particle)).getSolution();
-    }
-
-    @Override
     protected boolean isPointInside(final CartesianPoint point) {
         return point.getX() <= length;
     }
@@ -107,10 +98,16 @@ public class SmoothTorus extends SmoothCapillar {
         @Override
         public double[] getInitialApproximation(int recursiveIterationCounter) {
             return new double[]{
-                    initialPoint.getX() + speed.getX() * radius * recursiveIterationCounter,
-                    initialPoint.getY() + speed.getY() * radius * recursiveIterationCounter,
-                    initialPoint.getZ() + speed.getZ() * radius * recursiveIterationCounter
+                    initialPoint.getX() + radius * recursiveIterationCounter,
+                    initialPoint.getY() + radius * Math.signum(speed.getY()),
+                    initialPoint.getZ() + radius * Math.signum(speed.getZ())
             };
+
+//            return new double[]{
+//                    initialPoint.getX() + speed.getX() * radius * recursiveIterationCounter,
+//                    initialPoint.getY() + speed.getY() * radius * recursiveIterationCounter,
+//                    initialPoint.getZ() + speed.getZ() * radius * recursiveIterationCounter
+//            };
         }
 
         @Override
@@ -196,7 +193,7 @@ public class SmoothTorus extends SmoothCapillar {
     }
 
     public static CapillarFactory getFactoryWithLength(double radius, double length, double curvAngleR, double roughnessSize,
-                                             double roughnessAngleR, double reflectivity, double criticalAngleR) {
+                                                       double roughnessAngleR, double reflectivity, double criticalAngleR) {
         return new CapillarFactory() {
 
             @Override
@@ -242,15 +239,16 @@ public class SmoothTorus extends SmoothCapillar {
     }
 }
 
+//    @Override
+//    protected CartesianPoint getHitPoint(final NeutralParticle p) {
 //        if (p.getSpeed().getX() <= 0.0) {
-//            Logger.warning(MessagePool.particleDeleted());
-//            p.delete();
-//            return p.getCoordinate();
+//            return null;
 //        }
 //
-//        double[] solution = {p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
-//                             p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
-//                             p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()};
+//        double[] solution = {
+//                p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
+//                p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
+//                p.getCoordinate().getZ() + p.getSpeed().getZ() * radius * p.getRecursiveIterationCount()};
 //
 //        double[] delta = {1.0, 1.0, 1.0};
 //        double[] F  = new double[3];
@@ -291,7 +289,7 @@ public class SmoothTorus extends SmoothCapillar {
 //                        - 8 * curvRadius * curvRadius * z;
 //
 //                F[0] = (x * x + y * y + z * z + curvRadius * curvRadius - r * r) *
-//                       (x * x + y * y + z * z + curvRadius * curvRadius - r * r)
+//                        (x * x + y * y + z * z + curvRadius * curvRadius - r * r)
 //                        - 4 * curvRadius * curvRadius * (x * x + z * z);
 //
 //                if (p.getSpeed().getY() == 0.0) {
@@ -349,3 +347,4 @@ public class SmoothTorus extends SmoothCapillar {
 //            p.stopRecursiveIterations();
 //            return newCoordinate;
 //        }
+//    }

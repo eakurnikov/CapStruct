@@ -10,6 +10,7 @@ import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.utils.Interaction;
+import com.private_void.utils.exceptions.BadParticleException;
 import com.private_void.utils.notifiers.Logger;
 import com.private_void.utils.notifiers.MessagePool;
 import com.private_void.utils.notifiers.ProgressProvider;
@@ -38,6 +39,50 @@ public abstract class Plate implements CapillarSystem {
         this.capillars = new ArrayList<>();
     }
 
+//    @Override
+//    public Distribution interact(Flux flux) {
+//        Logger.info(MessagePool.interactionStart());
+//
+//        List<? extends Particle> particles = flux.getParticles();
+//        int particlesCounter = 0;
+//        int tenPercentOfParticlesAmount = particles.size() / 10;
+//
+//        for (Particle particle : particles) {
+//            if (++particlesCounter % tenPercentOfParticlesAmount == 0.0) {
+//                ProgressProvider.getInstance().setProgress(
+//                        particleCounter * 10 / tenPercentOfParticlesAmount);
+//            }
+//
+//            for (Capillar capillar : capillars) {
+//                CartesianPoint coordinateInGlobalRefFrame = new CartesianPoint(particle.getCoordinate());
+//                Vector speedInGlobalRefFrame = Vector.set(particle.getSpeed());
+//
+//                capillar.getReferenceFrameConverter().convert(particle);
+//
+//                if (capillar.willParticleGetInside(particle)) {
+//                    try {
+//                        capillar.interact(particle);
+//                    } catch (BadParticleException e) {
+//                        Logger.warning(MessagePool.particleDeleted());
+//                        particle.delete();
+//                    }
+//
+//                    capillar.getReferenceFrameConverter().convertBack(particle);
+//                    particle.setChanneled();
+//                    break;
+//                }
+//
+//                particle.setCoordinate(coordinateInGlobalRefFrame);
+//                particle.setSpeed(speedInGlobalRefFrame);
+//            }
+//        }
+//
+//        Logger.info(MessagePool.interactionFinish());
+//
+//        return detector.detect(flux);
+//    }
+
+    @Override
     public Distribution interact(Flux flux) {
         Logger.info(MessagePool.interactionStart());
 
@@ -66,7 +111,13 @@ public abstract class Plate implements CapillarSystem {
                             capillar.getReferenceFrameConverter().convert(particle);
 
                             if (capillar.willParticleGetInside(particle)) {
-                                capillar.interact(particle);
+                                try {
+                                    capillar.interact(particle);
+                                } catch (BadParticleException e) {
+                                    Logger.warning(MessagePool.particleDeleted());
+                                    particle.delete();
+                                }
+
                                 capillar.getReferenceFrameConverter().convertBack(particle);
                                 particle.setChanneled();
                                 break;

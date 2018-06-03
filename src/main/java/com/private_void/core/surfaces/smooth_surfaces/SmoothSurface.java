@@ -3,6 +3,7 @@ package com.private_void.core.surfaces.smooth_surfaces;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
+import com.private_void.utils.exceptions.BadParticleException;
 
 public abstract class SmoothSurface {
     protected final CartesianPoint front;
@@ -24,5 +25,5 @@ public abstract class SmoothSurface {
 
     protected abstract Vector getParticleSpeedRotationAxis(final CartesianPoint point, final Vector normal);
 
-    protected abstract CartesianPoint getHitPoint(final NeutralParticle p);
+    protected abstract CartesianPoint getHitPoint(final NeutralParticle p) throws BadParticleException;
 }

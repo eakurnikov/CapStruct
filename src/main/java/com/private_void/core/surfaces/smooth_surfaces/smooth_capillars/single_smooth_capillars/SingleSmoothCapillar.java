@@ -6,17 +6,13 @@ import com.private_void.core.fluxes.Flux;
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
-import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.CapillarSystem;
 import com.private_void.core.surfaces.smooth_surfaces.SmoothSurface;
 import com.private_void.utils.Interaction;
+import com.private_void.utils.exceptions.BadParticleException;
 import com.private_void.utils.newtons_method.NewtonsMethod;
 import com.private_void.utils.notifiers.Logger;
 import com.private_void.utils.notifiers.MessagePool;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
@@ -33,161 +29,161 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         this.length = length;
     }
 
-    public Distribution interactSingle(Flux flux) {
-        Logger.info(MessagePool.interactionStart());
-
-        NeutralParticle particle;
-        CartesianPoint newCoordinate;
-        Vector normal;
-        double angleWithSurface;
-
-        for (Particle p : flux.getParticles()) {
-            particle = (NeutralParticle) p;
-
-            if (willParticleGetInside(particle)) {
-                newCoordinate = getHitPoint(particle);
-
-                while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
-                    normal = getNormal(newCoordinate)
-                            .rotateAroundVector(
-                                    Vector.E_X.rotateAroundOY(generator().uniformDouble(0.0, 2.0 * PI)),
-                                    generator().uniformDouble(0.0, roughnessAngleR));
-
-                    angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
-                    particle.decreaseIntensity(reflectivity);
-
-                    if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
-                        particle
-                                .setCoordinate(newCoordinate)
-                                .rotateSpeed(
-                                        getParticleSpeedRotationAxis(newCoordinate, normal),
-                                        2.0 * Math.abs(angleWithSurface));
-
-                        newCoordinate = getHitPoint(particle);
-
-                        if (newCoordinate == null) {
-                            Logger.warning(MessagePool.particleDeleted());
-                            particle.delete();
-                            break;
-                        }
-                    } else {
-                        particle.absorb();
-                        break;
-                    }
-                }
-
-                particle.setChanneled();
-            }
-        }
-
-        Logger.info(MessagePool.interactionFinish());
-
-        return detector.detect(flux);
-    }
-
-    public Distribution interactParallel(Flux flux) {
-        Logger.info(MessagePool.interactionStart());
-
-        ExecutorService exec = Executors.newFixedThreadPool(4);
-
-        class Interaction implements Runnable {
-            private NeutralParticle particle;
-            private CartesianPoint newCoordinate;
-            private Vector normal;
-            private double angleWithSurface;
-
-            public Interaction(NeutralParticle particle) {
-                this.particle = particle;
-            }
-
-            @Override
-            public void run() {
-                if (willParticleGetInside(particle)) {
-                    newCoordinate = getHitPoint(particle);
-
-                    while (isPointInside(newCoordinate)) {
-                        normal = getNormal(newCoordinate)
-                                .rotateAroundVector(
-                                        Vector.E_X.rotateAroundOY(generator().uniformDouble(0.0, 2.0 * PI)),
-                                        generator().uniformDouble(0.0, roughnessAngleR));
-
-                        angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
-                        particle.decreaseIntensity(reflectivity);
-
-                        if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
-                            particle
-                                    .setCoordinate(newCoordinate)
-                                    .rotateSpeed(
-                                            getParticleSpeedRotationAxis(newCoordinate, normal),
-                                            2.0 * Math.abs(angleWithSurface));
-                            newCoordinate = getHitPoint(particle);
-                        } else {
-                            particle.absorb();
-                            break;
-                        }
-                    }
-                    particle.setChanneled();
-                }
-                Thread.yield();
-            }
-        }
-
-        for (Particle particle : flux.getParticles()) {
-            NeutralParticle neutralParticle = (NeutralParticle) particle;
-            exec.execute(new Interaction(neutralParticle));
-        }
-        exec.shutdown();
-
-        try {
-            exec.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Logger.info(MessagePool.interactionFinish());
-
-        return detector.detect(flux);
-    }
-
-    public Distribution interactStream(Flux flux) {
-        Logger.info(MessagePool.interactionStart());
-
-        flux.getParticles().forEach(p -> {
-            NeutralParticle particle = (NeutralParticle) p;
-            Vector normal;
-
-            if (willParticleGetInside(particle)) {
-                CartesianPoint newCoordinate = getHitPoint(particle);
-
-                while (isPointInside(newCoordinate)) {
-                    normal = getNormal(newCoordinate)
-                            .rotateAroundVector(
-                                    Vector.E_X.rotateAroundOY(generator().uniformDouble(0.0, 2.0 * PI)),
-                                    generator().uniformDouble(0.0, roughnessAngleR));
-
-                    double angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
-                    particle.decreaseIntensity(reflectivity);
-
-                    if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
-                        particle
-                                .setCoordinate(newCoordinate)
-                                .rotateSpeed(
-                                        getParticleSpeedRotationAxis(newCoordinate, normal),
-                                        2.0 * Math.abs(angleWithSurface));
-                        newCoordinate = getHitPoint(particle);
-                    } else {
-                        particle.absorb();
-                        break;
-                    }
-                }
-                particle.setChanneled();
-            }
-        });
-
-        Logger.info(MessagePool.interactionFinish());
-
-        return detector.detect(flux);
-    }
+//    public Distribution interactSingle(Flux flux) {
+//        Logger.info(MessagePool.interactionStart());
+//
+//        NeutralParticle particle;
+//        CartesianPoint newCoordinate;
+//        Vector normal;
+//        double angleWithSurface;
+//
+//        for (Particle p : flux.getParticles()) {
+//            particle = (NeutralParticle) p;
+//
+//            if (willParticleGetInside(particle)) {
+//                newCoordinate = getHitPoint(particle);
+//
+//                while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
+//                    normal = getNormal(newCoordinate)
+//                            .rotateAroundVector(
+//                                    Vector.E_X.rotateAroundOY(generator().uniformDouble(0.0, 2.0 * PI)),
+//                                    generator().uniformDouble(0.0, roughnessAngleR));
+//
+//                    angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
+//                    particle.decreaseIntensity(reflectivity);
+//
+//                    if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
+//                        particle
+//                                .setCoordinate(newCoordinate)
+//                                .rotateSpeed(
+//                                        getParticleSpeedRotationAxis(newCoordinate, normal),
+//                                        2.0 * Math.abs(angleWithSurface));
+//
+//                        newCoordinate = getHitPoint(particle);
+//
+//                        if (newCoordinate == null) {
+//                            Logger.warning(MessagePool.particleDeleted());
+//                            particle.delete();
+//                            break;
+//                        }
+//                    } else {
+//                        particle.absorb();
+//                        break;
+//                    }
+//                }
+//
+//                particle.setChanneled();
+//            }
+//        }
+//
+//        Logger.info(MessagePool.interactionFinish());
+//
+//        return detector.detect(flux);
+//    }
+//
+//    public Distribution interactParallel(Flux flux) {
+//        Logger.info(MessagePool.interactionStart());
+//
+//        ExecutorService exec = Executors.newFixedThreadPool(4);
+//
+//        class Interaction implements Runnable {
+//            private NeutralParticle particle;
+//            private CartesianPoint newCoordinate;
+//            private Vector normal;
+//            private double angleWithSurface;
+//
+//            public Interaction(NeutralParticle particle) {
+//                this.particle = particle;
+//            }
+//
+//            @Override
+//            public void run() {
+//                if (willParticleGetInside(particle)) {
+//                    newCoordinate = getHitPoint(particle);
+//
+//                    while (isPointInside(newCoordinate)) {
+//                        normal = getNormal(newCoordinate)
+//                                .rotateAroundVector(
+//                                        Vector.E_X.rotateAroundOY(generator().uniformDouble(0.0, 2.0 * PI)),
+//                                        generator().uniformDouble(0.0, roughnessAngleR));
+//
+//                        angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
+//                        particle.decreaseIntensity(reflectivity);
+//
+//                        if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
+//                            particle
+//                                    .setCoordinate(newCoordinate)
+//                                    .rotateSpeed(
+//                                            getParticleSpeedRotationAxis(newCoordinate, normal),
+//                                            2.0 * Math.abs(angleWithSurface));
+//                            newCoordinate = getHitPoint(particle);
+//                        } else {
+//                            particle.absorb();
+//                            break;
+//                        }
+//                    }
+//                    particle.setChanneled();
+//                }
+//                Thread.yield();
+//            }
+//        }
+//
+//        for (Particle particle : flux.getParticles()) {
+//            NeutralParticle neutralParticle = (NeutralParticle) particle;
+//            exec.execute(new Interaction(neutralParticle));
+//        }
+//        exec.shutdown();
+//
+//        try {
+//            exec.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        Logger.info(MessagePool.interactionFinish());
+//
+//        return detector.detect(flux);
+//    }
+//
+//    public Distribution interactStream(Flux flux) {
+//        Logger.info(MessagePool.interactionStart());
+//
+//        flux.getParticles().forEach(p -> {
+//            NeutralParticle particle = (NeutralParticle) p;
+//            Vector normal;
+//
+//            if (willParticleGetInside(particle)) {
+//                CartesianPoint newCoordinate = getHitPoint(particle);
+//
+//                while (isPointInside(newCoordinate)) {
+//                    normal = getNormal(newCoordinate)
+//                            .rotateAroundVector(
+//                                    Vector.E_X.rotateAroundOY(generator().uniformDouble(0.0, 2.0 * PI)),
+//                                    generator().uniformDouble(0.0, roughnessAngleR));
+//
+//                    double angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
+//                    particle.decreaseIntensity(reflectivity);
+//
+//                    if (angleWithSurface <= criticalAngleR && particle.getIntensity() >= flux.getMinIntensity()) {
+//                        particle
+//                                .setCoordinate(newCoordinate)
+//                                .rotateSpeed(
+//                                        getParticleSpeedRotationAxis(newCoordinate, normal),
+//                                        2.0 * Math.abs(angleWithSurface));
+//                        newCoordinate = getHitPoint(particle);
+//                    } else {
+//                        particle.absorb();
+//                        break;
+//                    }
+//                }
+//                particle.setChanneled();
+//            }
+//        });
+//
+//        Logger.info(MessagePool.interactionFinish());
+//
+//        return detector.detect(flux);
+//    }
 
     @Override
     public Distribution interact(Flux flux) {
@@ -202,39 +198,37 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
                         NeutralParticle particle = (NeutralParticle) particles.get(i);
                         Vector normal;
 
-                        if (willParticleGetInside(particle)) {
-                            CartesianPoint newCoordinate = getHitPoint(particle);
+                        try {
+                            if (willParticleGetInside(particle)) {
+                                CartesianPoint newCoordinate = getHitPoint(particle);
 
-                            while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
-                                normal = getNormal(newCoordinate)
-                                        .rotateAroundVector(
-                                                Vector.E_X.rotateAroundOY(generator().uniformDouble(0.0, 2.0 * PI)),
-                                                generator().uniformDouble(0.0, roughnessAngleR));
+                                while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
+                                    normal = getNormal(newCoordinate)
+                                            .rotateAroundVector(
+                                                    Vector.E_X.rotateAroundOY(generator().uniformDouble(0.0, 2.0 * PI)),
+                                                    generator().uniformDouble(0.0, roughnessAngleR));
 
-                                double angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
-                                particle.decreaseIntensity(reflectivity);
+                                    double angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
+                                    particle.decreaseIntensity(reflectivity);
 
-                                if (angleWithSurface <= criticalAngleR &&
-                                        particle.getIntensity() >= flux.getMinIntensity()) {
-                                    particle
-                                            .setCoordinate(newCoordinate)
-                                            .rotateSpeed(
-                                                    getParticleSpeedRotationAxis(newCoordinate, normal),
-                                                    2.0 * Math.abs(angleWithSurface));
-
-                                    newCoordinate = getHitPoint(particle);
-
-                                    if (newCoordinate == null) {
-                                        Logger.warning(MessagePool.particleDeleted());
-                                        particle.delete();
+                                    if (angleWithSurface <= criticalAngleR &&
+                                            particle.getIntensity() >= flux.getMinIntensity()) {
+                                        particle
+                                                .setCoordinate(newCoordinate)
+                                                .rotateSpeed(
+                                                        getParticleSpeedRotationAxis(newCoordinate, normal),
+                                                        2.0 * Math.abs(angleWithSurface));
+                                        newCoordinate = getHitPoint(particle);
+                                    } else {
+                                        particle.absorb();
                                         break;
                                     }
-                                } else {
-                                    particle.absorb();
-                                    break;
                                 }
+                                particle.setChanneled();
                             }
-                            particle.setChanneled();
+                        } catch (BadParticleException e) {
+                            Logger.warning(MessagePool.particleDeleted());
+                            particle.delete();
                         }
                     }
                 }).start();
@@ -242,6 +236,15 @@ public abstract class SingleSmoothCapillar extends SmoothSurface implements Capi
         Logger.info(MessagePool.interactionFinish());
 
         return detector.detect(flux);
+    }
+
+    @Override
+    protected CartesianPoint getHitPoint(final NeutralParticle particle) throws BadParticleException {
+        if (particle.getSpeed().getX() <= 0.0) {
+            throw new BadParticleException();
+        }
+
+        return new NewtonsMethod(getEquation(particle)).getSolution();
     }
 
     protected boolean willParticleGetInside(final NeutralParticle p) {

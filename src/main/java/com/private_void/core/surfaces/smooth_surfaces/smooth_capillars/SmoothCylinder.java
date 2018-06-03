@@ -31,15 +31,6 @@ public class SmoothCylinder extends SmoothCapillar {
     }
 
     @Override
-    protected CartesianPoint getHitPoint(final NeutralParticle p) {
-        if (p.getSpeed().getX() <= 0.0) {
-            return null;
-        }
-
-        return new NewtonsMethod(getEquation(p)).getSolution();
-    }
-
-    @Override
     protected boolean isPointInside(final CartesianPoint point) {
         return point.getX() <= length;
     }
@@ -65,14 +56,8 @@ public class SmoothCylinder extends SmoothCapillar {
             return new double[]{
                     initialPoint.getX() + radius * recursiveIterationCounter,
                     initialPoint.getY() + radius * Math.signum(speed.getY()),
-                    initialPoint.getX() + radius * Math.signum(speed.getX())
+                    initialPoint.getZ() + radius * Math.signum(speed.getZ())
             };
-
-//            return new double[]{
-//                initialPoint.getX() + speed.getX() * radius * recursiveIterationCounter,
-//                initialPoint.getY() + speed.getY() * radius * recursiveIterationCounter,
-//                initialPoint.getZ() + speed.getZ() * radius * recursiveIterationCounter
-//            };
         }
 
         @Override
@@ -174,110 +159,3 @@ public class SmoothCylinder extends SmoothCapillar {
         };
     }
 }
-
-//        if (p.getSpeed().getX() <= 0.0) {
-//            Logger.warning(MessagePool.particleDeleted());
-//            p.delete();
-//            return p.getCoordinate();
-//        }
-//
-//        double[] solution = {p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount(),
-//                             p.getCoordinate().getY() + p.getSpeed().getY() * radius * p.getRecursiveIterationCount(),
-//                             p.getCoordinate().getX() + p.getSpeed().getX() * radius * p.getRecursiveIterationCount()};
-//
-//        double[] solution = {
-//                p.getCoordinate().getX() + radius * p.getRecursiveIterationCount(),
-//                p.getCoordinate().getY() + radius * Math.signum(p.getSpeed().getY()),
-//                p.getCoordinate().getZ() + radius * Math.signum(p.getSpeed().getZ())};
-//
-//        double[] delta = {1.0, 1.0, 1.0};
-//        double[] F  = new double[3];
-//        double[][] W = new double[3][3];
-//
-//        double E = 0.05;
-//        int iterationsAmount = 0;
-//
-//        double dr = generator().uniformDouble(0.0, roughnessSize);
-//        double r = radius - dr;
-//        double y, z;
-//
-//        while (Utils.getMax(delta) > E) {
-//            try {
-//                // Костыль для уничтожения частиц, вычисление координат которых зациклилось
-//                iterationsAmount++;
-//                if (iterationsAmount > ITERATIONS_MAX) {
-//                    if (p.isRecursiveIterationsLimitReached()) {
-//                        Logger.warning(MessagePool.particleDeleted());
-//                        p.delete();
-//                        return p.getCoordinate();
-//                    } else {
-//                        p.recursiveIteration();
-//                        return getHitPoint(p);
-//                    }
-//                }
-//
-//                y = solution[1];
-//                z = solution[2];
-//
-//                W[0][0] = 0.0;
-//                W[0][1] = 2.0 * y;
-//                W[0][2] = 2.0 * z;
-//
-//                F[0] = y * y + z * z - r * r;
-//
-//                if (p.getSpeed().getY() == 0.0) {
-//                    W[1][0] = 0.0;
-//                    W[1][1] = 1.0;
-//                    W[1][2] = 0.0;
-//
-//                    F[1] = solution[1] - p.getCoordinate().getY();
-//                } else {
-//                    W[1][0] = 1.0 / p.getSpeed().getX();
-//                    W[1][1] = -1.0 / p.getSpeed().getY();
-//                    W[1][2] = 0.0;
-//
-//                    F[1] = (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX()
-//                            - (solution[1] - p.getCoordinate().getY()) / p.getSpeed().getY();
-//                }
-//
-//                if (p.getSpeed().getZ() == 0.0) {
-//                    W[2][0] = 0.0;
-//                    W[2][1] = 0.0;
-//                    W[2][2] = 1.0;
-//
-//                    F[2] = solution[2] - p.getCoordinate().getZ();
-//                } else {
-//                    W[2][0] = 1.0 / p.getSpeed().getX();
-//                    W[2][1] = 0.0;
-//                    W[2][2] = -1.0 / p.getSpeed().getZ();
-//
-//                    F[2] = -(solution[2] - p.getCoordinate().getZ()) / p.getSpeed().getZ()
-//                            + (solution[0] - p.getCoordinate().getX()) / p.getSpeed().getX();
-//                }
-//
-//                delta = Utils.matrixMultiplication(Utils.inverseMatrix(W), F);
-//
-//                for (int i = 0; i < 3; i++) {
-//                    solution[i] -= delta[i];
-//                }
-//            } catch (ArithmeticException e) {
-//                e.printStackTrace();
-//                return p.getCoordinate();
-//            } catch (Exception e){
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        CartesianPoint newCoordinate = new CartesianPoint(solution[0], solution[1], solution[2]);
-//        if ((newCoordinate.isNear(p.getCoordinate()) || newCoordinate.getX() <= p.getCoordinate().getX())
-//                && !p.isRecursiveIterationsLimitReached()) {
-//            p.recursiveIteration();
-//            return getHitPoint(p);
-//        } else {
-//            if (p.isRecursiveIterationsLimitReached()) {
-//                Logger.warning(MessagePool.particleDeleted());
-//                p.delete();
-//            }
-//            p.stopRecursiveIterations();
-//            return newCoordinate;
-//        }

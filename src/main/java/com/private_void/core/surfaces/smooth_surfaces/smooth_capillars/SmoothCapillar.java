@@ -7,14 +7,13 @@ import com.private_void.core.particles.NeutralParticle;
 import com.private_void.core.particles.Particle;
 import com.private_void.core.surfaces.Capillar;
 import com.private_void.core.surfaces.smooth_surfaces.SmoothSurface;
+import com.private_void.utils.exceptions.BadParticleException;
 import com.private_void.utils.newtons_method.NewtonsMethod;
-import com.private_void.utils.notifiers.Logger;
-import com.private_void.utils.notifiers.MessagePool;
 
 import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
 
-public abstract  class SmoothCapillar extends SmoothSurface implements Capillar {
+public abstract class SmoothCapillar extends SmoothSurface implements Capillar {
     private final ReferenceFrame.Converter refFrameConverter;
     protected final double radius;
     protected final double length;
@@ -28,7 +27,7 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
     }
 
     @Override
-    public void interact(Particle p) {
+    public void interact(Particle p) throws BadParticleException {
         Vector normal;
         NeutralParticle particle = (NeutralParticle) p;
         CartesianPoint newCoordinate = getHitPoint(particle);
@@ -50,12 +49,6 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
                                 2.0 * Math.abs(angleWithSurface));
 
                 newCoordinate = getHitPoint(particle);
-
-                if (newCoordinate == null) {
-                    Logger.warning(MessagePool.particleDeleted());
-                    particle.delete();
-                    break;
-                }
             } else {
                 particle.absorb();
                 break;
@@ -84,6 +77,15 @@ public abstract  class SmoothCapillar extends SmoothSurface implements Capillar 
     @Override
     public ReferenceFrame.Converter getReferenceFrameConverter() {
         return refFrameConverter;
+    }
+
+    @Override
+    protected CartesianPoint getHitPoint(final NeutralParticle particle) throws BadParticleException {
+        if (particle.getSpeed().getX() <= 0.0) {
+            throw new BadParticleException();
+        }
+
+        return new NewtonsMethod(getEquation(particle)).getSolution();
     }
 
     protected abstract boolean isPointInside(final CartesianPoint point);

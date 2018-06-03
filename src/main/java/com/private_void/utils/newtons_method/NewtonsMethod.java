@@ -2,7 +2,7 @@ package com.private_void.utils.newtons_method;
 
 import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.utils.Utils;
-import com.sun.istack.internal.Nullable;
+import com.private_void.utils.exceptions.BadParticleException;
 
 public class NewtonsMethod {
     private static final int RECURSIVE_ITERATIONS_MAX = 300;
@@ -15,15 +15,13 @@ public class NewtonsMethod {
         this.equation = equation;
     }
 
-    @Nullable
-    public CartesianPoint getSolution() {
+    public CartesianPoint getSolution() throws BadParticleException {
         return getSolution(1);
     }
 
-    @Nullable
-    private CartesianPoint getSolution(int recursiveIterationsCounter) {
+    private CartesianPoint getSolution(int recursiveIterationsCounter) throws BadParticleException {
         if (recursiveIterationsCounter == RECURSIVE_ITERATIONS_MAX) {
-            return null;
+            throw new BadParticleException();
         }
 
         double[] approximation = equation.getInitialApproximation(recursiveIterationsCounter);

@@ -6,7 +6,6 @@ import com.private_void.core.geometry.space_3D.vectors.Vector;
 import com.private_void.core.particles.NeutralParticle;
 import com.private_void.utils.Utils;
 import com.private_void.utils.newtons_method.NewtonsMethod;
-import com.sun.istack.internal.Nullable;
 
 import static com.private_void.utils.Constants.PI;
 import static com.private_void.utils.Generator.generator;
@@ -27,16 +26,6 @@ public class SingleSmoothCylinder extends SingleSmoothCapillar {
     @Override
     protected Vector getParticleSpeedRotationAxis(final CartesianPoint point, final Vector normal) {
         return normal.rotateAroundOX(PI / 2.0);
-    }
-
-    @Nullable
-    @Override
-    protected CartesianPoint getHitPoint(final NeutralParticle particle) {
-        if (particle.getSpeed().getX() <= 0.0) {
-            return null;
-        }
-
-        return new NewtonsMethod(getEquation(particle)).getSolution();
     }
 
     @Override
