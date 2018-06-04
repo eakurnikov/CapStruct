@@ -34,7 +34,7 @@ public class TorusFlatPlate extends Plate {
         this.width = capillarFactory.getLength();
         this.focus = center.shift(DETECTORS_DISTANCE_COEFFICIENT * width, 0.0, 0.0);
         this.plateRadius = (focus.getX() - width) * Math.tan(maxAngleR);
-        this.detector = new Detector(getDetectorsCoordinate(), 2.0 * 1.2 * plateRadius);
+        this.detector = new Detector(getDetectorsCoordinate(), 2.0 * plateRadius);
         createCapillars();
     }
 
@@ -140,7 +140,8 @@ public class TorusFlatPlate extends Plate {
         return true;
     }
 
-    private Capillar createCapillarAtPoint(final CartesianPoint capillarsEndCenter, final CylindricalPoint cylindricalPoint) {
+    private Capillar createCapillarAtPoint(final CartesianPoint capillarsEndCenter,
+                                           final CylindricalPoint cylindricalPoint) {
         double curvAngleR = Math.atan(cylindricalPoint.getR() / (focus.getX() - width));
         double curvRadius = Utils.getTorusCurvRadius(width, curvAngleR);
 

@@ -12,7 +12,7 @@ import com.private_void.core.math.geometry.space_3D.vectors.Vector;
 import java.util.List;
 
 public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
-    private final ReferenceFrame.Converter refFrameConverter;
+    protected final ReferenceFrame.Converter refFrameConverter;
     protected final List<AtomicChain> atomicChains;
     protected final int atomicChainsAmount;
     protected final double radius;

@@ -19,7 +19,7 @@ public class CapStructApp extends Application {
     private Stage mainWindowStage;
     private Stage progressDialogStage;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         launch(args);
     }
 

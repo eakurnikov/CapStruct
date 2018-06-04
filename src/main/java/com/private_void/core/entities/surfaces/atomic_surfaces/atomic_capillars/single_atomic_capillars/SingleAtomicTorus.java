@@ -5,6 +5,7 @@ import com.private_void.core.entities.particles.AtomicChain;
 import com.private_void.core.entities.particles.ChargedParticle;
 import com.private_void.core.math.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.math.geometry.space_3D.coordinates.CylindricalPoint;
+import com.private_void.core.math.geometry.space_3D.reference_frames.ReferenceFrame;
 import com.private_void.core.math.geometry.space_3D.vectors.Vector;
 import com.private_void.core.math.utils.Utils;
 
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.private_void.core.constants.Constants.ELECTRON_CHARGE;
+import static com.private_void.core.constants.Constants.TIME_STEP;
+import static com.private_void.core.entities.particles.AtomicChain.C_SQUARE;
 
 public class SingleAtomicTorus extends SingleAtomicCapillar {
     private final double curvRadius;
@@ -38,7 +41,44 @@ public class SingleAtomicTorus extends SingleAtomicCapillar {
 
     @Override
     protected Vector rotateParticleSpeed(final ChargedParticle particle) {
-        return null;
+        double y;
+        double z;
+        double r;
+        double F;
+
+        double dVy = 0.0;
+        double dVz = 0.0;
+
+        double currentCurvAngle = getPointsAngle(particle.getCoordinate());
+        CartesianPoint currentCrossSectionCenter = new CartesianPoint(
+                front.getX() + curvRadius * Math.sin(currentCurvAngle),
+                front.getY(),
+                front.getZ() + curvRadius * (1 - Math.cos(currentCurvAngle)));
+
+        ReferenceFrame.Converter converter = new ReferenceFrame.Converter(
+                ReferenceFrame.builder()
+                        .atPoint(currentCrossSectionCenter)
+                        .setAngleAroundOY(currentCurvAngle)
+                        .build());
+
+        for (AtomicChain chain : atomicChains) {
+            CartesianPoint actualChainCoordinate = converter.convert(chain.getCoordinate());
+
+            y = particle.getCoordinate().getY() - actualChainCoordinate.getY();
+            z = particle.getCoordinate().getZ() - actualChainCoordinate.getZ();
+            r = Math.sqrt(y * y + z * z);
+
+            F = 2.0 * particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
+                    (chain.getPeriod() * (r + (r * r * r) / C_SQUARE));
+
+            dVy += (F * (y / r) / particle.getMass()) * TIME_STEP;
+            dVz += (F * (z / r) / particle.getMass()) * TIME_STEP;
+        }
+
+        return Vector.set(
+                particle.getSpeed().getX(),
+                particle.getSpeed().getY() + dVy / 800,
+                particle.getSpeed().getZ() + dVz / 800);
     }
 
     @Override
@@ -73,7 +113,7 @@ public class SingleAtomicTorus extends SingleAtomicCapillar {
     private double getPointsAngle(final CartesianPoint point) {
         double x = point.getX();
         double y = point.getY();
-        double z = point.getZ() + curvRadius;
+        double z = point.getZ() - curvRadius;
 
         return Math.asin(x / Math.sqrt(x * x + y * y + z * z));
     }

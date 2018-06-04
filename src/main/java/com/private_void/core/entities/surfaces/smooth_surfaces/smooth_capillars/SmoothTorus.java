@@ -170,8 +170,9 @@ public class SmoothTorus extends SmoothCapillar {
         }
     }
 
-    public static StraightCapillarFactory getFactory(double radius, double curvRadius, double curvAngleR, double roughnessSize,
-                                                     double roughnessAngleR, double reflectivity, double criticalAngleR) {
+    public static StraightCapillarFactory getCapillarFactory(double radius, double curvRadius, double curvAngleR,
+                                                             double roughnessSize, double roughnessAngleR,
+                                                             double reflectivity, double criticalAngleR) {
         return new StraightCapillarFactory() {
 
             @Override
@@ -192,8 +193,9 @@ public class SmoothTorus extends SmoothCapillar {
         };
     }
 
-    public static StraightCapillarFactory getFactoryWithLength(double radius, double length, double curvAngleR, double roughnessSize,
-                                                               double roughnessAngleR, double reflectivity, double criticalAngleR) {
+    public static StraightCapillarFactory getCapillarFactoryWithLength(double radius, double length, double curvAngleR,
+                                                                       double roughnessSize, double roughnessAngleR,
+                                                                       double reflectivity, double criticalAngleR) {
         return new StraightCapillarFactory() {
 
             @Override
@@ -214,9 +216,9 @@ public class SmoothTorus extends SmoothCapillar {
         };
     }
 
-    public static RotatedTorusFactory getRotatedTorusFactory(double radius, double length, double roughnessSize,
-                                                             double roughnessAngleR, double reflectivity,
-                                                             double criticalAngleR) {
+    public static RotatedTorusFactory getRotatedCapillarFactory(double radius, double length, double roughnessSize,
+                                                                double roughnessAngleR, double reflectivity,
+                                                                double criticalAngleR) {
         return new RotatedTorusFactory() {
 
             @Override

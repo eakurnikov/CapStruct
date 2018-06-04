@@ -56,4 +56,8 @@ public class Logger {
     public static void warning(String message) {
         logger().warning(message);
     }
+
+    public static void error(String message) {
+        logger().severe(message);
+    }
 }
