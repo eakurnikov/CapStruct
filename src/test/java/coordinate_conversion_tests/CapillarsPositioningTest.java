@@ -1,15 +1,15 @@
-package coordinate_conversion_tests;
-
-import org.junit.Test;
-
-import static junit.framework.TestCase.assertTrue;
-
-public class CapillarsPositioningTest {
-
-    @Test
-    public void capillarsPositionTest() {
-
-    }
+//package coordinate_conversion_tests;
+//
+//import org.junit.Test;
+//
+//import static junit.framework.TestCase.assertTrue;
+//
+//public class CapillarsPositioningTest {
+//
+//    @Test
+//    public void capillarsPositionTest() {
+//
+//    }
 //    @Test
 //    public void capillarPositionTest() {
 //        double sqrt2 = sqrt(2.0);
@@ -162,4 +162,4 @@ public class CapillarsPositioningTest {
 //                            2000.0 * 2000.0));
 //        }
 //    }
-}
+//}

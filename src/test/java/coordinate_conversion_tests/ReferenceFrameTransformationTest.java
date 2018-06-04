@@ -1,14 +1,14 @@
 //package coordinate_conversion_tests;
 //
-//import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
+//import com.private_void.core.math.geometry.space_3D.coordinates.CartesianPoint;
 //
-//import com.private_void.core.geometry.space_3D.coordinates.SphericalPoint;
+//import com.private_void.core.math.geometry.space_3D.coordinates.SphericalPoint;
 //import Vector;
-//import com.private_void.core.particles.NeutralParticle;
-//import com.private_void.core.particles.Particle;
-//import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedCapillar;
-//import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedSmoothCylinder;
-//import com.private_void.utils.Utils;
+//import com.private_void.core.entities.particles.NeutralParticle;
+//import com.private_void.core.entities.particles.Particle;
+//import com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedCapillar;
+//import com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.rotated_smooth_capillars.RotatedSmoothCylinder;
+//import com.private_void.core.math.utils.Utils;
 //import org.junit.Test;
 //
 //import static junit.framework.TestCase.assertTrue;

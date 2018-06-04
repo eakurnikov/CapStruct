@@ -1,32 +1,32 @@
 package com.private_void.app.controllers;
 
-import com.private_void.core.detection.Distribution;
-import com.private_void.core.fluxes.DivergentFlux;
-import com.private_void.core.fluxes.Flux;
-import com.private_void.core.fluxes.ParallelFlux;
-import com.private_void.core.geometry.space_2D.CartesianPoint2D;
-import com.private_void.core.geometry.space_3D.coordinates.CartesianPoint;
-import com.private_void.core.geometry.space_3D.vectors.Vector;
-import com.private_void.core.particles.AtomicChain;
-import com.private_void.core.particles.ChargedParticle;
-import com.private_void.core.particles.NeutralParticle;
-import com.private_void.core.particles.Particle;
-import com.private_void.core.plates.CurvedPlate;
-import com.private_void.core.plates.TorusFlatPlate;
-import com.private_void.core.surfaces.CapillarSystem;
-import com.private_void.core.surfaces.atomic_surfaces.AtomicPlane;
-import com.private_void.core.surfaces.atomic_surfaces.atomic_capillars.AtomicCylinder;
-import com.private_void.core.surfaces.capillar_factories.CapillarFactory;
-import com.private_void.core.surfaces.capillar_factories.RotatedCapillarFactory;
-import com.private_void.core.surfaces.capillar_factories.RotatedTorusFactory;
-import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothCylinder;
-import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.SmoothTorus;
-import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone;
-import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCylinder;
-import com.private_void.core.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothTorus;
-import com.private_void.utils.notifiers.Logger;
-import com.private_void.utils.notifiers.MessagePool;
-import com.private_void.utils.notifiers.ProgressProvider;
+import com.private_void.app.notifiers.Logger;
+import com.private_void.app.notifiers.MessagePool;
+import com.private_void.app.notifiers.ProgressProvider;
+import com.private_void.core.entities.detectors.Distribution;
+import com.private_void.core.entities.fluxes.DivergentFlux;
+import com.private_void.core.entities.fluxes.Flux;
+import com.private_void.core.entities.fluxes.ParallelFlux;
+import com.private_void.core.entities.particles.AtomicChain;
+import com.private_void.core.entities.particles.ChargedParticle;
+import com.private_void.core.entities.particles.NeutralParticle;
+import com.private_void.core.entities.particles.Particle;
+import com.private_void.core.entities.plates.CurvedPlate;
+import com.private_void.core.entities.plates.TorusFlatPlate;
+import com.private_void.core.entities.surfaces.CapillarSystem;
+import com.private_void.core.entities.surfaces.atomic_surfaces.AtomicPlane;
+import com.private_void.core.entities.surfaces.atomic_surfaces.atomic_capillars.AtomicCylinder;
+import com.private_void.core.entities.surfaces.capillar_factories.RotatedCylinderFactory;
+import com.private_void.core.entities.surfaces.capillar_factories.RotatedTorusFactory;
+import com.private_void.core.entities.surfaces.capillar_factories.StraightCapillarFactory;
+import com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.SmoothCylinder;
+import com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.SmoothTorus;
+import com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone;
+import com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCylinder;
+import com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothTorus;
+import com.private_void.core.math.geometry.space_2D.CartesianPoint2D;
+import com.private_void.core.math.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.math.geometry.space_3D.vectors.Vector;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -40,8 +40,8 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 
-import static com.private_void.utils.Constants.CONE_COEFFICIENT;
-import static com.private_void.utils.Generator.generator;
+import static com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone.CONE_COEFFICIENT;
+import static com.private_void.core.math.generators.Generator.generator;
 
 public class MainWindowController extends CapStructController {
 
@@ -123,8 +123,7 @@ public class MainWindowController extends CapStructController {
     public NumberAxis yAxis;
     public NumberAxis xAxis;
 
-    public ContextMenu menu;
-    public MenuItem clearChartItem;
+    private ContextMenu menu;
 
     @FXML
     private void initialize() {
@@ -168,7 +167,7 @@ public class MainWindowController extends CapStructController {
         planeChargeNum.setText("1");
         planeSize.setText("50");
 
-        clearChartItem = new MenuItem("Clear all");
+        MenuItem clearChartItem = new MenuItem("Clear all");
         clearChartItem.setOnAction(actionEvent -> chart.getData().clear());
         menu = new ContextMenu(clearChartItem);
 
@@ -206,12 +205,12 @@ public class MainWindowController extends CapStructController {
             protected Task<Distribution> createTask() {
                 return new Task<Distribution>() {
                     @Override
-                    protected Distribution call() throws Exception {
+                    protected Distribution call() {
                         ProgressProvider.getInstance()
-                                .setProgressListener(progress -> updateProgress(progress,100.0))
+                                .setProgressListener(progress -> updateProgress(progress, 100.0))
                                 .setProgress(-1.0);
 
-                      return createCapillar().interact(createFlux());
+                        return createCapillar().interact(createFlux());
 //                        return createPlate().interact(createFlux());
                     }
                 };
@@ -264,8 +263,7 @@ public class MainWindowController extends CapStructController {
                     particlesPerLayerAmount,
                     layerDistance,
                     minIntensity);
-        }
-        else {
+        } else {
             CartesianPoint.Factory gaussDistribution = generator().getGaussDistribution(0.0,
                     Math.toRadians(Double.parseDouble(dFluxAngle.getText())));
 
@@ -315,7 +313,7 @@ public class MainWindowController extends CapStructController {
 //          int capillarsAmount = 320;
             double plateSideLength = 300.0;
 
-            CapillarFactory smoothCylinderFactory = SmoothCylinder.getCapillarFactory(
+            StraightCapillarFactory smoothCylinderFactory = SmoothCylinder.getCapillarFactory(
                     capillarRadius,
                     capillarLength,
                     capillarRoughnessSize,
@@ -323,7 +321,7 @@ public class MainWindowController extends CapStructController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
-            RotatedCapillarFactory rotatedSmoothCylinderFactory = SmoothCylinder.getRotatedCapillarFactory(
+            RotatedCylinderFactory rotatedSmoothCylinderFactory = SmoothCylinder.getRotatedCapillarFactory(
                     capillarRadius,
                     capillarLength,
                     capillarRoughnessSize,
@@ -333,14 +331,14 @@ public class MainWindowController extends CapStructController {
 
             int atomicChainsAmount = 1000;
             AtomicChain.Factory atomicChainFactory = AtomicChain.getFactory(2.0 * Math.PI / atomicChainsAmount);
-            CapillarFactory atomicCylinderFactory = AtomicCylinder.getCapillarFactory(
+            StraightCapillarFactory atomicCylinderFactory = AtomicCylinder.getCapillarFactory(
                     atomicChainFactory,
                     atomicChainsAmount,
                     1.0,
                     capillarRadius,
                     capillarLength);
 
-            RotatedCapillarFactory rotatedAtomicCylinderFactory = AtomicCylinder.getRotatedCapillarFactory(
+            RotatedCylinderFactory rotatedAtomicCylinderFactory = AtomicCylinder.getRotatedCapillarFactory(
                     atomicChainFactory,
                     atomicChainsAmount,
                     1.0,
@@ -393,7 +391,7 @@ public class MainWindowController extends CapStructController {
 //          int capillarsAmount = 320;
             double plateMaxAngleR = Math.toRadians(3.0);
 
-            CapillarFactory smoothTorusFactoryWithRadius = SmoothTorus.getFactory(
+            StraightCapillarFactory smoothTorusFactoryWithRadius = SmoothTorus.getFactory(
                     capillarSmallRadius,
                     1000.0,
                     capillarCurvAngleR,
@@ -402,7 +400,7 @@ public class MainWindowController extends CapStructController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
-            CapillarFactory smoothTorusFactoryWithLength = SmoothTorus.getFactoryWithLength(
+            StraightCapillarFactory smoothTorusFactoryWithLength = SmoothTorus.getFactoryWithLength(
                     capillarSmallRadius,
                     1000.0,
                     capillarCurvAngleR,
