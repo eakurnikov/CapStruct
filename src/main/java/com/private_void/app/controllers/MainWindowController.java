@@ -211,8 +211,8 @@ public class MainWindowController extends CapStructController {
                                 .setProgressListener(progress -> updateProgress(progress,100.0))
                                 .setProgress(-1.0);
 
-//                      return createCapillar().interact(createFlux());
-                        return createPlate().interact(createFlux());
+                      return createCapillar().interact(createFlux());
+//                        return createPlate().interact(createFlux());
                     }
                 };
             }
@@ -257,7 +257,7 @@ public class MainWindowController extends CapStructController {
 
             return new ParallelFlux(
                     neutralParticleFactory,
-                    circleUniformDistribution,
+                    gaussDistribution,
                     new CartesianPoint(x, y, z),
                     Vector.set(axisX, axisY, axisZ),
                     layersAmount,
