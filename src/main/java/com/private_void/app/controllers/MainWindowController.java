@@ -212,8 +212,8 @@ public class MainWindowController extends CapStructController {
                                 .setProgress(-1.0);
 
                         try {
-                          return createPlate().interact(createFlux());
-//                            return createCapillar().interact(createFlux());
+//                          return createPlate().interact(createFlux());
+                            return createCapillar().interact(createFlux());
                         } catch (Exception e) {
                             Logger.error(e.getCause().toString());
                             e.printStackTrace();
@@ -262,13 +262,13 @@ public class MainWindowController extends CapStructController {
 
             CartesianPoint.Factory uniformDistribution = generator().getXFlatUniformDistribution(250.0, 250.0);
 
-//            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(7.0);
+            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(7.0);
 //            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(150.0);
-            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(370.0);
+//            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(370.0);
 
             return new ParallelFlux(
                     chargedParticleFactory,
-                    circleUniformDistribution,
+                    gaussDistribution,
                     new CartesianPoint(x, y, z),
                     Vector.set(axisX, axisY, axisZ),
                     layersAmount,

@@ -12,4 +12,5 @@ public class Constants {
     public static final double BOHR_RADIUS = 0.53;
 
     public static final double TIME_STEP = 1.0;
+    public static final double STEP = 1.0;
 }

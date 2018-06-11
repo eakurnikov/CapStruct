@@ -113,6 +113,16 @@ public class AtomicTwoParallelPlanes extends AtomicSurface implements CapillarSy
         return Vector.set(particle.getSpeed().getX(), particle.getSpeed().getY() + dVy, particle.getSpeed().getZ());
     }
 
+    @Override
+    protected Vector getNextParticleSpeed(ChargedParticle particle) {
+        return null;
+    }
+
+    @Override
+    protected CartesianPoint getNextParticleCoordinate(ChargedParticle particle) {
+        return null;
+    }
+
     private boolean isPointInside(final CartesianPoint point) {
         return point.getX() <= front.getX() + size;
     }

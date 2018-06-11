@@ -29,4 +29,8 @@ public abstract class AtomicSurface {
     protected abstract void setCriticalAngle(final ChargedParticle particle);
 
     protected abstract Vector rotateParticleSpeed(final ChargedParticle particle);
+
+    protected abstract Vector getNextParticleSpeed(final ChargedParticle particle);
+
+    protected abstract CartesianPoint getNextParticleCoordinate(final ChargedParticle particle);
 }

@@ -12,8 +12,7 @@ import com.private_void.core.math.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.private_void.core.constants.Constants.ELECTRON_CHARGE;
-import static com.private_void.core.constants.Constants.TIME_STEP;
+import static com.private_void.core.constants.Constants.*;
 import static com.private_void.core.entities.particles.AtomicChain.C_SQUARE;
 
 public class SingleAtomicTorus extends SingleAtomicCapillar {
@@ -78,6 +77,68 @@ public class SingleAtomicTorus extends SingleAtomicCapillar {
                 particle.getSpeed().getX(),
                 particle.getSpeed().getY() + dVy / 800,
                 particle.getSpeed().getZ() + dVz / 800);
+    }
+
+    @Override
+    protected Vector getNextParticleSpeed(final ChargedParticle particle) {
+        CartesianPoint nextCoordinate = particle.getCoordinate().shift(
+                particle.getSpeed().getX() * STEP / 2.0,
+                particle.getSpeed().getY() * STEP / 2.0,
+                particle.getSpeed().getZ() * STEP / 2.0
+        );
+        CartesianPoint nextForce = getForce(nextCoordinate, particle.getChargeNumber());
+        return Vector.set(
+                particle.getSpeed().getX() + (nextForce.getX() * TIME_STEP) / (450.0 * particle.getMass()),
+                particle.getSpeed().getY() + (nextForce.getY() * TIME_STEP) / (450.0 * particle.getMass()),
+                particle.getSpeed().getZ() + (nextForce.getZ() * TIME_STEP) / (450.0 * particle.getMass())
+        );
+    }
+
+    @Override
+    protected CartesianPoint getNextParticleCoordinate(final ChargedParticle particle) {
+        CartesianPoint currentForce = getForce(particle.getCoordinate(), particle.getChargeNumber());
+        return particle.getCoordinate().shift(
+                particle.getSpeed().getX() * STEP + (currentForce.getX() * STEP * STEP) / (2.0 * particle.getMass()),
+                particle.getSpeed().getY() * STEP + (currentForce.getY() * STEP * STEP) / (2.0 * particle.getMass()),
+                particle.getSpeed().getZ() * STEP + (currentForce.getZ() * STEP * STEP) / (2.0 * particle.getMass())
+        );
+    }
+
+    private CartesianPoint getForce(final CartesianPoint point, double particleChargeNumber) {
+        double y;
+        double z;
+        double r;
+
+        double F;
+        double Fy = 0.0;
+        double Fz = 0.0;
+
+        double currentCurvAngle = getPointsAngle(point);
+        CartesianPoint currentCrossSectionCenter = new CartesianPoint(
+                front.getX() + curvRadius * Math.sin(currentCurvAngle),
+                front.getY(),
+                front.getZ() + curvRadius * (1 - Math.cos(currentCurvAngle)));
+
+        CartesianPoint particleCoordinateInCurrentRefFrame = new ReferenceFrame.Converter(
+                ReferenceFrame.builder()
+                        .atPoint(currentCrossSectionCenter)
+                        .setAngleAroundOY(currentCurvAngle)
+                        .build())
+                .convert(point);
+
+        for (AtomicChain chain : atomicChains) {
+            y = particleCoordinateInCurrentRefFrame.getY() - chain.getCoordinate().getY();
+            z = particleCoordinateInCurrentRefFrame.getZ() - chain.getCoordinate().getZ();
+            r = Math.sqrt(y * y + z * z);
+
+            F = 2.0 * particleChargeNumber * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
+                    (chain.getPeriod() * (r + (r * r * r) / C_SQUARE));
+
+            Fy += F * (y / r);
+            Fz += F * (z / r);
+        }
+
+        return new CartesianPoint(0.0, Fy, Fz);
     }
 
     @Override

@@ -114,8 +114,11 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
                                             .setCoordinate(newCoordinate)
                                             .setSpeed(newSpeed);
 
-                                    newSpeed = rotateParticleSpeed(particle);
-                                    newCoordinate = newCoordinate.shift(newSpeed);
+//                                    newSpeed = rotateParticleSpeed(particle);
+//                                    newCoordinate = newCoordinate.shift(newSpeed);
+
+                                    newCoordinate = getNextParticleCoordinate(particle);
+                                    newSpeed = getNextParticleSpeed(particle);
                                 } else {
                                     particle.absorb();
                                     break;

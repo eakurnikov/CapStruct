@@ -50,8 +50,11 @@ public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
                             .setCoordinate(newCoordinate)
                             .setSpeed(newSpeed);
 
-                    newSpeed = rotateParticleSpeed(particle);
-                    newCoordinate = newCoordinate.shift(newSpeed);
+//                    newSpeed = rotateParticleSpeed(particle);
+//                    newCoordinate = newCoordinate.shift(newSpeed);
+
+                    newSpeed = getNextParticleSpeed(particle);
+                    newCoordinate = getNextParticleCoordinate(particle);
                 } else {
                     particle.absorb();
                     break;
