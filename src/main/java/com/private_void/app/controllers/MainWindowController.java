@@ -17,6 +17,7 @@ import com.private_void.core.entities.surfaces.CapillarSystem;
 import com.private_void.core.entities.surfaces.atomic_surfaces.AtomicPlane;
 import com.private_void.core.entities.surfaces.atomic_surfaces.atomic_capillars.AtomicCylinder;
 import com.private_void.core.entities.surfaces.atomic_surfaces.atomic_capillars.AtomicTorus;
+import com.private_void.core.entities.surfaces.atomic_surfaces.atomic_capillars.single_atomic_capillars.SingleAtomicCylinder;
 import com.private_void.core.entities.surfaces.atomic_surfaces.atomic_capillars.single_atomic_capillars.SingleAtomicTorus;
 import com.private_void.core.entities.surfaces.capillar_factories.RotatedCylinderFactory;
 import com.private_void.core.entities.surfaces.capillar_factories.RotatedTorusFactory;
@@ -24,7 +25,6 @@ import com.private_void.core.entities.surfaces.capillar_factories.StraightCapill
 import com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.SmoothCylinder;
 import com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.SmoothTorus;
 import com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone;
-import com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCylinder;
 import com.private_void.core.math.geometry.space_2D.CartesianPoint2D;
 import com.private_void.core.math.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.math.geometry.space_3D.vectors.Vector;
@@ -212,10 +212,8 @@ public class MainWindowController extends CapStructController {
                                 .setProgress(-1.0);
 
                         try {
-//                            Distribution distribution = createCapillar().interact(createFlux());
-                          Distribution distribution = createPlate().interact(createFlux());
-
-                            return distribution;
+                          return createPlate().interact(createFlux());
+//                            return createCapillar().interact(createFlux());
                         } catch (Exception e) {
                             Logger.error(e.getCause().toString());
                             e.printStackTrace();
@@ -496,25 +494,25 @@ public class MainWindowController extends CapStructController {
             double criticalAngleD = Double.parseDouble(cylSlideAngle.getText());
             double criticalAngleR = Math.toRadians(criticalAngleD);
 
-            return new SingleSmoothCylinder(
-                    new CartesianPoint(frontX, frontY, frontZ),
-                    radius,
-                    length,
-                    roughnessSize,
-                    roughnessAngleR,
-                    reflectivity,
-                    criticalAngleR);
-
-//            int atomicChainsAmount = 1000;
-//            AtomicChain.Factory factory = AtomicChain.getFactory(2.0 * Math.PI / atomicChainsAmount);
-//
-//            return new SingleAtomicCylinder(
+//            return new SingleSmoothCylinder(
 //                    new CartesianPoint(frontX, frontY, frontZ),
-//                    factory,
-//                    atomicChainsAmount,
-//                    1.0,
 //                    radius,
-//                    length);
+//                    length,
+//                    roughnessSize,
+//                    roughnessAngleR,
+//                    reflectivity,
+//                    criticalAngleR);
+
+            int atomicChainsAmount = 1000;
+            AtomicChain.Factory factory = AtomicChain.getFactory(2.0 * Math.PI / atomicChainsAmount);
+
+            return new SingleAtomicCylinder(
+                    new CartesianPoint(frontX, frontY, frontZ),
+                    factory,
+                    atomicChainsAmount,
+                    1.0,
+                    radius,
+                    length);
         }
 
         if (torusTab.isSelected()) {

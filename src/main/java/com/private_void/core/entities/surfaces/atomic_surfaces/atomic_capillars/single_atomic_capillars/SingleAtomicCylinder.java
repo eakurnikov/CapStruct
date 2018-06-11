@@ -28,8 +28,8 @@ public class SingleAtomicCylinder extends SingleAtomicCapillar {
     }
 
     @Override
-    protected double getCriticalAngle(final ChargedParticle particle) {
-        return Math.sqrt(2.0 * particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
+    protected void setCriticalAngle(final ChargedParticle particle) {
+        criticalAngle = Math.sqrt(2.0 * particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
                 particle.getEnergy() * atomicChains.get(0).getPeriod()) * 1000;
     }
 
@@ -57,7 +57,7 @@ public class SingleAtomicCylinder extends SingleAtomicCapillar {
 
         return Vector.set(
                 particle.getSpeed().getX(),
-                particle.getSpeed().getY() + dVy / 800,
+                particle.getSpeed().getY() + dVy / 800, //30000
                 particle.getSpeed().getZ() + dVz / 800);
     }
 

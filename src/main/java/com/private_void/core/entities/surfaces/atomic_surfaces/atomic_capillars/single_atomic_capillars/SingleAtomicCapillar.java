@@ -81,6 +81,7 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
     public Distribution interact(Flux flux) {
         Logger.info(MessagePool.interactionStart());
 
+        setCriticalAngle((ChargedParticle) flux.getParticles().get(0));
         particleCounter = 0;
         final int tenPercentOfParticlesAmount = flux.getParticles().size() / 10;
 
@@ -108,7 +109,7 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
                             while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
                                 double angleWithAxis = newSpeed.getAngle(getAxis(newCoordinate));
 
-                                if (angleWithAxis <= getCriticalAngle(particle)) {
+                                if (angleWithAxis <= criticalAngle) {
                                     particle
                                             .setCoordinate(newCoordinate)
                                             .setSpeed(newSpeed);

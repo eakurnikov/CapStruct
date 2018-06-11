@@ -36,6 +36,7 @@ public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
         double angleWithAxis;
 
         ChargedParticle particle = (ChargedParticle) p;
+        setCriticalAngle(particle);
 
         if (willParticleGetInside(particle)) {
             newCoordinate = particle.getCoordinate();
@@ -44,7 +45,7 @@ public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
             while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
                 angleWithAxis = newSpeed.getAngle(getAxis(newCoordinate));
 
-                if (angleWithAxis <= getCriticalAngle(particle)) {
+                if (angleWithAxis <= criticalAngle) {
                     particle
                             .setCoordinate(newCoordinate)
                             .setSpeed(newSpeed);

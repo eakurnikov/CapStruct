@@ -45,9 +45,9 @@ public class AtomicTorus extends AtomicCapillar {
     }
 
     @Override
-    protected double getCriticalAngle(final ChargedParticle particle) {
-        return Math.sqrt(2.0 * particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
-                particle.getEnergy() * atomicChains.get(0).getPeriod()) * 1000;
+    protected void setCriticalAngle(final ChargedParticle particle) {
+        criticalAngle = Math.sqrt(2.0 * particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
+                particle.getEnergy() * atomicChains.get(0).getPeriod()) * 200;
     }
 
     @Override
@@ -61,22 +61,22 @@ public class AtomicTorus extends AtomicCapillar {
         double dVz = 0.0;
 
         double currentCurvAngle = getPointsAngle(particle.getCoordinate());
-        CartesianPoint currentCrossSectionCenter = new CartesianPoint(
-                -curvRadius * Math.sin(currentCurvAngle),
-                0.0,
-                curvRadius * (1.0 - Math.cos(currentCurvAngle)));
 
-        ReferenceFrame.Converter converter = new ReferenceFrame.Converter(
+        CartesianPoint currentCrossSectionCenter = new CartesianPoint(
+                curvRadius * Math.sin(currentCurvAngle),
+                0.0,
+                -curvRadius * (1.0 - Math.cos(currentCurvAngle)));
+
+        CartesianPoint particleCoordinateInCurrentRefFrame = new ReferenceFrame.Converter(
                 ReferenceFrame.builder()
                         .atPoint(currentCrossSectionCenter)
-                        .setAngleAroundOY(currentCurvAngle)
-                        .build());
+                        .setAngleAroundOY(-currentCurvAngle)
+                        .build())
+                .convert(particle.getCoordinate());
 
         for (AtomicChain chain : atomicChains) {
-            CartesianPoint actualChainCoordinate = converter.convert(chain.getCoordinate());
-
-            y = particle.getCoordinate().getY() - actualChainCoordinate.getY();
-            z = particle.getCoordinate().getZ() - actualChainCoordinate.getZ();
+            y = particleCoordinateInCurrentRefFrame.getY() - chain.getCoordinate().getY();
+            z = particleCoordinateInCurrentRefFrame.getZ() - chain.getCoordinate().getZ();
             r = Math.sqrt(y * y + z * z);
 
             F = 2.0 * particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /

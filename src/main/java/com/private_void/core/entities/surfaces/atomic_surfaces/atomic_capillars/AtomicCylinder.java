@@ -31,9 +31,9 @@ public class AtomicCylinder extends AtomicCapillar {
     }
 
     @Override
-    protected double getCriticalAngle(final ChargedParticle particle) {
-        return Math.sqrt(2.0 * particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
-                particle.getEnergy() * atomicChains.get(0).getPeriod()) * 1000;
+    protected void setCriticalAngle(final ChargedParticle particle) {
+        criticalAngle = Math.sqrt(2.0 * particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
+                particle.getEnergy() * atomicChains.get(0).getPeriod()) * 200;
     }
 
     @Override

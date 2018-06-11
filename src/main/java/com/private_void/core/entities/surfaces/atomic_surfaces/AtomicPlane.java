@@ -42,6 +42,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
         int tenPercentOfParticlesAmount = flux.getParticles().size() / 10;
 
         setShieldingDistance(((ChargedParticle) flux.getParticles().get(0)).getChargeNumber());
+        setCriticalAngle((ChargedParticle) flux.getParticles().get(0));
 
         for (Iterator<? extends Particle> iterator = flux.getParticles().iterator(); iterator.hasNext(); particlesCounter++) {
             if (particlesCounter % tenPercentOfParticlesAmount == 0.0) {
@@ -51,7 +52,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
             particle = (ChargedParticle) iterator.next();
             angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
 
-            if (angleWithSurface <= getCriticalAngle(particle)) {
+            if (angleWithSurface <= criticalAngle) {
                 newCoordinate = particle.getCoordinate();
 
                 while (isPointInside(newCoordinate)) {
@@ -79,7 +80,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
     }
 
     @Override
-    protected double getCriticalAngle(final ChargedParticle particle) {
+    protected void setCriticalAngle(final ChargedParticle particle) {
         // CriticalAngle = ( (2PI N d` Z1 Z2 e^2 a) / E ) ^ (1/2)
         // Nd` - среднее число атомов на единицу площади
         // d` - расстояние между соседними плоскостями
@@ -90,7 +91,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
         // a - расстояние экранировки (0.885  * а боровский ((Z1)^(1/2) + (Z2)^(1/2)) ^ -(2/3)), а боровский = 0.529 ангстрем
         // E - энергия налетающей частицы (10 КэВ - 1 МэВ)
 
-        return Math.sqrt((2 * PI * particle.getChargeNumber() * chargeNumber *
+        criticalAngle = Math.sqrt((2 * PI * particle.getChargeNumber() * chargeNumber *
                 (ELECTRON_CHARGE * ELECTRON_CHARGE) * shieldingDistance * chargePlanarDensity) / particle.getEnergy());
     }
 

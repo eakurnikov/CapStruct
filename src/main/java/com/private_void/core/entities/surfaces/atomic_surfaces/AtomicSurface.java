@@ -10,6 +10,7 @@ public abstract class AtomicSurface {
     protected final CartesianPoint front;
     protected final double period;
     protected final double chargeNumber;
+    protected double criticalAngle;
     protected double shieldingDistance;
 
     public AtomicSurface(final CartesianPoint front, double period, double chargeNumber) {
@@ -25,7 +26,7 @@ public abstract class AtomicSurface {
 
     protected abstract Vector getAxis(final CartesianPoint point);
 
-    protected abstract double getCriticalAngle(final ChargedParticle particle);
+    protected abstract void setCriticalAngle(final ChargedParticle particle);
 
     protected abstract Vector rotateParticleSpeed(final ChargedParticle particle);
 }
