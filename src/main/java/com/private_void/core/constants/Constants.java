@@ -13,4 +13,7 @@ public class Constants {
 
     public static final double TIME_STEP = 1.0;
     public static final double STEP = 1.0;
+
+//    public static final double TIME_STEP = 0.25;
+//    public static final double STEP = 0.25;
 }

@@ -7,7 +7,6 @@ import com.private_void.core.entities.surfaces.Capillar;
 import com.private_void.core.entities.surfaces.atomic_surfaces.AtomicSurface;
 import com.private_void.core.math.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.math.geometry.space_3D.reference_frames.ReferenceFrame;
-import com.private_void.core.math.geometry.space_3D.vectors.Vector;
 
 import java.util.List;
 
@@ -31,30 +30,22 @@ public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
 
     @Override
     public void interact(Particle p) {
-        CartesianPoint newCoordinate;
-        Vector newSpeed;
+        Particle.State state;
         double angleWithAxis;
 
         ChargedParticle particle = (ChargedParticle) p;
+        setShieldingDistance(particle.getChargeNumber());
         setCriticalAngle(particle);
 
         if (willParticleGetInside(particle)) {
-            newCoordinate = particle.getCoordinate();
-            newSpeed = particle.getSpeed();
+            state = new Particle.State(particle.getCoordinate(), particle.getSpeed());
 
-            while (!particle.isAbsorbed() && isPointInside(newCoordinate)) {
-                angleWithAxis = newSpeed.getAngle(getAxis(newCoordinate));
+            while (!particle.isAbsorbed() && isPointInside(state.getCoordinate())) {
+                angleWithAxis = state.getSpeed().getAngle(getAxis(state.getCoordinate()));
 
                 if (angleWithAxis <= criticalAngle) {
-                    particle
-                            .setCoordinate(newCoordinate)
-                            .setSpeed(newSpeed);
-
-//                    newSpeed = rotateParticleSpeed(particle);
-//                    newCoordinate = newCoordinate.shift(newSpeed);
-
-                    newSpeed = getNextParticleSpeed(particle);
-                    newCoordinate = getNextParticleCoordinate(particle);
+                    particle.setState(state);
+                    state = getParticlesNewState(state, particle.getChargeNumber(), particle.getMass());
                 } else {
                     particle.absorb();
                     break;

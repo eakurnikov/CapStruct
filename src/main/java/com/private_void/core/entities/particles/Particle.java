@@ -42,6 +42,10 @@ public abstract class Particle {
         return this;
     }
 
+    public Particle setState(final State state) {
+        return setCoordinate(state.coordinate).setSpeed(state.speed);
+    }
+
     public Particle rotateSpeed(final Vector vector, double angle) {
         speed = speed.rotateAroundVector(vector, angle);
         return this;
@@ -88,6 +92,24 @@ public abstract class Particle {
 
     public interface Factory {
         Particle getNewParticle(final CartesianPoint coordinate, final Vector speed);
+    }
+
+    public static class State {
+        final CartesianPoint coordinate;
+        final Vector speed;
+
+        public State(final CartesianPoint coordinate, final Vector speed) {
+            this.coordinate = coordinate;
+            this.speed = speed;
+        }
+
+        public CartesianPoint getCoordinate() {
+            return coordinate;
+        }
+
+        public Vector getSpeed() {
+            return speed;
+        }
     }
 }
 

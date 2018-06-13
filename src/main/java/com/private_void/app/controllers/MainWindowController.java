@@ -14,7 +14,6 @@ import com.private_void.core.entities.particles.Particle;
 import com.private_void.core.entities.plates.CurvedPlate;
 import com.private_void.core.entities.plates.TorusFlatPlate;
 import com.private_void.core.entities.surfaces.CapillarSystem;
-import com.private_void.core.entities.surfaces.atomic_surfaces.AtomicPlane;
 import com.private_void.core.entities.surfaces.atomic_surfaces.atomic_capillars.AtomicCylinder;
 import com.private_void.core.entities.surfaces.atomic_surfaces.atomic_capillars.AtomicTorus;
 import com.private_void.core.entities.surfaces.atomic_surfaces.atomic_capillars.single_atomic_capillars.SingleAtomicCylinder;
@@ -212,8 +211,8 @@ public class MainWindowController extends CapStructController {
                                 .setProgress(-1.0);
 
                         try {
-//                          return createPlate().interact(createFlux());
-                            return createCapillar().interact(createFlux());
+                          return createPlate().interact(createFlux());
+//                            return createCapillar().interact(createFlux());
                         } catch (Exception e) {
                             Logger.error(e.getCause().toString());
                             e.printStackTrace();
@@ -262,13 +261,13 @@ public class MainWindowController extends CapStructController {
 
             CartesianPoint.Factory uniformDistribution = generator().getXFlatUniformDistribution(250.0, 250.0);
 
-            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(7.0);
+//            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(7.0);
 //            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(150.0);
-//            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(370.0);
+            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(370.0);
 
             return new ParallelFlux(
                     chargedParticleFactory,
-                    gaussDistribution,
+                    circleUniformDistribution,
                     new CartesianPoint(x, y, z),
                     Vector.set(axisX, axisY, axisZ),
                     layersAmount,
@@ -452,28 +451,28 @@ public class MainWindowController extends CapStructController {
 //                    90);
 //        }
 
-        if (planeTab.isSelected()) {
-            double frontX = Double.parseDouble(planeX.getText());
-            double frontY = Double.parseDouble(planeY.getText());
-            double frontZ = Double.parseDouble(planeZ.getText());
-            double size = Double.parseDouble(planeSize.getText());
-
-            double period = Double.parseDouble(planePeriod.getText());
-            double chargeNumber = Double.parseDouble(planeChargeNum.getText());
-
-            return new AtomicPlane(
-                    new CartesianPoint(frontX, frontY, frontZ),
-                    period,
-                    chargeNumber,
-                    size);
-
-//            return new AtomicTwoParallelPlanes(
+//        if (planeTab.isSelected()) {
+//            double frontX = Double.parseDouble(planeX.getText());
+//            double frontY = Double.parseDouble(planeY.getText());
+//            double frontZ = Double.parseDouble(planeZ.getText());
+//            double size = Double.parseDouble(planeSize.getText());
+//
+//            double period = Double.parseDouble(planePeriod.getText());
+//            double chargeNumber = Double.parseDouble(planeChargeNum.getText());
+//
+//            return new AtomicPlane(
 //                    new CartesianPoint(frontX, frontY, frontZ),
 //                    period,
-//                    10.0,
 //                    chargeNumber,
 //                    size);
-        }
+//
+////            return new AtomicTwoParallelPlanes(
+////                    new CartesianPoint(frontX, frontY, frontZ),
+////                    period,
+////                    10.0,
+////                    chargeNumber,
+////                    size);
+//        }
 
         return null;
     }

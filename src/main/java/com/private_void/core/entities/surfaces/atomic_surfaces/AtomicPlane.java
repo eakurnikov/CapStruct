@@ -34,7 +34,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
         Logger.info(MessagePool.interactionStart());
 
         ChargedParticle particle;
-        CartesianPoint newCoordinate;
+        Particle.State state;
         double angleWithSurface;
         Vector normal = Vector.E_Y;
 
@@ -53,13 +53,11 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
             angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
 
             if (angleWithSurface <= criticalAngle) {
-                newCoordinate = particle.getCoordinate();
+                state = new Particle.State(particle.getCoordinate(), particle.getSpeed());
 
-                while (isPointInside(newCoordinate)) {
-                    particle
-                            .setCoordinate(newCoordinate)
-                            .setSpeed(rotateParticleSpeed(particle));
-                    newCoordinate = newCoordinate.shift(particle.getSpeed());
+                while (isPointInside(state.getCoordinate())) {
+                    particle.setState(state);
+                    state = getParticlesNewState(state, particle.getChargeNumber(), particle.getMass());
                 }
             } else {
                 particle.absorb();
@@ -72,11 +70,6 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
         Logger.info(MessagePool.interactionFinish());
 
         return detector.detect(flux);
-    }
-
-    @Override
-    protected Vector getAxis(CartesianPoint point) {
-        return Vector.E_X;
     }
 
     @Override
@@ -96,24 +89,31 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
     }
 
     @Override
-    protected Vector rotateParticleSpeed(final ChargedParticle particle) {
-        double y = particle.getCoordinate().getY() - front.getY();
-
-        double Fy = 2.0 * PI *  particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE)
-                * chargePlanarDensity * (1.0 - y / Math.sqrt((y / shieldingDistance) * (y / shieldingDistance) + C_SQUARE));
-        double dVy = (Fy / particle.getMass()) * TIME_STEP;
-
-        return Vector.set(particle.getSpeed().getX(), particle.getSpeed().getY() + dVy, particle.getSpeed().getZ());
+    protected Vector getAxis(CartesianPoint point) {
+        return Vector.E_X;
     }
 
     @Override
-    protected Vector getNextParticleSpeed(ChargedParticle particle) {
-        return null;
+    protected double[] getAcceleration(final CartesianPoint coordinate, double chargeNumber, double mass) {
+        double y = coordinate.getY() - front.getY();
+
+        double Fy = 2.0 * PI *  chargeNumber * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE)
+                * chargePlanarDensity
+                * (1.0 - y / Math.sqrt((y / shieldingDistance) * (y / shieldingDistance) + C_SQUARE));
+
+        return new double[] {(Fy / mass) * TIME_STEP};
     }
 
     @Override
-    protected CartesianPoint getNextParticleCoordinate(ChargedParticle particle) {
-        return null;
+    protected Particle.State getParticlesNewState(final Particle.State prevState, double chargeNumber, double mass) {
+        double[] acceleration = getAcceleration(prevState.getCoordinate(), chargeNumber, mass);
+
+        Vector nextSpeed = Vector.set(
+                prevState.getSpeed().getX(),
+                prevState.getSpeed().getY() + acceleration[0],
+                prevState.getSpeed().getZ());
+
+        return new Particle.State(prevState.getCoordinate().shift(nextSpeed), nextSpeed);
     }
 
     private boolean isPointInside(final CartesianPoint point) {

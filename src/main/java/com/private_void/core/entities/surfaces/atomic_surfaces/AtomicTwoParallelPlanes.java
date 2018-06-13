@@ -36,7 +36,7 @@ public class AtomicTwoParallelPlanes extends AtomicSurface implements CapillarSy
         Logger.info(MessagePool.interactionStart());
 
         ChargedParticle particle;
-        CartesianPoint newCoordinate;
+        Particle.State state;
         double angleWithSurface;
         Vector normal = Vector.E_Y;
 
@@ -55,13 +55,11 @@ public class AtomicTwoParallelPlanes extends AtomicSurface implements CapillarSy
             angleWithSurface = particle.getSpeed().getAngle(normal) - PI / 2.0;
 
             if (angleWithSurface <= criticalAngle) {
-                newCoordinate = particle.getCoordinate();
+                state = new Particle.State(particle.getCoordinate(), particle.getSpeed());
 
-                while (isPointInside(newCoordinate)) {
-                    particle
-                            .setCoordinate(newCoordinate)
-                            .setSpeed(rotateParticleSpeed(particle));
-                    newCoordinate = newCoordinate.shift(particle.getSpeed());
+                while (isPointInside(state.getCoordinate())) {
+                    particle.setState(state);
+                    state = getParticlesNewState(state, particle.getChargeNumber(), particle.getMass());
                 }
             } else {
                 particle.absorb();
@@ -74,11 +72,6 @@ public class AtomicTwoParallelPlanes extends AtomicSurface implements CapillarSy
         Logger.info(MessagePool.interactionFinish());
 
         return detector.detect(flux);
-    }
-
-    @Override
-    protected Vector getAxis(CartesianPoint point) {
-        return Vector.E_X;
     }
 
     @Override
@@ -98,29 +91,34 @@ public class AtomicTwoParallelPlanes extends AtomicSurface implements CapillarSy
     }
 
     @Override
-    protected Vector rotateParticleSpeed(final ChargedParticle particle) {
-        double y1 = particle.getCoordinate().getY() - front.getY();
-        double y2 = front.getY() + width - particle.getCoordinate().getY();
+    protected Vector getAxis(CartesianPoint point) {
+        return Vector.E_X;
+    }
 
-        double Fy1 = 2.0 * PI *  particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE)
+    @Override
+    protected double[] getAcceleration(final CartesianPoint coordinate, double particleChargeNumber, double mass) {
+        double y1 = coordinate.getY() - front.getY();
+        double y2 = front.getY() + width - coordinate.getY();
+
+        double Fy1 = 2.0 * PI * particleChargeNumber * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE)
                 * chargePlanarDensity * (1.0 - y1 / Math.sqrt((y1 / shieldingDistance) * (y1 / shieldingDistance) + C_SQUARE));
 
-        double Fy2 = 2.0 * PI *  particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE)
+        double Fy2 = 2.0 * PI * particleChargeNumber * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE)
                 * chargePlanarDensity * (1.0 - y2 / Math.sqrt((y2 / shieldingDistance) * (y2 / shieldingDistance) + C_SQUARE));
 
-        double dVy = ((Fy1 - Fy2) / particle.getMass()) * TIME_STEP;
-
-        return Vector.set(particle.getSpeed().getX(), particle.getSpeed().getY() + dVy, particle.getSpeed().getZ());
+        return new double[] {((Fy1 - Fy2) / mass) * TIME_STEP};
     }
 
     @Override
-    protected Vector getNextParticleSpeed(ChargedParticle particle) {
-        return null;
-    }
+    protected Particle.State getParticlesNewState(Particle.State prevState, double chargeNumber, double mass) {
+        double[] acceleration = getAcceleration(prevState.getCoordinate(), chargeNumber, mass);
 
-    @Override
-    protected CartesianPoint getNextParticleCoordinate(ChargedParticle particle) {
-        return null;
+        Vector nextSpeed = Vector.set(
+                prevState.getSpeed().getX(),
+                prevState.getSpeed().getY() + acceleration[0],
+                prevState.getSpeed().getZ());
+
+        return new Particle.State(prevState.getCoordinate().shift(nextSpeed), nextSpeed);
     }
 
     private boolean isPointInside(final CartesianPoint point) {
