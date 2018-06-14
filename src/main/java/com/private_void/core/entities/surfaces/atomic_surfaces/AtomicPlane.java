@@ -15,7 +15,6 @@ import com.private_void.core.math.geometry.space_3D.vectors.Vector;
 import java.util.Iterator;
 
 import static com.private_void.core.constants.Constants.*;
-import static com.private_void.core.entities.particles.AtomicChain.C_SQUARE;
 
 public class AtomicPlane extends AtomicSurface implements CapillarSystem {
     private final double size;
@@ -41,7 +40,7 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
         int particlesCounter = 0;
         int tenPercentOfParticlesAmount = flux.getParticles().size() / 10;
 
-        setShieldingDistance(((ChargedParticle) flux.getParticles().get(0)).getChargeNumber());
+//        setShieldingDistance(((ChargedParticle) flux.getParticles().get(0)).getChargeNumber());
         setCriticalAngle((ChargedParticle) flux.getParticles().get(0));
 
         for (Iterator<? extends Particle> iterator = flux.getParticles().iterator(); iterator.hasNext(); particlesCounter++) {
@@ -72,21 +71,21 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
         return detector.detect(flux);
     }
 
-    @Override
-    protected void setCriticalAngle(final ChargedParticle particle) {
-        // CriticalAngle = ( (2PI N d` Z1 Z2 e^2 a) / E ) ^ (1/2)
-        // Nd` - среднее число атомов на единицу площади
-        // d` - расстояние между соседними плоскостями
-        // n - концентрация на плоскости = Nd`
-        // N - среднее число атомов в единице объема
-        // Z1, Z2 - заряды частиц (1, 26)
-        // e - заряд электрона, 1.60217662 × 10 ^ -19 Кулона
-        // a - расстояние экранировки (0.885  * а боровский ((Z1)^(1/2) + (Z2)^(1/2)) ^ -(2/3)), а боровский = 0.529 ангстрем
-        // E - энергия налетающей частицы (10 КэВ - 1 МэВ)
-
-        criticalAngle = Math.sqrt((2 * PI * particle.getChargeNumber() * chargeNumber *
-                (ELECTRON_CHARGE * ELECTRON_CHARGE) * shieldingDistance * chargePlanarDensity) / particle.getEnergy());
-    }
+//    @Override
+//    protected void setCriticalAngle(final ChargedParticle particle) {
+//        // CriticalAngle = ( (2PI N d` Z1 Z2 e^2 a) / E ) ^ (1/2)
+//        // Nd` - среднее число атомов на единицу площади
+//        // d` - расстояние между соседними плоскостями
+//        // n - концентрация на плоскости = Nd`
+//        // N - среднее число атомов в единице объема
+//        // Z1, Z2 - заряды частиц (1, 26)
+//        // e - заряд электрона, 1.60217662 × 10 ^ -19 Кулона
+//        // a - расстояние экранировки (0.885  * а боровский ((Z1)^(1/2) + (Z2)^(1/2)) ^ -(2/3)), а боровский = 0.529 ангстрем
+//        // E - энергия налетающей частицы (10 КэВ - 1 МэВ)
+//
+//        criticalAngle = Math.sqrt((2 * PI * particle.getChargeNumber() * chargeNumber *
+//                (ELECTRON_CHARGE * ELECTRON_CHARGE) * shieldingDistance * chargePlanarDensity) / particle.getEnergy());
+//    }
 
     @Override
     protected Vector getAxis(CartesianPoint point) {
@@ -94,23 +93,23 @@ public class AtomicPlane extends AtomicSurface implements CapillarSystem {
     }
 
     @Override
-    protected double[] getAcceleration(final CartesianPoint coordinate, double chargeNumber, double mass) {
+    protected CartesianPoint getAcceleration(final CartesianPoint coordinate, double chargeNumber, double mass) {
         double y = coordinate.getY() - front.getY();
 
         double Fy = 2.0 * PI *  chargeNumber * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE)
                 * chargePlanarDensity
                 * (1.0 - y / Math.sqrt((y / shieldingDistance) * (y / shieldingDistance) + C_SQUARE));
 
-        return new double[] {(Fy / mass) * TIME_STEP};
+        return new CartesianPoint(0.0, (Fy / mass) * TIME_STEP, 0.0);
     }
 
     @Override
     protected Particle.State getParticlesNewState(final Particle.State prevState, double chargeNumber, double mass) {
-        double[] acceleration = getAcceleration(prevState.getCoordinate(), chargeNumber, mass);
+        CartesianPoint acceleration = getAcceleration(prevState.getCoordinate(), chargeNumber, mass);
 
         Vector nextSpeed = Vector.set(
                 prevState.getSpeed().getX(),
-                prevState.getSpeed().getY() + acceleration[0],
+                prevState.getSpeed().getY() + acceleration.getY(),
                 prevState.getSpeed().getZ());
 
         return new Particle.State(prevState.getCoordinate().shift(nextSpeed), nextSpeed);

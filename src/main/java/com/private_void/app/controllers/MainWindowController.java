@@ -7,13 +7,13 @@ import com.private_void.core.entities.detectors.Distribution;
 import com.private_void.core.entities.fluxes.DivergentFlux;
 import com.private_void.core.entities.fluxes.Flux;
 import com.private_void.core.entities.fluxes.ParallelFlux;
-import com.private_void.core.entities.particles.AtomicChain;
 import com.private_void.core.entities.particles.ChargedParticle;
 import com.private_void.core.entities.particles.NeutralParticle;
 import com.private_void.core.entities.particles.Particle;
 import com.private_void.core.entities.plates.CurvedPlate;
 import com.private_void.core.entities.plates.TorusFlatPlate;
 import com.private_void.core.entities.surfaces.CapillarSystem;
+import com.private_void.core.entities.surfaces.atomic_surfaces.AtomicPlane;
 import com.private_void.core.entities.surfaces.atomic_surfaces.atomic_capillars.AtomicCylinder;
 import com.private_void.core.entities.surfaces.atomic_surfaces.atomic_capillars.AtomicTorus;
 import com.private_void.core.entities.surfaces.atomic_surfaces.atomic_capillars.single_atomic_capillars.SingleAtomicCylinder;
@@ -40,6 +40,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 
+import static com.private_void.core.constants.Constants.*;
 import static com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone.CONE_COEFFICIENT;
 import static com.private_void.core.math.generators.Generator.generator;
 
@@ -241,7 +242,7 @@ public class MainWindowController extends CapStructController {
 
     private Flux createFlux() {
         Particle.Factory neutralParticleFactory = NeutralParticle.getFactory(1.0);
-        Particle.Factory chargedParticleFactory = ChargedParticle.getFactory(1.0, 0.1, 4.0);
+        Particle.Factory chargedParticleFactory = ChargedParticle.getFactory(1.0, MUON_MASS, FLUX_ENERGY);
 
         if (pFluxTab.isSelected()) {
             double x = Double.parseDouble(pFluxX.getText());
@@ -340,22 +341,17 @@ public class MainWindowController extends CapStructController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
-            int atomicChainsAmount = 1000;
-            AtomicChain.Factory atomicChainFactory = AtomicChain.getFactory(2.0 * Math.PI / atomicChainsAmount);
             StraightCapillarFactory atomicCylinderFactory = AtomicCylinder.getCapillarFactory(
-                    atomicChainFactory,
-                    atomicChainsAmount,
-                    1.0,
                     capillarRadius,
-                    capillarLength);
+                    capillarLength,
+                    ATOMIC_CELL_PERIOD,
+                    20.0);
 
             RotatedCylinderFactory rotatedAtomicCylinderFactory = AtomicCylinder.getRotatedCapillarFactory(
-                    atomicChainFactory,
-                    atomicChainsAmount,
-                    1.0,
                     capillarRadius,
-                    capillarLength
-            );
+                    capillarLength,
+                    ATOMIC_CELL_PERIOD,
+                    20.0);
 
 //            return new FlatPlate(
 //                    atomicCylinderFactory,
@@ -410,14 +406,11 @@ public class MainWindowController extends CapStructController {
                     capillarReflectivity,
                     capillarCriticalAngleR);
 
-            int atomicChainsAmount = 1000;
-            AtomicChain.Factory atomicChainFactory = AtomicChain.getFactory(2.0 * Math.PI / atomicChainsAmount);
             RotatedTorusFactory rotatedAtomicTorusFactory = AtomicTorus.getRotatedCapillarFactory(
-                    atomicChainFactory,
-                    atomicChainsAmount,
-                    1.0,
                     capillarSmallRadius,
-                    1000.0
+                    1000.0,
+                    ATOMIC_CELL_PERIOD,
+                    20.0
             );
 
             return new TorusFlatPlate(
@@ -451,28 +444,24 @@ public class MainWindowController extends CapStructController {
 //                    90);
 //        }
 
-//        if (planeTab.isSelected()) {
-//            double frontX = Double.parseDouble(planeX.getText());
-//            double frontY = Double.parseDouble(planeY.getText());
-//            double frontZ = Double.parseDouble(planeZ.getText());
-//            double size = Double.parseDouble(planeSize.getText());
-//
-//            double period = Double.parseDouble(planePeriod.getText());
-//            double chargeNumber = Double.parseDouble(planeChargeNum.getText());
-//
-//            return new AtomicPlane(
+        if (planeTab.isSelected()) {
+            double frontX = Double.parseDouble(planeX.getText());
+            double frontY = Double.parseDouble(planeY.getText());
+            double frontZ = Double.parseDouble(planeZ.getText());
+            double size = Double.parseDouble(planeSize.getText());
+
+            double period = Double.parseDouble(planePeriod.getText());
+            double chargeNumber = Double.parseDouble(planeChargeNum.getText());
+
+            return new AtomicPlane(new CartesianPoint(frontX, frontY, frontZ), period, chargeNumber, size);
+
+//            return new AtomicTwoParallelPlanes(
 //                    new CartesianPoint(frontX, frontY, frontZ),
 //                    period,
+//                    10.0,
 //                    chargeNumber,
 //                    size);
-//
-////            return new AtomicTwoParallelPlanes(
-////                    new CartesianPoint(frontX, frontY, frontZ),
-////                    period,
-////                    10.0,
-////                    chargeNumber,
-////                    size);
-//        }
+        }
 
         return null;
     }
@@ -502,16 +491,8 @@ public class MainWindowController extends CapStructController {
 //                    reflectivity,
 //                    criticalAngleR);
 
-            int atomicChainsAmount = 1000;
-            AtomicChain.Factory factory = AtomicChain.getFactory(2.0 * Math.PI / atomicChainsAmount);
-
-            return new SingleAtomicCylinder(
-                    new CartesianPoint(frontX, frontY, frontZ),
-                    factory,
-                    atomicChainsAmount,
-                    1.0,
-                    radius,
-                    length);
+            return new SingleAtomicCylinder(new CartesianPoint(frontX, frontY, frontZ), radius, length,
+                    ATOMIC_CELL_PERIOD, 20.0);
         }
 
         if (torusTab.isSelected()) {
@@ -540,17 +521,8 @@ public class MainWindowController extends CapStructController {
 //                    reflectivity,
 //                    criticalAngleR);
 
-            int atomicChainsAmount = 1000;
-            AtomicChain.Factory factory = AtomicChain.getFactory(2.0 * Math.PI / atomicChainsAmount);
-
-            return new SingleAtomicTorus(
-                    new CartesianPoint(frontX, frontY, frontZ),
-                    factory,
-                    atomicChainsAmount,
-                    1.0,
-                    smallRadius,
-                    bigRadius,
-                    curvAngleR);
+            return new SingleAtomicTorus(new CartesianPoint(frontX, frontY, frontZ), smallRadius, bigRadius, curvAngleR,
+                    ATOMIC_CELL_PERIOD, 20.0);
         }
 
         if (coneTab.isSelected()) {

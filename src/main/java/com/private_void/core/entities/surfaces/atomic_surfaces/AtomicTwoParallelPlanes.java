@@ -15,7 +15,6 @@ import com.private_void.core.math.geometry.space_3D.vectors.Vector;
 import java.util.Iterator;
 
 import static com.private_void.core.constants.Constants.*;
-import static com.private_void.core.entities.particles.AtomicChain.C_SQUARE;
 
 public class AtomicTwoParallelPlanes extends AtomicSurface implements CapillarSystem {
     private final double size;
@@ -43,7 +42,7 @@ public class AtomicTwoParallelPlanes extends AtomicSurface implements CapillarSy
         int particlesCounter = 0;
         int tenPercentOfParticlesAmount = flux.getParticles().size() / 10;
 
-        setShieldingDistance(((ChargedParticle) flux.getParticles().get(0)).getChargeNumber());
+//        setShieldingDistance(((ChargedParticle) flux.getParticles().get(0)).getChargeNumber());
         setCriticalAngle((ChargedParticle) flux.getParticles().get(0));
 
         for (Iterator<? extends Particle> iterator = flux.getParticles().iterator(); iterator.hasNext(); particlesCounter++) {
@@ -75,28 +74,12 @@ public class AtomicTwoParallelPlanes extends AtomicSurface implements CapillarSy
     }
 
     @Override
-    protected void setCriticalAngle(final ChargedParticle particle) {
-        // CriticalAngle = ( (2PI N d` Z1 Z2 e^2 a) / E ) ^ (1/2)
-        // Nd` - среднее число атомов на единицу площади
-        // d` - расстояние между соседними плоскостями
-        // n - концентрация на плоскости = Nd`
-        // N - среднее число атомов в единице объема
-        // Z1, Z2 - заряды частиц (1, 26)
-        // e - заряд электрона, 1.60217662 × 10 ^ -19 Кулона
-        // a - расстояние экранировки (0.885  * а боровский ((Z1)^(1/2) + (Z2)^(1/2)) ^ -(2/3)), а боровский = 0.529 ангстрем
-        // E - энергия налетающей частицы (10 КэВ - 1 МэВ)
-
-        criticalAngle = Math.sqrt((2 * PI * particle.getChargeNumber() * chargeNumber *
-                (ELECTRON_CHARGE * ELECTRON_CHARGE) * shieldingDistance * chargePlanarDensity) / particle.getEnergy());
-    }
-
-    @Override
     protected Vector getAxis(CartesianPoint point) {
         return Vector.E_X;
     }
 
     @Override
-    protected double[] getAcceleration(final CartesianPoint coordinate, double particleChargeNumber, double mass) {
+    protected CartesianPoint getAcceleration(final CartesianPoint coordinate, double particleChargeNumber, double mass) {
         double y1 = coordinate.getY() - front.getY();
         double y2 = front.getY() + width - coordinate.getY();
 
@@ -106,16 +89,16 @@ public class AtomicTwoParallelPlanes extends AtomicSurface implements CapillarSy
         double Fy2 = 2.0 * PI * particleChargeNumber * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE)
                 * chargePlanarDensity * (1.0 - y2 / Math.sqrt((y2 / shieldingDistance) * (y2 / shieldingDistance) + C_SQUARE));
 
-        return new double[] {((Fy1 - Fy2) / mass) * TIME_STEP};
+        return new CartesianPoint(0.0, ((Fy1 - Fy2) / mass) * TIME_STEP, 0.0 );
     }
 
     @Override
     protected Particle.State getParticlesNewState(Particle.State prevState, double chargeNumber, double mass) {
-        double[] acceleration = getAcceleration(prevState.getCoordinate(), chargeNumber, mass);
+        CartesianPoint acceleration = getAcceleration(prevState.getCoordinate(), chargeNumber, mass);
 
         Vector nextSpeed = Vector.set(
                 prevState.getSpeed().getX(),
-                prevState.getSpeed().getY() + acceleration[0],
+                prevState.getSpeed().getY() + acceleration.getY(),
                 prevState.getSpeed().getZ());
 
         return new Particle.State(prevState.getCoordinate().shift(nextSpeed), nextSpeed);

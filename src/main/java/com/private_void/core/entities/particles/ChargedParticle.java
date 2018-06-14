@@ -6,9 +6,10 @@ import com.private_void.core.math.geometry.space_3D.vectors.Vector;
 public class ChargedParticle extends Particle {
     private final double chargeNumber;
     private final double mass;
-    private double energy;
+    private final double energy;
 
-    private ChargedParticle(final CartesianPoint coordinate, final Vector speed, double chargeNumber, double mass, double energy) {
+    private ChargedParticle(final CartesianPoint coordinate, final Vector speed, double chargeNumber, double mass,
+                            double energy) {
         super(coordinate, speed);
         this.chargeNumber = chargeNumber;
         this.mass = mass;

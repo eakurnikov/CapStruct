@@ -6,7 +6,6 @@ import com.private_void.app.notifiers.ProgressProvider;
 import com.private_void.core.entities.detectors.Detector;
 import com.private_void.core.entities.detectors.Distribution;
 import com.private_void.core.entities.fluxes.Flux;
-import com.private_void.core.entities.particles.AtomicChain;
 import com.private_void.core.entities.particles.ChargedParticle;
 import com.private_void.core.entities.particles.Particle;
 import com.private_void.core.entities.surfaces.CapillarSystem;
@@ -14,11 +13,9 @@ import com.private_void.core.entities.surfaces.atomic_surfaces.AtomicSurface;
 import com.private_void.core.math.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.math.utils.Interaction;
 
-import java.util.List;
+import static com.private_void.core.constants.Constants.ELECTRON_CHARGE;
 
 public abstract class SingleAtomicCapillar extends AtomicSurface implements CapillarSystem {
-    protected final List<AtomicChain> atomicChains;
-    protected final int atomicChainsAmount;
     protected final double length;
     protected final double radius;
     protected Detector detector;
@@ -26,22 +23,18 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
     private volatile int particleCounter;
     private final Object lock = new Object();
 
-    public SingleAtomicCapillar(final CartesianPoint front, final AtomicChain.Factory chainFactory,
-                                int atomicChainsAmount, double chargeNumber, double radius, double length) {
-        super(front, chainFactory.getPeriod(), chargeNumber);
-        this.atomicChainsAmount = atomicChainsAmount;
+    public SingleAtomicCapillar(final CartesianPoint front, double radius, double length, double period,
+                                double chargeNumber) {
+        super(front, period, chargeNumber);
         this.radius = radius;
         this.length = length;
-        this.atomicChains = createAtomicChains(chainFactory);
     }
 
     @Override
     public Distribution interact(Flux flux) {
         Logger.info(MessagePool.interactionStart());
 
-        setShieldingDistance(((ChargedParticle) flux.getParticles().get(0)).getChargeNumber());
         setCriticalAngle((ChargedParticle) flux.getParticles().get(0));
-
         particleCounter = 0;
         final int tenPercentOfParticlesAmount = flux.getParticles().size() / 10;
 
@@ -71,7 +64,7 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
                                     particle.setState(state);
                                     state = getParticlesNewState(state, particle.getChargeNumber(), particle.getMass());
                                 } else {
-                                    particle.absorb();
+//                                    particle.absorb();
                                     break;
                                 }
                             }
@@ -84,6 +77,21 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
         Logger.info(MessagePool.interactionFinish());
 
         return detector.detect(flux);
+    }
+
+    double getForce(double distance, double particleChargeNumber) {
+        double C2 = C_SQUARE * shieldingDistance * shieldingDistance * 10_000;
+        double sum = C2 + radius * radius + distance * distance;
+        double sqrt = Math.sqrt(sum * sum - 4.0 * radius * radius * distance * distance);
+
+        double coefficient = - 2.0 * Math.PI * particleChargeNumber * chargeNumber * ELECTRON_CHARGE * ELECTRON_CHARGE *
+                radius / (period * period);
+
+        double numerator = (2.0 * distance * sum - 4.0 * radius * radius * distance) / sqrt + 2.0 * distance;
+
+        double denominator = sqrt + sum;
+
+        return coefficient * numerator / denominator;
     }
 
     private boolean willParticleGetInside(final ChargedParticle p) {
@@ -102,8 +110,6 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
 
         return newY * newY + newZ * newZ < radius * radius;
     }
-
-    protected abstract List<AtomicChain> createAtomicChains(final AtomicChain.Factory chainFactory);
 
     protected abstract boolean isPointInside(final CartesianPoint point);
 

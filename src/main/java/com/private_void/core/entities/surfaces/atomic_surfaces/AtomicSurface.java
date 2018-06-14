@@ -9,8 +9,14 @@ import static com.private_void.core.constants.Constants.BOHR_RADIUS;
 import static com.private_void.core.constants.Constants.TIME_STEP;
 
 public abstract class AtomicSurface {
-    protected static final double ACCELERATION_SCALE = 450.0;
-    protected static final double ANGLE_SCALE = 200.0;
+    public static final double C_SQUARE = 3.0;
+
+//    protected static final double ACCELERATION_SCALE = 450.0; old
+//    protected static final double ACCELERATION_SCALE = 0.03;
+    protected static final double ACCELERATION_SCALE = 0.0003;
+
+//    protected static final double ANGLE_SCALE = 200.0; old
+    protected static final double ANGLE_SCALE = 112;
 
     protected final CartesianPoint front;
     protected final double period;
@@ -22,31 +28,36 @@ public abstract class AtomicSurface {
         this.front = front;
         this.period = period;
         this.chargeNumber = chargeNumber;
+        this.shieldingDistance = 0.885 * BOHR_RADIUS / Math.pow(chargeNumber,  1.0 / 3.0);
     }
 
-    protected void setShieldingDistance(double particleChargeNumber) {
-        shieldingDistance = 0.885 * BOHR_RADIUS * Math.pow(Math.sqrt(particleChargeNumber) +
-                Math.sqrt(chargeNumber),  2.0 / 3.0);
+    protected void setCriticalAngle(final ChargedParticle particle) {
+//        criticalAngle = Math.sqrt (2.0 * particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
+//                particle.getEnergy() * period) * ANGLE_SCALE;
+
+        criticalAngle = Math.toRadians(1.0);
     }
 
-    protected abstract void setCriticalAngle(final ChargedParticle particle);
+    //  realization of Euler's method
+    protected Particle.State getParticlesNewState(final Particle.State prevState, double particleChargeNumber,
+                                                  double mass) {
+        CartesianPoint acceleration = getAcceleration(prevState.getCoordinate(), particleChargeNumber, mass);
 
-    protected abstract Vector getAxis(final CartesianPoint point);
-
-    protected abstract double[] getAcceleration(final CartesianPoint coordinate, double particleChargeNumber, double mass);
-
-//  realization of Euler's method
-    protected Particle.State getParticlesNewState(final Particle.State prevState, double particleChargeNumber, double mass) {
-        double[] acceleration = getAcceleration(prevState.getCoordinate(), particleChargeNumber, mass);
         Vector nextSpeed = Vector.set(
-                prevState.getSpeed().getX(),
-                prevState.getSpeed().getY() + acceleration[0] * TIME_STEP,
-                prevState.getSpeed().getZ() + acceleration[1] * TIME_STEP);
+                prevState.getSpeed().getX() + acceleration.getX() * TIME_STEP,
+                prevState.getSpeed().getY() + acceleration.getY() * TIME_STEP,
+                prevState.getSpeed().getZ() + acceleration.getZ() * TIME_STEP);
 
-        return new Particle.State(prevState.getCoordinate().shift(nextSpeed), nextSpeed);
+//        return new Particle.State(prevState.getCoordinate().shift(nextSpeed), nextSpeed);
+        return new Particle.State(
+                prevState.getCoordinate().shift(
+                        nextSpeed.getX() * TIME_STEP,
+                        nextSpeed.getY() * TIME_STEP,
+                        nextSpeed.getZ() * TIME_STEP),
+                nextSpeed);
     }
 
-//    realization of modified Euler's method
+    //    realization of modified Euler's method
 //    protected Particle.State getParticlesNewState(final Particle.State prevState, double particleChargeNumber,
 //                                                  double mass) {
 //        double[] currentAcceleration = getAcceleration(prevState.getCoordinate(), particleChargeNumber, mass);
@@ -116,4 +127,9 @@ public abstract class AtomicSurface {
 //                        speed.getY() + (a1[0] + 2.0 * a2[0] + 2.0 * a3[0] + a4[0]) * STEP / 6.0,
 //                        speed.getZ() + (a1[1] + 2.0 * a2[1] + 2.0 * a3[1] + a4[1]) * STEP / 6.0));
 //    }
+
+    protected abstract Vector getAxis(final CartesianPoint point);
+
+    protected abstract CartesianPoint getAcceleration(final CartesianPoint coordinate, double particleChargeNumber,
+                                                double mass);
 }

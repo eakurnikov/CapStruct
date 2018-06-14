@@ -1,47 +1,29 @@
 package com.private_void.core.entities.surfaces.atomic_surfaces.atomic_capillars;
 
-import com.private_void.core.entities.particles.AtomicChain;
-import com.private_void.core.entities.particles.ChargedParticle;
 import com.private_void.core.entities.surfaces.Capillar;
 import com.private_void.core.entities.surfaces.capillar_factories.RotatedTorusFactory;
 import com.private_void.core.entities.surfaces.capillar_factories.StraightCapillarFactory;
 import com.private_void.core.math.geometry.space_3D.coordinates.CartesianPoint;
-import com.private_void.core.math.geometry.space_3D.coordinates.CylindricalPoint;
 import com.private_void.core.math.geometry.space_3D.reference_frames.ReferenceFrame;
 import com.private_void.core.math.geometry.space_3D.vectors.Vector;
 import com.private_void.core.math.utils.Utils;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.private_void.core.constants.Constants.ELECTRON_CHARGE;
-import static com.private_void.core.entities.particles.AtomicChain.C_SQUARE;
 
 public class AtomicTorus extends AtomicCapillar {
     private final double curvRadius;
     private final double curvAngleR;
 
-    public AtomicTorus(final CartesianPoint front, final ReferenceFrame refFrame,
-                       final AtomicChain.Factory chainFactory, int atomicChainsAmount, double chargeNumber,
-                       double radius, double curvRadius, double curvAngleR) {
-        super(front, refFrame, chainFactory, atomicChainsAmount, chargeNumber, radius,
-                Utils.getTorusLength(curvRadius, curvAngleR));
+    public AtomicTorus(final CartesianPoint front, final ReferenceFrame refFrame, double radius, double curvRadius,
+                       double curvAngleR, double period, double chargeNumber) {
+        super(front, refFrame, radius, Utils.getTorusLength(curvRadius, curvAngleR), period, chargeNumber);
         this.curvRadius = curvRadius;
         this.curvAngleR = curvAngleR;
     }
 
-    public AtomicTorus(double length, final CartesianPoint front, final ReferenceFrame refFrame,
-                       final AtomicChain.Factory chainFactory, int atomicChainsAmount, double chargeNumber,
-                       double radius, double curvAngleR) {
-        super(front, refFrame, chainFactory, atomicChainsAmount, chargeNumber, radius, length);
+    public AtomicTorus(double length, final CartesianPoint front, final ReferenceFrame refFrame, double radius,
+                       double curvAngleR, double period, double chargeNumber) {
+        super(front, refFrame, radius, length, period, chargeNumber);
         this.curvRadius = Utils.getTorusCurvRadius(length, curvAngleR);
         this.curvAngleR = curvAngleR;
-    }
-
-    @Override
-    protected void setCriticalAngle(final ChargedParticle particle) {
-        criticalAngle = Math.sqrt(2.0 * particle.getChargeNumber() * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
-                particle.getEnergy() * atomicChains.get(0).getPeriod()) * ANGLE_SCALE;
     }
 
     @Override
@@ -50,55 +32,40 @@ public class AtomicTorus extends AtomicCapillar {
     }
 
     @Override
-    protected double[] getAcceleration(final CartesianPoint coordinate, double particleChargeNumber, double mass) {
-        double y;
-        double z;
-        double r;
-
-        double F;
-        double Fy = 0.0;
-        double Fz = 0.0;
-
+    protected CartesianPoint getAcceleration(final CartesianPoint coordinate, double particleChargeNumber, double mass) {
         double currentCurvAngle = getPointsAngle(coordinate);
+
         CartesianPoint currentCrossSectionCenter = new CartesianPoint(
                 curvRadius * Math.sin(currentCurvAngle),
                 0.0,
                 -curvRadius * (1.0 - Math.cos(currentCurvAngle)));
 
-        CartesianPoint particleCoordinateInCurrentRefFrame = new ReferenceFrame.Converter(
+        ReferenceFrame.Converter coordinateConverter = new ReferenceFrame.Converter(
                 ReferenceFrame.builder()
-                        .atPoint(currentCrossSectionCenter)
+//                        .atPoint(currentCrossSectionCenter)
                         .setAngleAroundOY(currentCurvAngle)
-                        .build())
-                .convert(coordinate);
+                        .build());
 
-        for (AtomicChain chain : atomicChains) {
-            y = particleCoordinateInCurrentRefFrame.getY() - chain.getCoordinate().getY();
-            z = particleCoordinateInCurrentRefFrame.getZ() - chain.getCoordinate().getZ();
-            r = Math.sqrt(y * y + z * z);
+        CartesianPoint particleCoordinateInCurrentRefFrame = coordinateConverter.convert(coordinate);
 
-            F = 2.0 * particleChargeNumber * chargeNumber * (ELECTRON_CHARGE * ELECTRON_CHARGE) /
-                    (chain.getPeriod() * (r + (r * r * r) / (C_SQUARE * shieldingDistance * shieldingDistance)));
+        double y = particleCoordinateInCurrentRefFrame.getY();
+        double z = particleCoordinateInCurrentRefFrame.getZ();
+        double r = Math.sqrt(y * y + z * z);
 
-            Fy += F * (y / r);
-            Fz += F * (z / r);
-        }
+        double F = getForce(r, particleChargeNumber);
+        double Fy = F * (y / r);
+        double Fz = F * (z / r);
 
-        return new double[] {Fy / (mass * ACCELERATION_SCALE), Fz / (mass * ACCELERATION_SCALE)};
-    }
+//        ReferenceFrame.Converter forceConverter = new ReferenceFrame.Converter(
+//                ReferenceFrame.builder()
+//                        .setAngleAroundOY(currentCurvAngle)
+//                        .build());
+//
+//        return forceConverter.convertBack(new CartesianPoint(0.0, Fy / mass, Fz / mass));
 
-    @Override
-    protected List<AtomicChain> createAtomicChains(final AtomicChain.Factory chainFactory) {
-        List<AtomicChain> atomicChains = new ArrayList<>();
+        return new CartesianPoint(0.0, Fy / mass, Fz / mass);
 
-        double phi = 0.0;
-        for (int i = 0; i < atomicChainsAmount; i++) {
-            atomicChains.add(
-                    chainFactory.getNewAtomicChain(
-                            new CylindricalPoint(radius, phi += period, 0.0).convertToCartesian()));
-        }
-
-        return atomicChains;
+//        return new double[] {Fy / mass, Fz / mass};
     }
 
     @Override
@@ -106,15 +73,14 @@ public class AtomicTorus extends AtomicCapillar {
         return point.getX() <= length;
     }
 
-    public static StraightCapillarFactory getCapillarFactory(final AtomicChain.Factory chainFactory,
-                                                             int chainsAmount, double chargeNumber, double radius,
-                                                             double curvRadius, double curvAngleR) {
+    public static StraightCapillarFactory getCapillarFactory(double radius, double curvRadius, double curvAngleR,
+                                                             double period, double chargeNumber) {
         return new StraightCapillarFactory() {
 
             @Override
             public Capillar getNewCapillar(final CartesianPoint coordinate) {
-                return new AtomicTorus(coordinate, ReferenceFrame.builder().atPoint(coordinate).build(), chainFactory,
-                        chainsAmount, chargeNumber, radius, curvRadius, curvAngleR);
+                return new AtomicTorus(coordinate, ReferenceFrame.builder().atPoint(coordinate).build(), radius,
+                        curvRadius, curvAngleR, period, chargeNumber);
             }
 
             @Override
@@ -129,16 +95,14 @@ public class AtomicTorus extends AtomicCapillar {
         };
     }
 
-    public static RotatedTorusFactory getRotatedCapillarFactory(final AtomicChain.Factory chainFactory,
-                                                                int chainsAmount, double chargeNumber,
-                                                                double radius, double length) {
+    public static RotatedTorusFactory getRotatedCapillarFactory(double radius, double length, double period,
+                                                                double chargeNumber) {
         return new RotatedTorusFactory() {
 
             @Override
             public Capillar getNewCapillar(final CartesianPoint coordinate, double curvAngleR,
                                            final ReferenceFrame refFrame) {
-                return new AtomicTorus(length, coordinate, refFrame, chainFactory, chainsAmount, chargeNumber, radius,
-                        curvAngleR);
+                return new AtomicTorus(length, coordinate, refFrame, radius, curvAngleR, period, chargeNumber);
             }
 
             @Override

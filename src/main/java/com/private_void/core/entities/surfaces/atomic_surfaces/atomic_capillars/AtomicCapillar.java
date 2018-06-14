@@ -1,6 +1,5 @@
 package com.private_void.core.entities.surfaces.atomic_surfaces.atomic_capillars;
 
-import com.private_void.core.entities.particles.AtomicChain;
 import com.private_void.core.entities.particles.ChargedParticle;
 import com.private_void.core.entities.particles.Particle;
 import com.private_void.core.entities.surfaces.Capillar;
@@ -8,24 +7,19 @@ import com.private_void.core.entities.surfaces.atomic_surfaces.AtomicSurface;
 import com.private_void.core.math.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.math.geometry.space_3D.reference_frames.ReferenceFrame;
 
-import java.util.List;
+import static com.private_void.core.constants.Constants.ELECTRON_CHARGE;
 
 public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
     protected final ReferenceFrame.Converter refFrameConverter;
-    protected final List<AtomicChain> atomicChains;
-    protected final int atomicChainsAmount;
     protected final double radius;
     protected final double length;
 
-    public AtomicCapillar(final CartesianPoint front, final ReferenceFrame refFrame,
-                          final AtomicChain.Factory chainFactory, int atomicChainsAmount, double chargeNumber,
-                          double radius, double length) {
-        super(front, chainFactory.getPeriod(), chargeNumber);
+    public AtomicCapillar(final CartesianPoint front, final ReferenceFrame refFrame, double radius, double length,
+                          double period, double chargeNumber) {
+        super(front, period, chargeNumber);
         this.refFrameConverter = new ReferenceFrame.Converter(refFrame);
-        this.atomicChainsAmount = atomicChainsAmount;
         this.radius = radius;
         this.length = length;
-        this.atomicChains = createAtomicChains(chainFactory);
     }
 
     @Override
@@ -34,7 +28,6 @@ public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
         double angleWithAxis;
 
         ChargedParticle particle = (ChargedParticle) p;
-        setShieldingDistance(particle.getChargeNumber());
         setCriticalAngle(particle);
 
         if (willParticleGetInside(particle)) {
@@ -79,7 +72,20 @@ public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
         return refFrameConverter;
     }
 
-    protected abstract List<AtomicChain> createAtomicChains(final AtomicChain.Factory chainFactory);
+    protected double getForce(double distance, double particleChargeNumber) {
+        double C2 = C_SQUARE * shieldingDistance * shieldingDistance * 10_000;
+        double sum = C2 + radius * radius + distance * distance;
+        double sqrt = Math.sqrt(sum * sum - 4.0 * radius * radius * distance * distance);
+
+        double coefficient = - 2.0 * Math.PI * particleChargeNumber * chargeNumber * ELECTRON_CHARGE * ELECTRON_CHARGE *
+                radius / period * period;
+
+        double numerator = (2.0 * distance * sum - 4.0 * radius * radius * distance) / sqrt + 2.0 * distance;
+
+        double denominator = sqrt + sum;
+
+        return coefficient * numerator / denominator;
+    }
 
     protected abstract boolean isPointInside(final CartesianPoint point);
 }
