@@ -42,8 +42,8 @@ public class AtomicTorus extends AtomicCapillar {
 
         ReferenceFrame.Converter coordinateConverter = new ReferenceFrame.Converter(
                 ReferenceFrame.builder()
-//                        .atPoint(currentCrossSectionCenter)
-                        .setAngleAroundOY(currentCurvAngle)
+                        .atPoint(currentCrossSectionCenter)
+                        .setAngleAroundOY(-currentCurvAngle)
                         .build());
 
         CartesianPoint particleCoordinateInCurrentRefFrame = coordinateConverter.convert(coordinate);
@@ -61,16 +61,22 @@ public class AtomicTorus extends AtomicCapillar {
 //                        .setAngleAroundOY(currentCurvAngle)
 //                        .build());
 //
-//        return forceConverter.convertBack(new CartesianPoint(0.0, Fy / mass, Fz / mass));
+//        return forceConverter.convert(new CartesianPoint(0.0, Fy / mass, Fz / mass));
 
         return new CartesianPoint(0.0, Fy / mass, Fz / mass);
-
-//        return new double[] {Fy / mass, Fz / mass};
     }
 
     @Override
     protected boolean isPointInside(final CartesianPoint point) {
         return point.getX() <= length;
+    }
+
+    private double getPointsAngle(final CartesianPoint point) {
+        double x = point.getX();
+        double y = point.getY();
+        double z = point.getZ() + curvRadius;
+
+        return Math.asin(x / Math.sqrt(x * x + y * y + z * z));
     }
 
     public static StraightCapillarFactory getCapillarFactory(double radius, double curvRadius, double curvAngleR,
@@ -115,13 +121,5 @@ public class AtomicTorus extends AtomicCapillar {
                 return length;
             }
         };
-    }
-
-    private double getPointsAngle(final CartesianPoint point) {
-        double x = point.getX();
-        double y = point.getY();
-        double z = point.getZ() + curvRadius;
-
-        return Math.asin(x / Math.sqrt(x * x + y * y + z * z));
     }
 }

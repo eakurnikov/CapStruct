@@ -72,8 +72,8 @@ public class InclinedPlate extends Plate {
                             capillarsFrontCoordinate,
                             ReferenceFrame.builder()
                                     .atPoint(capillarsFrontCoordinate)
-                                    .setAngleAroundOY(Math.toRadians(15.0))
-                                    .setAngleAroundOZ(Math.toRadians(15.0))
+                                    .setAngleAroundOY(Math.toRadians(1.0))
+                                    .setAngleAroundOZ(Math.toRadians(1.0))
                                     .build()));
 
                     if (++capillarsCounter % (capillarsAmount / 10) == 0.0) {

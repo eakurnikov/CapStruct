@@ -88,12 +88,9 @@ public abstract class AtomicSurface {
 //        CartesianPoint coordinate = prevState.getCoordinate();
 //        Vector speed = prevState.getSpeed();
 //
-//        double[] a1 = getAcceleration(
-//                coordinate,
-//                chargeNumber,
-//                mass);
+//        CartesianPoint a1 = getAcceleration(coordinate, chargeNumber, mass);
 //
-//        double[] a2 = getAcceleration(
+//        CartesianPoint a2 = getAcceleration(
 //                coordinate.shift(
 //                        speed.getX() * STEP / 2.0,
 //                        speed.getY() * STEP / 2.0,
@@ -101,35 +98,35 @@ public abstract class AtomicSurface {
 //                chargeNumber,
 //                mass);
 //
-//        double[] a3 = getAcceleration(
+//        CartesianPoint a3 = getAcceleration(
 //                coordinate.shift(
-//                        speed.getX() * STEP / 2.0,
-//                        (speed.getY() + a1[0] * STEP / 2.0) * STEP / 2.0,
-//                        (speed.getZ() + a1[1] * STEP / 2.0) * STEP / 2.0),
+//                        (speed.getX() + a1.getX() * STEP / 2.0) * STEP / 2.0,
+//                        (speed.getY() + a1.getY() * STEP / 2.0) * STEP / 2.0,
+//                        (speed.getZ() + a1.getZ() * STEP / 2.0) * STEP / 2.0),
 //                chargeNumber,
 //                mass);
 //
-//        double[] a4 = getAcceleration(
+//        CartesianPoint a4 = getAcceleration(
 //                coordinate.shift(
-//                        speed.getX() * STEP,
-//                        (speed.getY() + a2[0] / 2.0) * STEP,
-//                        (speed.getZ() + a2[1] / 2.0) * STEP),
+//                        (speed.getX() + a2.getX() / 2.0) * STEP,
+//                        (speed.getY() + a2.getY() / 2.0) * STEP,
+//                        (speed.getZ() + a2.getZ() / 2.0) * STEP),
 //                chargeNumber,
 //                mass);
 //
 //        return new Particle.State(
 //                coordinate.shift(
-//                        speed.getX() * STEP,
-//                        speed.getY() * STEP + (a1[0] + a2[0] + a3[0]) * STEP * STEP / 6.0,
-//                        speed.getZ() * STEP + (a1[1] + a2[1] + a3[1]) * STEP * STEP / 6.0),
+//                        speed.getX() * STEP + (a1.getX() + a2.getX() + a3.getX()) * STEP * STEP / 6.0,
+//                        speed.getY() * STEP + (a1.getY() + a2.getY() + a3.getY()) * STEP * STEP / 6.0,
+//                        speed.getZ() * STEP + (a1.getZ() + a2.getZ() + a3.getZ()) * STEP * STEP / 6.0),
 //                Vector.set(
-//                        speed.getX(),
-//                        speed.getY() + (a1[0] + 2.0 * a2[0] + 2.0 * a3[0] + a4[0]) * STEP / 6.0,
-//                        speed.getZ() + (a1[1] + 2.0 * a2[1] + 2.0 * a3[1] + a4[1]) * STEP / 6.0));
+//                        speed.getX() + (a1.getX() + 2.0 * a2.getX() + 2.0 * a3.getX() + a4.getX()) * STEP / 6.0,
+//                        speed.getY() + (a1.getY() + 2.0 * a2.getY() + 2.0 * a3.getY() + a4.getY()) * STEP / 6.0,
+//                        speed.getZ() + (a1.getZ() + 2.0 * a2.getZ() + 2.0 * a3.getZ() + a4.getZ()) * STEP / 6.0));
 //    }
 
     protected abstract Vector getAxis(final CartesianPoint point);
 
     protected abstract CartesianPoint getAcceleration(final CartesianPoint coordinate, double particleChargeNumber,
-                                                double mass);
+                                                      double mass);
 }

@@ -64,7 +64,7 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
                                     particle.setState(state);
                                     state = getParticlesNewState(state, particle.getChargeNumber(), particle.getMass());
                                 } else {
-//                                    particle.absorb();
+                                    particle.absorb();
                                     break;
                                 }
                             }

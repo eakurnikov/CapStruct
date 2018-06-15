@@ -18,6 +18,14 @@ public class SingleAtomicTorus extends SingleAtomicCapillar {
         this.detector = createDetector();
     }
 
+    public SingleAtomicTorus(double length, final CartesianPoint front, double radius, double curvAngleR, double period,
+                             double chargeNumber) {
+        super(front, radius, length, period, chargeNumber);
+        this.curvRadius = Utils.getTorusCurvRadius(length, curvAngleR);
+        this.curvAngleR = curvAngleR;
+        this.detector = createDetector();
+    }
+
     @Override
     protected Vector getAxis(final CartesianPoint point) {
         return Vector.E_X.rotateAroundOY(getPointsAngle(point));
@@ -34,7 +42,7 @@ public class SingleAtomicTorus extends SingleAtomicCapillar {
 
         ReferenceFrame.Converter converter = new ReferenceFrame.Converter(
                 ReferenceFrame.builder()
-//                        .atPoint(currentCrossSectionCenter)
+                        .atPoint(currentCrossSectionCenter)
                         .setAngleAroundOY(currentCurvAngle)
                         .build());
 
@@ -56,8 +64,6 @@ public class SingleAtomicTorus extends SingleAtomicCapillar {
 //        return forceConverter.convert(new CartesianPoint(0.0, Fy / mass, Fz / mass));
 
         return new CartesianPoint(0.0, Fy / mass, Fz / mass);
-
-//        return new double[] {Fy / mass, Fz / mass};
     }
 
     @Override

@@ -28,7 +28,6 @@ public class SingleAtomicCylinder extends SingleAtomicCapillar {
         double Fz = F * (z / r);
 
         return new CartesianPoint(0.0, Fy / mass, Fz / mass);
-//        return new double[] {Fy / mass, Fz / mass};
     }
 
     @Override
