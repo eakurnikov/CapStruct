@@ -80,7 +80,7 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
     }
 
     double getForce(double distance, double particleChargeNumber) {
-        double C2 = C_SQUARE * shieldingDistance * shieldingDistance * 10_000;
+        double C2 = C_SQUARE * shieldingDistance * shieldingDistance * SCALE;
         double sum = C2 + radius * radius + distance * distance;
         double sqrt = Math.sqrt(sum * sum - 4.0 * radius * radius * distance * distance);
 

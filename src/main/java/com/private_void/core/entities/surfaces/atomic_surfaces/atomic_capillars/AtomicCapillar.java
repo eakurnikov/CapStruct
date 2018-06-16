@@ -73,12 +73,12 @@ public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
     }
 
     protected double getForce(double distance, double particleChargeNumber) {
-        double C2 = C_SQUARE * shieldingDistance * shieldingDistance * 10_000;
+        double C2 = C_SQUARE * shieldingDistance * shieldingDistance * SCALE;
         double sum = C2 + radius * radius + distance * distance;
         double sqrt = Math.sqrt(sum * sum - 4.0 * radius * radius * distance * distance);
 
         double coefficient = - 2.0 * Math.PI * particleChargeNumber * chargeNumber * ELECTRON_CHARGE * ELECTRON_CHARGE *
-                radius / period * period;
+                radius / (period * period);
 
         double numerator = (2.0 * distance * sum - 4.0 * radius * radius * distance) / sqrt + 2.0 * distance;
 

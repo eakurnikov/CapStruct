@@ -10,13 +10,7 @@ import static com.private_void.core.constants.Constants.TIME_STEP;
 
 public abstract class AtomicSurface {
     public static final double C_SQUARE = 3.0;
-
-//    protected static final double ACCELERATION_SCALE = 450.0; old
-//    protected static final double ACCELERATION_SCALE = 0.03;
-    protected static final double ACCELERATION_SCALE = 0.0003;
-
-//    protected static final double ANGLE_SCALE = 200.0; old
-    protected static final double ANGLE_SCALE = 112;
+    protected static final double SCALE = 20_000;
 
     protected final CartesianPoint front;
     protected final double period;
@@ -47,8 +41,7 @@ public abstract class AtomicSurface {
                 prevState.getSpeed().getX() + acceleration.getX() * TIME_STEP,
                 prevState.getSpeed().getY() + acceleration.getY() * TIME_STEP,
                 prevState.getSpeed().getZ() + acceleration.getZ() * TIME_STEP);
-
-//        return new Particle.State(prevState.getCoordinate().shift(nextSpeed), nextSpeed);
+        
         return new Particle.State(
                 prevState.getCoordinate().shift(
                         nextSpeed.getX() * TIME_STEP,
