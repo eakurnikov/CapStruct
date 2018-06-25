@@ -53,8 +53,6 @@ public abstract class SmoothCapillar extends SmoothSurface implements Capillar {
                 particle.absorb();
                 break;
             }
-
-            particle.setChanneled();
         }
     }
 

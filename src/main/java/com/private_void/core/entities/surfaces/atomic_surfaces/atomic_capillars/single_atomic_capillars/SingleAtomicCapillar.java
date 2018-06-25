@@ -11,6 +11,7 @@ import com.private_void.core.entities.particles.Particle;
 import com.private_void.core.entities.surfaces.CapillarSystem;
 import com.private_void.core.entities.surfaces.atomic_surfaces.AtomicSurface;
 import com.private_void.core.math.geometry.space_3D.coordinates.CartesianPoint;
+import com.private_void.core.math.geometry.space_3D.vectors.Vector;
 import com.private_void.core.math.utils.Interaction;
 
 import static com.private_void.core.constants.Constants.ELECTRON_CHARGE;
@@ -69,7 +70,9 @@ public abstract class SingleAtomicCapillar extends AtomicSurface implements Capi
                                 }
                             }
 
-                            particle.setChanneled();
+                            particle
+                                    .calculateExpansionAngle(Vector.E_X)
+                                    .setChanneled();
                         }
                     }
                 }).start();

@@ -107,6 +107,14 @@ public class MessagePool {
         return "TOTAL DELETED PARTICLES = " + amount;
     }
 
+    public static String averageExpansionAngle(double angle) {
+        return "AVERAGE EXPANSION ANGLE = " + angle;
+    }
+
+    public static String standardAngleDeviation(double deviation) {
+        return "STANDARD ANGLE DEVIATION = " + deviation;
+    }
+
     public static String convertingDistributionToFile() {
         return "Converting distribution to file ...\n";
     }

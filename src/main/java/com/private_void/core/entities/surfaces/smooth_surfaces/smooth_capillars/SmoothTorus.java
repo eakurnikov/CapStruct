@@ -17,8 +17,8 @@ public class SmoothTorus extends SmoothCapillar {
     private final double curvRadius;
     private final double curvAngleR;
 
-    private SmoothTorus(final CartesianPoint front, double radius, double curvRadius, double curvAngleR, double roughnessSize,
-                        double roughnessAngleR, double reflectivity, double criticalAngleR) {
+    private SmoothTorus(final CartesianPoint front, double radius, double curvRadius, double curvAngleR,
+                        double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
         super(front, ReferenceFrame.builder().atPoint(front).build(), radius, Utils.getTorusLength(curvRadius, curvAngleR),
                 roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
 
@@ -26,8 +26,8 @@ public class SmoothTorus extends SmoothCapillar {
         this.curvAngleR = curvAngleR;
     }
 
-    public SmoothTorus(double length, final CartesianPoint front, double radius, double curvAngleR, double roughnessSize,
-                       double roughnessAngleR, double reflectivity, double criticalAngleR) {
+    public SmoothTorus(double length, final CartesianPoint front, double radius, double curvAngleR,
+                       double roughnessSize, double roughnessAngleR, double reflectivity, double criticalAngleR) {
         super(front, ReferenceFrame.builder().atPoint(front).build(), radius, length,
                 roughnessSize, roughnessAngleR, reflectivity, criticalAngleR);
 

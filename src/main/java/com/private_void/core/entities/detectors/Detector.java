@@ -9,6 +9,7 @@ import com.private_void.core.math.geometry.space_2D.CartesianPoint2D;
 import com.private_void.core.math.geometry.space_3D.coordinates.CartesianPoint;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Detector {
     private static final double CELL_WIDTH = 10;
@@ -86,6 +87,10 @@ public class Detector {
         int absorbedAmount = 0;
         int deletedAmount = 0;
 
+        double expansionAngleSum = 0;
+        double averageExpansionAngle;
+        double standardAngleDeviation;
+
         for (Particle particle : flux.getParticles()) {
 
             if (particle.isDeleted()) {
@@ -114,6 +119,7 @@ public class Detector {
                 channeledCells.get(zCellNumber).get(yCellNumber).register();
                 channeledCellsZ.get(zCellNumber).register();
                 channeledCellsY.get(yCellNumber).register();
+                expansionAngleSum += particle.getExpansionAngle();
                 channeledAmount++;
             } else {
                 piercedImage.add(new CartesianPoint2D(point.getZ(), point.getY()));
@@ -123,6 +129,9 @@ public class Detector {
                 piercedAmount++;
             }
         }
+
+        averageExpansionAngle = expansionAngleSum / channeledAmount;
+        standardAngleDeviation = getStandardAngleDeviation(flux.getParticles(), averageExpansionAngle, channeledAmount);
 
         Logger.info(MessagePool.detectingParticlesFinish());
 
@@ -140,6 +149,8 @@ public class Detector {
                 .setOutOfDetectorAmount(outOfDetectorAmount)
                 .setAbsorbedAmount(absorbedAmount)
                 .setDeletedAmount(deletedAmount)
+                .setAverageExpansionAngle(averageExpansionAngle)
+                .setStandardAngleDeviation(standardAngleDeviation)
                 .setWidth(width)
                 .build();
     }
@@ -163,5 +174,19 @@ public class Detector {
                 p.getCoordinate().getY() < leftBottomPoint.getY() + width &&
                 p.getCoordinate().getZ() > leftBottomPoint.getZ() &&
                 p.getCoordinate().getZ() < leftBottomPoint.getZ() + width;
+    }
+
+    private double getStandardAngleDeviation(final List<? extends Particle> particles, double averageExpansionAngle,
+                                             int channeledAmount) {
+        double tempSum = 0;
+
+        for (Particle particle : particles) {
+            if (particle.isChanneled()) {
+                tempSum += (particle.getExpansionAngle() - averageExpansionAngle) *
+                        (particle.getExpansionAngle() - averageExpansionAngle);
+            }
+        }
+
+        return Math.sqrt(tempSum / (channeledAmount - 1));
     }
 }

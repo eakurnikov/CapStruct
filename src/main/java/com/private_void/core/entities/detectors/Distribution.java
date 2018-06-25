@@ -26,6 +26,9 @@ public class Distribution {
     private final int absorbedAmount;
     private final int deletedAmount;
 
+    private final double averageExpansionAngle;
+    private final double standardAngleDeviation;
+
     private final double width;
 
     private Distribution(final ArrayList<CartesianPoint2D> channeledImage,
@@ -47,6 +50,9 @@ public class Distribution {
                          int absorbedAmount,
                          int deletedAmount,
 
+                         double averageExpansionAngle,
+                         double standardAngleDeviation,
+
                          double width) {
 
         this.channeledImage = channeledImage;
@@ -67,6 +73,9 @@ public class Distribution {
         this.outOfDetectorAmount = outOfDetectorAmount;
         this.absorbedAmount = absorbedAmount;
         this.deletedAmount = deletedAmount;
+
+        this.averageExpansionAngle = averageExpansionAngle;
+        this.standardAngleDeviation = standardAngleDeviation;
 
         this.width = width;
     }
@@ -121,6 +130,14 @@ public class Distribution {
 
     public int getDeletedAmount() {
         return deletedAmount;
+    }
+
+    public double getAverageExpansionAngle() {
+        return averageExpansionAngle;
+    }
+
+    public double getStandardAngleDeviation() {
+        return standardAngleDeviation;
     }
 
     public double getWidth() {
@@ -226,6 +243,9 @@ public class Distribution {
         private int absorbedAmount;
         private int deletedAmount;
 
+        private double averageExpansionAngle;
+        private double standardAngleDeviation;
+
         private double width;
 
         private Builder() {}
@@ -295,6 +315,16 @@ public class Distribution {
             return this;
         }
 
+        public Builder setAverageExpansionAngle(double angle) {
+            this.averageExpansionAngle = angle;
+            return this;
+        }
+
+        public Builder setStandardAngleDeviation(double deviation) {
+            this.standardAngleDeviation = deviation;
+            return this;
+        }
+
         public Builder setWidth(double width) {
             this.width = width;
             return this;
@@ -308,9 +338,8 @@ public class Distribution {
                     channeledCellsY, piercedCellsY,
                     channeledAmount, piercedAmount,
                     outOfDetectorAmount, absorbedAmount, deletedAmount,
+                    averageExpansionAngle, standardAngleDeviation,
                     width);
         }
-
-
     }
 }

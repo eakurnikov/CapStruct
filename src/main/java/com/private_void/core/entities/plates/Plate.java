@@ -74,7 +74,9 @@ public abstract class Plate implements CapillarSystem {
                                 }
 
                                 capillar.getReferenceFrameConverter().convertBack(particle);
-                                particle.setChanneled();
+                                particle
+                                        .calculateExpansionAngle(Vector.E_X)
+                                        .setChanneled();
                                 break;
                             }
 

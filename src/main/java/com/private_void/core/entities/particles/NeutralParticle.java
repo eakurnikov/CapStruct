@@ -5,12 +5,10 @@ import com.private_void.core.math.geometry.space_3D.vectors.Vector;
 
 public class NeutralParticle extends Particle {
     private double intensity;
-    private int recursiveIterationCount;
 
     private NeutralParticle(final CartesianPoint coordinate, final Vector speed, double intensity) {
         super(coordinate, speed);
         this.intensity = intensity;
-        this.recursiveIterationCount = 1;
     }
 
     public double getIntensity() {

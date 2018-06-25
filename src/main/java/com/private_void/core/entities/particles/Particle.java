@@ -7,20 +7,24 @@ import com.private_void.core.math.geometry.space_3D.vectors.Vector;
 public abstract class Particle {
     protected CartesianPoint coordinate;
     protected Vector speed;
-    protected double trace;
 
     protected boolean absorbed;
     protected boolean channeled;
     protected boolean deleted;
 
+    protected double trace;
+    protected double expansionAngle;
+
     protected Particle(final CartesianPoint coordinate, final Vector speed) {
         this.coordinate = coordinate;
         this.speed = speed;
-        this.trace = 0.0;
 
         this.absorbed = false;
         this.channeled = false;
         this.deleted = false;
+
+        this.trace = 0.0;
+        this.expansionAngle = 0.0;
     }
 
     public CartesianPoint getCoordinate() {
@@ -77,6 +81,15 @@ public abstract class Particle {
 
     public double getTrace() {
         return trace;
+    }
+
+    public double getExpansionAngle() {
+        return expansionAngle;
+    }
+
+    public Particle calculateExpansionAngle(final Vector axis) {
+        expansionAngle = speed.getAngle(axis);
+        return this;
     }
 
     // Возвращает проекцию координаты на плоскость, расположенную под углом angle к абсолютной

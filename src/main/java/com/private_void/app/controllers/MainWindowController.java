@@ -212,8 +212,8 @@ public class MainWindowController extends CapStructController {
                                 .setProgress(-1.0);
 
                         try {
-//                          return createPlate().interact(createFlux());
-                            return createCapillar().interact(createFlux());
+                          return createPlate().interact(createFlux());
+//                            return createCapillar().interact(createFlux());
                         } catch (Exception e) {
                             Logger.error(e.getCause().toString());
                             e.printStackTrace();
@@ -262,9 +262,9 @@ public class MainWindowController extends CapStructController {
 
             CartesianPoint.Factory uniformDistribution = generator().getXFlatUniformDistribution(250.0, 250.0);
 
-            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(7.0);
+//            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(7.0);
 //            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(150.0);
-//            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(370.0);
+            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(370.0);
 
             return new ParallelFlux(
                     chargedParticleFactory,
@@ -521,11 +521,11 @@ public class MainWindowController extends CapStructController {
 //                    reflectivity,
 //                    criticalAngleR);
 
-//            return new SingleAtomicTorus(new CartesianPoint(frontX, frontY, frontZ), smallRadius, bigRadius, curvAngleR,
-//                    ATOMIC_CELL_PERIOD, 20.0);
-
-            return new SingleAtomicTorus(bigRadius, new CartesianPoint(frontX, frontY, frontZ), smallRadius, curvAngleR,
+            return new SingleAtomicTorus(new CartesianPoint(frontX, frontY, frontZ), smallRadius, bigRadius, curvAngleR,
                     ATOMIC_CELL_PERIOD, 20.0);
+
+//            return new SingleAtomicTorus(bigRadius, new CartesianPoint(frontX, frontY, frontZ), smallRadius, curvAngleR,
+//                    ATOMIC_CELL_PERIOD, 20.0);
         }
 
         if (coneTab.isSelected()) {
@@ -587,6 +587,10 @@ public class MainWindowController extends CapStructController {
         Logger.info(MessagePool.totalOutOfDetector(distribution.getOutOfDetectorAmount()));
         Logger.info(MessagePool.totalAbsorbededAmount(distribution.getAbsorbedAmount()));
         Logger.info(MessagePool.totalDeletedAmount(distribution.getDeletedAmount()));
+        Logger.info(MessagePool.averageExpansionAngle(Math.toDegrees(distribution.getAverageExpansionAngle())));
+        Logger.info(MessagePool.standardAngleDeviation(Math.toDegrees(distribution.getStandardAngleDeviation())));
+
+        distribution.contvertToFile();
     }
 
     private void showChanneledImage(final Distribution distribution) {

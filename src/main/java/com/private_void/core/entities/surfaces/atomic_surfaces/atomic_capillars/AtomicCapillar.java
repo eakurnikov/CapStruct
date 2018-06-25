@@ -44,8 +44,6 @@ public abstract class AtomicCapillar extends AtomicSurface implements Capillar {
                     break;
                 }
             }
-
-            particle.setChanneled();
         }
     }
 
