@@ -14,7 +14,7 @@ import static com.private_void.core.math.generators.Generator.generator;
 
 public class DivergentFlux extends Flux {
 
-    public DivergentFlux(final Particle.Factory particleFactory, final CartesianPoint.Factory coordinateFactory,
+    private DivergentFlux(final Particle.Factory particleFactory, final CartesianPoint.Factory coordinateFactory,
                          final CartesianPoint fluxCoordinate, final Vector fluxAxis,
                          int particlesAmount, double minIntensity) {
 
@@ -41,5 +41,63 @@ public class DivergentFlux extends Flux {
         particles = newParticles;
 
         Logger.info(MessagePool.fluxCreationFinish());
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private Particle.Factory particleFactory;
+        private CartesianPoint.Factory coordinateFactory;
+        private CartesianPoint fluxCoordinate;
+        private Vector fluxAxis;
+        private int particlesAmount;
+        private double minIntensity;
+
+        private Builder() {
+            particleFactory = null;
+            coordinateFactory = null;
+            fluxCoordinate = null;
+            fluxAxis = null;
+
+            particlesAmount = 0;
+            minIntensity = 0.0d;
+        }
+
+        public Builder setParticleFactory(final Particle.Factory particleFactory) {
+            this.particleFactory = particleFactory;
+            return this;
+        }
+
+        public Builder setCoordinateFactory(final CartesianPoint.Factory coordinateFactory) {
+            this.coordinateFactory = coordinateFactory;
+            return this;
+        }
+
+        public Builder setFluxCoordinate(final CartesianPoint fluxCoordinate) {
+            this.fluxCoordinate = fluxCoordinate;
+            return this;
+        }
+
+        public Builder setFluxAxis(final Vector fluxAxis) {
+            this.fluxAxis = fluxAxis;
+            return this;
+        }
+
+        public Builder setParticlesAmount(int particlesAmount) {
+            this.particlesAmount = particlesAmount;
+            return this;
+        }
+
+        public Builder setMinIntensity(double minIntensity) {
+            this.minIntensity = minIntensity;
+            return this;
+        }
+
+        public DivergentFlux build() {
+            return new DivergentFlux(particleFactory, coordinateFactory, fluxCoordinate, fluxAxis, particlesAmount,
+                    minIntensity);
+        }
     }
 }

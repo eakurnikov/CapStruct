@@ -13,7 +13,7 @@ public class ParallelFlux extends Flux {
     private final int layersAmount;
     private final double layerDistance;
 
-    public ParallelFlux(final Particle.Factory particleFactory, final CartesianPoint.Factory coordinateFactory,
+    private ParallelFlux(final Particle.Factory particleFactory, final CartesianPoint.Factory coordinateFactory,
                         final CartesianPoint fluxCoordinate, final Vector fluxAxis, int layersAmount,
                         int particlesAmount, double layerDistance, double minIntensity) {
 
@@ -45,5 +45,77 @@ public class ParallelFlux extends Flux {
         particles = newParticles;
 
         Logger.info(MessagePool.fluxCreationFinish());
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private Particle.Factory particleFactory;
+        private CartesianPoint.Factory coordinateFactory;
+        private CartesianPoint fluxCoordinate;
+        private Vector fluxAxis;
+        private int layersAmount;
+        private int particlesAmount;
+        private double layerDistance;
+        private double minIntensity;
+
+        private Builder() {
+            particleFactory = null;
+            coordinateFactory = null;
+            fluxCoordinate = null;
+            fluxAxis = null;
+
+            layersAmount = 0;
+            particlesAmount = 0;
+            layerDistance = 0.0d;
+            minIntensity = 0.0d;
+        }
+
+        public Builder setParticleFactory(final Particle.Factory particleFactory) {
+            this.particleFactory = particleFactory;
+            return this;
+        }
+
+        public Builder setCoordinateFactory(final CartesianPoint.Factory coordinateFactory) {
+            this.coordinateFactory = coordinateFactory;
+            return this;
+        }
+
+        public Builder setFluxCoordinate(final CartesianPoint fluxCoordinate) {
+            this.fluxCoordinate = fluxCoordinate;
+            return this;
+        }
+
+        public Builder setFluxAxis(final Vector fluxAxis) {
+            this.fluxAxis = fluxAxis;
+            return this;
+        }
+
+        public Builder setLayersAmount(int layersAmount) {
+            this.layersAmount = layersAmount;
+            return this;
+        }
+
+        public Builder setParticlesAmount(int particlesAmount) {
+            this.particlesAmount = particlesAmount;
+            return this;
+        }
+
+        public Builder setLayerDistance(double layerDistance) {
+            this.layerDistance = layerDistance;
+            return this;
+        }
+
+        public Builder setMinIntensity(double minIntensity) {
+            this.minIntensity = minIntensity;
+            return this;
+        }
+
+        public ParallelFlux build() {
+            return new ParallelFlux(particleFactory, coordinateFactory, fluxCoordinate, fluxAxis, layersAmount,
+                    particlesAmount, layerDistance, minIntensity);
+        }
     }
 }

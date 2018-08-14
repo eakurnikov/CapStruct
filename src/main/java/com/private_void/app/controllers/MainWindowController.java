@@ -16,14 +16,14 @@ import com.private_void.core.entities.surfaces.CapillarSystem;
 import com.private_void.core.entities.surfaces.atomic_surfaces.AtomicPlane;
 import com.private_void.core.entities.surfaces.atomic_surfaces.atomic_capillars.AtomicCylinder;
 import com.private_void.core.entities.surfaces.atomic_surfaces.atomic_capillars.AtomicTorus;
-import com.private_void.core.entities.surfaces.atomic_surfaces.atomic_capillars.single_atomic_capillars.SingleAtomicCylinder;
-import com.private_void.core.entities.surfaces.atomic_surfaces.atomic_capillars.single_atomic_capillars.SingleAtomicTorus;
 import com.private_void.core.entities.surfaces.capillar_factories.RotatedCylinderFactory;
 import com.private_void.core.entities.surfaces.capillar_factories.RotatedTorusFactory;
 import com.private_void.core.entities.surfaces.capillar_factories.StraightCapillarFactory;
 import com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.SmoothCylinder;
 import com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.SmoothTorus;
 import com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone;
+import com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCylinder;
+import com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothTorus;
 import com.private_void.core.math.geometry.space_2D.CartesianPoint2D;
 import com.private_void.core.math.geometry.space_3D.coordinates.CartesianPoint;
 import com.private_void.core.math.geometry.space_3D.vectors.Vector;
@@ -40,6 +40,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 
+import static com.private_void.app.controllers.UIConstants.*;
 import static com.private_void.core.constants.Constants.*;
 import static com.private_void.core.entities.surfaces.smooth_surfaces.smooth_capillars.single_smooth_capillars.SingleSmoothCone.CONE_COEFFICIENT;
 import static com.private_void.core.math.generators.Generator.generator;
@@ -126,53 +127,59 @@ public class MainWindowController extends CapStructController {
 
     private ContextMenu menu;
 
+    private void setConstants() {
+        pFluxAxisX.setText(PARALLEL_FLUX_AXIS_X);
+        pFluxAxisY.setText(PARALLEL_FLUX_AXIS_Y);
+
+        pFluxParticlesAmount.setText(PARALLEL_FLUX_PARTICLES_AMOUNT);
+        pFluxLayersAmount.setText(PARALLEL_FLUX_LAYERS_AMOUNT);
+        pFluxLayersDist.setText(PARALLEL_FLUX_LAYER_DISTANCE);
+        pFluxMinIntensity.setText(PARALLEL_FLUX_MIN_INTENSITY);
+
+        dFluxAxisX.setText(DIVERGENT_FLUX_AXIS_X);
+        dFluxParticlesAmount.setText(DIVERGENT_FLUX_PARTICLES_AMOUNT);
+        dFluxAngle.setText(DIVERGENT_FLUX_ANGLE);
+        dFluxMinIntensity.setText(DIVERGENT_FLUX_MIN_INTENSITY);
+
+        cylRadius.setText(CYLINER_RADIUS);
+        cylLength.setText(CYLINER_LENGTH);
+        cylRoughSize.setText(CYLINER_ROUGH_SIZE);
+        cylRoughAngle.setText(CYLINER_ROUGH_ANGLE);
+        cylReflect.setText(CYLINER_REFLECT);
+        cylSlideAngle.setText(CYLINER_SLIDE_ANGLE);
+
+        torRadius.setText(TORUS_RADIUS);
+        torBigRadius.setText(TORUS_BIG_RADIUS);
+        torAngle.setText(TORUS_ANGLE);
+        torRoughSize.setText(TORUS_ROUGH_SIZE);
+        torRoughAngle.setText(TORUS_ROUGH_ANGLE);
+        torReflect.setText(TORUS_REFLECT);
+        torSlideAngle.setText(TORUS_SLIDE_ANGLE);
+
+        coneRadius.setText(CONE_RADIUS);
+        coneAngle.setText(CONE_ANGLE);
+        coneCoefficient.setText(CONE_FACTOR);
+        coneRoughSize.setText(CONE_ROUGH_SIZE);
+        coneRoughAngle.setText(CONE_ROUGH_ANGLE);
+        coneReflect.setText(CONE_REFLECT);
+        coneSlideAngle.setText(CONE_SLIDE_ANGLE);
+
+        planePeriod.setText(PLANE_PERIOD);
+        planeChargeNum.setText(PLANE_CHARGE_NUMBER);
+        planeSize.setText(PLANE_SIZE);
+    }
+
     @FXML
     private void initialize() {
-        pFluxAxisX.setText("1.0");
-        pFluxAxisY.setText("-0.01");
+        final double SCALE_DELTA = 1.1;
 
-        pFluxParticlesAmount.setText("1000");
-        pFluxLayersAmount.setText("10");
-        pFluxLayersDist.setText("1");
-        pFluxMinIntensity.setText("0.5");
-
-        dFluxAxisX.setText("1.0");
-        dFluxParticlesAmount.setText("1000");
-        dFluxAngle.setText("20");
-        dFluxMinIntensity.setText("0.5");
-
-        cylRadius.setText("7");
-        cylLength.setText("1000");
-        cylRoughSize.setText("0");
-        cylRoughAngle.setText("0");
-        cylReflect.setText("1");
-        cylSlideAngle.setText("1");
-
-        torRadius.setText("7");
-        torBigRadius.setText("1000");
-        torAngle.setText("1");
-        torRoughSize.setText("0");
-        torRoughAngle.setText("0");
-        torReflect.setText("1");
-        torSlideAngle.setText("1");
-
-        coneRadius.setText("20");
-        coneAngle.setText("30");
-        coneCoefficient.setText("0.1");
-        coneRoughSize.setText("0.2");
-        coneRoughAngle.setText("5");
-        coneReflect.setText("1");
-        coneSlideAngle.setText("90");
-
-        planePeriod.setText("0.1");
-        planeChargeNum.setText("1");
-        planeSize.setText("50");
+        setConstants();
 
         MenuItem clearChartItem = new MenuItem("Clear all");
         clearChartItem.setOnAction(actionEvent -> chart.getData().clear());
+
         menu = new ContextMenu(clearChartItem);
 
-        final double SCALE_DELTA = 1.1;
         chart.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
                 menu.show(chart.getScene().getWindow(), mouseEvent.getScreenX(), mouseEvent.getScreenY());
@@ -212,8 +219,8 @@ public class MainWindowController extends CapStructController {
                                 .setProgress(-1.0);
 
                         try {
-                          return createPlate().interact(createFlux());
-//                            return createCapillar().interact(createFlux());
+//                          return createPlate().interact(createFlux());
+                            return createCapillar().interact(createFlux());
                         } catch (Exception e) {
                             Logger.error(e.getCause().toString());
                             e.printStackTrace();
@@ -262,19 +269,21 @@ public class MainWindowController extends CapStructController {
 
             CartesianPoint.Factory uniformDistribution = generator().getXFlatUniformDistribution(250.0, 250.0);
 
-//            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(7.0);
+            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(7.0);
 //            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(150.0);
-            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(370.0);
+//            CartesianPoint.Factory circleUniformDistribution = generator().getXFlatCircleUniformDistribution(370.0);
 
-            return new ParallelFlux(
-                    chargedParticleFactory,
-                    circleUniformDistribution,
-                    new CartesianPoint(x, y, z),
-                    Vector.set(axisX, axisY, axisZ),
-                    layersAmount,
-                    particlesPerLayerAmount,
-                    layerDistance,
-                    minIntensity);
+            return ParallelFlux.builder()
+                    .setParticleFactory(neutralParticleFactory)
+                    .setCoordinateFactory(gaussDistribution)
+                    .setFluxCoordinate(new CartesianPoint(x, y, z))
+                    .setFluxAxis(Vector.set(axisX, axisY, axisZ))
+                    .setLayersAmount(layersAmount)
+                    .setParticlesAmount(particlesPerLayerAmount)
+                    .setLayerDistance(layerDistance)
+                    .setMinIntensity(minIntensity)
+                    .build();
+
         } else {
             CartesianPoint.Factory gaussDistribution = generator().getGaussDistribution(0.0,
                     Math.toRadians(Double.parseDouble(dFluxAngle.getText())));
@@ -290,13 +299,14 @@ public class MainWindowController extends CapStructController {
             int totalParticlesAmount = Integer.parseInt(dFluxParticlesAmount.getText());
             double minIntensity = Double.parseDouble(dFluxMinIntensity.getText());
 
-            return new DivergentFlux(
-                    neutralParticleFactory,
-                    gaussDistribution,
-                    new CartesianPoint(x, y, z),
-                    Vector.set(axisX, axisY, axisZ),
-                    totalParticlesAmount,
-                    minIntensity);
+            return DivergentFlux.builder()
+                    .setParticleFactory(neutralParticleFactory)
+                    .setCoordinateFactory(gaussDistribution)
+                    .setFluxCoordinate(new CartesianPoint(x, y, z))
+                    .setFluxAxis(Vector.set(axisX, axisY, axisZ))
+                    .setParticlesAmount(totalParticlesAmount)
+                    .setMinIntensity(minIntensity)
+                    .build();
         }
     }
 
@@ -482,17 +492,17 @@ public class MainWindowController extends CapStructController {
             double criticalAngleD = Double.parseDouble(cylSlideAngle.getText());
             double criticalAngleR = Math.toRadians(criticalAngleD);
 
-//            return new SingleSmoothCylinder(
-//                    new CartesianPoint(frontX, frontY, frontZ),
-//                    radius,
-//                    length,
-//                    roughnessSize,
-//                    roughnessAngleR,
-//                    reflectivity,
-//                    criticalAngleR);
+            return new SingleSmoothCylinder(
+                    new CartesianPoint(frontX, frontY, frontZ),
+                    radius,
+                    length,
+                    roughnessSize,
+                    roughnessAngleR,
+                    reflectivity,
+                    criticalAngleR);
 
-            return new SingleAtomicCylinder(new CartesianPoint(frontX, frontY, frontZ), radius, length,
-                    ATOMIC_CELL_PERIOD, 20.0);
+//            return new SingleAtomicCylinder(new CartesianPoint(frontX, frontY, frontZ), radius, length,
+//                    ATOMIC_CELL_PERIOD, 20.0);
         }
 
         if (torusTab.isSelected()) {
@@ -511,18 +521,18 @@ public class MainWindowController extends CapStructController {
             double criticalAngleD = Double.parseDouble(torSlideAngle.getText());
             double criticalAngleR = Math.toRadians(criticalAngleD);
 
-//            return new SingleSmoothTorus(
-//                    new CartesianPoint(frontX, frontY, frontZ),
-//                    smallRadius,
-//                    bigRadius,
-//                    curvAngleR,
-//                    roughnessSize,
-//                    roughnessAngleR,
-//                    reflectivity,
-//                    criticalAngleR);
+            return new SingleSmoothTorus(
+                    new CartesianPoint(frontX, frontY, frontZ),
+                    smallRadius,
+                    bigRadius,
+                    curvAngleR,
+                    roughnessSize,
+                    roughnessAngleR,
+                    reflectivity,
+                    criticalAngleR);
 
-            return new SingleAtomicTorus(new CartesianPoint(frontX, frontY, frontZ), smallRadius, bigRadius, curvAngleR,
-                    ATOMIC_CELL_PERIOD, 20.0);
+//            return new SingleAtomicTorus(new CartesianPoint(frontX, frontY, frontZ), smallRadius, bigRadius, curvAngleR,
+//                    ATOMIC_CELL_PERIOD, 20.0);
 
 //            return new SingleAtomicTorus(bigRadius, new CartesianPoint(frontX, frontY, frontZ), smallRadius, curvAngleR,
 //                    ATOMIC_CELL_PERIOD, 20.0);
